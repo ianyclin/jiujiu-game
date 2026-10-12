@@ -87,6 +87,9 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .hud{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding-block:10px 0}
 .hud-l{display:flex;align-items:center;gap:6px;min-width:0}
 .hearts{display:flex;gap:3px;flex-wrap:wrap}
+.hearts.inv svg{filter:drop-shadow(0 0 6px rgba(255,210,63,.9))}
+.hshield{width:26px;height:26px;flex:none;animation:hsh .8s ease-in-out infinite}
+@keyframes hsh{50%{transform:scale(1.18);filter:drop-shadow(0 0 8px rgba(255,210,63,.9))}}
 .fire{display:flex;gap:1px;align-items:center;min-height:44px;border:2px solid transparent;background:transparent;border-radius:12px;padding:4px 7px;cursor:pointer;touch-action:manipulation}
 .fire svg{width:24px;height:24px}
 .fire.ready{border-color:var(--ember);background:rgba(255,174,87,.18)}
@@ -354,6 +357,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     <div class="hud">
       <div class="hud-l">
         <div class="hearts" id="m-hearts" aria-label="生命"></div>
+        <svg class="hshield" id="m-hshield" viewBox="0 0 24 24" aria-label="無敵中" hidden><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z" fill="rgba(255,210,63,.3)" stroke="#ffd23f" stroke-width="2"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="#ffd23f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <button class="fire" id="m-fire" type="button" aria-label="發射飛彈" hidden></button>
       </div>
       <div class="score"><span id="m-score">0</span><small id="m-wave">第 1 波</small></div>
@@ -600,7 +604,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       </ul>
       <h4>寶箱流星</h4>
       <ul class="rules">
-        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。</li>
+        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。寶箱有<b>金色</b>（常見）、<b>綠色</b>（少見）、<b>彩虹色</b>（稀有）三種，越稀有開起來越熱鬧。</li>
         <li>常見：+30 分、時間凍結、<b>連擊護盾</b>、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b></li>
         <li>連擊護盾：右上角的連擊數字會罩在一顆亮亮的泡泡裡。答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>，泡泡就破了。已經有泡泡時再開到改 +50 分。</li>
         <li>追蹤飛彈最多存 3 枚（已滿改 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
@@ -1111,6 +1115,7 @@ function updateMeteor(dt) {
   if (M.freeze > 0) { M.freeze -= dt; $('#m-freeze').hidden = M.freeze <= 0; $('#m-freeze i').style.width = clamp(M.freeze / 4 * 100, 0, 100) + '%'; }
   if (M.dbl > 0) { M.dbl -= dt; $('#m-dbl').hidden = M.dbl <= 0; $('#m-dbl i').style.width = clamp(M.dbl / 10 * 100, 0, 100) + '%'; }
   if (M.inv > 0) { M.inv -= dt; $('#m-inv').hidden = M.inv <= 0; $('#m-inv i').style.width = clamp(M.inv / M.invMax * 100, 0, 100) + '%'; }
+  const invOn = M.inv > 0; $('#m-hshield').hidden = !invOn; $('#m-hearts').classList.toggle('inv', invOn);   // 無敵：心旁邊有盾牌、心發光
   updateDrops(dt); updateRockets(dt);
   if (M.bossDelay > 0) { M.bossDelay -= dt; if (M.bossDelay <= 0) spawnBoss(); }
   M.spawnT -= dt;
@@ -1165,6 +1170,21 @@ const DROPS = [
   { id: 'missile', p: 10, col: '#ffae57' }, { id: 'inv', p: 10, col: '#ff6161' },
   { id: 'nova', p: 5, col: '#ffd23f' }, { id: 'heart', p: 5, col: '#ff6161' }, { id: 'inv20', p: 5, col: '#ff6161' },
 ];
+// 稀有度：1 常見（20%／15%）、2 少見（10%）、3 稀有（5%）。越稀有寶箱越亮、開起來越浮誇
+const TIER = { score: 1, freeze: 1, shield: 1, double: 2, missile: 2, inv: 2, nova: 3, heart: 3, inv20: 3 };
+const TIER_COL = ['', '#ffd23f', '#5ff2d0', '#ff6161'];
+const TIER_NAME = { nova: '超新星！', heart: '補一顆心！', inv20: '無敵 20 秒！' };
+function celebrate(d, x, y) {
+  const tier = TIER[d.id] || 1, col = TIER_COL[tier];
+  const cols = tier === 3 ? ['#ff6161', '#ffd23f', '#5ff2d0', '#9fdcff', '#ffffff'] : tier === 2 ? [col, '#ffd23f', '#ffffff'] : [col, '#ffffff'];
+  spark(x, y, 40 + tier * 45, cols, 240 + tier * 100, 3 + tier, 0.7 + tier * 0.25, 120);
+  ring(x, y, 110, col, 5);
+  if (tier >= 2) { ring(x, y, 200, cols[1], 6); confetti(14 * tier); flashA = Math.max(flashA, 0.1 + tier * 0.1); shake(0.1 + tier * 0.1, 2 + tier * 3); }
+  if (tier >= 3) {
+    for (let i = 1; i <= 3; i++) setTimeout(() => { if (!M || M.over) return; ring(x, y, 150 + i * 80, cols[i], 8); spark(x + rnd(-90, 90), y + rnd(-70, 70), 45, cols, 340, 4.5, 1, 150); }, i * 130);
+    banner(TIER_NAME[d.id] || '稀有寶箱！', 'mega t2'); SFX.milestone(2);
+  } else SFX.power();
+}
 function rollDrop() {
   const pool = DROPS, tot = pool.reduce((s, d) => s + d.p, 0);
   let r = Math.random() * tot;
@@ -1175,7 +1195,8 @@ function spawnDrop(x, y) { M.drops.push({ x, y, vy: 70, t: 0, d: rollDrop(), rot
 function updateDrops(dt) {
   for (const o of M.drops) {
     o.t += dt; o.y += o.vy * dt; o.rot += dt * 5;
-    if (Math.random() < 0.6) P.push({ k: 0, x: o.x + rnd(-10, 10), y: o.y + rnd(-10, 10), vx: rnd(-10, 10), vy: rnd(-25, 15), l: 0.4, m: 0.4, s: 2.5, c: '#ffd23f', gv: 0 });
+    const tier = TIER[o.d.id] || 1;
+    if (Math.random() < 0.4 + tier * 0.25) P.push({ k: 0, x: o.x + rnd(-14, 14), y: o.y + rnd(-14, 14), vx: rnd(-14, 14), vy: rnd(-35, 15), l: 0.45, m: 0.45, s: 2 + tier, c: tier === 3 ? ['#ff6161', '#ffd23f', '#5ff2d0', '#ffffff'][ri(0, 3)] : TIER_COL[tier], gv: 0 });
     if (o.t >= 1 || o.y > GY - 90) applyDrop(o);
   }
   M.drops = M.drops.filter(o => !o.done);
@@ -1183,14 +1204,14 @@ function updateDrops(dt) {
 function applyDrop(o) {
   o.done = true;
   const d = o.d, x = o.x, y = o.y;
-  spark(x, y, 44, [d.col, '#ffffff'], 260, 3.5, 0.8, 100); ring(x, y, 120, d.col, 5);
+  celebrate(d, x, y);
   switch (d.id) {
     case 'heart':
       if (!M.sudden && M.hearts < 3) { M.hearts++; ftxt(x, y, '生命 +1', '#ff8a8a', 32); } else { M.score += 100; ftxt(x, y, M.sudden ? '+100' : '生命已滿 +100', '#ffd23f', 30); }
       break;
     case 'nova': nova(); break;
     case 'freeze': freeze(); break;
-    case 'score': M.score += 30; ftxt(x, y, '+30', '#ffd23f', 36); break;
+    case 'score': M.score += 30; ftxt(x, y, '+30', '#ffd23f', 38); break;
     case 'double': M.dbl = 10; $('#m-dbl').hidden = false; ftxt(x, y, '雙倍得分！', '#ffd23f', 32); break;
     case 'missile':
       if (M.missiles < 3) { M.missiles++; ftxt(x, y, '追蹤飛彈 +1', '#ffae57', 30); }
@@ -1208,18 +1229,27 @@ function applyDrop(o) {
       break;
     }
   }
-  if (d.id !== 'nova' && d.id !== 'freeze') SFX.power();
   hud();
 }
 function drawDrop(o) {
+  const tier = TIER[o.d.id] || 1;
+  const col = tier === 3 ? `hsl(${(T * 160) % 360} 95% 68%)` : TIER_COL[tier];   // 稀有寶箱彩虹變色
+  const R = 36 + tier * 8, hs = 15 + tier * 2;
   g.save(); g.translate(o.x, o.y);
-  const hg = g.createRadialGradient(0, 0, 4, 0, 0, 36);
-  hg.addColorStop(0, 'rgba(255,210,63,.55)'); hg.addColorStop(1, 'rgba(255,210,63,0)');
-  g.fillStyle = hg; g.beginPath(); g.arc(0, 0, 36, 0, 6.283); g.fill();
-  g.rotate(Math.sin(o.rot) * 0.3);
-  g.fillStyle = '#ffd23f'; rr(-15, -15, 30, 30, 8); g.fill();
-  g.strokeStyle = '#a87a00'; g.lineWidth = 2; g.stroke();
-  g.fillStyle = '#3b2a00'; g.font = `24px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', 0, 1);
+  const hg = g.createRadialGradient(0, 0, 4, 0, 0, R);
+  hg.addColorStop(0, col); hg.addColorStop(1, 'rgba(255,210,63,0)');
+  g.globalAlpha = 0.5 + 0.15 * Math.sin(T * (4 + tier * 3)); g.fillStyle = hg; g.beginPath(); g.arc(0, 0, R, 0, 6.283); g.fill(); g.globalAlpha = 1;
+  if (tier >= 2) {   // 少見以上：外圈旋轉的小星星
+    g.save(); g.rotate(T * (tier === 3 ? 3 : 1.6)); g.fillStyle = col;
+    for (let i = 0; i < 3 + tier; i++) { g.rotate(6.283 / (3 + tier)); g.beginPath(); g.arc(R - 6, 0, 2 + tier, 0, 6.283); g.fill(); }
+    g.restore();
+  }
+  const open = o.t > 0.65;   // 快開了：抖得更兇、一脹一縮
+  g.rotate(Math.sin(o.rot * (open ? 4 : 1)) * (open ? 0.22 : 0.3));
+  if (open) { const k = 1 + 0.12 * Math.sin(o.t * 40); g.scale(k, k); }
+  g.fillStyle = tier === 3 ? col : TIER_COL[tier]; rr(-hs, -hs, hs * 2, hs * 2, 8); g.fill();
+  g.strokeStyle = tier === 1 ? '#a87a00' : tier === 2 ? '#0f8a6c' : '#ffffff'; g.lineWidth = 2.5; g.stroke();
+  g.fillStyle = tier === 2 ? '#063d30' : '#3b2a00'; g.font = `${22 + tier * 2}px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', 0, 1);
   g.restore();
 }
 function meteorKey(d) {
