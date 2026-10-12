@@ -26,14 +26,14 @@
 ## 架構（index.html 內的區塊順序）
 
 1. `<style>`：`:root` tokens（夜空單一主題，刻意不做亮色）、各畫面 CSS。
-2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-map` 六個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、遊戲說明。
+2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-map` 七個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、遊戲說明。
 3. JS（IIFE）：
    - **存檔** `DB = { facts, best, set }`，`save()`。
-   - **題庫與錯題加權** `MUL`（81 題）、`ADDSUB`（十以內加減）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
+   - **題庫與錯題加權** `MUL`（81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 25% 抽加減。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
    - **音效** `SFX.*`、**音樂** `TR` 三首曲子（menu / game / boss）由 `musTick()` 排程。
    - **畫布**：背景（星空、月亮、遠山、小鎮）、粒子系統 `P`（`k` 0 火花、1 碎片、2 擴散環、3 浮動文字）。
    - **流星防衛戰** `M` 狀態；`newMeteor / updateMeteor / impact / hit / miss / destroy / killBoss`；寶箱 `DROPS / rollDrop / applyDrop`；追蹤飛彈 `launchMissile / updateRockets`。
-   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**星圖**、**錯題本**、**連擊里程碑**。
+   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**炸彈拆除** `BM`（`bombBoard()` 鋪 12 格、`bombTap()` 作答、`explode()` / `defused()`）、**星圖**、**錯題本**、**連擊里程碑**。
    - 共用：`result()` 結果卡、`countdown()`、`show(name)` 切畫面、`makePad()` 數字鍵盤。
    - 主迴圈 `frame()`。
 
@@ -62,6 +62,13 @@
 - 答對：三個乘積亮出約 0.8 秒再下一題。**不呼叫 `record()`**：選擇題證明不了「能打出答案」，星圖只靠打答案的模式點亮。
 - 答錯：亮出三個乘積，正確那顆發亮，點它才繼續，本題算錯。「正確那題」和「點錯那題」都 `record(false)`、都進結果卡；第三題不記。
 - 紀錄是「10 題全對的最短總時間」，存 `DB.best.cmpT`（毫秒，`null` 表示還沒有）。畫面右上有小計時，答錯後變暗表示這局不算；破紀錄才慶祝。
+
+### 炸彈拆除
+- 一局 5 顆炸彈，每顆：乘法表 `n`（2～9，依該表的 `weightOf` 總和加權，2 的表減半，不連續同一個）、12 格一次全部攤開，4～6 個是 `n×1`～`n×9` 的倍數（錯題優先）。
+- 干擾數字：倍數 ±1、±2 權重最高，再來是含數字 n 的（27、57），再來是別的乘法表的答案；全部不整除 n、不重複。
+- 全部倍數點完自動拆除。點到非倍數立刻爆炸（說明最近的 `n × k`）；引線 `FUSE` 25 秒燒完也爆炸（亮出沒找到的）。爆炸後按「下一顆」。
+- 點對**不記星圖**（理由同哪個大）；爆炸時記錯：點錯記最近的 `n×k`，引線燒完記每個沒找到的倍數。
+- 紀錄是「5 顆全拆的最短總時間」，存 `DB.best.bomb`（毫秒／`null`）。
 
 ## 開發慣例
 

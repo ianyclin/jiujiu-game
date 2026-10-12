@@ -190,6 +190,30 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 #c-timer{font-size:24px;transition:opacity .3s}
 #c-timer.off{opacity:.35}
 
+/* ---------- 炸彈拆除 ---------- */
+.bm-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.8vh,16px);min-height:0;padding-block:4px 14px;width:100%}
+.bm-task{text-align:center;font-weight:900;font-size:clamp(22px,6vw,32px);line-height:1.25}
+.bm-task b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:1.5em;vertical-align:-.08em;margin-inline:.08em}
+.bm-task small{display:block;font-size:14px;color:var(--muted);font-weight:700;margin-top:4px}
+.fuse{width:100%;max-width:400px;height:10px;border-radius:5px;background:rgba(255,97,97,.18);overflow:hidden}
+.fuse i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--ember),var(--coral));border-radius:5px}
+.fuse.low i{animation:fuseblink .4s steps(2) infinite}
+@keyframes fuseblink{50%{opacity:.35}}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:400px}
+.tile{height:clamp(54px,8.4vh,74px);border-radius:16px;border:2px solid var(--line);background:var(--panel);box-shadow:0 5px 0 var(--keyEdge);font-family:var(--f-num);font-size:clamp(26px,7vw,36px);color:var(--paper);display:grid;place-items:center;cursor:pointer;padding:0;touch-action:manipulation;transition:transform .06s,box-shadow .06s,border-color .15s,background .15s}
+.tile:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
+.tile.got{border-color:var(--mint);background:rgba(95,242,208,.16);color:var(--mint);animation:pop .32s ease}
+.tile.miss{border-color:var(--sun);background:rgba(255,210,63,.16);color:var(--sun);animation:missblink .9s ease-in-out infinite}
+@keyframes missblink{50%{box-shadow:0 5px 0 var(--keyEdge),0 0 0 5px rgba(255,210,63,.4)}}
+.tile.boom{border-color:var(--coral);background:rgba(255,97,97,.22);color:#ffbcbc}
+.tiles.off .tile{pointer-events:none}
+.bm-found{font-size:14px;color:var(--muted);font-weight:700;letter-spacing:.1em;min-height:1.3em}
+.bm-found b{font-family:var(--f-num);font-weight:400;color:var(--mint);font-size:18px}
+.bm-msg{text-align:center;font-weight:900;font-size:clamp(20px,5.6vw,28px);min-height:1.3em}
+.bm-msg.good{color:var(--mint)} .bm-msg.bad{color:var(--coral)}
+.bm-why{font-size:14px;color:var(--muted);font-weight:700;text-align:center;min-height:1.3em;line-height:1.4}
+#bm-timer{font-size:24px}
+
 /* ---------- 覆蓋層 ---------- */
 .overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(4,9,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .card{width:100%;max-width:400px;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--line);border-radius:26px;padding:22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:14px;text-align:center;max-height:100%;overflow-y:auto}
@@ -268,6 +292,11 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
           <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="34" width="12" height="24" rx="4" fill="#5ff2d0"/><rect x="26" y="18" width="12" height="40" rx="4" fill="#ffd23f"/><rect x="44" y="28" width="12" height="30" rx="4" fill="#ffae57"/><path d="m32 2 2.3 5 5.5.6-4.1 3.7 1.2 5.4L32 14l-4.9 2.7 1.2-5.4-4.1-3.7 5.5-.6z" fill="#ffd23f" stroke="#a87a00" stroke-width="1.5"/></svg>
           <span class="m-t">哪個大？哪個小？<em id="b-cmp"></em></span>
           <span class="m-d">三個算式，點出乘積最大（或最小）的那個。數字很接近，要算過才知道。</span>
+        </button>
+        <button class="mode" id="go-bomb" type="button">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="28" cy="38" r="20" fill="#2a3f58" stroke="#93a9c0" stroke-width="2"/><path d="M38 20l6-8" stroke="#93a9c0" stroke-width="4" stroke-linecap="round"/><path d="M44 12c4-6 10-4 12 0" stroke="#ffae57" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="56" cy="12" r="5" fill="#ffd23f"/><circle cx="56" cy="12" r="2" fill="#fff"/><text x="28" y="46" text-anchor="middle" font-family="Lilita One,sans-serif" font-size="22" fill="#5ff2d0">7</text></svg>
+          <span class="m-t">炸彈拆除<em id="b-bomb"></em></span>
+          <span class="m-d">引線燒完前，把 7 的倍數全部點掉。點到不是的會爆炸！</span>
         </button>
       </nav>
       <div class="menu-foot">
@@ -389,6 +418,23 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </section>
 
+  <section class="screen" id="s-bomb" hidden>
+    <div class="topbar">
+      <button class="link-btn" type="button" data-home>‹ 主選單</button>
+      <div class="prog" id="bm-prog"></div>
+      <div class="timer" id="bm-timer"><span id="bm-time">0.0</span><small>秒</small></div>
+    </div>
+    <div class="bm-in">
+      <div class="bm-task" id="bm-task"></div>
+      <div class="fuse" id="bm-fuse" hidden><i></i></div>
+      <div class="tiles" id="bm-tiles"></div>
+      <div class="bm-found" id="bm-found"></div>
+      <div class="bm-msg" id="bm-msg"></div>
+      <div class="bm-why" id="bm-why"></div>
+      <button class="btn" type="button" id="bm-next" hidden>下一顆炸彈</button>
+    </div>
+  </section>
+
   <section class="screen" id="s-map" hidden>
     <div class="map-in">
       <div class="map-head">
@@ -500,6 +546,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯的題目以後會更常出現。</li>
         <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
       </ul>
+      <h4>炸彈拆除</h4>
+      <ul class="rules">
+        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 × 1 到 7 × 9 的答案：7、14、21……63。把它們全部點掉，炸彈就拆除了。</li>
+        <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！</li>
+        <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
+      </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
   </div>
@@ -521,7 +573,7 @@ const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null }, set: { mix: false, sound: true, music: true, sudden: false } });
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -535,8 +587,9 @@ function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (
 /* ================= 題庫與錯題加權 ================= */
 const MUL = [], ADDSUB = [];
 for (let a = 1; a <= 9; a++) for (let b = 1; b <= 9; b++) MUL.push({ k: a + 'x' + b, a, b, op: '×', ans: a * b });
-for (let a = 1; a <= 9; a++) for (let b = 1; b <= 9; b++) if (a + b <= 10) ADDSUB.push({ k: a + '+' + b, a, b, op: '+', ans: a + b });
-for (let a = 2; a <= 10; a++) for (let b = 1; b < a; b++) ADDSUB.push({ k: a + '-' + b, a, b, op: '−', ans: a - b });
+// 十以內加減不出現 1：兩個數都 ≥ 2，減法答案也 ≥ 2（3−2 這種太簡單）
+for (let a = 2; a <= 8; a++) for (let b = 2; b <= 8; b++) if (a + b <= 10) ADDSUB.push({ k: a + '+' + b, a, b, op: '+', ans: a + b });
+for (let a = 4; a <= 10; a++) for (let b = 2; b <= a - 2; b++) ADDSUB.push({ k: a + '-' + b, a, b, op: '−', ans: a - b });
 
 let recent = [];
 function weightOf(f) {
@@ -1578,6 +1631,130 @@ function finishCmp() {
 $('#c-opts').addEventListener('pointerdown', e => { const b = e.target.closest('.cmp-opt'); if (!b) return; e.preventDefault(); cmpChoose(+b.dataset.i); });
 $('#c-opts').addEventListener('click', e => { const b = e.target.closest('.cmp-opt'); if (b && e.detail === 0) cmpChoose(+b.dataset.i); });
 
+/* ================= 炸彈拆除 ================= */
+let BM = null;
+const FUSE = 25;   // 每顆炸彈的引線秒數（估的，看孩子玩的狀況調）
+function wpick(arr, wf) {
+  let tot = 0; const ws = arr.map(x => { const w = wf(x); tot += w; return w; });
+  let r = Math.random() * tot;
+  for (let i = 0; i < arr.length; i++) { r -= ws[i]; if (r <= 0) return arr[i]; }
+  return arr[arr.length - 1];
+}
+const factNK = (n, k) => MUL[(n - 1) * 9 + clamp(k, 1, 9) - 1];
+const tableW = n => MUL.filter(f => f.a === n && f.b > 1).reduce((s, f) => s + weightOf(f), 0) * (n === 2 ? 0.5 : 1);
+// 12 格：4～6 個 n 的倍數（錯題優先），其餘是干擾：倍數 ±1、±2 最多，再來是含數字 n 的（27、57），再來是別的乘法表的答案
+function bombBoard(n) {
+  const mults = []; for (let k = 1; k <= 9; k++) mults.push(n * k);
+  const pool = mults.slice(), got = [];
+  while (got.length < ri(4, 6)) { const m = wpick(pool, m => weightOf(factNK(n, m / n))); pool.splice(pool.indexOf(m), 1); got.push(m); }
+  const seen = new Set(), cand = [];
+  const add = (v, w) => { if (v >= 2 && v <= 90 && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
+  mults.forEach(m => { add(m - 1, 3); add(m + 1, 3); add(m - 2, 1.5); add(m + 2, 1.5); });
+  for (let v = 10; v <= 89; v++) if (String(v).includes(String(n))) add(v, 2);
+  MUL2.forEach(f => add(f.ans, 1));
+  const tiles = got.slice();
+  while (tiles.length < 12) { const c = wpick(cand, c => c.w); cand.splice(cand.indexOf(c), 1); tiles.push(c.v); }
+  for (let i = tiles.length - 1; i > 0; i--) { const j = ri(0, i); [tiles[i], tiles[j]] = [tiles[j], tiles[i]]; }
+  return { n, tiles, count: got.length };
+}
+function startBomb() {
+  show('bomb');
+  BM = { i: 0, n: 5, done: 0, wrongs: [], t0: 0, end: 0, round: null, over: false, lastN: 0 };
+  ['#bm-tiles', '#bm-task'].forEach(s => { $(s).innerHTML = ''; });
+  ['#bm-msg', '#bm-why', '#bm-found'].forEach(s => { $(s).textContent = ''; });
+  $('#bm-next').hidden = true; $('#bm-fuse').hidden = true; $('#bm-time').textContent = '0.0'; $('#bm-prog').textContent = '準備好了嗎？';
+  countdown(() => { if (BM) { BM.t0 = now(); nextBomb(); } });
+}
+function nextBomb() {
+  const n = wpick([2, 3, 4, 5, 6, 7, 8, 9].filter(n => n !== BM.lastN), tableW); BM.lastN = n;
+  const b = bombBoard(n);
+  BM.round = { n, tiles: b.tiles, count: b.count, got: new Set(), t0: now(), state: 'live', sec: -1 };
+  BM.i++;
+  $('#bm-prog').textContent = `第 ${BM.i} / ${BM.n} 顆`;
+  $('#bm-task').innerHTML = `點掉所有 <b>${n}</b> 的倍數<small>就是 ${n} × 1 到 ${n} × 9 的答案</small>`;
+  const t = $('#bm-tiles'); t.className = 'tiles';
+  t.innerHTML = b.tiles.map((v, i) => `<button type="button" class="tile" data-i="${i}">${v}</button>`).join('');
+  $('#bm-found').innerHTML = `找到 <b>0</b> / ${b.count}`;
+  $('#bm-msg').textContent = ''; $('#bm-msg').className = 'bm-msg'; $('#bm-why').textContent = ''; $('#bm-next').hidden = true;
+  const f = $('#bm-fuse'); f.hidden = false; f.className = 'fuse'; f.firstElementChild.style.width = '100%';
+}
+function bombTap(i) {
+  if (!BM || !BM.round || BM.round.state !== 'live') return;
+  const r = BM.round, v = r.tiles[i], el = $$('#bm-tiles .tile')[i];
+  if (v === undefined || r.got.has(i)) return;
+  if (v % r.n === 0) {
+    r.got.add(i); el.classList.add('got'); SFX.zap(r.got.size * 3);
+    const rc = el.getBoundingClientRect();
+    spark(rc.left + rc.width / 2, rc.top + rc.height / 2, 14, ['#5ff2d0', '#ffffff'], 180, 3, 0.6, 80);
+    $('#bm-found').innerHTML = `找到 <b>${r.got.size}</b> / ${r.count}`;
+    if (r.got.size >= r.count) defused();
+    return;
+  }
+  const k = clamp(Math.round(v / r.n), 1, 9), near = r.n * k;
+  explode(`${v} 不是 ${r.n} 的倍數。${r.n} × ${k} = ${near}，差了 ${Math.abs(v - near)}`, [factNK(r.n, k)], el);
+}
+function bombEndRound() { if (BM.i >= BM.n) { BM.end = now(); updateBomb(); } }
+function explode(why, facts, el) {
+  const r = BM.round; r.state = 'dead'; bombEndRound();
+  if (el) el.classList.add('boom');
+  $$('#bm-tiles .tile').forEach((t, i) => { if (r.tiles[i] % r.n === 0 && !r.got.has(i)) t.classList.add('miss'); });
+  $('#bm-tiles').classList.add('off'); $('#bm-fuse').hidden = true;
+  facts.forEach(f => { record(f.k, false, 0); BM.wrongs.push({ f, k: f.k }); });
+  SFX.big(); shake(0.5, 10); flashA = 0.35;
+  const rc = (el || $('#bm-tiles')).getBoundingClientRect(), x = rc.left + rc.width / 2, y = rc.top + rc.height / 2;
+  spark(x, y, 60, ['#ff6161', '#ffae57', '#ffd23f', '#ffffff'], 380, 4, 1.1, 160); ring(x, y, 160, '#ff6161', 6);
+  $('#bm-msg').textContent = '碰！爆炸了'; $('#bm-msg').className = 'bm-msg bad';
+  $('#bm-why').textContent = why;
+  $('#bm-next').textContent = BM.i >= BM.n ? '看結果' : '下一顆炸彈'; $('#bm-next').hidden = false;
+}
+function defused() {
+  const r = BM.round; r.state = 'ok'; BM.done++; bombEndRound();
+  $('#bm-tiles').classList.add('off'); $('#bm-fuse').hidden = true;
+  $('#bm-msg').textContent = '拆除成功！'; $('#bm-msg').className = 'bm-msg good';
+  SFX.power(); flashA = 0.15;
+  const rc = $('#bm-tiles').getBoundingClientRect();
+  for (let i = 0; i < 3; i++) setTimeout(() => spark(rnd(rc.left, rc.right), rnd(rc.top, rc.bottom), 30, ['#5ff2d0', '#ffd23f', '#ffffff'], 260, 3.5, 0.9, 120), i * 120);
+  setTimeout(() => { if (BM && BM.round === r) bombAdvance(); }, 1000);
+}
+function bombAdvance() { if (!BM || BM.over) return; if (BM.i >= BM.n) finishBomb(); else nextBomb(); }
+function updateBomb() {
+  if (!BM || !BM.t0) return;
+  $('#bm-time').textContent = (((BM.end || now()) - BM.t0) / 1000).toFixed(1);
+  const r = BM.round; if (!r || r.state !== 'live') return;
+  const left = FUSE - (now() - r.t0) / 1000;
+  $('#bm-fuse').firstElementChild.style.width = clamp(left / FUSE * 100, 0, 100) + '%';
+  $('#bm-fuse').classList.toggle('low', left < 5);
+  if (left < 5 && Math.ceil(left) !== r.sec) { r.sec = Math.ceil(left); if (r.sec > 0) SFX.tick(); }
+  if (left <= 0) {
+    const missed = r.tiles.filter((v, i) => v % r.n === 0 && !r.got.has(i));
+    explode(`引線燒完了。還沒找到：${missed.join('、')}`, missed.map(m => factNK(r.n, m / r.n)), null);
+  }
+}
+function finishBomb() {
+  BM.over = true; musTrack('menu');
+  const done = BM.done, n = BM.n, all = done === n, total = BM.end - BM.t0, prev = DB.best.bomb;
+  const better = all && (prev === null || total < prev);
+  if (better) { DB.best.bomb = total; save(); }
+  const sec = ms => (ms / 1000).toFixed(1) + ' 秒';
+  let note;
+  if (!all) note = done >= 4 ? '差一顆就全拆了！5 顆全拆才比時間' : '爆掉的那幾題，之後會比較常出現';
+  else if (prev === null) note = '5 顆全拆！這個時間就是你的紀錄';
+  else if (better) note = `新紀錄！比上次快 ${sec(prev - total)}`;
+  else note = total - prev < 100 ? '全拆！跟紀錄一樣快' : `全拆！差紀錄 ${sec(total - prev)}，再一次！`;
+  setTimeout(() => {
+    if (mode !== 'bomb') return;
+    result({
+      title: all ? '拆彈專家！' : done >= 3 ? '差一點！' : '再練一下',
+      big: all ? (total / 1000).toFixed(1) : String(done), label: all ? '秒・5 顆全拆' : `拆除 / ${n} 顆`, note,
+      stars: all ? 3 : done >= 3 ? 2 : 1, rows: [['拆除', `${done}/${n}`], ['總時間', sec(total)], ['全拆最快', DB.best.bomb === null ? '—' : sec(DB.best.bomb)]],
+      wrongs: BM.wrongs, again: startBomb, celebrate: better
+    });
+  }, 400);
+}
+$('#bm-tiles').addEventListener('pointerdown', e => { const b = e.target.closest('.tile'); if (!b) return; e.preventDefault(); bombTap(+b.dataset.i); });
+$('#bm-tiles').addEventListener('click', e => { const b = e.target.closest('.tile'); if (b && e.detail === 0) bombTap(+b.dataset.i); });
+$('#bm-next').addEventListener('click', bombAdvance);
+
 /* ================= 星圖 ================= */
 let resetArm = 0;
 function openMap() {
@@ -1706,6 +1883,7 @@ function show(name) {
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
+  if (name !== 'bomb') BM = null;
   musTrack(name === 'menu' || name === 'map' ? 'menu' : 'game', name === 'ghost' ? 1.08 : 1);
   musDuck(false);
   measure();
@@ -1714,6 +1892,7 @@ function refreshMenu() {
   $('#b-meteor').textContent = [DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '', DB.best.sudden ? `即死 ${DB.best.sudden} 分` : ''].filter(Boolean).join('・');
   $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? `最佳 ${(DB.best.ghost[19] / 1000).toFixed(1)} 秒` : '';
   $('#b-cmp').textContent = DB.best.cmpT !== null ? `全對最快 ${(DB.best.cmpT / 1000).toFixed(1)} 秒` : '';
+  $('#b-bomb').textContent = DB.best.bomb !== null ? `全拆最快 ${(DB.best.bomb / 1000).toFixed(1)} 秒` : '';
   $('#b-stars').textContent = `${starCount()}/81`;
   $('#b-wrong').textContent = wrongList().length;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
@@ -1755,6 +1934,7 @@ $('#go-meteor').addEventListener('click', pickMode);
 $('#go-ghost').addEventListener('click', startGhost);
 $('#go-versus').addEventListener('click', openVersus);
 $('#go-cmp').addEventListener('click', startCmp);
+$('#go-bomb').addEventListener('click', startBomb);
 $('#go-map').addEventListener('click', openMap);
 $$('[data-set]').forEach(b => b.addEventListener('click', () => {
   const k = b.dataset.set; DB.set[k] = !DB.set[k]; save(); refreshMenu();
@@ -1792,6 +1972,7 @@ function frame(t) {
   if (mode === 'meteor' && M) { if (!M.paused && !M.over) updateMeteor(dt); drawMeteorScene(frozen ? 0 : dt); }
   if (mode === 'ghost') updateGhost();
   if (mode === 'cmp') updateCmp();
+  if (mode === 'bomb') updateBomb();
   if (!frozen) stepP(dt);
   drawP();
   g.restore();
