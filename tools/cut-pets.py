@@ -1,7 +1,7 @@
 """把 ChatGPT 生成的「角色成長圖」（一隻五階段並排、白底）切成遊戲用的 15 張透明 PNG。
 
 用法：python3 tools/cut-pets.py <來源資料夾>
-來源資料夾放三張圖：cute.png（毛毛）、cool.png（小龍）、funny.png（呱呱），每張由左到右是蛋、幼體、少年、成體、究極。
+來源資料夾放 cute.png（毛毛）、cool.png（小龍）、funny.png（呱呱）、legend.png（星狐），有哪張切哪張，每張由左到右是蛋、幼體、少年、成體、究極。
 輸出到 assets/pets/{kind}-{0..4}.png（400×400、256 色、透明背景、同一隻五張共用比例、底部對齊）。
 結束時印出每張的精靈位置，拿去換 index.html 裡的 PET_HEAD（頭中心與半徑要看截圖微調）。
 需要 Pillow 與 numpy，沒有其他相依。
@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image
 from collections import deque
 SRC = (sys.argv[1] if len(sys.argv) > 1 else 'pet-src').rstrip('/') + '/'
-SHEETS = {'cute': 'cute.png', 'cool': 'cool.png', 'funny': 'funny.png'}
+SHEETS = {k: f'{k}.png' for k in ('cute', 'cool', 'funny', 'legend') if os.path.exists(os.path.join(SRC, f'{k}.png'))}   # 來源有哪幾張就切哪幾張
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'pets') + '/'
 CANVAS = 400
 
