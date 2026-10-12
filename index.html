@@ -604,7 +604,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       </ul>
       <h4>寶箱流星</h4>
       <ul class="rules">
-        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。寶箱有<b>金色</b>（常見）、<b>綠色</b>（少見）、<b>彩虹色</b>（稀有）三種，越稀有開起來越熱鬧。</li>
+        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。寶箱有<b>銀色</b>（常見）、<b>金色</b>（少見）、<b>彩虹色</b>（稀有）三種，越稀有開起來越熱鬧。</li>
         <li>常見：+30 分、時間凍結、<b>連擊護盾</b>、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b></li>
         <li>連擊護盾：右上角的連擊數字會罩在一顆亮亮的泡泡裡。答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>，泡泡就破了。已經有泡泡時再開到改 +50 分。</li>
         <li>追蹤飛彈最多存 3 枚（已滿改 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
@@ -1172,11 +1172,11 @@ const DROPS = [
 ];
 // 稀有度：1 常見（20%／15%）、2 少見（10%）、3 稀有（5%）。越稀有寶箱越亮、開起來越浮誇
 const TIER = { score: 1, freeze: 1, shield: 1, double: 2, missile: 2, inv: 2, nova: 3, heart: 3, inv20: 3 };
-const TIER_COL = ['', '#ffd23f', '#5ff2d0', '#ff6161'];
+const TIER_COL = ['', '#d8dee9', '#ffd23f', '#ff6161'];   // 銀、金、彩虹（第 3 級實際用變色）
 const TIER_NAME = { nova: '超新星！', heart: '補一顆心！', inv20: '無敵 20 秒！' };
 function celebrate(d, x, y) {
   const tier = TIER[d.id] || 1, col = TIER_COL[tier];
-  const cols = tier === 3 ? ['#ff6161', '#ffd23f', '#5ff2d0', '#9fdcff', '#ffffff'] : tier === 2 ? [col, '#ffd23f', '#ffffff'] : [col, '#ffffff'];
+  const cols = tier === 3 ? ['#ff6161', '#ffd23f', '#5ff2d0', '#9fdcff', '#ffffff'] : tier === 2 ? [col, '#ffae57', '#ffffff'] : [col, '#ffffff'];
   spark(x, y, 40 + tier * 45, cols, 240 + tier * 100, 3 + tier, 0.7 + tier * 0.25, 120);
   ring(x, y, 110, col, 5);
   if (tier >= 2) { ring(x, y, 200, cols[1], 6); confetti(14 * tier); flashA = Math.max(flashA, 0.1 + tier * 0.1); shake(0.1 + tier * 0.1, 2 + tier * 3); }
@@ -1248,8 +1248,8 @@ function drawDrop(o) {
   g.rotate(Math.sin(o.rot * (open ? 4 : 1)) * (open ? 0.22 : 0.3));
   if (open) { const k = 1 + 0.12 * Math.sin(o.t * 40); g.scale(k, k); }
   g.fillStyle = tier === 3 ? col : TIER_COL[tier]; rr(-hs, -hs, hs * 2, hs * 2, 8); g.fill();
-  g.strokeStyle = tier === 1 ? '#a87a00' : tier === 2 ? '#0f8a6c' : '#ffffff'; g.lineWidth = 2.5; g.stroke();
-  g.fillStyle = tier === 2 ? '#063d30' : '#3b2a00'; g.font = `${22 + tier * 2}px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', 0, 1);
+  g.strokeStyle = tier === 1 ? '#7b8794' : tier === 2 ? '#a87a00' : '#ffffff'; g.lineWidth = 2.5; g.stroke();
+  g.fillStyle = tier === 1 ? '#2b3440' : '#3b2a00'; g.font = `${22 + tier * 2}px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', 0, 1);
   g.restore();
 }
 function meteorKey(d) {
