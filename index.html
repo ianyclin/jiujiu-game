@@ -302,6 +302,18 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .pet-next{font-size:14px;color:var(--muted);font-weight:700;min-height:1.3em}
 .pet-tip{font-size:13px;color:var(--muted);text-align:center;line-height:1.5}
 #pet-feed:disabled{opacity:.45;box-shadow:none;transform:none}
+.gear{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;max-width:470px;margin-top:4px}
+.gear button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:68px;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
+.gear button svg{width:30px;height:30px}
+.gear button small{font-size:11px;color:var(--muted);font-weight:700}
+.gear button[aria-pressed="true"]{border-color:var(--sun);background:rgba(255,210,63,.14);color:var(--sun)}
+.gear button:disabled{opacity:.45;cursor:default}
+.gear-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
+.pet-stage.bye svg{animation:petBye 1.6s ease-in forwards}
+@keyframes petBye{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(.5);opacity:0}}
+.alumni{width:100%;max-width:470px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-size:14px;line-height:1.6;color:var(--muted)}
+.alumni b{color:var(--paper)}
+.alumni svg{width:26px;height:26px;vertical-align:middle;margin-right:2px}
 
 /* ---------- 覆蓋層 ---------- */
 .overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(4,9,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
@@ -579,11 +591,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <div class="pet-show" id="pet-show" hidden>
         <div class="pet-stage" id="pet-stage"></div>
         <div class="pet-name" id="pet-name"></div>
-        <div class="pet-bar"><i id="pet-bar"></i></div>
-        <div class="pet-next" id="pet-next"></div>
+        <div class="pet-bar" id="pet-barwrap"><i id="pet-bar"></i></div>
         <button class="btn" type="button" id="pet-feed">餵星塵 ×10</button>
-        <div class="pet-tip">星塵怎麼來？答對一題 +1、打倒魔王 +20、完成每日任務 +10。</div>
+        <button class="btn alt" type="button" id="pet-bye" hidden></button>
+        <div class="gear" id="pet-gear"></div>
       </div>
+      <div class="alumni" id="pet-alumni" hidden></div>
     </div>
   </section>
 
@@ -711,6 +724,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li>
         <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
+        <li>每日任務的<b>徽章</b>可以換寵物的配件：蝴蝶結、圍巾、墨鏡、氣球、彩虹光環，在寵物頁點一下就戴上。</li>
+        <li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li>
         <li>不餵也不會怎樣，牠會乖乖等你。</li>
       </ul>
       <h4>每日任務</h4>
@@ -756,7 +771,7 @@ const now = () => performance.now();
 const KEY = 'jiujiu-meteor-v1';
 const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
-  pet: { kind: '', dust: 0, fed: 0 } });
+  pet: { kind: '', dust: 0, fed: 0, wear: '', released: [] } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -2081,16 +2096,32 @@ const PET_KINDS = {
 };
 const PET_STAGES = [{ at: 0, n: '蛋' }, { at: 30, n: '幼體' }, { at: 100, n: '少年' }, { at: 250, n: '成體' }, { at: 500, n: '究極' }];
 const FEED = 10;
+const PET_HOME = { cute: '山上', cool: '海裡', funny: '叢林' };
+// 徽章換配件：累積徽章數到 at 就解鎖，解鎖後永久保留（換寵物也在）
+const GEAR = [
+  { id: 'bow', at: 1, n: '蝴蝶結' }, { id: 'scarf', at: 3, n: '圍巾' }, { id: 'glasses', at: 7, n: '墨鏡' },
+  { id: 'balloon', at: 15, n: '氣球' }, { id: 'halo', at: 30, n: '彩虹光環' },
+];
+function gearSVG(id, hx, hy, hr) {   // 畫在頭上：hx,hy 頭中心、hr 半徑
+  switch (id) {
+    case 'bow': { const x = hx - hr * 0.6, y = hy - hr * 0.85; return `<g transform="translate(${x} ${y}) rotate(-15)"><path d="M0 0l-14 -9v18z" fill="#ff6161"/><path d="M0 0l14 -9v18z" fill="#ff6161"/><circle r="4" fill="#ffd23f"/></g>`; }
+    case 'scarf': { const y = hy + hr * 0.78; return `<path d="M${hx - hr * 0.7} ${y} q${hr * 0.7} 14 ${hr * 1.4} 0 v8 q-${hr * 0.7} 14 -${hr * 1.4} 0z" fill="#ff6161"/><path d="M${hx + hr * 0.3} ${y + 6} l10 22 h10 l-8 -24z" fill="#ff6161"/><path d="M${hx - hr * 0.6} ${y + 4} q${hr * 0.6} 10 ${hr * 1.2} 0" fill="none" stroke="#ffd23f" stroke-width="2.5"/>`; }
+    case 'glasses': { const y = hy - hr * 0.25, w = hr * 0.42; return `<rect x="${hx - w * 2 - 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><rect x="${hx + 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - 2} ${y}h4" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - w * 2 - 2} ${y - 2}h-6 M${hx + w * 2 + 2} ${y - 2}h6" stroke="#93a9c0" stroke-width="2"/>`; }
+    case 'balloon': { const x = hx + hr + 8, y = hy - hr - 10; return `<path d="M${hx + hr * 0.5} ${hy + hr * 0.6} Q${x - 4} ${y + 40} ${x} ${y + 16}" fill="none" stroke="#f2f6fb" stroke-width="1.5"/><ellipse cx="${x}" cy="${y}" rx="12" ry="15" fill="#5ff2d0"/><path d="M${x - 3} ${y + 15}l3 5 3 -5z" fill="#5ff2d0"/><ellipse cx="${x - 4}" cy="${y - 5}" rx="3" ry="5" fill="rgba(255,255,255,.5)"/>`; }
+    case 'halo': { const y = hy - hr - 12; return ['#ff6161', '#ffae57', '#ffd23f', '#5ff2d0', '#9fdcff'].map((c, i) => `<ellipse cx="${hx}" cy="${y}" rx="${hr * 0.9 - i * 2.5}" ry="${7 - i * 1.2}" fill="none" stroke="${c}" stroke-width="2.2"/>`).join(''); }
+  }
+  return '';
+}
 const petStage = fed => { let st = 0; PET_STAGES.forEach((s, i) => { if (fed >= s.at) st = i; }); return st; };
 function earn(n) { DB.pet.dust += n; save(); if (mode === 'menu') $('#b-pet').textContent = DB.pet.dust; }
 // 畫寵物：同一隻依階段長大、加配件。全部 inline SVG，沒有圖檔
-function petSVG(kind, st) {
+function petSVG(kind, st, wear = '') {
   const K = PET_KINDS[kind], g = [];
   if (st === 0) {   // 蛋：依路線不同花紋
     const pat = kind === 'cute' ? '<path d="M52 58c-6-6 2-12 7-6 5-6 13 0 7 6l-7 7z" fill="' + K.c2 + '"/><path d="M38 74c-4-4 1-8 5-4 4-4 9 0 5 4l-5 5z" fill="' + K.c2 + '"/>'
       : kind === 'cool' ? '<path d="M58 48l-8 14h8l-6 14 14-18h-8l6-10z" fill="' + K.c2 + '"/>'
       : '<circle cx="48" cy="58" r="6" fill="' + K.c2 + '"/><circle cx="66" cy="70" r="4" fill="' + K.c2 + '"/><circle cx="54" cy="82" r="5" fill="' + K.c2 + '"/>';
-    return `<svg viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="108" rx="34" ry="6" fill="rgba(0,0,0,.35)"/><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="${K.c1}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>${pat}<ellipse cx="46" cy="40" rx="6" ry="10" fill="rgba(255,255,255,.35)" transform="rotate(-20 46 40)"/></svg>`;
+    return `<svg viewBox="0 -18 120 138" aria-hidden="true"><ellipse cx="60" cy="108" rx="34" ry="6" fill="rgba(0,0,0,.35)"/><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="${K.c1}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>${pat}<ellipse cx="46" cy="40" rx="6" ry="10" fill="rgba(255,255,255,.35)" transform="rotate(-20 46 40)"/>${gearSVG(wear, 60, 60, 34)}</svg>`;
   }
   const size = [0, 30, 38, 46, 50][st], cy = 70, c = K.c1, d = K.c2;
   // 身體
@@ -2120,6 +2151,7 @@ function petSVG(kind, st) {
     const top = cy - size - (st >= 2 && kind === 'funny' ? 28 : 4);
     g.push(`<path d="M${60 - 16} ${top} l6 -14 l10 10 l10 -10 l6 14z" fill="#ffd23f" stroke="#a87a00" stroke-width="2" stroke-linejoin="round"/><path d="M16 30l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#ffd23f"/><path d="M104 44l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#5ff2d0"/>`);
   }
+  g.push(gearSVG(wear, 60, cy, size));
   return `<svg viewBox="0 -18 120 138" aria-hidden="true"><ellipse cx="60" cy="112" rx="${size + 6}" ry="6" fill="rgba(0,0,0,.35)"/>${g.join('')}</svg>`;   // 上方留空間給帽子、皇冠
 }
 function openPet() {
@@ -2129,22 +2161,53 @@ function renderPet() {
   const P_ = DB.pet, has = !!PET_KINDS[P_.kind];
   $('#pet-dust').textContent = `★${P_.dust}`;
   $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
+  renderAlumni();   // 挑蛋畫面也要看得到回家的夥伴
   if (!has) {
-    $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}">${petSVG(k, 0)}<b>${PET_KINDS[k].name}</b><small>${PET_KINDS[k].line}路線</small></button>`).join('');
+    $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}">${petSVG(k, 0)}<b>${PET_KINDS[k].name}</b><small>${PET_KINDS[k].line}</small></button>`).join('');
     return;
   }
   const st = petStage(P_.fed), K = PET_KINDS[P_.kind], next = PET_STAGES[st + 1];
-  $('#pet-stage').innerHTML = petSVG(P_.kind, st);
-  $('#pet-stage').classList.toggle('wobble', st === 0 && P_.dust >= FEED);
-  $('#pet-name').innerHTML = `${K.name}<small>${PET_STAGES[st].n}・${K.line}路線</small>`;
-  if (next) {
-    const from = PET_STAGES[st].at, pct_ = clamp((P_.fed - from) / (next.at - from), 0, 1);
-    $('#pet-bar').style.width = Math.round(pct_ * 100) + '%';
-    $('#pet-next').textContent = `再餵 ${Math.ceil((next.at - P_.fed) / FEED)} 次就會變成${next.n}`;
-  } else { $('#pet-bar').style.width = '100%'; $('#pet-next').textContent = '已經是究極型態，超厲害！'; }
+  $('#pet-stage').innerHTML = petSVG(P_.kind, st, P_.wear);
+  $('#pet-stage').className = 'pet-stage' + (st === 0 && P_.dust >= FEED ? ' wobble' : '');
+  $('#pet-name').innerHTML = `${K.name}<small>${PET_STAGES[st].n}</small>`;
+  if (next) { const from = PET_STAGES[st].at; $('#pet-bar').style.width = Math.round(clamp((P_.fed - from) / (next.at - from), 0, 1) * 100) + '%'; }
+  else $('#pet-bar').style.width = '100%';
+  $('#pet-barwrap').hidden = !next; $('#pet-feed').hidden = !next;
   $('#pet-feed').disabled = P_.dust < FEED;
   $('#pet-feed').textContent = P_.dust < FEED ? `餵星塵 ×${FEED}（還差 ${FEED - P_.dust}）` : `餵星塵 ×${FEED}`;
+  const bye = $('#pet-bye'); bye.hidden = !!next;   // 究極才能放回家
+  if (!next) { bye.textContent = byeArm ? `再按一次，跟${K.name}說再見` : `放${K.name}回${PET_HOME[P_.kind]}`; }
+  renderGear(); renderAlumni();
 }
+let byeArm = 0;
+function renderGear() {
+  const B_ = DB.daily.badges, P_ = DB.pet;
+  $('#pet-gear').innerHTML = '<div class="gear-t">配件（每日任務的徽章換的）</div>' + GEAR.map(g => {
+    const ok = B_ >= g.at, on = P_.wear === g.id;
+    return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><svg viewBox="-20 -20 40 40" aria-hidden="true">${gearSVG(g.id, 0, 0, 14)}</svg>${g.n}<small>${ok ? (on ? '戴著' : '點一下戴上') : `徽章 ×${g.at}`}</small></button>`;
+  }).join('');
+}
+function renderAlumni() {
+  const R = DB.pet.released || [], el = $('#pet-alumni');
+  el.hidden = !R.length;
+  if (R.length) el.innerHTML = '回家的夥伴：' + R.map(r => `${petSVG(r.kind, 4)}<b>${PET_KINDS[r.kind].name}</b>（${PET_HOME[r.kind]}）`).join('、');
+}
+function releasePet() {
+  const P_ = DB.pet; if (!PET_KINDS[P_.kind] || petStage(P_.fed) < 4) return;
+  if (Date.now() - byeArm > 3000) { byeArm = Date.now(); renderPet(); setTimeout(() => { if (Date.now() - byeArm >= 2900) { byeArm = 0; if (mode === 'pet') renderPet(); } }, 3100); return; }
+  byeArm = 0;
+  const K = PET_KINDS[P_.kind], kind = P_.kind, el = $('#pet-stage'), r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  el.classList.add('bye'); $('#pet-bye').hidden = true;
+  spark(x, y, 60, ['#ffd23f', '#5ff2d0', '#ffffff', K.c2], 260, 4, 1.4, -40); SFX.fan(); confetti(40);
+  toast(`${K.name}回到${PET_HOME[kind]}了，謝謝你把牠養大！`);
+  setTimeout(() => {
+    (P_.released = P_.released || []).push({ kind, date: today() });
+    P_.kind = ''; P_.fed = 0; save();
+    if (mode === 'pet') renderPet();
+  }, 1700);
+}
+$('#pet-gear').addEventListener('click', e => { const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; DB.pet.wear = DB.pet.wear === b.dataset.gear ? '' : b.dataset.gear; save(); renderPet(); SFX.ding(); });
+$('#pet-bye').addEventListener('click', releasePet);
 function feedPet() {
   const P_ = DB.pet; if (P_.dust < FEED || !PET_KINDS[P_.kind]) return;
   const before = petStage(P_.fed);
@@ -2247,7 +2310,8 @@ function quest(id, v = 1, how = 'add') {
   if (x.p >= x.n) {
     x.done = true; toast(`任務完成：${QBY[id].t(x.n)}　星塵 +10`); SFX.fan(); earn(10);
     if (D.tasks.every(y => y.done)) {
-      D.badges++; earn(30); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
+      D.badges++; earn(30);
+      const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(`解鎖寵物配件：${g.n}！到寵物頁給牠戴上`), 4200); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
       setTimeout(() => { toast(`今天的任務全部完成！徽章 +1${D.streak > 1 ? `，連續 ${D.streak} 天` : ''}`); confetti(60); SFX.milestone(2); }, 1500);
     }
   }
