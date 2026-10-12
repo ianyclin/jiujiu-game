@@ -113,8 +113,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .dock{padding-block:2px 12px}
 .answer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:82px;padding-block:8px 6px}
 .answer.pop{animation:pop .32s ease}
-.answer-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;max-width:420px;margin-inline:auto}
-.fire-big{height:clamp(46px,7.2vh,66px);padding:0 14px;border-radius:16px;border:0;background:linear-gradient(#ff9a4a,#d85a1a);color:#fff;font-weight:900;font-size:17px;box-shadow:0 5px 0 #7a2e08;display:flex;align-items:center;gap:6px;cursor:pointer;touch-action:manipulation;white-space:nowrap;animation:firepulse .6s ease-in-out infinite}
+/* 發射鈕浮在舞台右下角（鍵盤正上方），不佔版面，題目不會被擠偏 */
+.fire-big{position:absolute;right:0;bottom:10px;pointer-events:auto;height:clamp(46px,7.2vh,66px);padding:0 14px;border-radius:16px;border:0;background:linear-gradient(#ff9a4a,#d85a1a);color:#fff;font-weight:900;font-size:17px;box-shadow:0 5px 0 #7a2e08;display:flex;align-items:center;gap:6px;cursor:pointer;touch-action:manipulation;white-space:nowrap;animation:firepulse .6s ease-in-out infinite}
 .fire-big svg{width:26px;height:26px}
 .fire-big:active{transform:translateY(4px);box-shadow:0 1px 0 #7a2e08;animation:none}
 @keyframes firepulse{50%{transform:scale(1.07);box-shadow:0 5px 0 #7a2e08,0 0 20px rgba(255,154,74,.9)}}
@@ -353,12 +353,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     <div class="freeze" id="m-freeze" hidden><i></i></div>
     <div class="freeze gold" id="m-dbl" hidden><i></i></div>
     <div class="freeze inv" id="m-inv" hidden><i></i></div>
-    <div class="stage"><div class="banner" id="banner"></div></div>
+    <div class="stage">
+      <div class="banner" id="banner"></div>
+      <button class="fire-big" id="m-fire2" type="button" hidden aria-label="發射飛彈"></button>
+    </div>
     <div class="dock" id="m-dock">
-      <div class="answer-row">
-        <div class="answer" id="m-answer"></div>
-        <button class="fire-big" id="m-fire2" type="button" hidden aria-label="發射飛彈"></button>
-      </div>
+      <div class="answer" id="m-answer"></div>
       <div class="pad" id="m-pad"></div>
     </div>
   </section>
