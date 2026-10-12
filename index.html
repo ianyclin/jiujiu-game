@@ -40,7 +40,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .menu-in{margin-block:auto;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3.2vh,30px);padding-block:24px;width:100%}
 .brand{display:flex;align-items:center;gap:14px}
 .brand-mark{font-weight:900;font-size:clamp(68px,19vw,116px);line-height:.9;color:var(--sun);letter-spacing:-.05em;text-shadow:0 5px 0 #a87a00,0 14px 40px rgba(255,210,63,.35);transform:rotate(-5deg)}
-.brand-sub span{display:block;font-weight:900;font-size:clamp(32px,8.6vw,50px);line-height:1;letter-spacing:.04em}
+.brand-sub span{display:block;font-weight:900;font-size:clamp(32px,8.6vw,50px);line-height:1;letter-spacing:.04em;text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 18px rgba(8,17,31,.9)}
 .brand-sub small{display:block;color:var(--muted);font-size:14px;letter-spacing:.24em;margin-top:10px}
 .modes{display:grid;gap:12px;width:100%;max-width:470px}
 .mode{display:grid;grid-template-columns:62px 1fr;column-gap:14px;row-gap:3px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;transition:transform .08s,box-shadow .08s}
@@ -57,6 +57,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .m-t em{font-style:normal;font-family:var(--f-num);font-size:14px;color:var(--sun);font-weight:400;white-space:nowrap;text-align:right}
 .m-d{color:var(--muted);font-size:14px;line-height:1.45}
 .menu-foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:470px;width:100%}
+#s-menu .menu-foot{display:grid;grid-template-columns:repeat(3,1fr)}
+#s-menu .menu-foot .chip{justify-content:center;padding-inline:6px;font-size:14px;white-space:nowrap;min-height:44px}
+#s-menu .menu-foot .chip b{font-size:15px}
+#s-menu .menu-foot .chip{gap:5px}
 .chip{border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
 .chip b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:17px}
 .chip.tog::before{content:'';width:9px;height:9px;border-radius:50%;border:1.5px solid var(--muted)}
@@ -1076,13 +1080,15 @@ function drawWorld(gy, dt) {
     g.strokeStyle = lg; g.lineWidth = 2; g.beginPath(); g.moveTo(s.x, s.y); g.lineTo(s.x + 90, s.y - 36); g.stroke();
   }
   // 月亮
-  const mx = W * 0.82, my = Math.max(64, Math.min(120, gy * 0.13));
-  const mg = g.createRadialGradient(mx, my, 10, mx, my, 96);
-  mg.addColorStop(0, 'rgba(255,240,200,.32)'); mg.addColorStop(1, 'rgba(255,240,200,0)');
-  g.fillStyle = mg; g.beginPath(); g.arc(mx, my, 96, 0, 6.283); g.fill();
-  g.fillStyle = '#fff1cf'; g.beginPath(); g.arc(mx, my, 22, 0, 6.283); g.fill();
+  // 主選單時月亮縮小躲到右上角，不壓到「流星隊」標題；遊戲中維持原位
+  const menuMoon = mode === 'menu' || mode === 'pet' || mode === 'map';
+  const mx = menuMoon ? W - 46 : W * 0.82, my = menuMoon ? 46 : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
+  const mg = g.createRadialGradient(mx, my, 8, mx, my, mgr);
+  mg.addColorStop(0, 'rgba(255,240,200,.3)'); mg.addColorStop(1, 'rgba(255,240,200,0)');
+  g.fillStyle = mg; g.beginPath(); g.arc(mx, my, mgr, 0, 6.283); g.fill();
+  g.fillStyle = '#fff1cf'; g.beginPath(); g.arc(mx, my, mr, 0, 6.283); g.fill();
   g.fillStyle = 'rgba(205,180,150,.4)';
-  [[-7, -5, 5], [7, 4, 4], [-2, 10, 3]].forEach(([dx, dy, r]) => { g.beginPath(); g.arc(mx + dx, my + dy, r, 0, 6.283); g.fill(); });
+  const ms = mr / 22; [[-7, -5, 5], [7, 4, 4], [-2, 10, 3]].forEach(([dx, dy, r]) => { g.beginPath(); g.arc(mx + dx * ms, my + dy * ms, r * ms, 0, 6.283); g.fill(); });
   drawHill(hills[0], gy, '#173149');
   drawHill(hills[1], gy, '#0f2438');
   for (const b of town) {
