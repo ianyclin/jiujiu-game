@@ -812,7 +812,7 @@ const now = () => performance.now();
 const KEY = 'jiujiu-meteor-v1';
 const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
-  pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '' }, released: [] } });
+  pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [] } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -2176,8 +2176,10 @@ const GEAR = [
   { id: 'halo', at: 30, n: '彩虹光環', slot: 'head', ar: 2.415, place: (hx, hy, hr, top) => [hx, top - 8, hr * 1.9, 0] },
 ];
 const GEAR_BY = {}; GEAR.forEach(g => { GEAR_BY[g.id] = g; });
-const SLOTS = ['side', 'neck', 'head', 'face'];   // 畫的順序：旁邊、脖子、頭頂、臉（臉最上層）
-const SLOT_NAME = { head: '頭頂', face: '臉', neck: '脖子', side: '旁邊' };
+const SLOTS = ['side', 'neck', 'head', 'face'];   // 畫在寵物前面的順序：旁邊、脖子、頭頂、臉（臉最上層）
+const BACK_SLOTS = ['back'];   // 畫在寵物後面（翅膀、光環之類的華麗配件）
+const SLOT_NAME = { head: '頭頂', face: '臉', neck: '脖子', side: '旁邊', back: '背後' };
+// GEAR 項目可加 hidden: true：徽章沒到門檻前，清單上完全不出現（稀有的驚喜），到門檻時 toast 揭曉
 function gearSVG(id, hx, hy, hr, top) {
   const g = GEAR_BY[id]; if (!g) return '';
   if (top === undefined) top = hy - hr;
@@ -2187,7 +2189,8 @@ function gearSVG(id, hx, hy, hr, top) {
 // 戴的東西存成 { head, face, neck, side }；舊存檔是字串（單一配件），載入時轉過來
 function wearObj() {
   let W = DB.pet.wear;
-  if (!W || typeof W !== 'object') { const old = typeof W === 'string' ? W : ''; W = { head: '', face: '', neck: '', side: '' }; if (GEAR_BY[old]) W[GEAR_BY[old].slot] = old; DB.pet.wear = W; save(); }
+  if (!W || typeof W !== 'object') { const old = typeof W === 'string' ? W : ''; W = { head: '', face: '', neck: '', side: '', back: '' }; if (GEAR_BY[old]) W[GEAR_BY[old].slot] = old; DB.pet.wear = W; save(); }
+  if (W.back === undefined) W.back = '';
   return W;
 }
 const petStage = fed => { let st = 0; PET_STAGES.forEach((s, i) => { if (fed >= s.at) st = i; }); return st; };
@@ -2202,8 +2205,8 @@ const PET_HEAD = {
 };
 function petSVG(kind, st, wear = null) {   // wear：{ head, face, neck, side } 或 null（不戴）
   const [hx, hy, hr, top] = PET_HEAD[kind][st];
-  const gear = wear ? SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '';
-  return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/><image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gear}</svg>`;
+  const gear = wear ? SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '', back = wear ? BACK_SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '';
+  return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/>${back}<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gear}</svg>`;
 }
 function openPet() {
   show('pet'); renderPet();
@@ -2240,7 +2243,7 @@ function renderPet() {
 let byeArm = 0;
 function renderGear() {
   const B_ = DB.daily.badges, W = wearObj();
-  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴，每個位置各一樣）</div>' + GEAR.map(g => {
+  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴，每個位置各一樣）</div>' + GEAR.filter(g => !g.hidden || B_ >= g.at).map(g => {
     const ok = B_ >= g.at, on = W[g.slot] === g.id;
     return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><img src="assets/gear/${g.id}.png" alt="">${g.n}<small>${ok ? (on ? '戴著' : SLOT_NAME[g.slot]) : `徽章 ×${g.at}`}</small></button>`;
   }).join('');
@@ -2393,7 +2396,7 @@ function quest(id, v = 1, how = 'add') {
     x.done = true; toast(`任務完成：${QBY[id].t(x.n)}　星塵 +10`); SFX.fan(); earn(10);
     if (D.tasks.every(y => y.done)) {
       D.badges++; earn(30);
-      const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(`寵物可以戴${g.n}了！到寵物頁給牠戴上`), 4200); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
+      const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(g.hidden ? `神祕配件出現了：${g.n}！到寵物頁看看` : `寵物可以戴${g.n}了！到寵物頁給牠戴上`), 4200); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
       setTimeout(() => { toast(`今天的任務全部完成！徽章 +1${D.streak > 1 ? `，連續 ${D.streak} 天` : ''}`); confetti(60); SFX.milestone(2); }, 1500);
     }
   }
