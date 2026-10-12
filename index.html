@@ -88,8 +88,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .hearts{display:flex;gap:3px;flex-wrap:wrap}
 .fire{display:flex;gap:1px;align-items:center;min-height:44px;border:2px solid transparent;background:transparent;border-radius:12px;padding:4px 7px;cursor:pointer;touch-action:manipulation}
 .fire svg{width:24px;height:24px}
-.fire.ready{border-color:var(--ember);background:rgba(255,174,87,.18);animation:fireblink .55s ease-in-out infinite}
-@keyframes fireblink{50%{transform:scale(1.22);box-shadow:0 0 18px rgba(255,174,87,.85);background:rgba(255,174,87,.4)}}
+.fire.ready{border-color:var(--ember);background:rgba(255,174,87,.18)}
 .hearts svg{width:24px;height:24px}
 .score{text-align:center;font-family:var(--f-num);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
 .score small{display:block;font-family:var(--f-zh);font-size:12px;color:var(--muted);letter-spacing:.16em;margin-top:3px;font-weight:700}
@@ -114,6 +113,11 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .dock{padding-block:2px 12px}
 .answer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:82px;padding-block:8px 6px}
 .answer.pop{animation:pop .32s ease}
+.answer-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;max-width:420px;margin-inline:auto}
+.fire-big{height:clamp(46px,7.2vh,66px);padding:0 14px;border-radius:16px;border:0;background:linear-gradient(#ff9a4a,#d85a1a);color:#fff;font-weight:900;font-size:17px;box-shadow:0 5px 0 #7a2e08;display:flex;align-items:center;gap:6px;cursor:pointer;touch-action:manipulation;white-space:nowrap;animation:firepulse .6s ease-in-out infinite}
+.fire-big svg{width:26px;height:26px}
+.fire-big:active{transform:translateY(4px);box-shadow:0 1px 0 #7a2e08;animation:none}
+@keyframes firepulse{50%{transform:scale(1.07);box-shadow:0 5px 0 #7a2e08,0 0 20px rgba(255,154,74,.9)}}
 
 /* ---------- 幽靈競速 ---------- */
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-block:10px 4px}
@@ -351,7 +355,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     <div class="freeze inv" id="m-inv" hidden><i></i></div>
     <div class="stage"><div class="banner" id="banner"></div></div>
     <div class="dock" id="m-dock">
-      <div class="answer" id="m-answer"></div>
+      <div class="answer-row">
+        <div class="answer" id="m-answer"></div>
+        <button class="fire-big" id="m-fire2" type="button" hidden aria-label="發射飛彈"></button>
+      </div>
       <div class="pad" id="m-pad"></div>
     </div>
   </section>
@@ -570,7 +577,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。</li>
         <li>常見：+30 分、時間凍結、連擊 +5（倍率已滿就改 +50 分）、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b></li>
-        <li>追蹤飛彈最多存 3 枚（已滿改 +50 分）。魔王出現時，左上角的飛彈會<b>一閃一閃</b>，點它就發射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
+        <li>追蹤飛彈最多存 3 枚（已滿改 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
         <li>稀有：<b>超新星</b>清光全場、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已滿 3 顆或一擊即死時改 +100 分）</li>
       </ul>
       <h4>連擊</h4>
@@ -644,8 +651,10 @@ function weightOf(f) {
   if (f.op === '×' && (f.a === 1 || f.b === 1)) w *= 0.25;
   return w;
 }
-function pickFact(pool) {
-  pool = pool || ((DB.set.mix && Math.random() < 0.25) ? ADDSUB : MUL);
+const MUL2 = MUL.filter(f => f.a > 1 && f.b > 1);   // 不含 ×1 的 64 題
+// no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）。混入加減開著時每題 20% 抽加減
+function pickFact(pool, no1) {
+  pool = pool || ((DB.set.mix && Math.random() < 0.2) ? ADDSUB : (no1 ? MUL2 : MUL));
   let tot = 0;
   const ws = pool.map(f => { const w = recent.includes(f.k) ? 0 : weightOf(f); tot += w; return w; });
   let r = Math.random() * tot, pick = pool[0];
@@ -1014,7 +1023,7 @@ function spawnBoss() {
   const m = newMeteor(bossQ(), true);
   m.hp = m.hpMax = 5 + Math.floor(M.wave / 5);
   M.boss = m; M.list.push(m); hud();
-  if (M.missiles > 0) setTimeout(() => { if (M && M.boss) { ftxt(W * 0.3, GY * 0.14, '有飛彈！點左上角發射', '#ffae57', 24); SFX.ding(); } }, 900);
+  if (M.missiles > 0) setTimeout(() => { if (M && M.boss) { ftxt(W / 2, GY - 60, '有飛彈！按「發射」', '#ffae57', 26); SFX.ding(); } }, 900);
 }
 // 飛彈手動發射：點 HUD 的飛彈圖示或按空白鍵／Enter，一次一枚
 function launchMissile() {
@@ -1417,7 +1426,10 @@ function hud() {
   const f = $('#m-fire'); f.hidden = M.missiles <= 0;
   f.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>'.repeat(M.missiles);
   f.setAttribute('aria-label', `飛彈 ${M.missiles} 枚，點一下發射`);
-  f.classList.toggle('ready', !!M.boss && !M.boss.dead && M.missiles > 0);
+  const ready = !!M.boss && !M.boss.dead && M.missiles > 0;
+  f.classList.toggle('ready', ready);
+  const f2 = $('#m-fire2'); f2.hidden = !ready;   // 鍵盤上方的大發射鈕：魔王在場且有飛彈才出現
+  if (ready) f2.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffd23f"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#ffffff"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>發射 ×${M.missiles}`;
   $('#m-score').textContent = M.score;
   $('#m-wave').textContent = M.bossWave ? `第 ${M.wave} 波・魔王` : `第 ${M.wave} 波`;
   const c = $('#m-combo'), mult = 1 + Math.min(4, Math.floor(M.combo / 5));
@@ -1455,7 +1467,7 @@ function startGhost() {
   $('#g-q').innerHTML = ''; $('#g-hint').textContent = ''; $('#g-prog').textContent = '準備好了嗎？';
   countdown(() => { G.started = true; G.t0 = now(); nextGQ(); });
 }
-function nextGQ() { G.q = makeQ(pickFact(), true, true); G.buf = ''; G.rev = false; G.qt = now(); gRender(); }
+function nextGQ() { G.q = makeQ(pickFact(null, true), true, true); G.buf = ''; G.rev = false; G.qt = now(); gRender(); }
 function gRender() {
   $('#g-q').innerHTML = G.q ? qHTML(G.q, G.buf) : ''; $('#g-q').classList.toggle('seq', !!(G.q && G.q.seq));
   $('#g-hint').textContent = G.rev ? `答案是 ${G.q.ans}，照著打一次` : '';
@@ -1540,7 +1552,7 @@ function vPause(on) {
 }
 function newVQ(i) {
   const p = V.p[i];
-  if (i === 0) p.q = makeQ(pickFact(), false, true);
+  if (i === 0) p.q = makeQ(pickFact(null, true), false, true);
   else if (vHard) { const a = ri(11, 19), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   else { const a = ri(2, 9), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   p.buf = ''; p.rev = false; p.qt = now();
@@ -1588,7 +1600,6 @@ function endVersus(w) {
 
 /* ================= 哪個大／哪個小 ================= */
 let C = null;
-const MUL2 = MUL.filter(f => f.a > 1 && f.b > 1);
 const CMP_ICON = {
   big: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3l8 14H2z" fill="currentColor"/></svg>',
   small: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17 2 3h16z" fill="currentColor"/></svg>',
@@ -2040,6 +2051,8 @@ $$('[data-home]').forEach(b => b.addEventListener('click', home));
 $('#m-pause').addEventListener('click', () => pause(true));
 $('#m-fire').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
 $('#m-fire').addEventListener('click', e => { if (e.detail === 0) launchMissile(); });
+$('#m-fire2').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
+$('#m-fire2').addEventListener('click', e => { if (e.detail === 0) launchMissile(); });
 $('#p-resume').addEventListener('click', () => pause(false));
 $('#p-restart').addEventListener('click', startMeteor);
 $('#r-again').addEventListener('click', () => againFn && againFn());
