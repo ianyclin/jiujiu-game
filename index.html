@@ -84,7 +84,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
 /* ---------- 流星防衛戰 ---------- */
 .hud{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding-block:10px 0}
+.hud-l{display:flex;align-items:center;gap:6px;min-width:0}
 .hearts{display:flex;gap:3px;flex-wrap:wrap}
+.fire{display:flex;gap:1px;align-items:center;min-height:44px;border:2px solid transparent;background:transparent;border-radius:12px;padding:4px 7px;cursor:pointer;touch-action:manipulation}
+.fire svg{width:24px;height:24px}
+.fire.ready{border-color:var(--ember);background:rgba(255,174,87,.18);animation:fireblink .55s ease-in-out infinite}
+@keyframes fireblink{50%{transform:scale(1.22);box-shadow:0 0 18px rgba(255,174,87,.85);background:rgba(255,174,87,.4)}}
 .hearts svg{width:24px;height:24px}
 .score{text-align:center;font-family:var(--f-num);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
 .score small{display:block;font-family:var(--f-zh);font-size:12px;color:var(--muted);letter-spacing:.16em;margin-top:3px;font-weight:700}
@@ -331,7 +336,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
   <section class="screen" id="s-meteor" hidden>
     <div class="hud">
-      <div class="hearts" id="m-hearts" aria-label="生命"></div>
+      <div class="hud-l">
+        <div class="hearts" id="m-hearts" aria-label="生命"></div>
+        <button class="fire" id="m-fire" type="button" aria-label="發射飛彈" hidden></button>
+      </div>
       <div class="score"><span id="m-score">0</span><small id="m-wave">第 1 波</small></div>
       <div class="hud-r">
         <div class="combo" id="m-combo"></div>
@@ -553,7 +561,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。</li>
         <li>有時候流星上是一串數字「7、14、?、28」，那是 7 的乘法表，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
         <li>流星掉到小鎮會<b>扣一顆心</b>。一整波都沒失誤 +50 分。</li>
-        <li>每 5 波出現<b>錯題魔王</b>，專出你最常錯的題目，要連續答對 5 題以上才打得倒（波數越高血越多）。打倒 +200 分、<b>必掉寶箱</b>。</li>
+        <li>每 5 波出現<b>錯題魔王</b>，專出你最常錯的題目，要連續答對 5 題以上才打得倒（波數越高血越多）。魔王來的時候不會有小流星，專心打它就好。打倒 +200 分、<b>必掉寶箱</b>。</li>
         <li>魔王掉到小鎮會<b>扣 2 顆心</b>，一擊即死模式等於直接結束。</li>
         <li>補心只靠寶箱，心最多 3 顆。</li>
         <li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>
@@ -562,7 +570,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。</li>
         <li>常見：+30 分、時間凍結、連擊 +5（倍率已滿就改 +50 分）、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b></li>
-        <li>追蹤飛彈最多存 3 枚（已滿改 +50 分），魔王出現時會自動發射，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
+        <li>追蹤飛彈最多存 3 枚（已滿改 +50 分）。魔王出現時，左上角的飛彈會<b>一閃一閃</b>，點它就發射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
         <li>稀有：<b>超新星</b>清光全場、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已滿 3 顆或一擊即死時改 +100 分）</li>
       </ul>
       <h4>連擊</h4>
@@ -1005,11 +1013,12 @@ function bossQ() {
 function spawnBoss() {
   const m = newMeteor(bossQ(), true);
   m.hp = m.hpMax = 5 + Math.floor(M.wave / 5);
-  M.boss = m; M.list.push(m);
-  for (let i = 0; i < M.missiles; i++) setTimeout(launchMissile, 1100 + i * 450);
+  M.boss = m; M.list.push(m); hud();
+  if (M.missiles > 0) setTimeout(() => { if (M && M.boss) { ftxt(W * 0.3, GY * 0.14, '有飛彈！點左上角發射', '#ffae57', 24); SFX.ding(); } }, 900);
 }
+// 飛彈手動發射：點 HUD 的飛彈圖示或按空白鍵／Enter，一次一枚
 function launchMissile() {
-  if (!M || M.over || !M.boss || M.missiles <= 0) return;
+  if (!M || M.over || M.paused || !M.boss || M.boss.dead || M.missiles <= 0) return;
   M.missiles--; hud();
   const tp = tipPos();
   M.rockets.push({ x: tp.x, y: tp.y, a: tA, v: 260, t: 0 });
@@ -1068,9 +1077,9 @@ function updateMeteor(dt) {
   M.spawnT -= dt;
   const smalls = M.list.filter(m => !m.boss).length;
   if (!M.list.length && M.spawnT > 0.5 && M.bossDelay <= 0) M.spawnT = 0.5;
-  if (M.spawnT <= 0) {
-    if (smalls < (M.boss ? 2 : M.max)) M.list.push(newMeteor(makeQ(pickFact(), M.wave >= 2, M.wave >= 2), false));
-    M.spawnT = M.int * (M.boss ? 1.9 : 1) * rnd(0.8, 1.2);
+  if (M.spawnT <= 0 && !M.bossWave) {   // 魔王波只有魔王，不出小流星
+    if (smalls < M.max) M.list.push(newMeteor(makeQ(pickFact(), M.wave >= 2, M.wave >= 2), false));
+    M.spawnT = M.int * rnd(0.8, 1.2);
   }
   for (const m of M.list) {
     m.y += m.vy * dt * sm; m.x += m.vx * dt * sm; m.rot += m.vr * dt * sm;
@@ -1148,7 +1157,7 @@ function applyDrop(o) {
       break;
     case 'double': M.dbl = 10; $('#m-dbl').hidden = false; ftxt(x, y, '雙倍得分！', '#ffd23f', 32); break;
     case 'missile':
-      if (M.missiles < 3) { M.missiles++; ftxt(x, y, '追蹤飛彈 +1', '#ffae57', 30); if (M.boss) setTimeout(launchMissile, 600); }
+      if (M.missiles < 3) { M.missiles++; ftxt(x, y, '追蹤飛彈 +1', '#ffae57', 30); }
       else { M.score += 50; ftxt(x, y, '飛彈已滿 +50', '#ffd23f', 28); }
       break;
     case 'inv': case 'inv20': {
@@ -1404,8 +1413,11 @@ function hud() {
   if (!M) return;
   let h = '';
   for (let i = 0; i < Math.max(M.sudden ? 1 : 3, M.hearts); i++) h += `<svg viewBox="0 0 24 24" aria-hidden="true" fill="${i < M.hearts ? '#ff6161' : 'none'}" stroke="${i < M.hearts ? '#ff6161' : 'rgba(147,169,192,.5)'}" stroke-width="2">${HEART}</svg>`;
-  for (let i = 0; i < M.missiles; i++) h += `<svg viewBox="0 0 24 24" aria-hidden="true" style="margin-left:${i ? 0 : 6}px"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>`;
-  $('#m-hearts').innerHTML = h; $('#m-hearts').setAttribute('aria-label', `生命 ${M.hearts}，飛彈 ${M.missiles}`);
+  $('#m-hearts').innerHTML = h; $('#m-hearts').setAttribute('aria-label', `生命 ${M.hearts}`);
+  const f = $('#m-fire'); f.hidden = M.missiles <= 0;
+  f.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>'.repeat(M.missiles);
+  f.setAttribute('aria-label', `飛彈 ${M.missiles} 枚，點一下發射`);
+  f.classList.toggle('ready', !!M.boss && !M.boss.dead && M.missiles > 0);
   $('#m-score').textContent = M.score;
   $('#m-wave').textContent = M.bossWave ? `第 ${M.wave} 波・魔王` : `第 ${M.wave} 波`;
   const c = $('#m-combo'), mult = 1 + Math.min(4, Math.floor(M.combo / 5));
@@ -2006,6 +2018,7 @@ addEventListener('keydown', e => {
   if (/^[0-9]$/.test(e.key)) d = e.key;
   else if (e.key === 'Backspace') d = 'back';
   else if (e.key === 'Escape' && mode === 'meteor' && M) { pause(!M.paused); return; }
+  else if ((e.key === ' ' || e.key === 'Enter') && mode === 'meteor' && M) { launchMissile(); e.preventDefault(); return; }
   if (d === null) return;
   if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d);
   else if (mode === 'cmp' && /^[123]$/.test(d)) cmpChoose(+d - 1); else return;
@@ -2025,6 +2038,8 @@ $$('[data-set]').forEach(b => b.addEventListener('click', () => {
 }));
 $$('[data-home]').forEach(b => b.addEventListener('click', home));
 $('#m-pause').addEventListener('click', () => pause(true));
+$('#m-fire').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
+$('#m-fire').addEventListener('click', e => { if (e.detail === 0) launchMissile(); });
 $('#p-resume').addEventListener('click', () => pause(false));
 $('#p-restart').addEventListener('click', startMeteor);
 $('#r-again').addEventListener('click', () => againFn && againFn());
