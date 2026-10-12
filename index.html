@@ -190,24 +190,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 #c-timer{font-size:24px;transition:opacity .3s}
 #c-timer.off{opacity:.35}
 
-/* ---------- 乘法賓果 ---------- */
-.bg-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.8vh,18px);min-height:0;padding-block:4px 14px;width:100%}
-.bg-q{display:flex;flex-direction:column;align-items:center;gap:4px}
-.bg-q .aq{font-size:clamp(40px,11vw,64px)}
-.bg-q .aq span{color:var(--muted)}
-.bg-q.pop{animation:pop .32s ease}
-.bg-lines{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.12em}
-.bg-lines b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:17px}
-.bingo{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;width:100%;max-width:400px}
-.bcell{aspect-ratio:1;border-radius:14px;border:2px solid var(--line);background:var(--panel);box-shadow:0 4px 0 var(--keyEdge);font-family:var(--f-num);font-size:clamp(20px,5.6vw,30px);color:var(--paper);display:grid;place-items:center;cursor:pointer;padding:0;touch-action:manipulation;transition:transform .06s,box-shadow .06s,border-color .15s}
-.bcell:active{transform:translateY(3px);box-shadow:0 1px 0 var(--keyEdge)}
-.bcell.on{background:radial-gradient(circle at 45% 35%,#fff6c4,var(--sun) 58%,#d39f00);color:#3b2a00;border-color:transparent;box-shadow:0 4px 0 #a87a00;animation:pop .32s ease}
-.bcell.on.line{box-shadow:0 4px 0 #a87a00,0 0 0 3px var(--mint),0 0 16px rgba(95,242,208,.6)}
-.bcell.want{border-color:var(--mint);animation:wantb .9s ease-in-out infinite}
-@keyframes wantb{50%{box-shadow:0 4px 0 var(--keyEdge),0 0 0 5px rgba(95,242,208,.35)}}
-.bcell.bad{border-color:var(--coral);background:rgba(255,97,97,.14);color:#ffbcbc}
-#bg-timer{font-size:24px}
-
 /* ---------- 覆蓋層 ---------- */
 .overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(4,9,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .card{width:100%;max-width:400px;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--line);border-radius:26px;padding:22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:14px;text-align:center;max-height:100%;overflow-y:auto}
@@ -286,11 +268,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
           <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="34" width="12" height="24" rx="4" fill="#5ff2d0"/><rect x="26" y="18" width="12" height="40" rx="4" fill="#ffd23f"/><rect x="44" y="28" width="12" height="30" rx="4" fill="#ffae57"/><path d="m32 2 2.3 5 5.5.6-4.1 3.7 1.2 5.4L32 14l-4.9 2.7 1.2-5.4-4.1-3.7 5.5-.6z" fill="#ffd23f" stroke="#a87a00" stroke-width="1.5"/></svg>
           <span class="m-t">哪個大？哪個小？<em id="b-cmp"></em></span>
           <span class="m-d">三個算式，點出乘積最大（或最小）的那個。數字很接近，要算過才知道。</span>
-        </button>
-        <button class="mode" id="go-bingo" type="button">
-          <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#93a9c0" stroke-width="2"><rect x="6" y="6" width="14" height="14" rx="4"/><rect x="25" y="6" width="14" height="14" rx="4"/><rect x="44" y="6" width="14" height="14" rx="4"/><rect x="6" y="25" width="14" height="14" rx="4"/><rect x="44" y="25" width="14" height="14" rx="4"/><rect x="6" y="44" width="14" height="14" rx="4"/><rect x="25" y="44" width="14" height="14" rx="4"/><rect x="44" y="44" width="14" height="14" rx="4"/></g><rect x="25" y="25" width="14" height="14" rx="4" fill="#ffd23f"/><rect x="6" y="6" width="14" height="14" rx="4" fill="#ffd23f"/><rect x="44" y="44" width="14" height="14" rx="4" fill="#ffd23f"/><path d="M11 11 53 53" stroke="#5ff2d0" stroke-width="3" stroke-linecap="round"/></svg>
-          <span class="m-t">乘法賓果<em id="b-bingo"></em></span>
-          <span class="m-d">看算式，在 25 格裡找到答案。連成 3 條線就賓果！</span>
         </button>
       </nav>
       <div class="menu-foot">
@@ -412,19 +389,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </section>
 
-  <section class="screen" id="s-bingo" hidden>
-    <div class="topbar">
-      <button class="link-btn" type="button" data-home>‹ 主選單</button>
-      <div class="prog" id="bg-prog"></div>
-      <div class="timer" id="bg-timer"><span id="bg-time">0.0</span><small>秒</small></div>
-    </div>
-    <div class="bg-in">
-      <div class="bg-q" id="bg-card"><div class="aq" id="bg-q"></div><div class="hint" id="bg-hint"></div></div>
-      <div class="bingo" id="bg-grid"></div>
-      <div class="bg-lines" id="bg-lines"></div>
-    </div>
-  </section>
-
   <section class="screen" id="s-map" hidden>
     <div class="map-in">
       <div class="map-head">
@@ -536,12 +500,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯的題目以後會更常出現。</li>
         <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
       </ul>
-      <h4>乘法賓果</h4>
-      <ul class="rules">
-        <li>看上面的算式，在 25 格裡<b>點出答案</b>。中間那格是送的。</li>
-        <li>格子裡有很像的數字（54 和 56），要算清楚再點。點錯會亮出答案，找到它才繼續。</li>
-        <li>直的、橫的、斜的，5 格連成一條就是一條線。<b>連成 3 條線</b>就賓果，看誰最快！</li>
-      </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
   </div>
@@ -563,7 +521,7 @@ const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bingo: null }, set: { mix: false, sound: true, music: true, sudden: false } });
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null }, set: { mix: false, sound: true, music: true, sudden: false } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -1620,90 +1578,6 @@ function finishCmp() {
 $('#c-opts').addEventListener('pointerdown', e => { const b = e.target.closest('.cmp-opt'); if (!b) return; e.preventDefault(); cmpChoose(+b.dataset.i); });
 $('#c-opts').addEventListener('click', e => { const b = e.target.closest('.cmp-opt'); if (b && e.detail === 0) cmpChoose(+b.dataset.i); });
 
-/* ================= 乘法賓果 ================= */
-let B = null;
-const BY_PROD = {}; MUL2.forEach(f => (BY_PROD[f.ans] = BY_PROD[f.ans] || []).push(f));
-const PRODS = Object.keys(BY_PROD).map(Number);   // 2～9 相乘的 31 種乘積
-const LINES = [];   // 5 橫、5 直、2 斜
-for (let i = 0; i < 5; i++) { LINES.push([0, 1, 2, 3, 4].map(j => i * 5 + j)); LINES.push([0, 1, 2, 3, 4].map(j => j * 5 + i)); }
-LINES.push([0, 6, 12, 18, 24], [4, 8, 12, 16, 20]);
-const prodW = p => Math.max(...BY_PROD[p].map(weightOf));
-function wpick(arr, wf) {
-  let tot = 0; const ws = arr.map(x => { const w = wf(x); tot += w; return w; });
-  let r = Math.random() * tot;
-  for (let i = 0; i < arr.length; i++) { r -= ws[i]; if (r <= 0) return arr[i]; }
-  return arr[arr.length - 1];
-}
-const bCells = () => $$('#bg-grid .bcell');
-function startBingo() {
-  show('bingo');
-  // 31 種乘積挑 24 個鋪格子，錯題的乘積優先；中央免費格
-  const pool = PRODS.slice(), cells = [];
-  while (cells.length < 24) { const p = wpick(pool, prodW); pool.splice(pool.indexOf(p), 1); cells.push(p); }
-  for (let i = cells.length - 1; i > 0; i--) { const j = ri(0, i); [cells[i], cells[j]] = [cells[j], cells[i]]; }
-  cells.splice(12, 0, 0);
-  B = { cells, on: cells.map((p, i) => i === 12), lines: [], goal: 3, q: null, i: 0, ok: 0, wrongs: [], lock: 0, rev: false, t0: 0, end: 0, qt: 0, done: false, lastP: 0 };
-  $('#bg-grid').innerHTML = cells.map((p, i) => i === 12 ? '<button type="button" class="bcell on" aria-label="免費格" disabled>★</button>' : `<button type="button" class="bcell" data-i="${i}">${p}</button>`).join('');
-  $('#bg-q').innerHTML = ''; $('#bg-hint').textContent = ''; $('#bg-time').textContent = '0.0'; $('#bg-prog').textContent = '準備好了嗎？';
-  bgLines();
-  countdown(() => { if (B) { B.t0 = now(); nextBQ(); } });
-}
-function bgLines() { $('#bg-lines').innerHTML = `連線 <b>${B.lines.length}</b> / ${B.goal}`; }
-function updateBingo() { if (B && B.t0) $('#bg-time').textContent = (((B.end || now()) - B.t0) / 1000).toFixed(1); }
-function nextBQ() {
-  let open = B.cells.filter((p, i) => p && !B.on[i] && p !== B.lastP);
-  if (!open.length) open = B.cells.filter((p, i) => p && !B.on[i]);
-  const p = wpick(open, prodW), f = wpick(BY_PROD[p], weightOf);
-  B.q = { f, k: f.k, ans: p, text: `${f.a} × ${f.b}` }; B.lastP = p; B.rev = false; B.qt = now(); B.i++;
-  $('#bg-q').innerHTML = `${f.a} <span>×</span> ${f.b}`;
-  $('#bg-hint').textContent = '';
-  $('#bg-prog').textContent = `第 ${B.i} 題`;
-  const c = $('#bg-card'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
-}
-function bingoTap(i) {
-  if (!B || B.done || !B.q || now() < B.lock) return;
-  const p = B.cells[i], els = bCells(), el = els[i];
-  if (!p || B.on[i]) return;
-  if (p === B.q.ans) {
-    if (!B.rev) { B.ok++; record(B.q.k, true, now() - B.qt); SFX.zap(B.ok); } else SFX.ding();
-    B.on[i] = true; el.className = 'bcell on';
-    const r = el.getBoundingClientRect();
-    spark(r.left + r.width / 2, r.top + r.height / 2, 16, ['#ffd23f', '#ffffff'], 180, 3, 0.6, 80);
-    const got = LINES.map((L, li) => li).filter(li => !B.lines.includes(li) && LINES[li].every(c => B.on[c]));
-    if (got.length) {
-      got.forEach(li => { B.lines.push(li); LINES[li].forEach((c, j) => { els[c].classList.add('line'); setTimeout(() => { const rr = els[c].getBoundingClientRect(); spark(rr.left + rr.width / 2, rr.top + rr.height / 2, 14, ['#5ff2d0', '#ffffff'], 200, 3, 0.7, 60); }, j * 70); }); });
-      SFX.power(); flashA = 0.18; bgLines();
-      $('#bg-hint').textContent = '';
-    }
-    if (B.lines.length >= B.goal) { B.end = now(); updateBingo(); return finishBingo(); }
-    nextBQ(); return;
-  }
-  if (!B.rev) { B.rev = true; record(B.q.k, false, 0); B.wrongs.push(B.q); }
-  B.lock = now() + 600; SFX.wrong();
-  el.classList.add('bad'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
-  setTimeout(() => el.classList.remove('bad'), 600);
-  els[B.cells.indexOf(B.q.ans)].classList.add('want');
-  $('#bg-hint').textContent = `${B.q.text} = ${B.q.ans}，找到它`;
-}
-function finishBingo() {
-  B.done = true; musTrack('menu');
-  const total = B.end - B.t0, prev = DB.best.bingo, better = prev === null || total < prev, acc = B.ok / B.i;
-  if (better) { DB.best.bingo = total; save(); }
-  const sec = ms => (ms / 1000).toFixed(1) + ' 秒';
-  const note = prev === null ? '第一次賓果！這個時間就是你的紀錄' : better ? `新紀錄！比上次快 ${sec(prev - total)}` : total - prev < 100 ? '跟紀錄一樣快' : `差紀錄 ${sec(total - prev)}，再一次！`;
-  $('#bg-prog').textContent = '賓果！'; $('#bg-q').innerHTML = '賓果！';
-  setTimeout(() => {
-    if (mode !== 'bingo') return;
-    result({
-      title: '賓果！', big: (total / 1000).toFixed(1), label: '秒・連成 3 條線', note,
-      stars: starsFor(acc, B.i), rows: [['答對率', pct(acc)], ['題數', String(B.i)], ['最佳', sec(DB.best.bingo)]],
-      wrongs: B.wrongs, again: startBingo, celebrate: better
-    });
-  }, 900);
-}
-$('#bg-grid').addEventListener('pointerdown', e => { const b = e.target.closest('.bcell[data-i]'); if (!b) return; e.preventDefault(); bingoTap(+b.dataset.i); });
-$('#bg-grid').addEventListener('click', e => { const b = e.target.closest('.bcell[data-i]'); if (b && e.detail === 0) bingoTap(+b.dataset.i); });
-
 /* ================= 星圖 ================= */
 let resetArm = 0;
 function openMap() {
@@ -1832,7 +1706,6 @@ function show(name) {
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
-  if (name !== 'bingo') B = null;
   musTrack(name === 'menu' || name === 'map' ? 'menu' : 'game', name === 'ghost' ? 1.08 : 1);
   musDuck(false);
   measure();
@@ -1841,7 +1714,6 @@ function refreshMenu() {
   $('#b-meteor').textContent = [DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '', DB.best.sudden ? `即死 ${DB.best.sudden} 分` : ''].filter(Boolean).join('・');
   $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? `最佳 ${(DB.best.ghost[19] / 1000).toFixed(1)} 秒` : '';
   $('#b-cmp').textContent = DB.best.cmpT !== null ? `全對最快 ${(DB.best.cmpT / 1000).toFixed(1)} 秒` : '';
-  $('#b-bingo').textContent = DB.best.bingo !== null ? `最快 ${(DB.best.bingo / 1000).toFixed(1)} 秒` : '';
   $('#b-stars').textContent = `${starCount()}/81`;
   $('#b-wrong').textContent = wrongList().length;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
@@ -1883,7 +1755,6 @@ $('#go-meteor').addEventListener('click', pickMode);
 $('#go-ghost').addEventListener('click', startGhost);
 $('#go-versus').addEventListener('click', openVersus);
 $('#go-cmp').addEventListener('click', startCmp);
-$('#go-bingo').addEventListener('click', startBingo);
 $('#go-map').addEventListener('click', openMap);
 $$('[data-set]').forEach(b => b.addEventListener('click', () => {
   const k = b.dataset.set; DB.set[k] = !DB.set[k]; save(); refreshMenu();
@@ -1921,7 +1792,6 @@ function frame(t) {
   if (mode === 'meteor' && M) { if (!M.paused && !M.over) updateMeteor(dt); drawMeteorScene(frozen ? 0 : dt); }
   if (mode === 'ghost') updateGhost();
   if (mode === 'cmp') updateCmp();
-  if (mode === 'bingo') updateBingo();
   if (!frozen) stepP(dt);
   drawP();
   g.restore();
