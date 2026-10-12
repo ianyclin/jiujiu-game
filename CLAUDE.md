@@ -28,12 +28,12 @@
 1. `<style>`：`:root` tokens（夜空單一主題，刻意不做亮色）、各畫面 CSS。
 2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-map` 七個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理）、遊戲說明。
 3. JS（IIFE）：
-   - **存檔** `DB = { facts, best, set }`，`save()`。
+   - **存檔** `DB = { facts, best, set, daily }`，`save()`。
    - **題庫與錯題加權** `MUL`（81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 20% 抽加減。`MUL2` 是不含 ×1 的 64 題；`pickFact(pool, no1)` 的 `no1` 讓幽靈競速、拔河小隊長不出 ×1（流星防衛戰留著當緩衝，權重 0.25）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
    - **音效** `SFX.*`、**音樂** `TR` 三首曲子（menu / game / boss）由 `musTick()` 排程。
    - **畫布**：背景（星空、月亮、遠山、小鎮）、粒子系統 `P`（`k` 0 火花、1 碎片、2 擴散環、3 浮動文字）。
    - **流星防衛戰** `M` 狀態；`newMeteor / updateMeteor / impact / hit / miss / destroy / killBoss`；寶箱 `DROPS / rollDrop / applyDrop`；追蹤飛彈 `launchMissile / updateRockets`。
-   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**炸彈拆除** `BM`（`bombBoard()` 鋪 12 格、`bombTap()` 作答、`explode()` / `defused()`）、**星圖**、**錯題本**、**連擊里程碑**。
+   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**炸彈拆除** `BM`（`bombBoard()` 鋪 12 格、`bombTap()` 作答、`explode()` / `defused()`）、**每日任務**（`QUESTS` 池、`ensureDaily()` 換日、`quest(id, v, how)` 推進、`toast()`）、**星圖**、**錯題本**、**連擊里程碑**。
    - 共用：`result()` 結果卡、`countdown()`、`show(name)` 切畫面、`makePad()` 數字鍵盤。
    - 主迴圈 `frame()`。
 
@@ -54,6 +54,11 @@
 - 連擊護盾（`M.shield`，最多 1 個，已有改 +50）：`miss()` 或 `impact()` 時 `shieldSave()` 擋一次，連擊不歸零（心照扣、完美一波照失）。有護盾時 HUD 連擊字樣加 `.shield`：半透明發亮的氣泡加流光。心旁邊**不**放盾牌圖示，免得誤會成擋心；盾牌圖示 `#m-hshield` 只在無敵期間出現（心同時發光）。
 - 追蹤飛彈最多存 3 枚，**手動發射**，一按一枚：魔王在場且有飛彈時，舞台右下角（鍵盤正上方）浮現閃爍的大「發射」鈕 `#m-fire2`（絕對定位，不擠到題目）（空白鍵／Enter 也可）；HUD 的 `#m-fire` 只顯示庫存。每枚扣 1 血，最後 1 血打不掉。魔王出現 0.9 秒後有「有飛彈！按「發射」」提示。
 - 連擊 10 / 30 / 50 / 100 有里程碑動畫，越大越誇張。
+
+### 每日任務
+- 每天 3 個，從 `QUESTS` 抽、同家族（`fam`）不重複，存 `DB.daily = { date, tasks:[{id,n,p,done}], badges, streak, lastDone, starBase }`。換日由 `ensureDaily()` 在主選單與每次 `quest()` 時檢查。
+- 推進點：答對（所有模式）、連擊 max、波數 max、魔王、寶箱、幽靈跑完／追過、哪個大玩完／全對、拆彈顆數／全拆、拔河一局、新星星（`starCount() - starBase`）。
+- 單項完成：toast + `SFX.fan`；三項全完成：徽章 +1、連續天數（昨天也完成才累計）、彩帶。沒有懲罰、沒有過期提醒。
 
 ### 幽靈競速
 - 20 題計時，跟上次最佳成績（逐題時間陣列）賽跑；第一次對手是每題 3.6 秒的新手幽靈。不出 ×1。
