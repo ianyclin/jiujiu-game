@@ -26,14 +26,14 @@
 ## 架構（index.html 內的區塊順序）
 
 1. `<style>`：`:root` tokens（夜空單一主題，刻意不做亮色）、各畫面 CSS。
-2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-map` 六個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、遊戲說明。
+2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bingo`、`#s-map` 七個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、遊戲說明。
 3. JS（IIFE）：
    - **存檔** `DB = { facts, best, set }`，`save()`。
    - **題庫與錯題加權** `MUL`（81 題）、`ADDSUB`（十以內加減）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
    - **音效** `SFX.*`、**音樂** `TR` 三首曲子（menu / game / boss）由 `musTick()` 排程。
    - **畫布**：背景（星空、月亮、遠山、小鎮）、粒子系統 `P`（`k` 0 火花、1 碎片、2 擴散環、3 浮動文字）。
    - **流星防衛戰** `M` 狀態；`newMeteor / updateMeteor / impact / hit / miss / destroy / killBoss`；寶箱 `DROPS / rollDrop / applyDrop`；追蹤飛彈 `launchMissile / updateRockets`。
-   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**星圖**、**錯題本**、**連擊里程碑**。
+   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**乘法賓果** `B`（`BY_PROD` 乘積→題目、`LINES` 12 條線、`bingoTap()` 作答）、**星圖**、**錯題本**、**連擊里程碑**。
    - 共用：`result()` 結果卡、`countdown()`、`show(name)` 切畫面、`makePad()` 數字鍵盤。
    - 主迴圈 `frame()`。
 
@@ -63,9 +63,15 @@
 - 答錯：亮出三個乘積，正確那顆發亮，點它才繼續，本題算錯。「正確那題」和「點錯那題」都 `record(false)`、都進結果卡；第三題不記。
 - 紀錄是「10 題全對的最短總時間」，存 `DB.best.cmpT`（毫秒，`null` 表示還沒有）。畫面右上有小計時，答錯後變暗表示這局不算；破紀錄才慶祝。
 
+### 乘法賓果
+- 5×5 格子鋪 24 個乘積（2～9 相乘共 31 種，依 `weightOf` 挑錯題的乘積優先）加中央免費格。乘積在板上不重複。
+- 每題從「還沒亮的格子」挑一個乘積（錯題優先、不連續同一個），再從該乘積的題目中加權挑一題，顯示算式，孩子點格子。
+- 點對：格子亮成星星、`record(ok, ms)`。點錯：鎖 0.6 秒、亮出答案格、提示「7 × 8 = 56，找到它」，找到才下一題；`record(false)`。
+- 橫、直、斜 5 格全亮算一條線，**3 條線**結束。紀錄是最快時間，存 `DB.best.bingo`（毫秒／`null`）。答錯本身已經花時間，所以不另設「全對才算」。
+
 ## 開發慣例
 
-- 改規則時，同一次 commit 要更新 `#o-help` 的遊戲說明。
+- 改規則時，同一次 commit 要更新 `#o-help` 的遊戲說明。遊戲說明要 **ELI5**：小三自己看得懂，一句一件事，不講系統內部（星圖怎麼算、權重之類）。
 - 存檔格式變動要向下相容：在載入時用 `Object.assign(fresh(), …)` 補欄位；若結構不相容才升 key 版本。
 - 新模式請沿用 `show('name')` + `#s-name` 的畫面慣例，打答案的模式作答用 `makePad()`（選擇題模式如「哪個大」可用大按鈕），紀錄一律用 `record()`，不要另開一套錯題系統。
 - 任何視覺效果都要尊重 `prefers-reduced-motion`（`RM` 旗標）。
