@@ -187,6 +187,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 @keyframes want{50%{box-shadow:0 6px 0 var(--keyEdge),0 0 0 6px rgba(95,242,208,.35)}}
 .cmp-opt.pop{animation:pop .32s ease}
 .cmp-streak{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.1em;min-height:1.2em}
+#c-timer{font-size:24px;transition:opacity .3s}
+#c-timer.off{opacity:.35}
 
 /* ---------- 覆蓋層 ---------- */
 .overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(4,9,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
@@ -377,7 +379,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     <div class="topbar">
       <button class="link-btn" type="button" data-home>‹ 主選單</button>
       <div class="prog" id="c-prog"></div>
-      <div class="timer"><span id="c-ok">0</span><small>答對</small></div>
+      <div class="timer" id="c-timer"><span id="c-time">0.0</span><small>秒</small></div>
     </div>
     <div class="cmp-in">
       <div class="cmp-ask" id="c-ask"></div>
@@ -495,7 +497,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>一次出三個算式，看題目問的是<b>最大</b>還是<b>最小</b>，點出那一個。三個乘積都很接近，要算過才分得出來。</li>
         <li>連續答對 3 題後，三個乘積會更接近。答錯會亮出三個答案，<b>點正確的那個</b>才能繼續。</li>
-        <li>一局 10 題，不計時。答錯時「正確的」和「你點的」兩題都會記進錯題本。</li>
+        <li>一局 10 題。<b>10 題全對</b>的最短時間會記成紀錄，答錯一題這局就不算時間，所以先求對再求快。答錯時「正確的」和「你點的」兩題都會記進錯題本。</li>
       </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
@@ -518,7 +520,7 @@ const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmp: 0 }, set: { mix: false, sound: true, music: true, sudden: false } });
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null }, set: { mix: false, sound: true, music: true, sudden: false } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -1474,10 +1476,15 @@ const CMP_ICON = {
 };
 function startCmp() {
   show('cmp');
-  C = { i: 0, n: 10, ok: 0, streak: 0, fast: 0, wrongs: [], q: null, lock: true, done: false };
+  C = { i: 0, n: 10, ok: 0, streak: 0, wrongs: [], q: null, lock: true, done: false, t0: 0, end: 0 };
   $('#c-ask').innerHTML = ''; $('#c-ask').className = 'cmp-ask'; $('#c-opts').innerHTML = ''; $('#c-hint').textContent = ''; $('#c-streak').textContent = '';
-  $('#c-ok').textContent = '0'; $('#c-prog').textContent = '準備好了嗎？';
-  countdown(() => { if (C) nextCmp(); });
+  $('#c-time').textContent = '0.0'; $('#c-timer').classList.remove('off'); $('#c-prog').textContent = '準備好了嗎？';
+  countdown(() => { if (C) { C.t0 = now(); nextCmp(); } });
+}
+// 計時只拿來「跟自己比」：10 題全對的最短時間才算紀錄，答錯後計時變暗表示這局不算
+function updateCmp() {
+  if (!C || !C.t0) return;
+  $('#c-time').textContent = (((C.end || now()) - C.t0) / 1000).toFixed(1);
 }
 // 目標題走錯題加權；另外兩題從「乘積落在目標 ±w 內」抽，三個乘積互不相同、最大最小差 ≤ w。
 // 連對 3 題以上 w 縮到 12；候選不夠就放寬。與目標共用因數的題目權重降低，免得只比因數不算乘積。
@@ -1513,7 +1520,7 @@ function nextCmp() {
   $('#c-opts').innerHTML = q.opts.map((f, i) => `<button type="button" class="cmp-opt" data-i="${i}" aria-label="${f.a} 乘 ${f.b}"><span>${f.a} × ${f.b}</span><span class="eq">= ${f.ans}</span></button>`).join('');
   $('#c-hint').textContent = '';
   $('#c-streak').textContent = C.streak >= 3 ? `連對 ${C.streak} 題，數字更接近了` : '';
-  $('#c-prog').textContent = `第 ${C.i + 1} / ${C.n} 題`;
+  $('#c-prog').textContent = `第 ${C.i + 1} / ${C.n} 題・答對 ${C.ok}`;
 }
 function cmpChoose(i) {
   if (!C || C.done || C.lock || !C.q) return;
@@ -1524,8 +1531,7 @@ function cmpChoose(i) {
     el.classList.remove('want', 'bad'); el.classList.add('ok', 'pop');
     if (!q.rev) {
       const ms = now() - q.t0;
-      C.ok++; C.streak++; $('#c-ok').textContent = C.ok;
-      if (!C.fast || ms < C.fast) C.fast = ms;
+      C.ok++; C.streak++;
       q.opts.forEach(o => record(o.k, true, ms / 3));
       SFX.zap(C.streak);
       const r = el.getBoundingClientRect();
@@ -1533,11 +1539,12 @@ function cmpChoose(i) {
     } else SFX.ding();
     $('#c-hint').textContent = '';
     C.i++; C.lock = true;
+    if (C.i >= C.n) { C.end = now(); updateCmp(); }
     setTimeout(() => { if (C && !C.done) nextCmp(); }, q.rev ? 450 : 800);
     return;
   }
   if (!q.rev) {
-    q.rev = true; C.streak = 0;
+    q.rev = true; C.streak = 0; $('#c-timer').classList.add('off');
     record(q.ans.k, false, 0); record(f.k, false, 0);
     C.wrongs.push({ f: q.ans, k: q.ans.k }, { f, k: f.k });
     els[q.opts.indexOf(q.ans)].classList.add('want');
@@ -1548,16 +1555,23 @@ function cmpChoose(i) {
 }
 function finishCmp() {
   C.done = true; musTrack('menu');
-  const ok = C.ok, n = C.n, prev = DB.best.cmp || 0, better = ok > prev, acc = ok / n;
-  if (better) { DB.best.cmp = ok; save(); }
-  const note = ok === n ? '10 題全對！直覺超準' : better ? `新紀錄！答對 ${ok} 題` : ok >= 8 ? '差一點就全對了，再來一次！' : '答錯的題目之後會比較常出現，多練幾次就會了';
+  const ok = C.ok, n = C.n, acc = ok / n, perfect = ok === n, total = C.end - C.t0, prev = DB.best.cmpT;
+  const better = perfect && (prev === null || total < prev);
+  if (better) { DB.best.cmpT = total; save(); }
+  const sec = ms => (ms / 1000).toFixed(1) + ' 秒';
+  let note;
+  if (!perfect) note = ok >= 8 ? '差一點就全對了！10 題全對才會算時間紀錄' : '答錯的題目之後會比較常出現，多練幾次就會了';
+  else if (prev === null) note = '10 題全對！這個時間就是你的第一個紀錄';
+  else if (better) note = `新紀錄！比上次快 ${sec(prev - total)}`;
+  else note = total - prev < 100 ? '全對！跟紀錄一樣快' : `全對！差紀錄 ${sec(total - prev)}，再一次！`;
   $('#c-prog').textContent = '結束！';
   setTimeout(() => {
     if (mode !== 'cmp') return;
     result({
-      title: ok === n ? '眼光真準！' : ok >= 7 ? '很有感覺！' : '再練一下', big: String(ok), label: `答對 / ${n} 題`, note,
-      stars: starsFor(acc, n), rows: [['答對率', pct(acc)], ['最快一題', C.fast ? (C.fast / 1000).toFixed(1) + ' 秒' : '—'], ['最佳', `${DB.best.cmp}/${n}`]],
-      wrongs: C.wrongs, again: startCmp, celebrate: ok === n || better
+      title: perfect ? '眼光真準！' : ok >= 7 ? '很有感覺！' : '再練一下',
+      big: perfect ? (total / 1000).toFixed(1) : String(ok), label: perfect ? '秒・10 題全對' : `答對 / ${n} 題`, note,
+      stars: starsFor(acc, n), rows: [['答對率', pct(acc)], ['總時間', sec(total)], ['全對最快', DB.best.cmpT === null ? '—' : sec(DB.best.cmpT)]],
+      wrongs: C.wrongs, again: startCmp, celebrate: better
     });
   }, 500);
 }
@@ -1699,7 +1713,7 @@ function show(name) {
 function refreshMenu() {
   $('#b-meteor').textContent = [DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '', DB.best.sudden ? `即死 ${DB.best.sudden} 分` : ''].filter(Boolean).join('・');
   $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? `最佳 ${(DB.best.ghost[19] / 1000).toFixed(1)} 秒` : '';
-  $('#b-cmp').textContent = DB.best.cmp ? `最佳 ${DB.best.cmp}/10` : '';
+  $('#b-cmp').textContent = DB.best.cmpT !== null ? `全對最快 ${(DB.best.cmpT / 1000).toFixed(1)} 秒` : '';
   $('#b-stars').textContent = `${starCount()}/81`;
   $('#b-wrong').textContent = wrongList().length;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
@@ -1777,6 +1791,7 @@ function frame(t) {
   const frozen = mode === 'meteor' && M && M.paused;
   if (mode === 'meteor' && M) { if (!M.paused && !M.over) updateMeteor(dt); drawMeteorScene(frozen ? 0 : dt); }
   if (mode === 'ghost') updateGhost();
+  if (mode === 'cmp') updateCmp();
   if (!frozen) stepP(dt);
   drawP();
   g.restore();
