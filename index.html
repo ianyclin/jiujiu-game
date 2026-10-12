@@ -169,6 +169,25 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .info b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:18px}
 .danger{border:1px solid rgba(255,97,97,.4);background:transparent;color:#ff9a9a;border-radius:12px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:14px}
 
+/* ---------- 哪個大／哪個小 ---------- */
+.cmp-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,2.6vh,24px);min-height:0;padding-block:8px 16px;width:100%}
+.cmp-ask{font-weight:900;font-size:clamp(30px,8vw,46px);line-height:1;display:flex;align-items:center;gap:10px;min-height:1.2em}
+.cmp-ask.big{color:var(--sun);text-shadow:0 4px 0 #a87a00}
+.cmp-ask.small{color:var(--ice);text-shadow:0 4px 0 #2a5a7a}
+.cmp-ask svg{width:.85em;height:.85em}
+.cmp-opts{display:grid;gap:12px;width:100%;max-width:420px}
+.cmp-opt{display:flex;align-items:center;justify-content:center;gap:.4em;padding:0 18px;height:clamp(62px,11vh,92px);border:2px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;font-family:var(--f-num);font-size:clamp(30px,8vw,44px);color:var(--paper);touch-action:manipulation;transition:transform .08s,box-shadow .08s,border-color .15s,background .15s}
+.cmp-opt:active{transform:translateY(4px);box-shadow:0 2px 0 var(--keyEdge)}
+.cmp-opt .eq{color:var(--muted);font-size:.72em;min-width:2.6em;text-align:left;opacity:0;transition:opacity .2s}
+.cmp-opt.show .eq{opacity:1}
+.cmp-opt.ok{border-color:var(--mint);background:rgba(95,242,208,.14);color:var(--mint)}
+.cmp-opt.ok .eq{color:var(--mint)}
+.cmp-opt.bad{border-color:var(--coral);background:rgba(255,97,97,.14);color:#ffbcbc}
+.cmp-opt.want{border-color:var(--mint);animation:want .9s ease-in-out infinite}
+@keyframes want{50%{box-shadow:0 6px 0 var(--keyEdge),0 0 0 6px rgba(95,242,208,.35)}}
+.cmp-opt.pop{animation:pop .32s ease}
+.cmp-streak{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.1em;min-height:1.2em}
+
 /* ---------- 覆蓋層 ---------- */
 .overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(4,9,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .card{width:100%;max-width:400px;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--line);border-radius:26px;padding:22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:14px;text-align:center;max-height:100%;overflow-y:auto}
@@ -242,6 +261,11 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
           <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 32h48" stroke="#d1a86e" stroke-width="6" stroke-linecap="round"/><circle cx="8" cy="32" r="7" fill="#5ff2d0"/><circle cx="56" cy="32" r="7" fill="#ffae57"/><path d="m32 22 3 6.5 7 .8-5.2 4.8 1.5 7-6.3-3.6-6.3 3.6 1.5-7-5.2-4.8 7-.8z" fill="#ffd23f"/></svg>
           <span class="m-t">雙人拔河</span>
           <span class="m-d">平板放中間，面對面搶答，跟爸爸媽媽一決勝負。</span>
+        </button>
+        <button class="mode" id="go-cmp" type="button">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="34" width="12" height="24" rx="4" fill="#5ff2d0"/><rect x="26" y="18" width="12" height="40" rx="4" fill="#ffd23f"/><rect x="44" y="28" width="12" height="30" rx="4" fill="#ffae57"/><path d="m32 2 2.3 5 5.5.6-4.1 3.7 1.2 5.4L32 14l-4.9 2.7 1.2-5.4-4.1-3.7 5.5-.6z" fill="#ffd23f" stroke="#a87a00" stroke-width="1.5"/></svg>
+          <span class="m-t">哪個大？哪個小？<em id="b-cmp"></em></span>
+          <span class="m-d">三個算式，點出乘積最大（或最小）的那個。數字很接近，要算過才知道。</span>
         </button>
       </nav>
       <div class="menu-foot">
@@ -349,6 +373,20 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
+  <section class="screen" id="s-cmp" hidden>
+    <div class="topbar">
+      <button class="link-btn" type="button" data-home>‹ 主選單</button>
+      <div class="prog" id="c-prog"></div>
+      <div class="timer"><span id="c-ok">0</span><small>答對</small></div>
+    </div>
+    <div class="cmp-in">
+      <div class="cmp-ask" id="c-ask"></div>
+      <div class="cmp-opts" id="c-opts"></div>
+      <div class="hint" id="c-hint"></div>
+      <div class="cmp-streak" id="c-streak"></div>
+    </div>
+  </section>
+
   <section class="screen" id="s-map" hidden>
     <div class="map-in">
       <div class="map-head">
@@ -453,6 +491,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>平板放中間，面對面搶答。答對把星星拉過來一格，先拉到底的贏；答錯停 1 秒。</li>
         <li>下方「小隊長」的作答會記進星圖和錯題本。</li>
       </ul>
+      <h4>哪個大？哪個小？</h4>
+      <ul class="rules">
+        <li>一次出三個算式，看題目問的是<b>最大</b>還是<b>最小</b>，點出那一個。三個乘積都很接近，要算過才分得出來。</li>
+        <li>連續答對 3 題後，三個乘積會更接近。答錯會亮出三個答案，<b>點正確的那個</b>才能繼續。</li>
+        <li>一局 10 題，不計時。答錯時「正確的」和「你點的」兩題都會記進錯題本。</li>
+      </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
   </div>
@@ -474,7 +518,7 @@ const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null }, set: { mix: false, sound: true, music: true, sudden: false } });
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmp: 0 }, set: { mix: false, sound: true, music: true, sudden: false } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -1421,6 +1465,105 @@ function endVersus(w) {
   spark(x, y, 80, ['#ffd23f', '#5ff2d0', '#ffae57', '#ffffff'], 420, 4.5, 1.3, 160);
 }
 
+/* ================= 哪個大／哪個小 ================= */
+let C = null;
+const MUL2 = MUL.filter(f => f.a > 1 && f.b > 1);
+const CMP_ICON = {
+  big: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3l8 14H2z" fill="currentColor"/></svg>',
+  small: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17 2 3h16z" fill="currentColor"/></svg>',
+};
+function startCmp() {
+  show('cmp');
+  C = { i: 0, n: 10, ok: 0, streak: 0, fast: 0, wrongs: [], q: null, lock: true, done: false };
+  $('#c-ask').innerHTML = ''; $('#c-ask').className = 'cmp-ask'; $('#c-opts').innerHTML = ''; $('#c-hint').textContent = ''; $('#c-streak').textContent = '';
+  $('#c-ok').textContent = '0'; $('#c-prog').textContent = '準備好了嗎？';
+  countdown(() => { if (C) nextCmp(); });
+}
+// 目標題走錯題加權；另外兩題從「乘積落在目標 ±w 內」抽，三個乘積互不相同、最大最小差 ≤ w。
+// 連對 3 題以上 w 縮到 12；候選不夠就放寬。與目標共用因數的題目權重降低，免得只比因數不算乘積。
+function cmpQ() {
+  const t = pickFact(MUL2), w0 = C.streak >= 3 ? 12 : 20;
+  const shares = f => f.a === t.a || f.a === t.b || f.b === t.a || f.b === t.b;
+  const draw = (lo, hi, used) => {
+    const cs = MUL2.filter(f => f.ans >= lo && f.ans <= hi && !used.includes(f.ans));
+    if (!cs.length) return null;
+    let tot = 0;
+    const ws = cs.map(f => { const w = weightOf(f) * (shares(f) ? 0.3 : 1); tot += w; return w; });
+    let r = Math.random() * tot;
+    for (let i = 0; i < cs.length; i++) { r -= ws[i]; if (r <= 0) return cs[i]; }
+    return cs[cs.length - 1];
+  };
+  let opts = null;
+  for (let w = w0; !opts && w <= 80; w += 8) {
+    const d1 = draw(t.ans - w, t.ans + w, [t.ans]); if (!d1) continue;
+    const d2 = draw(Math.max(t.ans, d1.ans) - w, Math.min(t.ans, d1.ans) + w, [t.ans, d1.ans]); if (!d2) continue;
+    opts = [t, d1, d2];
+  }
+  for (let i = opts.length - 1; i > 0; i--) { const j = ri(0, i); [opts[i], opts[j]] = [opts[j], opts[i]]; }
+  const big = Math.random() < 0.5;
+  const ans = opts.reduce((p, f) => (big ? f.ans > p.ans : f.ans < p.ans) ? f : p);
+  return { opts, big, ans, t0: now(), rev: false };
+}
+function nextCmp() {
+  if (C.i >= C.n) return finishCmp();
+  C.q = cmpQ(); C.lock = false;
+  const q = C.q, a = $('#c-ask');
+  a.className = 'cmp-ask ' + (q.big ? 'big' : 'small');
+  a.innerHTML = (q.big ? CMP_ICON.big : CMP_ICON.small) + (q.big ? '哪個最大？' : '哪個最小？');
+  $('#c-opts').innerHTML = q.opts.map((f, i) => `<button type="button" class="cmp-opt" data-i="${i}" aria-label="${f.a} 乘 ${f.b}"><span>${f.a} × ${f.b}</span><span class="eq">= ${f.ans}</span></button>`).join('');
+  $('#c-hint').textContent = '';
+  $('#c-streak').textContent = C.streak >= 3 ? `連對 ${C.streak} 題，數字更接近了` : '';
+  $('#c-prog').textContent = `第 ${C.i + 1} / ${C.n} 題`;
+}
+function cmpChoose(i) {
+  if (!C || C.done || C.lock || !C.q) return;
+  const q = C.q, f = q.opts[i]; if (!f) return;
+  const els = $$('#c-opts .cmp-opt'), el = els[i], word = q.big ? '最大' : '最小';
+  els.forEach(e => e.classList.add('show'));
+  if (f === q.ans) {
+    el.classList.remove('want', 'bad'); el.classList.add('ok', 'pop');
+    if (!q.rev) {
+      const ms = now() - q.t0;
+      C.ok++; C.streak++; $('#c-ok').textContent = C.ok;
+      if (!C.fast || ms < C.fast) C.fast = ms;
+      q.opts.forEach(o => record(o.k, true, ms / 3));
+      SFX.zap(C.streak);
+      const r = el.getBoundingClientRect();
+      spark(r.left + r.width / 2, r.top + r.height / 2, 24, ['#5ff2d0', '#ffd23f', '#ffffff'], 220, 3, 0.7, 80);
+    } else SFX.ding();
+    $('#c-hint').textContent = '';
+    C.i++; C.lock = true;
+    setTimeout(() => { if (C && !C.done) nextCmp(); }, q.rev ? 450 : 800);
+    return;
+  }
+  if (!q.rev) {
+    q.rev = true; C.streak = 0;
+    record(q.ans.k, false, 0); record(f.k, false, 0);
+    C.wrongs.push({ f: q.ans, k: q.ans.k }, { f, k: f.k });
+    els[q.opts.indexOf(q.ans)].classList.add('want');
+  }
+  SFX.wrong();
+  el.classList.add('bad'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+  $('#c-hint').textContent = `${word}的是 ${q.ans.a} × ${q.ans.b} = ${q.ans.ans}，點它繼續`;
+}
+function finishCmp() {
+  C.done = true; musTrack('menu');
+  const ok = C.ok, n = C.n, prev = DB.best.cmp || 0, better = ok > prev, acc = ok / n;
+  if (better) { DB.best.cmp = ok; save(); }
+  const note = ok === n ? '10 題全對！直覺超準' : better ? `新紀錄！答對 ${ok} 題` : ok >= 8 ? '差一點就全對了，再來一次！' : '答錯的題目之後會比較常出現，多練幾次就會了';
+  $('#c-prog').textContent = '結束！';
+  setTimeout(() => {
+    if (mode !== 'cmp') return;
+    result({
+      title: ok === n ? '眼光真準！' : ok >= 7 ? '很有感覺！' : '再練一下', big: String(ok), label: `答對 / ${n} 題`, note,
+      stars: starsFor(acc, n), rows: [['答對率', pct(acc)], ['最快一題', C.fast ? (C.fast / 1000).toFixed(1) + ' 秒' : '—'], ['最佳', `${DB.best.cmp}/${n}`]],
+      wrongs: C.wrongs, again: startCmp, celebrate: ok === n || better
+    });
+  }, 500);
+}
+$('#c-opts').addEventListener('pointerdown', e => { const b = e.target.closest('.cmp-opt'); if (!b) return; e.preventDefault(); cmpChoose(+b.dataset.i); });
+$('#c-opts').addEventListener('click', e => { const b = e.target.closest('.cmp-opt'); if (b && e.detail === 0) cmpChoose(+b.dataset.i); });
+
 /* ================= 星圖 ================= */
 let resetArm = 0;
 function openMap() {
@@ -1548,13 +1691,15 @@ function show(name) {
   $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
-  musTrack(name === 'meteor' || name === 'ghost' || name === 'versus' ? 'game' : 'menu', name === 'ghost' ? 1.08 : 1);
+  if (name !== 'cmp') C = null;
+  musTrack(name === 'meteor' || name === 'ghost' || name === 'versus' || name === 'cmp' ? 'game' : 'menu', name === 'ghost' ? 1.08 : 1);
   musDuck(false);
   measure();
 }
 function refreshMenu() {
   $('#b-meteor').textContent = [DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '', DB.best.sudden ? `即死 ${DB.best.sudden} 分` : ''].filter(Boolean).join('・');
   $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? `最佳 ${(DB.best.ghost[19] / 1000).toFixed(1)} 秒` : '';
+  $('#b-cmp').textContent = DB.best.cmp ? `最佳 ${DB.best.cmp}/10` : '';
   $('#b-stars').textContent = `${starCount()}/81`;
   $('#b-wrong').textContent = wrongList().length;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
@@ -1587,13 +1732,15 @@ addEventListener('keydown', e => {
   else if (e.key === 'Backspace') d = 'back';
   else if (e.key === 'Escape' && mode === 'meteor' && M) { pause(!M.paused); return; }
   if (d === null) return;
-  if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d); else return;
+  if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d);
+  else if (mode === 'cmp' && /^[123]$/.test(d)) cmpChoose(+d - 1); else return;
   e.preventDefault();
 });
 addEventListener('pointerdown', () => { ctx(); musStart(); }, { once: true });
 $('#go-meteor').addEventListener('click', pickMode);
 $('#go-ghost').addEventListener('click', startGhost);
 $('#go-versus').addEventListener('click', openVersus);
+$('#go-cmp').addEventListener('click', startCmp);
 $('#go-map').addEventListener('click', openMap);
 $$('[data-set]').forEach(b => b.addEventListener('click', () => {
   const k = b.dataset.set; DB.set[k] = !DB.set[k]; save(); refreshMenu();
