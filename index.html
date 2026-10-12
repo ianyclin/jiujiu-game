@@ -320,8 +320,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .pet-tip{font-size:13px;color:var(--muted);text-align:center;line-height:1.5}
 #pet-feed:disabled{opacity:.45;box-shadow:none;transform:none}
 .gear{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;max-width:470px;margin-top:4px}
-.gear button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:68px;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
-.gear button svg{width:30px;height:30px}
+.gear button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:78px;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
+.gear button img{height:32px;width:auto;max-width:52px}
 .gear button small{font-size:11px;color:var(--muted);font-weight:700}
 .gear button[aria-pressed="true"]{border-color:var(--sun);background:rgba(255,210,63,.14);color:var(--sun)}
 .gear button:disabled{opacity:.45;cursor:default}
@@ -763,7 +763,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li>
         <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
-        <li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉）：蝴蝶結、圍巾、墨鏡、氣球、彩虹光環。在寵物頁點一下就戴上。</li>
+        <li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、圍巾、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。</li>
+        <li>頭頂、臉、脖子、旁邊四個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li>
         <li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li>
         <li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li>
         <li>不餵也不會怎樣，牠會乖乖等你。</li>
@@ -811,7 +812,7 @@ const now = () => performance.now();
 const KEY = 'jiujiu-meteor-v1';
 const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
-  pet: { kind: '', name: '', dust: 0, fed: 0, wear: '', released: [] } });
+  pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '' }, released: [] } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -2160,20 +2161,34 @@ const PET_STAGES = [{ at: 0, n: '蛋' }, { at: 30, n: '幼體' }, { at: 100, n: 
 const FEED = 10;
 const PET_HOME = { cute: '山上', cool: '海裡', funny: '叢林', legend: '星空' };
 // 徽章換配件：累積徽章數到 at 就解鎖，解鎖後永久保留（換寵物也在）
+// 配件是圖檔 assets/gear/{id}.png（tools/cut-gear.py 切自 ChatGPT 生成的貼紙圖）。slot 是戴的位置，四個位置可以同時各戴一樣。
+// ar 是圖的寬高比（切圖腳本印出來的），擺放用 place() 依頭中心 hx,hy、頭半徑 hr、圖最高點 top 算出中心與寬度。
 const GEAR = [
-  { id: 'bow', at: 1, n: '蝴蝶結' }, { id: 'scarf', at: 3, n: '圍巾' }, { id: 'glasses', at: 7, n: '墨鏡' },
-  { id: 'balloon', at: 15, n: '氣球' }, { id: 'halo', at: 30, n: '彩虹光環' },
+  { id: 'bow', at: 1, n: '蝴蝶結', slot: 'head', ar: 1.249, place: (hx, hy, hr) => [hx - hr * 0.62, hy - hr * 0.78, hr * 0.95, -15] },
+  { id: 'scarf', at: 2, n: '圍巾', slot: 'neck', ar: 0.875, place: (hx, hy, hr) => [hx + hr * 0.1, hy + hr * 0.55 + hr * 1.35 / 0.875 * 0.3, hr * 1.35, 0] },
+  { id: 'glasses', at: 4, n: '墨鏡', slot: 'face', ar: 2.612, place: (hx, hy, hr) => [hx, hy - hr * 0.22, hr * 1.55, 0] },
+  { id: 'balloon', at: 6, n: '氣球', slot: 'side', ar: 0.57, place: (hx, hy, hr) => [hx + hr * 1.05, hy + hr * 0.4 - hr * 0.9 / 0.57 / 2, hr * 0.9, 0] },
+  { id: 'cap', at: 8, n: '棒球帽', slot: 'head', ar: 1.299, place: (hx, hy, hr) => [hx, hy - hr * 0.5 - hr * 1.75 / 1.299 * 0.38, hr * 1.75, 0] },
+  { id: 'specs', at: 10, n: '圓框眼鏡', slot: 'face', ar: 2.207, place: (hx, hy, hr) => [hx, hy - hr * 0.22, hr * 1.5, 0] },
+  { id: 'bowtie', at: 12, n: '領結', slot: 'neck', ar: 1.778, place: (hx, hy, hr) => [hx, hy + hr * 0.95, hr * 1.1, 0] },
+  { id: 'star', at: 15, n: '星星髮夾', slot: 'head', ar: 1.497, place: (hx, hy, hr) => [hx + hr * 0.62, hy - hr * 0.8, hr * 0.85, 15] },
+  { id: 'wizard', at: 20, n: '魔法師帽', slot: 'head', ar: 1.225, place: (hx, hy, hr) => [hx + hr * 0.1, hy - hr * 0.45 - hr * 1.9 / 1.225 * 0.4, hr * 1.9, 0] },
+  { id: 'halo', at: 30, n: '彩虹光環', slot: 'head', ar: 2.415, place: (hx, hy, hr, top) => [hx, top - 8, hr * 1.9, 0] },
 ];
-function gearSVG(id, hx, hy, hr, top) {   // 畫在頭上：hx,hy 頭中心、hr 半徑；top 圖最高點（沒給就用 hy - hr）
+const GEAR_BY = {}; GEAR.forEach(g => { GEAR_BY[g.id] = g; });
+const SLOTS = ['side', 'neck', 'head', 'face'];   // 畫的順序：旁邊、脖子、頭頂、臉（臉最上層）
+const SLOT_NAME = { head: '頭頂', face: '臉', neck: '脖子', side: '旁邊' };
+function gearSVG(id, hx, hy, hr, top) {
+  const g = GEAR_BY[id]; if (!g) return '';
   if (top === undefined) top = hy - hr;
-  switch (id) {
-    case 'bow': { const x = hx - hr * 0.6, y = hy - hr * 0.85; return `<g transform="translate(${x} ${y}) rotate(-15)"><path d="M0 0l-14 -9v18z" fill="#ff6161"/><path d="M0 0l14 -9v18z" fill="#ff6161"/><circle r="4" fill="#ffd23f"/></g>`; }
-    case 'scarf': { const y = hy + hr * 0.78; return `<path d="M${hx - hr * 0.7} ${y} q${hr * 0.7} 14 ${hr * 1.4} 0 v8 q-${hr * 0.7} 14 -${hr * 1.4} 0z" fill="#ff6161"/><path d="M${hx + hr * 0.3} ${y + 6} l10 22 h10 l-8 -24z" fill="#ff6161"/><path d="M${hx - hr * 0.6} ${y + 4} q${hr * 0.6} 10 ${hr * 1.2} 0" fill="none" stroke="#ffd23f" stroke-width="2.5"/>`; }
-    case 'glasses': { const y = hy - hr * 0.25, w = hr * 0.42; return `<rect x="${hx - w * 2 - 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><rect x="${hx + 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - 2} ${y}h4" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - w * 2 - 2} ${y - 2}h-6 M${hx + w * 2 + 2} ${y - 2}h6" stroke="#93a9c0" stroke-width="2"/>`; }
-    case 'balloon': { const x = hx + hr + 14, y = top - 6; return `<path d="M${hx + hr * 0.5} ${hy + hr * 0.6} Q${x - 4} ${y + 40} ${x} ${y + 16}" fill="none" stroke="#f2f6fb" stroke-width="1.5"/><ellipse cx="${x}" cy="${y}" rx="12" ry="15" fill="#5ff2d0"/><path d="M${x - 3} ${y + 15}l3 5 3 -5z" fill="#5ff2d0"/><ellipse cx="${x - 4}" cy="${y - 5}" rx="3" ry="5" fill="rgba(255,255,255,.5)"/>`; }
-    case 'halo': { const y = top - 9; return ['#ff6161', '#ffae57', '#ffd23f', '#5ff2d0', '#9fdcff'].map((c, i) => `<ellipse cx="${hx}" cy="${y}" rx="${hr * 0.9 - i * 2.5}" ry="${7 - i * 1.2}" fill="none" stroke="${c}" stroke-width="2.2"/>`).join(''); }
-  }
-  return '';
+  const [cx, cy, w, rot] = g.place(hx, hy, hr, top), h = w / g.ar;
+  return `<image href="assets/gear/${id}.png" x="${(cx - w / 2).toFixed(1)}" y="${(cy - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"${rot ? ` transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : ''}/>`;
+}
+// 戴的東西存成 { head, face, neck, side }；舊存檔是字串（單一配件），載入時轉過來
+function wearObj() {
+  let W = DB.pet.wear;
+  if (!W || typeof W !== 'object') { const old = typeof W === 'string' ? W : ''; W = { head: '', face: '', neck: '', side: '' }; if (GEAR_BY[old]) W[GEAR_BY[old].slot] = old; DB.pet.wear = W; save(); }
+  return W;
 }
 const petStage = fed => { let st = 0; PET_STAGES.forEach((s, i) => { if (fed >= s.at) st = i; }); return st; };
 function earn(n) { DB.pet.dust += n; save(); if (mode === 'menu') $('#b-pet').textContent = DB.pet.dust; }
@@ -2185,9 +2200,10 @@ const PET_HEAD = {
   cute: [[60.0, 89.8, 17.5, 62.7], [60.0, 96.8, 15.4, 71.1], [60.0, 91.7, 27.0, 50.4], [59.8, 85.6, 31.9, 34.5], [60.0, 74.6, 35.3, 11.1]],
   legend: [[59.8, 94, 18.6, 71.1], [59.8, 97, 17.2, 72.6], [60, 83.8, 16.7, 58.8], [60, 66.7, 15.1, 30.3], [59.8, 61.1, 15.2, 20.7]],
 };
-function petSVG(kind, st, wear = '') {
+function petSVG(kind, st, wear = null) {   // wear：{ head, face, neck, side } 或 null（不戴）
   const [hx, hy, hr, top] = PET_HEAD[kind][st];
-  return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/><image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gearSVG(wear, hx, hy, hr, top)}</svg>`;
+  const gear = wear ? SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '';
+  return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/><image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gear}</svg>`;
 }
 function openPet() {
   show('pet'); renderPet();
@@ -2209,7 +2225,7 @@ function renderPet() {
     return;
   }
   const st = petStage(P_.fed), K = PET_KINDS[P_.kind], next = PET_STAGES[st + 1];
-  $('#pet-stage').innerHTML = petSVG(P_.kind, st, P_.wear);
+  $('#pet-stage').innerHTML = petSVG(P_.kind, st, wearObj());
   $('#pet-stage').className = 'pet-stage' + (st === 0 && P_.dust >= FEED ? ' wobble' : '');
   $('#pet-name').innerHTML = `${petName()}<small>${PET_STAGES[st].n}</small>`;
   if (next) { const from = PET_STAGES[st].at; $('#pet-bar').style.width = Math.round(clamp((P_.fed - from) / (next.at - from), 0, 1) * 100) + '%'; }
@@ -2223,10 +2239,10 @@ function renderPet() {
 }
 let byeArm = 0;
 function renderGear() {
-  const B_ = DB.daily.badges, P_ = DB.pet;
-  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴）</div>' + GEAR.map(g => {
-    const ok = B_ >= g.at, on = P_.wear === g.id;
-    return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><svg viewBox="-20 -20 40 40" aria-hidden="true">${gearSVG(g.id, 0, 0, 14)}</svg>${g.n}<small>${ok ? (on ? '戴著' : '點一下戴上') : `徽章 ×${g.at}`}</small></button>`;
+  const B_ = DB.daily.badges, W = wearObj();
+  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴，每個位置各一樣）</div>' + GEAR.map(g => {
+    const ok = B_ >= g.at, on = W[g.slot] === g.id;
+    return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><img src="assets/gear/${g.id}.png" alt="">${g.n}<small>${ok ? (on ? '戴著' : SLOT_NAME[g.slot]) : `徽章 ×${g.at}`}</small></button>`;
   }).join('');
 }
 function renderAlumni() {
@@ -2248,7 +2264,7 @@ function releasePet() {
     if (mode === 'pet') renderPet();
   }, 1700);
 }
-$('#pet-gear').addEventListener('click', e => { const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; DB.pet.wear = DB.pet.wear === b.dataset.gear ? '' : b.dataset.gear; save(); renderPet(); SFX.ding(); });
+$('#pet-gear').addEventListener('click', e => { const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; const g = GEAR_BY[b.dataset.gear], W = wearObj(); W[g.slot] = W[g.slot] === g.id ? '' : g.id; save(); renderPet(); SFX.ding(); });
 $('#pet-bye').addEventListener('click', releasePet);
 function feedPet() {
   const P_ = DB.pet; if (P_.dust < FEED || !PET_KINDS[P_.kind]) return;
