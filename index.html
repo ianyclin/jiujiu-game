@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#08111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="九九乘法練習遊戲：流星防衛戰、幽靈競速、雙人拔河。錯題自動加權，星圖追蹤熟練度。">
+<meta name="description" content="九九乘法練習遊戲：流星防衛戰、幽靈競速、雙人拔河、哪個大哪個小、炸彈拆除。錯題會更常出現，星圖看熟練度，每日任務、養寵物。">
 <title>九九流星隊</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,7 +61,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 #s-menu .menu-foot .chip{justify-content:center;padding-inline:6px;font-size:14px;white-space:nowrap;min-height:44px}
 #s-menu .menu-foot .chip b{font-size:14px}
 #s-menu .menu-foot .chip{gap:4px;padding-inline:4px;font-size:13.5px}
-.chip{border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:10px 16px;min-height:44px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
 .chip b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:17px}
 .chip.tog::before{content:'';width:9px;height:9px;border-radius:50%;border:1.5px solid var(--muted)}
 .chip.tog[aria-pressed="true"]{border-color:var(--mint);color:var(--mint)}
@@ -90,7 +90,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .name-in{width:100%;font:inherit;font-size:24px;font-weight:900;text-align:center;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--paper)}
 .name-in:focus{outline:2px solid var(--mint);border-color:var(--mint)}
 .name-sug{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
+.name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:11px 14px;min-height:44px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 .toast.on{transform:translate(-50%,0);opacity:1}
 
@@ -110,9 +110,9 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .hint{font-size:14px;color:#ff9a9a;font-weight:700;min-height:1.3em;text-align:center}
 .shake{animation:shk .35s}
 @keyframes shk{20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
-.icon-btn{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:rgba(12,24,41,.66);cursor:pointer;display:grid;place-items:center;flex:none}
+.icon-btn{width:44px;height:44px;border-radius:13px;border:1px solid var(--line);background:rgba(12,24,41,.66);cursor:pointer;display:grid;place-items:center;flex:none}
 .icon-btn svg{width:18px;height:18px}
-.link-btn{border:1px solid var(--line);background:rgba(12,24,41,.66);border-radius:12px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:15px}
+.link-btn{border:1px solid var(--line);background:rgba(12,24,41,.66);border-radius:12px;padding:10px 14px;min-height:44px;font-weight:700;cursor:pointer;font-size:15px}
 
 /* ---------- 流星防衛戰 ---------- */
 .hud{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding-block:10px 0}
@@ -189,7 +189,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .top .who{color:var(--ember)} .bot .who{color:var(--mint)}
 .half .aq{font-size:clamp(30px,8vw,46px)}
 .half .pad{max-width:360px;gap:7px}
-.half .key{height:clamp(38px,5.4vh,56px);font-size:clamp(20px,3.4vh,30px)}
+.half .key{height:clamp(44px,5.4vh,56px);font-size:clamp(20px,3.4vh,30px)}
 .half.locked .pad{opacity:.3;pointer-events:none}
 #s-versus.cpu .half.top{transform:none;justify-content:center}
 #s-versus.cpu .half.top .pad{display:none}
@@ -211,7 +211,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .rope .mid{position:absolute;left:50%;top:-8px;bottom:-8px;width:2px;background:rgba(255,255,255,.35)}
 .knot{position:absolute;top:50%;left:50%;width:34px;height:34px;transform:translate(-50%,-50%);transition:left .35s cubic-bezier(.3,1.6,.5,1)}
 .band-btns{display:flex;gap:10px;justify-content:center;flex:1}
-.band-btns .btn{padding:10px 16px;font-size:16px}
+.band-btns .btn{padding:12px 16px;min-height:44px;font-size:16px}
 
 /* ---------- 星圖 ---------- */
 .map-in{margin-block:auto;display:flex;flex-direction:column;align-items:center;gap:14px;padding-block:14px 26px;width:100%}
@@ -230,7 +230,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
 .info{width:100%;max-width:520px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:15px;line-height:1.6;min-height:52px}
 .info b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:18px}
-.danger{border:1px solid rgba(255,97,97,.4);background:transparent;color:#ff9a9a;border-radius:12px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:14px}
+.danger{border:1px solid rgba(255,97,97,.4);background:transparent;color:#ff9a9a;border-radius:12px;padding:12px 16px;min-height:44px;font-weight:700;cursor:pointer;font-size:14px}
 
 /* ---------- 哪個大／哪個小 ---------- */
 .cmp-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,2.6vh,24px);min-height:0;padding-block:8px 16px;width:100%}
@@ -355,10 +355,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .setrow b{display:block;font-size:16px;font-weight:900}
 .setrow small{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px}
-.sw{width:54px;height:30px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
-.sw i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
+.sw{width:56px;height:34px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
+.sw i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
 .sw[aria-pressed="true"]{background:rgba(95,242,208,.22);border-color:var(--mint)}
-.sw[aria-pressed="true"] i{left:27px;background:var(--mint)}
+.sw[aria-pressed="true"] i{left:29px;background:var(--mint)}
 .opt{display:grid;gap:8px}
 .opt button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:14px;padding:12px;font-weight:700;cursor:pointer;text-align:left;font-size:15px}
 .opt button[aria-pressed="true"]{border-color:var(--ember);background:rgba(255,174,87,.12);color:#ffd2a1}
@@ -372,7 +372,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .meter{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
 .meter i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),var(--coral));border-radius:3px}
 .wmeta{font-size:12px;color:var(--muted);font-weight:700}
-.wx{border:1px solid var(--line);background:transparent;border-radius:10px;padding:7px 11px;font-weight:700;cursor:pointer;font-size:13px;color:var(--muted)}
+.wx{border:1px solid var(--line);background:transparent;border-radius:10px;padding:12px 12px;min-height:44px;font-weight:700;cursor:pointer;font-size:13px;color:var(--muted)}
 .wempty{color:var(--muted);padding:18px 8px;text-align:center;line-height:1.6}
 .rules{margin:0;padding-left:1.2em;text-align:left;color:var(--muted);font-size:14px;line-height:1.6;display:grid;gap:5px}
 .rules b{color:var(--paper)}
@@ -383,7 +383,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .count span{font-family:var(--f-num);font-size:clamp(90px,30vw,160px);color:var(--sun);text-shadow:0 8px 0 #a87a00;animation:cnt .7s ease forwards}
 .count span.go{font-family:var(--f-zh);font-weight:900;font-size:clamp(56px,16vw,96px)}
 @keyframes cnt{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(.85);opacity:0}}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}.count span{animation:none;opacity:1}.banner.on{animation:none}}
 </style>
 </head>
 <body>
@@ -415,7 +415,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <button class="mode" id="go-cmp" type="button">
           <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="34" width="12" height="24" rx="4" fill="#5ff2d0"/><rect x="26" y="18" width="12" height="40" rx="4" fill="#ffd23f"/><rect x="44" y="28" width="12" height="30" rx="4" fill="#ffae57"/><path d="m32 2 2.3 5 5.5.6-4.1 3.7 1.2 5.4L32 14l-4.9 2.7 1.2-5.4-4.1-3.7 5.5-.6z" fill="#ffd23f" stroke="#a87a00" stroke-width="1.5"/></svg>
           <span class="m-t">哪個大？哪個小？<em id="b-cmp"></em></span>
-          <span class="m-d">三個算式，點出乘積最大（或最小）的那個。數字很接近，要算過才知道。</span>
+          <span class="m-d">三個算式，點出答案最大（或最小）的那個。數字很接近，要算過才知道。</span>
         </button>
         <button class="mode" id="go-bomb" type="button">
           <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="28" cy="38" r="20" fill="#2a3f58" stroke="#93a9c0" stroke-width="2"/><path d="M38 20l6-8" stroke="#93a9c0" stroke-width="4" stroke-linecap="round"/><path d="M44 12c4-6 10-4 12 0" stroke="#ffae57" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="56" cy="12" r="5" fill="#ffd23f"/><circle cx="56" cy="12" r="2" fill="#fff"/><text x="28" y="46" text-anchor="middle" font-family="Lilita One,sans-serif" font-size="22" fill="#5ff2d0">7</text></svg>
@@ -664,7 +664,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
   <div class="overlay" id="o-wrong" hidden>
     <div class="card">
       <h3>錯題本</h3>
-      <p>最近最容易錯的題目，遊戲裡會比較常出現。已經學會的題目可以按「清除」，讓它回到一般出現機率。</p>
+      <p>這些是最近常錯的題目，遊戲裡會比較常出現。學會了可以按「清除」，它就不會特別常出現。</p>
       <div class="wlist" id="w-list"></div>
       <div class="btn-col">
         <button class="danger" type="button" id="w-clear">全部清空</button>
@@ -728,26 +728,27 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。</li>
         <li>有時候流星上寫「7 的倍數」加一串數字「7、14、?、28」，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
         <li>流星掉到小鎮會<b>扣一顆心</b>。一整波都沒失誤 +50 分。</li>
-        <li>每 5 波出現<b>錯題魔王</b>，專出你最常錯的題目，要連續答對 5 題以上才打得倒（波數越高血越多）。魔王來的時候不會有小流星，專心打它就好。打倒 +200 分、<b>必掉寶箱</b>。</li>
+        <li>每 5 波出現<b>錯題魔王</b>，專出你常錯的題目。要<b>一次就答對</b>才算打中一下，打中 6 下以上才打得倒，波數越高血越多。魔王來的時候沒有小流星，專心打牠就好。打倒 +200 分、<b>必掉寶箱</b>。</li>
         <li>魔王掉到小鎮會<b>扣 2 顆心</b>，一擊即死模式等於直接結束。</li>
         <li>補心只靠寶箱，心最多 3 顆。</li>
         <li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>
       </ul>
       <h4>寶箱流星</h4>
       <ul class="rules">
-        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。寶箱有<b>銀色</b>（常見）、<b>金色</b>（少見）、<b>彩虹色</b>（稀有）三種，越稀有開起來越熱鬧。</li>
-        <li>常見：+30 分、時間凍結、<b>連擊護盾</b>、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b></li>
-        <li>連擊護盾：右上角的連擊數字會罩在一顆亮亮的泡泡裡。答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>，泡泡就破了。已經有泡泡時再開到改 +50 分。</li>
-        <li>追蹤飛彈最多存 3 枚（已滿改 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
-        <li>稀有：<b>超新星</b>清光全場、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已滿 3 顆或一擊即死時改 +100 分）</li>
+        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱。<b>一次就答對</b>打掉它，就會掉一樣東西。</li>
+        <li>寶箱有三種：<b>銀色</b>常見、<b>金色</b>少見、<b>彩虹色</b>稀有，越稀有開起來越熱鬧。</li>
+        <li>銀色：+30 分、時間凍結、<b>連擊護盾</b>。金色：雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b>。</li>
+        <li>連擊護盾：右上角的連擊數字會罩在一顆亮亮的泡泡裡。答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>，泡泡就破了。已經有泡泡了，再拿到就變成 +50 分。</li>
+        <li>追蹤飛彈最多存 3 枚（滿了再拿到就變成 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
+        <li>彩虹色：<b>超新星</b>把正在掉的小流星全部清掉（你正在打的那顆和魔王除外）、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已經 3 顆、或一擊即死模式，就變成 +100 分）。</li>
       </ul>
       <h4>連擊</h4>
       <ul class="rules">
-        <li>每題 10 分，2.5 秒內答對再 +5。連擊每 5 次倍率 +1，最高 ×5。</li>
+        <li>每題 10 分，2.5 秒內答對再 +5。每連對 5 題，分數多乘 1 倍，最多 5 倍。答錯後照著重打只有 3 分，也不算連擊。</li>
         <li>連擊 10、30、50、100 有慶祝動畫。答錯或流星落地，連擊歸零。</li>
       </ul>
       <h4>幽靈競速</h4>
-      <ul class="rules"><li>20 題計時。另一條跑道是<b>上次的你</b>，追過它就是新紀錄。</li></ul>
+      <ul class="rules"><li>20 題計時。另一條跑道是<b>最快的你</b>（你最好的一次），追過它就是新紀錄。</li></ul>
       <h4>雙人拔河</h4>
       <ul class="rules">
         <li>平板放中間，面對面搶答。答對把星星拉過來一格，先拉到底的贏；答錯停 1 秒。</li>
@@ -758,7 +759,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li>
         <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
-        <li>每日任務的<b>徽章</b>可以換寵物的配件：蝴蝶結、圍巾、墨鏡、氣球、彩虹光環，在寵物頁點一下就戴上。</li>
+        <li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉）：蝴蝶結、圍巾、墨鏡、氣球、彩虹光環。在寵物頁點一下就戴上。</li>
         <li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li>
         <li>不餵也不會怎樣，牠會乖乖等你。</li>
       </ul>
@@ -771,12 +772,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。</li>
         <li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li>
-        <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯的題目以後會更常出現。</li>
+        <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現。</li>
         <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
       </ul>
       <h4>炸彈拆除</h4>
       <ul class="rules">
-        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 × 1 到 7 × 9 的答案：7、14、21……63。把它們全部點掉，炸彈就拆除了。</li>
+        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 × 1 到 7 × 9 的答案：7、14、21……63。格子裡不一定九個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。</li>
         <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！</li>
         <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
       </ul>
@@ -836,6 +837,7 @@ function pickFact(pool, no1) {
   pool = pool || ((DB.set.mix && Math.random() < 0.2) ? ADDSUB : (no1 ? MUL2 : MUL));
   let tot = 0;
   const ws = pool.map(f => { const w = recent.includes(f.k) ? 0 : weightOf(f); tot += w; return w; });
+  if (tot === 0) { tot = 0; pool.forEach((f, i) => { ws[i] = weightOf(f); tot += ws[i]; }); }   // 題庫很小時（魔王）不要卡在同一題
   let r = Math.random() * tot, pick = pool[0];
   for (let i = 0; i < pool.length; i++) { r -= ws[i]; if (r <= 0) { pick = pool[i]; break; } }
   recent.push(pick.k); if (recent.length > 5) recent.shift();
@@ -1109,6 +1111,7 @@ function drawWorld(gy, dt) {
 }
 
 function spark(x, y, n, cols, spd = 240, sz = 3, life = 0.8, grav = 120) {
+  if (RM) n = Math.ceil(n / 4);   // 減少動態：粒子剩四分之一
   for (let i = 0; i < n; i++) {
     const a = rnd(0, 6.283), v = spd * rnd(0.2, 1);
     P.push({ k: 0, x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, l: life * rnd(0.5, 1), m: life, s: sz * rnd(0.5, 1.4), c: cols[i % cols.length], gv: grav });
@@ -1196,8 +1199,10 @@ function waveBanner() {
   else { banner(`第 ${M.wave} 波`); musTrack('game', 1 + Math.min(0.22, (M.wave - 1) * 0.025)); }
   SFX.fan();
 }
+let bannerTok = 0;
 function banner(t, cls) {
   const b = $('#banner'); b.textContent = t; b.className = 'banner' + (cls ? ' ' + cls : ''); void b.offsetWidth; b.classList.add('on');
+  if (RM) { const tok = ++bannerTok; b.style.opacity = 1; setTimeout(() => { if (tok === bannerTok) b.style.opacity = ''; b.classList.remove('on'); }, 1900); }   // 減少動態時 CSS 動畫會瞬間結束，改用計時隱藏
 }
 function bossQ() {
   const ws = weakest(10);
@@ -1291,7 +1296,7 @@ function updateMeteor(dt) {
   const tg = getTarget();
   if (tg && !tg.tStart) tg.tStart = now();
   if (tg !== curT) {
-    const had = !!curT; curT = tg; M.switchT = now();
+    const had = !!curT; curT = tg; if (had) M.switchT = now();   // 魔王換題不是真的換目標，不用擋按鍵
     if (!M.buf) { bar(); if (had && tg) { const a = $('#m-answer'); a.classList.remove('pop'); void a.offsetWidth; a.classList.add('pop'); } }
   }
 }
@@ -1358,7 +1363,7 @@ function applyDrop(o) {
   celebrate(d, x, y); quest('chest');
   switch (d.id) {
     case 'heart':
-      if (!M.sudden && M.hearts < 3) { M.hearts++; ftxt(x, y, '生命 +1', '#ff8a8a', 32); } else { M.score += 100; ftxt(x, y, M.sudden ? '+100' : '生命已滿 +100', '#ffd23f', 30); }
+      if (!M.sudden && M.hearts < 3) { M.hearts++; ftxt(x, y, '心 +1', '#ff8a8a', 32); } else { M.score += 100; ftxt(x, y, M.sudden ? '+100' : '心已經滿了 +100', '#ffd23f', 30); }
       break;
     case 'nova': nova(); break;
     case 'freeze': freeze(); break;
@@ -1426,7 +1431,8 @@ function hit(m) {
   const tp = tipPos(); beams.push({ x1: tp.x, y1: tp.y, x2: m.x, y2: m.y, l: 0.2 }); kick = 1;
   SFX.zap(M.combo);
   if (m.boss) {
-    m.hp--; m.flash = 0; spark(m.x, m.y, 30, ['#5ff2d0', '#ffffff', '#ffd23f'], 260, 3.5, 0.7, 80); ring(m.x, m.y, m.r * 1.6, '#5ff2d0', 5);
+    if (fresh) m.hp--;   // 故意答錯再抄答案不算打中
+    m.flash = 0; spark(m.x, m.y, 30, ['#5ff2d0', '#ffffff', '#ffd23f'], 260, 3.5, 0.7, 80); ring(m.x, m.y, m.r * 1.6, '#5ff2d0', 5);
     ftxt(m.x, m.y - m.r - 30, `+${pts}`, '#ffd23f', 26); shake(0.15, 4);
     if (m.hp <= 0) killBoss(m);
     else { m.q = bossQ(); m.revealed = false; m.tStart = now(); m.vy *= 0.97; curT = null; }   // 魔王換題算一個段落，重新挑最低的
@@ -1482,13 +1488,15 @@ function nova() {
   ftxt(W / 2, GY - 130, '超新星！', '#ffd23f', 38);
   flashA = 0.7; shake(0.5, 10); SFX.big();
   for (const m of M.list) if (!m.boss && !m.dead && m !== M.lock) { destroy(m, 5); M.score += 5; M.kills++; }
+  if (!M.bossWave && M.kills >= M.goal) nextWave();
 }
 function gameOver() {
-  M.over = true; M.buf = ''; musTrack('menu');
+  M.over = true; M.buf = ''; musTrack('menu'); bar();
   const bk = M.sudden ? 'sudden' : 'meteor', best = DB.best[bk] || 0, isBest = M.score > best;
   if (isBest) { DB.best[bk] = M.score; save(); }
+  const me = M;
   setTimeout(() => {
-    if (mode !== 'meteor') return;
+    if (mode !== 'meteor' || M !== me) return;
     const acc = M.tot ? M.ok / M.tot : 0;
     result({
       title: M.sudden ? '一擊即死，結束！' : '小鎮撐不住了！', big: M.score, label: '分數',
@@ -1670,6 +1678,8 @@ function bar() {
 }
 function pause(on) {
   if (!M || M.over || mode !== 'meteor') return;
+  if (on && !M.paused) M.pausedAt = now();
+  if (!on && M.paused) { const d = now() - M.pausedAt; M.list.forEach(m => { if (m.tStart) m.tStart += d; }); M.switchT += d; }   // 暫停的時間不算進反應時間
   M.paused = on; $('#o-pause').hidden = !on; musDuck(on);
 }
 
@@ -1680,7 +1690,7 @@ function startGhost() {
   const best = DB.best.ghost && DB.best.ghost.length === 20 ? DB.best.ghost : null;
   G = { i: 0, n: 20, q: null, buf: '', t0: 0, qt: 0, times: [], ok: 0, wrongs: [], rev: false, done: false, started: false,
         ghost: best || Array.from({ length: 20 }, (_, i) => (i + 1) * 3600), hasBest: !!best, gNoted: false };
-  $('#g-glabel').textContent = best ? '上次的你' : '新手幽靈';
+  $('#g-glabel').textContent = best ? '最快的你' : '新手幽靈';
   $('#g-note').textContent = best ? `目標：${(best[19] / 1000).toFixed(1)} 秒內完成` : '第一次挑戰：先贏過每題 3.6 秒的新手幽靈';
   $('#g-you').style.left = '0%'; $('#g-ghost').style.left = '0%';
   $('#g-timer').textContent = '0.0';
@@ -1734,10 +1744,11 @@ function finishGhost() {
   const acc = G.ok / G.n;
   let note;
   if (prev === null) note = beatGhost ? '贏過新手幽靈！這次成績會變成下次的幽靈' : '成績已記下，下次跟自己比';
-  else if (better) note = `新紀錄！比上次快 ${((prev - total) / 1000).toFixed(1)} 秒`;
-  else note = `差上次 ${((total - prev) / 1000).toFixed(1)} 秒，再一次！`;
+  else if (better) note = `新紀錄！比之前最快還快 ${((prev - total) / 1000).toFixed(1)} 秒`;
+  else note = `差最快紀錄 ${((total - prev) / 1000).toFixed(1)} 秒，再一次！`;
+  const me = G;
   setTimeout(() => {
-    if (mode !== 'ghost') return;
+    if (mode !== 'ghost' || G !== me) return;
     result({
       title: beatGhost ? '你追過幽靈了！' : '幽靈先到了…', big: (total / 1000).toFixed(1), label: '秒', note,
       stars: starsFor(acc, G.n), rows: [['答對率', pct(acc)], ['平均每題', (total / G.n / 1000).toFixed(1) + ' 秒'], ['最高紀錄', ((DB.best.ghost[19]) / 1000).toFixed(1) + ' 秒']],
@@ -1757,7 +1768,7 @@ function openVersus() {
   $('#v-knot').style.left = '50%'; $('#v-btns').hidden = true; $('#v-rope').hidden = false; $$('.end').forEach(e => e.hidden = false); $('#v-quit').hidden = false;
 }
 function startVersus() {
-  $('#v-pausebox').hidden = true;
+  $('#v-pausebox').hidden = true; musDuck(false);
   $('#v-setup').hidden = true;
   V = { pos: 0, win: 6, over: false, started: false, cpu: vOpp === 'cpu', p: [{ q: null, buf: '', lock: 0, rev: false, qt: 0 }, { q: null, buf: '', lock: 0, rev: false, qt: 0, due: 0 }] };
   $('#s-versus').classList.toggle('cpu', V.cpu);
@@ -1788,7 +1799,9 @@ function cpuDelay() {
   return V.base * k * rnd(0.75, 1.3);
 }
 function updateVersus() {
-  if (!V || !V.cpu || !V.started || V.over || V.paused) return;
+  if (!V || !V.started || V.over || V.paused) return;
+  V.p.forEach((p, i) => vEl[i].classList.toggle('locked', now() < p.lock));   // 鎖定狀態每幀同步，暫停後不會卡住
+  if (!V.cpu) return;
   const p = V.p[1]; if (!p.q) return;
   const t = now();
   if (t < p.lock) return;
@@ -1956,8 +1969,9 @@ function finishCmp() {
   else if (better) note = `新紀錄！比上次快 ${sec(prev - total)}`;
   else note = total - prev < 100 ? '全對！跟紀錄一樣快' : `全對！差紀錄 ${sec(total - prev)}，再一次！`;
   $('#c-prog').textContent = '結束！';
+  const me = C;
   setTimeout(() => {
-    if (mode !== 'cmp') return;
+    if (mode !== 'cmp' || C !== me) return;
     result({
       title: perfect ? '眼光真準！' : ok >= 7 ? '很有感覺！' : '再練一下',
       big: perfect ? (total / 1000).toFixed(1) : String(ok), label: perfect ? '秒・10 題全對' : `答對 / ${n} 題`, note,
@@ -1984,7 +1998,8 @@ const tableW = n => MUL.filter(f => f.a === n && f.b > 1).reduce((s, f) => s + w
 function bombBoard(n) {
   const mults = []; for (let k = 1; k <= 9; k++) mults.push(n * k);
   const pool = mults.slice(), got = [];
-  while (got.length < ri(4, 6)) { const m = wpick(pool, m => weightOf(factNK(n, m / n))); pool.splice(pool.indexOf(m), 1); got.push(m); }
+  const want = ri(4, 6);
+  while (got.length < want) { const m = wpick(pool, m => weightOf(factNK(n, m / n))); pool.splice(pool.indexOf(m), 1); got.push(m); }
   const seen = new Set(), cand = [];
   // 數字都在 2～81（九九乘法的範圍）
   const add = (v, w) => { if (v >= 2 && v <= 81 && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
@@ -2109,8 +2124,9 @@ function finishBomb() {
   else if (prev === null) note = '5 顆全拆！這個時間就是你的紀錄';
   else if (better) note = `新紀錄！比上次快 ${sec(prev - total)}`;
   else note = total - prev < 100 ? '全拆！跟紀錄一樣快' : `全拆！差紀錄 ${sec(total - prev)}，再一次！`;
+  const me = BM;
   setTimeout(() => {
-    if (mode !== 'bomb') return;
+    if (mode !== 'bomb' || BM !== me) return;
     result({
       title: all ? '拆彈專家！' : done >= 3 ? '差一點！' : '再練一下',
       big: all ? (total / 1000).toFixed(1) : String(done), label: all ? '秒・5 顆全拆' : `拆除 / ${n} 顆`, note,
@@ -2218,7 +2234,7 @@ function renderPet() {
 let byeArm = 0;
 function renderGear() {
   const B_ = DB.daily.badges, P_ = DB.pet;
-  $('#pet-gear').innerHTML = '<div class="gear-t">配件（每日任務的徽章換的）</div>' + GEAR.map(g => {
+  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴）</div>' + GEAR.map(g => {
     const ok = B_ >= g.at, on = P_.wear === g.id;
     return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><svg viewBox="-20 -20 40 40" aria-hidden="true">${gearSVG(g.id, 0, 0, 14)}</svg>${g.n}<small>${ok ? (on ? '戴著' : '點一下戴上') : `徽章 ×${g.at}`}</small></button>`;
   }).join('');
@@ -2226,7 +2242,7 @@ function renderGear() {
 function renderAlumni() {
   const R = DB.pet.released || [], el = $('#pet-alumni');
   el.hidden = !R.length;
-  if (R.length) el.innerHTML = '回家的夥伴：' + R.map(r => `${petSVG(r.kind, 4)}<b>${r.name || PET_KINDS[r.kind].name}</b>（${PET_HOME[r.kind]}）`).join('、');
+  if (R.length) el.innerHTML = '回家的夥伴：' + R.map(r => `${petSVG(r.kind, 4)}<b>${esc(r.name || PET_KINDS[r.kind].name)}</b>（${PET_HOME[r.kind]}）`).join('、');
 }
 function releasePet() {
   const P_ = DB.pet; if (!PET_KINDS[P_.kind] || petStage(P_.fed) < 4) return;
@@ -2256,7 +2272,8 @@ function feedPet() {
     setTimeout(() => { if (mode !== 'pet') return; toast(`${petName()}長大了！變成${PET_STAGES[st].n}`); confetti(40 + st * 20); flashA = 0.3; spark(x, y, 90, ['#ffd23f', '#5ff2d0', '#ff6161', '#ffffff'], 380, 4.5, 1.2, 150); ring(x, y, 220, '#ffd23f', 8); SFX.milestone(Math.min(4, st)); }, 350);
   }
 }
-const petName = () => DB.pet.name || (PET_KINDS[DB.pet.kind] || {}).name || '';
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const petName = () => esc(DB.pet.name || (PET_KINDS[DB.pet.kind] || {}).name || '');
 // 取名：預設帶入建議名字，孩子可以直接按確定，也可以打自己想的（這裡需要系統鍵盤，是唯一的例外）
 const NAME_SUG = { cute: ['毛毛', '布丁', '棉花糖', '小粉'], cool: ['小龍', '閃電', '藍波', '阿鋼'], funny: ['呱呱', '皮皮', '大嘴', '豆豆'] };
 let nameKind = '';
@@ -2307,7 +2324,7 @@ $('#grid99').addEventListener('click', e => {
   const k = c.dataset.k, [a, b] = k.split('x').map(Number), s = DB.facts[k], st = state(k);
   const label = { new: '還沒遇過', learn: '熟悉中', weak: '容易錯', star: '已點亮' }[st];
   $('#map-info').innerHTML = !s || !s.n ? `<b>${a} × ${b} = ${a * b}</b>　還沒遇過這題。`
-    : `<b>${a} × ${b} = ${a * b}</b>　${label}<br>答過 ${s.n} 次・平均 ${s.t ? (s.t / 1000).toFixed(1) + ' 秒' : '—'}・錯誤指數 ${Math.round(s.err * 100)}%`;
+    : `<b>${a} × ${b} = ${a * b}</b>　${label}<br>答過 ${s.n} 次・平均 ${s.t ? (s.t / 1000).toFixed(1) + ' 秒' : '—'}・答錯過 ${s.w || 0} 次`;
 });
 $('#map-reset').addEventListener('click', () => {
   if (Date.now() - resetArm < 3000) {
@@ -2338,7 +2355,7 @@ const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(
 const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 function ensureDaily() {
   const D = DB.daily, t = today();
-  if (D.date === t && D.tasks.length === 3) return;
+  if (D.date === t && D.tasks.length === 3 && D.tasks.every(x => QBY[x.id])) return;
   const pool = QUESTS.slice(), fams = new Set(), tasks = [];
   while (tasks.length < 3 && pool.length) {
     const q = pool.splice(ri(0, pool.length - 1), 1)[0];
@@ -2370,14 +2387,14 @@ function quest(id, v = 1, how = 'add') {
     x.done = true; toast(`任務完成：${QBY[id].t(x.n)}　星塵 +10`); SFX.fan(); earn(10);
     if (D.tasks.every(y => y.done)) {
       D.badges++; earn(30);
-      const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(`解鎖寵物配件：${g.n}！到寵物頁給牠戴上`), 4200); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
+      const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(`寵物可以戴${g.n}了！到寵物頁給牠戴上`), 4200); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
       setTimeout(() => { toast(`今天的任務全部完成！徽章 +1${D.streak > 1 ? `，連續 ${D.streak} 天` : ''}`); confetti(60); SFX.milestone(2); }, 1500);
     }
   }
   save();
   if (mode === 'menu' || !$('#o-quest').hidden) renderQuests();
 }
-const questStars = () => quest('stars', starCount() - DB.daily.starBase, 'set');
+const questStars = () => quest('stars', Math.max(0, starCount() - DB.daily.starBase), 'max');
 
 /* ================= 錯題本 ================= */
 const ALL = {}; MUL.concat(ADDSUB).forEach(f => { ALL[f.k] = f; });
@@ -2390,7 +2407,7 @@ function openWrong() {
   const ks = wrongList();
   $('#w-list').innerHTML = ks.length ? ks.map((k, i) => {
     const f = ALL[k], s = DB.facts[k];
-    return `<div class="wrow"><span class="wrank">${i + 1}</span><div class="wmid"><div class="weq">${f.a} ${f.op} ${f.b} <span>=</span> ${f.ans}</div><div class="meter"><i style="width:${Math.round(clamp(s.err / 0.8, 0.06, 1) * 100)}%"></i></div><div class="wmeta">${s.w ? `錯過 ${s.w} 次` : '最近答錯'}・答過 ${s.n} 次</div></div><button class="wx" type="button" data-k="${k}">清除</button></div>`;
+    return `<div class="wrow"><span class="wrank">${i + 1}</span><div class="wmid"><div class="weq">${f.a} ${f.op} ${f.b} <span>=</span> ${f.ans}</div><div class="meter"><i style="width:${Math.round(clamp(s.err / 0.8, 0.06, 1) * 100)}%"></i></div><div class="wmeta">${s.w ? `答錯 ${s.w} 次` : '最近答錯'}・答過 ${s.n} 次</div></div><button class="wx" type="button" data-k="${k}">清除</button></div>`;
   }).join('') : '<div class="wempty">目前沒有容易錯的題目，太厲害了！</div>';
   $('#w-clear').hidden = !ks.length;
   wArm = 0; $('#w-clear').textContent = '全部清空';
@@ -2515,7 +2532,7 @@ addEventListener('keydown', e => {
   if (/^[0-9]$/.test(e.key)) d = e.key;
   else if (e.key === 'Backspace') d = 'back';
   else if (e.key === 'Escape' && mode === 'meteor' && M) { pause(!M.paused); return; }
-  else if ((e.key === ' ' || e.key === 'Enter') && mode === 'meteor' && M) { launchMissile(); e.preventDefault(); return; }
+  else if ((e.key === ' ' || e.key === 'Enter') && mode === 'meteor' && M && !M.over && !M.paused) { launchMissile(); e.preventDefault(); return; }
   if (d === null) return;
   if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d);
   else if (mode === 'cmp' && /^[123]$/.test(d)) cmpChoose(+d - 1); else return;
@@ -2572,6 +2589,7 @@ function frame(t) {
   if (!frozen) stepP(dt);
   drawP();
   g.restore();
+  if (RM) flashA = 0;   // 減少動態：不做全螢幕閃白
   if (flashA > 0) { g.fillStyle = `rgba(255,248,225,${flashA})`; g.fillRect(0, 0, W, H); flashA = Math.max(0, flashA - dt * 2.2); }
   requestAnimationFrame(frame);
 }
