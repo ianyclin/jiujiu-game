@@ -181,7 +181,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 #s-versus.cpu .half.top .aq{font-size:clamp(26px,7vw,40px)}
 .cpubox{display:flex;flex-direction:column;align-items:center;gap:6px}
 .cpu-face{width:clamp(64px,14vh,96px);height:auto}
-.cpu-face.think{animation:cpuThink .5s ease-in-out infinite}
+.cpu-face.thinking{animation:cpuThink .5s ease-in-out infinite}
 @keyframes cpuThink{50%{transform:translateY(-4px) rotate(3deg)}}
 .cpu-face.oops{animation:shk .35s}
 .think{width:min(60%,220px);height:8px;border-radius:4px;background:rgba(255,174,87,.18);overflow:hidden}
@@ -1710,7 +1710,7 @@ function newVQ(i) {
   else if (vOpp === 'hard') { const a = ri(11, 19), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   else { const a = ri(2, 9), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   p.buf = ''; p.rev = false; p.qt = now();
-  if (i === 1 && V.cpu) { p.due = p.qt + cpuDelay(); $('#v-think').style.width = '0%'; $('.cpu-face').classList.add('think'); }
+  if (i === 1 && V.cpu) { p.due = p.qt + cpuDelay(); $('#v-think').style.width = '0%'; $('.cpu-face').classList.add('thinking'); }
   vRender(i);
 }
 function vRender(i) {
@@ -1747,7 +1747,7 @@ function vKey(i, d) {
 function endVersus(w) {
   V.over = true; musTrack('menu'); quest('versus');
   vEl.forEach((e, i) => { const r = e.querySelector('[data-res]'); r.hidden = false; r.className = 'vres ' + (i === w ? 'win' : 'lose'); r.textContent = i === w ? '勝利！' : '下次再拉回來！'; e.classList.add('locked'); });
-  if (V.cpu) { $('.cpu-face').classList.remove('think'); $('#v-say').textContent = w === 1 ? '嘿嘿，我贏了！' : '你好厲害，再來一次？'; }
+  if (V.cpu) { $('.cpu-face').classList.remove('thinking'); $('#v-say').textContent = w === 1 ? '嘿嘿，我贏了！' : '你好厲害，再來一次？'; }
   $('#v-rope').hidden = true; $$('.end').forEach(e => e.hidden = true); $('#v-quit').hidden = true; $('#v-btns').hidden = false;
   SFX.fan(); flashA = 0.3;
   const x = W / 2, y = w === 0 ? H * 0.75 : H * 0.25;
