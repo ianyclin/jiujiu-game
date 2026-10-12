@@ -269,6 +269,14 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .wrongs-t{font-size:13px;color:var(--muted);font-weight:700}
 .wrongs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .wrongs i{font-style:normal;font-family:var(--f-num);background:rgba(255,97,97,.14);color:#ffbcbc;border-radius:10px;padding:4px 10px;font-size:17px}
+.setlist{display:grid;gap:8px;text-align:left}
+.setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.setrow b{display:block;font-size:16px;font-weight:900}
+.setrow small{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px}
+.sw{width:54px;height:30px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
+.sw i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
+.sw[aria-pressed="true"]{background:rgba(95,242,208,.22);border-color:var(--mint)}
+.sw[aria-pressed="true"] i{left:27px;background:var(--mint)}
 .opt{display:grid;gap:8px}
 .opt button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:14px;padding:12px;font-weight:700;cursor:pointer;text-align:left;font-size:15px}
 .opt button[aria-pressed="true"]{border-color:var(--ember);background:rgba(255,174,87,.12);color:#ffd2a1}
@@ -337,9 +345,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <button class="chip" id="go-map" type="button">星圖 <b id="b-stars">0/81</b></button>
         <button class="chip" id="go-wrong" type="button">錯題本 <b id="b-wrong">0</b></button>
         <button class="chip" id="go-help" type="button">遊戲說明</button>
-        <button class="chip tog" data-set="mix" type="button" aria-pressed="false">混入十以內加減</button>
-        <button class="chip tog" data-set="music" type="button" aria-pressed="true">音樂</button>
-        <button class="chip tog" data-set="sound" type="button" aria-pressed="true">音效</button>
+        <button class="chip" id="go-set" type="button">設定</button>
       </div>
     </div>
   </section>
@@ -565,6 +571,19 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
+  <div class="overlay" id="o-set" hidden>
+    <div class="card">
+      <h3>設定</h3>
+      <div class="setlist">
+        <div class="setrow"><div><b>音樂</b><small>背景音樂</small></div><button class="sw" data-set="music" type="button" aria-pressed="true" aria-label="音樂"><i></i></button></div>
+        <div class="setrow"><div><b>音效</b><small>按鍵、打中、爆炸的聲音</small></div><button class="sw" data-set="sound" type="button" aria-pressed="true" aria-label="音效"><i></i></button></div>
+        <div class="setrow"><div><b>混入十以內加減</b><small>流星防衛戰、幽靈競速、拔河偶爾出現加減題</small></div><button class="sw" data-set="mix" type="button" aria-pressed="false" aria-label="混入十以內加減"><i></i></button></div>
+        <div class="setrow"><div><b>數列題提示</b><small>數列題上面標示「7 的倍數」。關掉要自己看出是幾的乘法表，比較難</small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" aria-label="數列題提示"><i></i></button></div>
+      </div>
+      <div class="btn-col"><button class="btn alt" type="button" id="set-close">關閉</button></div>
+    </div>
+  </div>
+
   <div class="overlay" id="o-help" hidden>
     <div class="card help">
       <h3>遊戲說明</h3>
@@ -634,7 +653,7 @@ const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false } });
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -677,7 +696,9 @@ function makeQ(f, rev, seq) {
     const terms = [0, 1, 2, 3].map(i => n * (s + i)), hide = k - s;
     const show = terms.map((v, i) => i === hide ? '?' : String(v));
     // label 標示是幾的倍數，孩子不用自己看出乘法表（實測不標示跟反向題一樣難）
-    return { f, k: f.k, seq: true, ans: f.ans, label: `${n} 的倍數`, text: show.join('、'), lines: [`${n} 的倍數`, show.slice(0, 2).join('、'), show.slice(2).join('、')] };
+    const lines = [show.slice(0, 2).join('、'), show.slice(2).join('、')];
+    if (DB.set.seqLabel) lines.unshift(`${n} 的倍數`);
+    return { f, k: f.k, seq: true, ans: f.ans, label: DB.set.seqLabel ? `${n} 的倍數` : '', text: show.join('、'), lines };
   }
   if (rev && f.op === '×' && Math.random() < 0.2) {
     const hideA = Math.random() < 0.5;
@@ -1964,6 +1985,8 @@ function milestone(n) {
 
 /* ================= 遊戲說明 ================= */
 $('#go-help').addEventListener('click', () => { $('#o-help').hidden = false; });
+$('#go-set').addEventListener('click', () => { refreshMenu(); $('#o-set').hidden = false; });
+$('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 function pickMode() {
   $('#pk-std').textContent = DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '';
   $('#pk-sd').textContent = DB.best.sudden ? `最高 ${DB.best.sudden} 分` : '';
@@ -2002,7 +2025,7 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; });
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
