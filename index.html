@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#08111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="九九乘法練習遊戲：流星防衛戰、幽靈競速、雙人拔河。錯題自動加權，星圖追蹤熟練度。">
+<meta name="description" content="九九乘法練習遊戲：流星防衛戰、幽靈競速、雙人拔河、哪個大哪個小、炸彈拆除。錯題會更常出現，星圖看熟練度，每日任務、養寵物。">
 <title>九九流星隊</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +40,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .menu-in{margin-block:auto;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3.2vh,30px);padding-block:24px;width:100%}
 .brand{display:flex;align-items:center;gap:14px}
 .brand-mark{font-weight:900;font-size:clamp(68px,19vw,116px);line-height:.9;color:var(--sun);letter-spacing:-.05em;text-shadow:0 5px 0 #a87a00,0 14px 40px rgba(255,210,63,.35);transform:rotate(-5deg)}
-.brand-sub span{display:block;font-weight:900;font-size:clamp(32px,8.6vw,50px);line-height:1;letter-spacing:.04em}
+.brand-sub span{display:block;font-weight:900;font-size:clamp(32px,8.6vw,50px);line-height:1;letter-spacing:.04em;text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 18px rgba(8,17,31,.9)}
 .brand-sub small{display:block;color:var(--muted);font-size:14px;letter-spacing:.24em;margin-top:10px}
 .modes{display:grid;gap:12px;width:100%;max-width:470px}
 .mode{display:grid;grid-template-columns:62px 1fr;column-gap:14px;row-gap:3px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;transition:transform .08s,box-shadow .08s}
@@ -57,11 +57,42 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .m-t em{font-style:normal;font-family:var(--f-num);font-size:14px;color:var(--sun);font-weight:400;white-space:nowrap;text-align:right}
 .m-d{color:var(--muted);font-size:14px;line-height:1.45}
 .menu-foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:470px;width:100%}
-.chip{border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+#s-menu .menu-foot{display:grid;grid-template-columns:repeat(3,1fr)}
+#s-menu .menu-foot .chip{justify-content:center;padding-inline:6px;font-size:14px;white-space:nowrap;min-height:44px}
+#s-menu .menu-foot .chip b{font-size:14px}
+#s-menu .menu-foot .chip{gap:4px;padding-inline:4px;font-size:13.5px}
+.chip{border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:10px 16px;min-height:44px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
 .chip b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:17px}
 .chip.tog::before{content:'';width:9px;height:9px;border-radius:50%;border:1.5px solid var(--muted)}
 .chip.tog[aria-pressed="true"]{border-color:var(--mint);color:var(--mint)}
 .chip.tog[aria-pressed="true"]::before{background:var(--mint);border-color:var(--mint)}
+
+/* ---------- 每日任務 ---------- */
+.quests{width:100%;max-width:470px;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:12px 14px;display:grid;gap:8px}
+.q-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.q-head b{font-size:17px;font-weight:900}
+.q-head span{font-size:13px;color:var(--muted);font-weight:700}
+.q-head span em{font-style:normal;font-family:var(--f-num);color:var(--sun);font-size:16px;margin-inline:2px}
+.q-row{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:10px;font-size:15px;font-weight:700;line-height:1.3}
+.q-row i{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:15px;color:transparent}
+.q-row.done i{background:var(--mint);border-color:var(--mint);color:#063d30}
+.q-row.done span{color:var(--muted);text-decoration:line-through}
+.q-row em{font-style:normal;font-family:var(--f-num);color:var(--sun);font-size:15px;white-space:nowrap}
+.q-row.done em{color:var(--mint)}
+.q-all{text-align:center;color:var(--mint);font-weight:900;font-size:14px}
+.q-list{display:grid;gap:8px;text-align:left}
+.q-head{justify-content:center}
+.chip.todo{position:relative}
+.chip.todo::after{content:'';position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 2px var(--ink),0 0 10px var(--coral);animation:dot 1.2s ease-in-out infinite}
+@keyframes dot{50%{transform:scale(1.35);box-shadow:0 0 0 2px var(--ink),0 0 16px var(--coral)}}
+.chip.ok b{color:var(--mint)}
+.name-egg svg{width:110px;height:110px}
+.name-in{width:100%;font:inherit;font-size:24px;font-weight:900;text-align:center;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--paper)}
+.name-in:focus{outline:2px solid var(--mint);border-color:var(--mint)}
+.name-sug{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:11px 14px;min-height:44px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+.toast.on{transform:translate(-50%,0);opacity:1}
 
 /* ---------- 共用：鍵盤、題目 ---------- */
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:420px;margin-inline:auto}
@@ -71,18 +102,28 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .key.hit{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge);background:linear-gradient(#30587d,#22405f)}
 .aq{font-family:var(--f-num);font-size:clamp(32px,8.4vw,44px);display:flex;align-items:center;justify-content:center;gap:.22em;white-space:nowrap;line-height:1.1}
 .aq.dim{font-family:var(--f-zh);font-size:18px;color:var(--muted);font-weight:700}
+.aq.seq,.half .aq.seq{font-size:clamp(24px,6.4vw,38px);gap:.1em;flex-wrap:wrap;row-gap:.15em}
+.qcard .aq.seq{font-size:clamp(30px,8.6vw,54px)}
+.qlab{flex-basis:100%;text-align:center;font-family:var(--f-zh);font-size:.48em;font-weight:700;color:var(--ice);line-height:1;letter-spacing:.06em}
 .slot{display:inline-grid;place-items:center;width:.82em;height:1.08em;border-radius:.16em;background:rgba(255,255,255,.07);border-bottom:4px solid var(--muted);font-style:normal;color:var(--sun)}
 .slot.on{border-color:var(--sun);background:rgba(255,210,63,.1)}
 .hint{font-size:14px;color:#ff9a9a;font-weight:700;min-height:1.3em;text-align:center}
 .shake{animation:shk .35s}
 @keyframes shk{20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
-.icon-btn{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:rgba(12,24,41,.66);cursor:pointer;display:grid;place-items:center;flex:none}
+.icon-btn{width:44px;height:44px;border-radius:13px;border:1px solid var(--line);background:rgba(12,24,41,.66);cursor:pointer;display:grid;place-items:center;flex:none}
 .icon-btn svg{width:18px;height:18px}
-.link-btn{border:1px solid var(--line);background:rgba(12,24,41,.66);border-radius:12px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:15px}
+.link-btn{border:1px solid var(--line);background:rgba(12,24,41,.66);border-radius:12px;padding:10px 14px;min-height:44px;font-weight:700;cursor:pointer;font-size:15px}
 
 /* ---------- 流星防衛戰 ---------- */
 .hud{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding-block:10px 0}
+.hud-l{display:flex;align-items:center;gap:6px;min-width:0}
 .hearts{display:flex;gap:3px;flex-wrap:wrap}
+.hearts.inv svg{filter:drop-shadow(0 0 6px rgba(255,210,63,.9))}
+.hshield{width:26px;height:26px;flex:none;animation:hsh .8s ease-in-out infinite}
+@keyframes hsh{50%{transform:scale(1.18);filter:drop-shadow(0 0 8px rgba(255,210,63,.9))}}
+.fire{display:flex;gap:1px;align-items:center;min-height:44px;border:2px solid transparent;background:transparent;border-radius:12px;padding:4px 7px;cursor:pointer;touch-action:manipulation}
+.fire svg{width:24px;height:24px}
+.fire.ready{border-color:var(--ember);background:rgba(255,174,87,.18)}
 .hearts svg{width:24px;height:24px}
 .score{text-align:center;font-family:var(--f-num);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
 .score small{display:block;font-family:var(--f-zh);font-size:12px;color:var(--muted);letter-spacing:.16em;margin-top:3px;font-weight:700}
@@ -91,6 +132,11 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .combo b{display:block;font-family:var(--f-num);font-size:26px;color:var(--ember);font-weight:400;letter-spacing:0}
 .combo em{font-style:normal;font-family:var(--f-num);color:var(--sun);font-size:15px;letter-spacing:0}
 .combo.hot b{color:var(--sun);text-shadow:0 0 14px rgba(255,174,87,.8)}
+.combo{position:relative;padding:4px 10px;border-radius:999px}
+.combo.shield{background:rgba(159,220,255,.14);box-shadow:inset 0 0 0 1.5px rgba(159,220,255,.55),0 0 14px rgba(159,220,255,.4);animation:bubble 1.6s ease-in-out infinite;overflow:hidden}
+.combo.shield::after{content:'';position:absolute;inset:-40% -60%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.45) 50%,transparent 60%);animation:shimmer 1.6s linear infinite;pointer-events:none}
+@keyframes bubble{50%{box-shadow:inset 0 0 0 1.5px rgba(159,220,255,.95),0 0 24px rgba(159,220,255,.85)}}
+@keyframes shimmer{0%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
 .freeze{height:5px;border-radius:3px;background:rgba(159,220,255,.18);margin-top:8px;overflow:hidden}
 .freeze i{display:block;height:100%;width:0;background:var(--ice);border-radius:3px}
 .freeze.gold{background:rgba(255,210,63,.18)} .freeze.gold i{background:var(--sun)}
@@ -106,6 +152,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 @keyframes ban{0%{opacity:0;transform:scale(.5)}14%{opacity:1;transform:scale(1.1)}24%{transform:scale(1)}78%{opacity:1}100%{opacity:0;transform:translateY(-24px) scale(1.05)}}
 .dock{padding-block:2px 12px}
 .answer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:82px;padding-block:8px 6px}
+.answer.pop{animation:pop .32s ease}
+/* 發射鈕浮在舞台右下角（鍵盤正上方），不佔版面，題目不會被擠偏 */
+.fire-big{position:absolute;right:0;bottom:10px;pointer-events:auto;height:clamp(46px,7.2vh,66px);padding:0 14px;border-radius:16px;border:0;background:linear-gradient(#ff9a4a,#d85a1a);color:#fff;font-weight:900;font-size:17px;box-shadow:0 5px 0 #7a2e08;display:flex;align-items:center;gap:6px;cursor:pointer;touch-action:manipulation;white-space:nowrap;animation:firepulse .6s ease-in-out infinite}
+.fire-big svg{width:26px;height:26px}
+.fire-big:active{transform:translateY(4px);box-shadow:0 1px 0 #7a2e08;animation:none}
+@keyframes firepulse{50%{transform:scale(1.07);box-shadow:0 5px 0 #7a2e08,0 0 20px rgba(255,154,74,.9)}}
 
 /* ---------- 幽靈競速 ---------- */
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-block:10px 4px}
@@ -137,8 +189,19 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .top .who{color:var(--ember)} .bot .who{color:var(--mint)}
 .half .aq{font-size:clamp(30px,8vw,46px)}
 .half .pad{max-width:360px;gap:7px}
-.half .key{height:clamp(38px,5.4vh,56px);font-size:clamp(20px,3.4vh,30px)}
+.half .key{height:clamp(44px,5.4vh,56px);font-size:clamp(20px,3.4vh,30px)}
 .half.locked .pad{opacity:.3;pointer-events:none}
+#s-versus.cpu .half.top{transform:none;justify-content:center}
+#s-versus.cpu .half.top .pad{display:none}
+#s-versus.cpu .half.top .aq{font-size:clamp(26px,7vw,40px)}
+.cpubox{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cpu-face{width:clamp(64px,14vh,96px);height:auto}
+.cpu-face.thinking{animation:cpuThink .5s ease-in-out infinite}
+@keyframes cpuThink{50%{transform:translateY(-4px) rotate(3deg)}}
+.cpu-face.oops{animation:shk .35s}
+.think{width:min(60%,220px);height:8px;border-radius:4px;background:rgba(255,174,87,.18);overflow:hidden}
+.think i{display:block;height:100%;width:0;background:var(--ember);border-radius:4px}
+.cpu-say{font-size:13px;color:var(--ember);font-weight:700;min-height:1.2em}
 .vres{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:clamp(40px,11vw,70px);pointer-events:none;text-shadow:0 5px 0 rgba(0,0,0,.45)}
 .vres.win{color:var(--sun)} .vres.lose{color:var(--muted);font-size:clamp(28px,8vw,48px)}
 .band{flex:none;height:60px;display:flex;align-items:center;gap:10px;padding-inline:16px;background:rgba(6,12,24,.78);border-block:1px solid var(--line)}
@@ -148,7 +211,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .rope .mid{position:absolute;left:50%;top:-8px;bottom:-8px;width:2px;background:rgba(255,255,255,.35)}
 .knot{position:absolute;top:50%;left:50%;width:34px;height:34px;transform:translate(-50%,-50%);transition:left .35s cubic-bezier(.3,1.6,.5,1)}
 .band-btns{display:flex;gap:10px;justify-content:center;flex:1}
-.band-btns .btn{padding:10px 16px;font-size:16px}
+.band-btns .btn{padding:12px 16px;min-height:44px;font-size:16px}
 
 /* ---------- 星圖 ---------- */
 .map-in{margin-block:auto;display:flex;flex-direction:column;align-items:center;gap:14px;padding-block:14px 26px;width:100%}
@@ -167,7 +230,105 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
 .info{width:100%;max-width:520px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:15px;line-height:1.6;min-height:52px}
 .info b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:18px}
-.danger{border:1px solid rgba(255,97,97,.4);background:transparent;color:#ff9a9a;border-radius:12px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:14px}
+.danger{border:1px solid rgba(255,97,97,.4);background:transparent;color:#ff9a9a;border-radius:12px;padding:12px 16px;min-height:44px;font-weight:700;cursor:pointer;font-size:14px}
+
+/* ---------- 哪個大／哪個小 ---------- */
+.cmp-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,2.6vh,24px);min-height:0;padding-block:8px 16px;width:100%}
+.cmp-ask{font-weight:900;font-size:clamp(30px,8vw,46px);line-height:1;display:flex;align-items:center;gap:10px;min-height:1.2em}
+.cmp-ask.big{color:var(--sun);text-shadow:0 4px 0 #a87a00}
+.cmp-ask.small{color:var(--ice);text-shadow:0 4px 0 #2a5a7a}
+.cmp-ask svg{width:.85em;height:.85em}
+.cmp-opts{display:grid;gap:12px;width:100%;max-width:420px}
+.cmp-opt{display:flex;align-items:center;justify-content:center;gap:.4em;padding:0 18px;height:clamp(62px,11vh,92px);border:2px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;font-family:var(--f-num);font-size:clamp(30px,8vw,44px);color:var(--paper);touch-action:manipulation;transition:transform .08s,box-shadow .08s,border-color .15s,background .15s}
+.cmp-opt:active{transform:translateY(4px);box-shadow:0 2px 0 var(--keyEdge)}
+.cmp-opt .eq{color:var(--muted);font-size:.72em;min-width:2.6em;text-align:left;opacity:0;transition:opacity .2s}
+.cmp-opt.show .eq{opacity:1}
+.cmp-opt.ok{border-color:var(--mint);background:rgba(95,242,208,.14);color:var(--mint)}
+.cmp-opt.ok .eq{color:var(--mint)}
+.cmp-opt.bad{border-color:var(--coral);background:rgba(255,97,97,.14);color:#ffbcbc}
+.cmp-opt.want{border-color:var(--mint);animation:want .9s ease-in-out infinite}
+@keyframes want{50%{box-shadow:0 6px 0 var(--keyEdge),0 0 0 6px rgba(95,242,208,.35)}}
+.cmp-opt.pop{animation:pop .32s ease}
+.cmp-streak{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.1em;min-height:1.2em}
+#c-timer{font-size:24px;transition:opacity .3s}
+#c-timer.off{opacity:.35}
+
+/* ---------- 炸彈拆除 ---------- */
+.bm-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.8vh,16px);min-height:0;padding-block:4px 14px;width:100%}
+.bm-task{text-align:center;font-weight:900;font-size:clamp(22px,6vw,32px);line-height:1.25}
+.bm-task b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:1.5em;vertical-align:-.08em;margin-inline:.08em}
+.bm-task small{display:block;font-size:14px;color:var(--muted);font-weight:700;margin-top:4px}
+.bm-head{--bombw:clamp(84px,22vw,108px);display:flex;align-items:flex-start;gap:10px;width:100%;max-width:420px}
+.bm-rest{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bm-head .bm-task{text-align:left;padding-top:2px}
+.bomb{width:var(--bombw);height:auto;flex:none;overflow:visible}
+.bomb .body{transform-origin:60px 74px}
+.fuseline{display:block;width:100%;height:28px;overflow:visible;margin-top:calc(var(--bombw) * .217 - 14px)}
+.fuseline .ash{fill:none;stroke:rgba(147,169,192,.3);stroke-width:3;stroke-dasharray:2 5;stroke-linecap:round}
+.fuseline .fuse{fill:none;stroke:#c9a46b;stroke-width:5;stroke-linecap:round}
+.spark{transform-origin:center;transform-box:fill-box}
+.bomb.low .body{animation:wobble .22s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.bomb.boom .body{animation:bombgone .45s ease-out forwards}
+@keyframes bombgone{0%{transform:scale(1);opacity:1}35%{transform:scale(1.4);opacity:1}100%{transform:scale(2);opacity:0}}
+.bomb .burst{transform-origin:60px 74px;transform:scale(0);opacity:0}
+.bomb.boom .burst{animation:burst .75s ease-out forwards}
+@keyframes burst{0%{transform:scale(.15) rotate(0);opacity:1}55%{transform:scale(1.7) rotate(18deg);opacity:1}100%{transform:scale(2.4) rotate(30deg);opacity:0}}
+.bm-head.boom .spark,.bm-head.ok .spark{opacity:0}
+.bm-head.ok .fuse{stroke:var(--mint)}
+.bomb.ok .body{animation:pop .4s ease}
+.bomb.ok .body circle{stroke:var(--mint)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:400px}
+.tile{height:clamp(54px,8.4vh,74px);border-radius:16px;border:2px solid var(--line);background:var(--panel);box-shadow:0 5px 0 var(--keyEdge);font-family:var(--f-num);font-size:clamp(26px,7vw,36px);color:var(--paper);display:grid;place-items:center;cursor:pointer;padding:0;touch-action:manipulation;transition:transform .06s,box-shadow .06s,border-color .15s,background .15s}
+.tile:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
+.tile.got{border-color:var(--mint);background:rgba(95,242,208,.16);color:var(--mint);animation:pop .32s ease}
+.tile.miss{border-color:var(--sun);background:rgba(255,210,63,.16);color:var(--sun);animation:missblink .9s ease-in-out infinite}
+@keyframes missblink{50%{box-shadow:0 5px 0 var(--keyEdge),0 0 0 5px rgba(255,210,63,.4)}}
+.tile.boom{border-color:var(--coral);background:rgba(255,97,97,.22);color:#ffbcbc}
+.tiles.off .tile{pointer-events:none}
+.bm-found{font-size:14px;color:var(--muted);font-weight:700;letter-spacing:.1em;min-height:1.3em}
+.bm-found b{font-family:var(--f-num);font-weight:400;color:var(--mint);font-size:18px}
+.bm-msg{text-align:center;font-weight:900;font-size:clamp(20px,5.6vw,28px);min-height:1.3em}
+.bm-msg.good{color:var(--mint)} .bm-msg.bad{color:var(--coral)}
+.bm-why{font-size:14px;color:var(--muted);font-weight:700;text-align:center;min-height:1.3em;line-height:1.4}
+#bm-timer{font-size:24px}
+
+/* ---------- 寵物 ---------- */
+.pet-intro{margin:0;color:var(--muted);font-size:15px;line-height:1.6;text-align:center;max-width:470px}
+.pet-intro b{color:var(--sun)}
+.pet-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:470px}
+.pet-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 5px 0 var(--keyEdge);cursor:pointer;color:var(--paper)}
+.pet-card:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
+.pet-card svg{width:72px;height:72px}
+.pet-card b{font-size:16px;font-weight:900}
+.pet-card small{font-size:12px;color:var(--muted)}
+.pet-show{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:470px}
+.pet-stage{width:min(70vw,260px);height:min(70vw,260px);display:grid;place-items:center}
+.pet-stage svg{width:100%;height:100%;animation:petIdle 2.4s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes petIdle{50%{transform:translateY(-6px) scale(1.02,.98)}}
+.pet-stage.pop svg{animation:petPop .5s ease}
+@keyframes petPop{30%{transform:scale(1.18,.86)}60%{transform:scale(.94,1.1) translateY(-10px)}}
+.pet-stage.wobble svg{animation:petWobble .9s ease-in-out infinite}
+@keyframes petWobble{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.pet-name{font-size:22px;font-weight:900}
+.pet-name small{display:block;font-size:13px;color:var(--muted);font-weight:700;margin-top:2px}
+.pet-bar{width:100%;max-width:320px;height:12px;border-radius:6px;background:rgba(255,210,63,.15);overflow:hidden}
+.pet-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ember),var(--sun));border-radius:6px;transition:width .4s}
+.pet-next{font-size:14px;color:var(--muted);font-weight:700;min-height:1.3em}
+.pet-tip{font-size:13px;color:var(--muted);text-align:center;line-height:1.5}
+#pet-feed:disabled{opacity:.45;box-shadow:none;transform:none}
+.gear{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;max-width:470px;margin-top:4px}
+.gear button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:68px;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
+.gear button svg{width:30px;height:30px}
+.gear button small{font-size:11px;color:var(--muted);font-weight:700}
+.gear button[aria-pressed="true"]{border-color:var(--sun);background:rgba(255,210,63,.14);color:var(--sun)}
+.gear button:disabled{opacity:.45;cursor:default}
+.gear-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
+.pet-stage.bye svg{animation:petBye 1.6s ease-in forwards}
+@keyframes petBye{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(.5);opacity:0}}
+.alumni{width:100%;max-width:470px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-size:14px;line-height:1.6;color:var(--muted)}
+.alumni b{color:var(--paper)}
+.alumni svg{width:26px;height:26px;vertical-align:middle;margin-right:2px}
 
 /* ---------- 覆蓋層 ---------- */
 .overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(4,9,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
@@ -190,6 +351,14 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .wrongs-t{font-size:13px;color:var(--muted);font-weight:700}
 .wrongs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .wrongs i{font-style:normal;font-family:var(--f-num);background:rgba(255,97,97,.14);color:#ffbcbc;border-radius:10px;padding:4px 10px;font-size:17px}
+.setlist{display:grid;gap:8px;text-align:left}
+.setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.setrow b{display:block;font-size:16px;font-weight:900}
+.setrow small{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px}
+.sw{width:56px;height:34px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
+.sw i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
+.sw[aria-pressed="true"]{background:rgba(95,242,208,.22);border-color:var(--mint)}
+.sw[aria-pressed="true"] i{left:29px;background:var(--mint)}
 .opt{display:grid;gap:8px}
 .opt button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:14px;padding:12px;font-weight:700;cursor:pointer;text-align:left;font-size:15px}
 .opt button[aria-pressed="true"]{border-color:var(--ember);background:rgba(255,174,87,.12);color:#ffd2a1}
@@ -203,7 +372,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .meter{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
 .meter i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),var(--coral));border-radius:3px}
 .wmeta{font-size:12px;color:var(--muted);font-weight:700}
-.wx{border:1px solid var(--line);background:transparent;border-radius:10px;padding:7px 11px;font-weight:700;cursor:pointer;font-size:13px;color:var(--muted)}
+.wx{border:1px solid var(--line);background:transparent;border-radius:10px;padding:12px 12px;min-height:44px;font-weight:700;cursor:pointer;font-size:13px;color:var(--muted)}
 .wempty{color:var(--muted);padding:18px 8px;text-align:center;line-height:1.6}
 .rules{margin:0;padding-left:1.2em;text-align:left;color:var(--muted);font-size:14px;line-height:1.6;display:grid;gap:5px}
 .rules b{color:var(--paper)}
@@ -214,7 +383,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .count span{font-family:var(--f-num);font-size:clamp(90px,30vw,160px);color:var(--sun);text-shadow:0 8px 0 #a87a00;animation:cnt .7s ease forwards}
 .count span.go{font-family:var(--f-zh);font-weight:900;font-size:clamp(56px,16vw,96px)}
 @keyframes cnt{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(.85);opacity:0}}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}.count span{animation:none;opacity:1}.banner.on{animation:none}}
 </style>
 </head>
 <body>
@@ -241,23 +410,37 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <button class="mode" id="go-versus" type="button">
           <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 32h48" stroke="#d1a86e" stroke-width="6" stroke-linecap="round"/><circle cx="8" cy="32" r="7" fill="#5ff2d0"/><circle cx="56" cy="32" r="7" fill="#ffae57"/><path d="m32 22 3 6.5 7 .8-5.2 4.8 1.5 7-6.3-3.6-6.3 3.6 1.5-7-5.2-4.8 7-.8z" fill="#ffd23f"/></svg>
           <span class="m-t">雙人拔河</span>
-          <span class="m-d">平板放中間，面對面搶答，跟爸爸媽媽一決勝負。</span>
+          <span class="m-d">平板放中間面對面搶答，跟爸爸媽媽一決勝負。一個人也可以跟機器人比。</span>
+        </button>
+        <button class="mode" id="go-cmp" type="button">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="34" width="12" height="24" rx="4" fill="#5ff2d0"/><rect x="26" y="18" width="12" height="40" rx="4" fill="#ffd23f"/><rect x="44" y="28" width="12" height="30" rx="4" fill="#ffae57"/><path d="m32 2 2.3 5 5.5.6-4.1 3.7 1.2 5.4L32 14l-4.9 2.7 1.2-5.4-4.1-3.7 5.5-.6z" fill="#ffd23f" stroke="#a87a00" stroke-width="1.5"/></svg>
+          <span class="m-t">哪個大？哪個小？<em id="b-cmp"></em></span>
+          <span class="m-d">三個算式，點出答案最大（或最小）的那個。數字很接近，要算過才知道。</span>
+        </button>
+        <button class="mode" id="go-bomb" type="button">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="28" cy="38" r="20" fill="#2a3f58" stroke="#93a9c0" stroke-width="2"/><path d="M38 20l6-8" stroke="#93a9c0" stroke-width="4" stroke-linecap="round"/><path d="M44 12c4-6 10-4 12 0" stroke="#ffae57" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="56" cy="12" r="5" fill="#ffd23f"/><circle cx="56" cy="12" r="2" fill="#fff"/><text x="28" y="46" text-anchor="middle" font-family="Lilita One,sans-serif" font-size="22" fill="#5ff2d0">7</text></svg>
+          <span class="m-t">炸彈拆除<em id="b-bomb"></em></span>
+          <span class="m-d">炸彈說幾的倍數，就在引線燒完前把它們全部點掉。點到不是的會爆炸！</span>
         </button>
       </nav>
       <div class="menu-foot">
         <button class="chip" id="go-map" type="button">星圖 <b id="b-stars">0/81</b></button>
         <button class="chip" id="go-wrong" type="button">錯題本 <b id="b-wrong">0</b></button>
+        <button class="chip" id="go-pet" type="button">寵物 <b id="b-pet">0</b></button>
+        <button class="chip" id="go-quest" type="button">今日任務 <b id="b-quest">0/3</b></button>
         <button class="chip" id="go-help" type="button">遊戲說明</button>
-        <button class="chip tog" data-set="mix" type="button" aria-pressed="false">混入十以內加減</button>
-        <button class="chip tog" data-set="music" type="button" aria-pressed="true">音樂</button>
-        <button class="chip tog" data-set="sound" type="button" aria-pressed="true">音效</button>
+        <button class="chip" id="go-set" type="button">設定</button>
       </div>
     </div>
   </section>
 
   <section class="screen" id="s-meteor" hidden>
     <div class="hud">
-      <div class="hearts" id="m-hearts" aria-label="生命"></div>
+      <div class="hud-l">
+        <div class="hearts" id="m-hearts" aria-label="生命"></div>
+        <svg class="hshield" id="m-hshield" viewBox="0 0 24 24" aria-label="無敵中" hidden><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z" fill="rgba(255,210,63,.3)" stroke="#ffd23f" stroke-width="2"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="#ffd23f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <button class="fire" id="m-fire" type="button" aria-label="發射飛彈" hidden></button>
+      </div>
       <div class="score"><span id="m-score">0</span><small id="m-wave">第 1 波</small></div>
       <div class="hud-r">
         <div class="combo" id="m-combo"></div>
@@ -267,7 +450,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     <div class="freeze" id="m-freeze" hidden><i></i></div>
     <div class="freeze gold" id="m-dbl" hidden><i></i></div>
     <div class="freeze inv" id="m-inv" hidden><i></i></div>
-    <div class="stage"><div class="banner" id="banner"></div></div>
+    <div class="stage">
+      <div class="banner" id="banner"></div>
+      <button class="fire-big" id="m-fire2" type="button" hidden aria-label="發射飛彈"></button>
+    </div>
     <div class="dock" id="m-dock">
       <div class="answer" id="m-answer"></div>
       <div class="pad" id="m-pad"></div>
@@ -296,7 +482,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
   <section class="screen" id="s-versus" hidden>
     <div class="half top" id="v-top">
-      <div class="who">挑戰者</div>
+      <div class="who" id="v-topwho">挑戰者</div>
+      <div class="cpubox" id="v-cpu" hidden>
+        <svg class="cpu-face" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="14" width="44" height="38" rx="12" fill="#2a3f58" stroke="#93a9c0" stroke-width="2"/><path d="M32 14V6" stroke="#93a9c0" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="5" r="3" fill="#ff6161"/><circle cx="23" cy="31" r="5" fill="#5ff2d0"/><circle cx="41" cy="31" r="5" fill="#5ff2d0"/><path id="v-mouth" d="M23 43q9 6 18 0" fill="none" stroke="#5ff2d0" stroke-width="3" stroke-linecap="round"/></svg>
+        <div class="think"><i id="v-think"></i></div>
+        <div class="cpu-say" id="v-say">我在算…</div>
+      </div>
       <div class="aq" data-q></div>
       <div class="hint" data-hint></div>
       <div class="pad" data-pad></div>
@@ -326,9 +517,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <h3>雙人拔河</h3>
         <p>平板平放在兩人中間。答對一題就把星星往自己這邊拉一格，先拉到底的人贏。答錯會停 1 秒。</p>
         <p style="color:var(--mint)">下方「小隊長」的答題會記進星圖。</p>
-        <div class="opt" role="group" aria-label="挑戰者的題目">
-          <button type="button" id="v-easy" aria-pressed="true">挑戰者：一樣的九九乘法</button>
-          <button type="button" id="v-hard" aria-pressed="false">挑戰者：大人加難（兩位數 × 一位數）</button>
+        <div class="opt" role="group" aria-label="對手" id="v-opp">
+          <button type="button" data-opp="cpu" aria-pressed="true">對手：機器人（一個人也能玩，速度跟你差不多）</button>
+          <button type="button" data-opp="easy" aria-pressed="false">對手：真人，一樣的九九乘法</button>
+          <button type="button" data-opp="hard" aria-pressed="false">對手：大人加難（兩位數 × 一位數）</button>
         </div>
         <div class="btn-col">
           <button class="btn" type="button" id="v-start">開始對戰</button>
@@ -348,6 +540,77 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       </div>
     </div>
   </div>
+
+  <section class="screen" id="s-cmp" hidden>
+    <div class="topbar">
+      <button class="link-btn" type="button" data-home>‹ 主選單</button>
+      <div class="prog" id="c-prog"></div>
+      <div class="timer" id="c-timer"><span id="c-time">0.0</span><small>秒</small></div>
+    </div>
+    <div class="cmp-in">
+      <div class="cmp-ask" id="c-ask"></div>
+      <div class="cmp-opts" id="c-opts"></div>
+      <div class="hint" id="c-hint"></div>
+      <div class="cmp-streak" id="c-streak"></div>
+    </div>
+  </section>
+
+  <section class="screen" id="s-bomb" hidden>
+    <div class="topbar">
+      <button class="link-btn" type="button" data-home>‹ 主選單</button>
+      <div class="prog" id="bm-prog"></div>
+      <div class="timer" id="bm-timer"><span id="bm-time">0.0</span><small>秒</small></div>
+    </div>
+    <div class="bm-in">
+      <div class="bm-head" id="bm-head">
+        <svg class="bomb" id="bm-bomb" viewBox="0 0 120 120" aria-hidden="true">
+          <path class="burst" id="bm-burst" fill="#ffd23f" stroke="#ff6161" stroke-width="3" stroke-linejoin="round"/>
+          <path class="fuse" d="M70 26 H 132" fill="none" stroke="#c9a46b" stroke-width="5" stroke-linecap="round"/>
+          <g class="body">
+            <rect x="52" y="18" width="24" height="16" rx="5" fill="#4a5f78" stroke="#93a9c0" stroke-width="2"/>
+            <circle cx="60" cy="74" r="42" fill="#1b2b40" stroke="#93a9c0" stroke-width="3"/>
+            <ellipse cx="44" cy="56" rx="11" ry="6" fill="rgba(255,255,255,.16)" transform="rotate(-35 44 56)"/>
+            <text id="bm-n" x="60" y="90" text-anchor="middle" font-family="Lilita One,'Chiron GoRound TC',sans-serif" font-size="46" fill="#5ff2d0"></text>
+          </g>
+        </svg>
+        <div class="bm-rest">
+          <svg class="fuseline" id="bm-fuseline" viewBox="0 0 400 28" aria-hidden="true">
+            <path class="ash" id="bm-ash" d=""/>
+            <path class="fuse" id="bm-fusepath" d=""/>
+            <g class="spark" id="bm-spark"><circle r="12" fill="rgba(255,210,63,.3)"/><circle r="6" fill="#ffd23f"/><circle r="2.4" fill="#fff"/></g>
+          </svg>
+          <div class="bm-task" id="bm-task"></div>
+        </div>
+      </div>
+      <div class="tiles" id="bm-tiles"></div>
+      <div class="bm-found" id="bm-found"></div>
+      <div class="bm-msg" id="bm-msg"></div>
+      <div class="bm-why" id="bm-why"></div>
+      <button class="btn" type="button" id="bm-next" hidden>下一顆炸彈</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-pet" hidden>
+    <div class="map-in">
+      <div class="map-head">
+        <button class="link-btn" type="button" data-home>‹ 主選單</button>
+        <h2>寵物<b id="pet-dust">★0</b></h2>
+      </div>
+      <div class="pet-pick" id="pet-pick" hidden>
+        <p class="pet-intro">答對題目會掉<b>星塵</b>，拿星塵餵寵物，牠就會慢慢長大。選一隻當夥伴：</p>
+        <div class="pet-cards" id="pet-cards"></div>
+      </div>
+      <div class="pet-show" id="pet-show" hidden>
+        <div class="pet-stage" id="pet-stage"></div>
+        <div class="pet-name" id="pet-name"></div>
+        <div class="pet-bar" id="pet-barwrap"><i id="pet-bar"></i></div>
+        <button class="btn" type="button" id="pet-feed">餵星塵 ×10</button>
+        <button class="btn alt" type="button" id="pet-bye" hidden></button>
+        <div class="gear" id="pet-gear"></div>
+      </div>
+      <div class="alumni" id="pet-alumni" hidden></div>
+    </div>
+  </section>
 
   <section class="screen" id="s-map" hidden>
     <div class="map-in">
@@ -401,7 +664,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
   <div class="overlay" id="o-wrong" hidden>
     <div class="card">
       <h3>錯題本</h3>
-      <p>最近最容易錯的題目，遊戲裡會比較常出現。已經學會的題目可以按「清除」，讓它回到一般出現機率。</p>
+      <p>這些是最近常錯的題目，遊戲裡會比較常出現。學會了可以按「清除」，它就不會特別常出現。</p>
       <div class="wlist" id="w-list"></div>
       <div class="btn-col">
         <button class="danger" type="button" id="w-clear">全部清空</button>
@@ -421,43 +684,109 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
+  <div class="overlay" id="o-quest" hidden>
+    <div class="card">
+      <h3>今日任務</h3>
+      <div class="q-head"><span id="q-meta"></span></div>
+      <div class="q-list" id="q-list"></div>
+      <div class="btn-col"><button class="btn alt" type="button" id="q-close">關閉</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="o-name" hidden>
+    <div class="card">
+      <h3>幫牠取個名字</h3>
+      <div class="name-egg" id="name-egg"></div>
+      <input class="name-in" id="name-in" type="text" maxlength="6" autocomplete="off" aria-label="寵物名字">
+      <div class="name-sug" id="name-sug"></div>
+      <div class="btn-col">
+        <button class="btn" type="button" id="name-ok">就叫這個名字</button>
+        <button class="btn alt" type="button" id="name-back">換一顆蛋</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="o-set" hidden>
+    <div class="card">
+      <h3>設定</h3>
+      <div class="setlist">
+        <div class="setrow"><div><b>音樂</b><small>背景音樂</small></div><button class="sw" data-set="music" type="button" aria-pressed="true" aria-label="音樂"><i></i></button></div>
+        <div class="setrow"><div><b>音效</b><small>按鍵、打中、爆炸的聲音</small></div><button class="sw" data-set="sound" type="button" aria-pressed="true" aria-label="音效"><i></i></button></div>
+        <div class="setrow"><div><b>混入十以內加減</b><small>流星防衛戰、幽靈競速、拔河偶爾出現加減題</small></div><button class="sw" data-set="mix" type="button" aria-pressed="false" aria-label="混入十以內加減"><i></i></button></div>
+        <div class="setrow"><div><b>數列題提示</b><small>數列題上面會寫出是幾的倍數。關掉就要自己看出是幾的乘法表，比較難</small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" aria-label="數列題提示"><i></i></button></div>
+      </div>
+      <div class="btn-col"><button class="btn alt" type="button" id="set-close">關閉</button></div>
+    </div>
+  </div>
+
   <div class="overlay" id="o-help" hidden>
     <div class="card help">
       <h3>遊戲說明</h3>
       <h4>流星防衛戰</h4>
       <ul class="rules">
-        <li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台自動瞄準<b>最低的那顆</b>。</li>
+        <li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台會一直瞄準<b>同一顆</b>直到打掉；有別顆快掉到地上了，才會先轉過去打它，這時下面的題目會跳一下。</li>
         <li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。</li>
+        <li>有時候流星上寫「7 的倍數」加一串數字「7、14、?、28」，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
         <li>流星掉到小鎮會<b>扣一顆心</b>。一整波都沒失誤 +50 分。</li>
-        <li>每 5 波出現<b>錯題魔王</b>，專出你最常錯的題目，要連續答對 5 題以上才打得倒（波數越高血越多）。打倒 +200 分、<b>必掉寶箱</b>。</li>
+        <li>每 5 波出現<b>錯題魔王</b>，專出你常錯的題目。要<b>一次就答對</b>才算打中一下，打中 6 下以上才打得倒，波數越高血越多。魔王來的時候沒有小流星，專心打牠就好。打倒 +200 分、<b>必掉寶箱</b>。</li>
         <li>魔王掉到小鎮會<b>扣 2 顆心</b>，一擊即死模式等於直接結束。</li>
         <li>補心只靠寶箱，心最多 3 顆。</li>
         <li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>
       </ul>
       <h4>寶箱流星</h4>
       <ul class="rules">
-        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。</li>
-        <li>常見：+30 分、時間凍結、連擊 +5（倍率已滿就改 +50 分）、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b></li>
-        <li>追蹤飛彈最多存 3 枚（已滿改 +50 分），魔王出現時會自動發射，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
-        <li>稀有：<b>超新星</b>清光全場、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已滿 3 顆或一擊即死時改 +100 分）</li>
+        <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱。<b>一次就答對</b>打掉它，就會掉一樣東西。</li>
+        <li>寶箱有三種：<b>銀色</b>常見、<b>金色</b>少見、<b>彩虹色</b>稀有，越稀有開起來越熱鬧。</li>
+        <li>銀色：+30 分、時間凍結、<b>連擊護盾</b>。金色：雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b>。</li>
+        <li>連擊護盾：右上角的連擊數字會罩在一顆亮亮的泡泡裡。答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>，泡泡就破了。已經有泡泡了，再拿到就變成 +50 分。</li>
+        <li>追蹤飛彈最多存 3 枚（滿了再拿到就變成 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
+        <li>彩虹色：<b>超新星</b>把正在掉的小流星全部清掉（你正在打的那顆和魔王除外）、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已經 3 顆、或一擊即死模式，就變成 +100 分）。</li>
       </ul>
       <h4>連擊</h4>
       <ul class="rules">
-        <li>每題 10 分，2.5 秒內答對再 +5。連擊每 5 次倍率 +1，最高 ×5。</li>
+        <li>每題 10 分，2.5 秒內答對再 +5。每連對 5 題，分數多乘 1 倍，最多 5 倍。答錯後照著重打只有 3 分，也不算連擊。</li>
         <li>連擊 10、30、50、100 有慶祝動畫。答錯或流星落地，連擊歸零。</li>
       </ul>
       <h4>幽靈競速</h4>
-      <ul class="rules"><li>20 題計時。另一條跑道是<b>上次的你</b>，追過它就是新紀錄。</li></ul>
+      <ul class="rules"><li>20 題計時。另一條跑道是<b>最快的你</b>（你最好的一次），追過它就是新紀錄。</li></ul>
       <h4>雙人拔河</h4>
       <ul class="rules">
         <li>平板放中間，面對面搶答。答對把星星拉過來一格，先拉到底的贏；答錯停 1 秒。</li>
         <li>下方「小隊長」的作答會記進星圖和錯題本。</li>
+        <li>沒有人陪你玩？選<b>機器人</b>當對手。它算題的速度跟你平常差不多，你落後它會慢一點，你領先它會快一點，偶爾也會算錯。</li>
+      </ul>
+      <h4>寵物</h4>
+      <ul class="rules">
+        <li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li>
+        <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
+        <li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉）：蝴蝶結、圍巾、墨鏡、氣球、彩虹光環。在寵物頁點一下就戴上。</li>
+        <li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li>
+        <li>不餵也不會怎樣，牠會乖乖等你。</li>
+      </ul>
+      <h4>每日任務</h4>
+      <ul class="rules">
+        <li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li>
+        <li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>
+      </ul>
+      <h4>哪個大？哪個小？</h4>
+      <ul class="rules">
+        <li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。</li>
+        <li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li>
+        <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現。</li>
+        <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
+      </ul>
+      <h4>炸彈拆除</h4>
+      <ul class="rules">
+        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 × 1 到 7 × 9 的答案：7、14、21……63。格子裡不一定九個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。</li>
+        <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！</li>
+        <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
       </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
   </div>
 
   <div class="count" id="o-count" hidden></div>
+  <div class="toast" id="toast" role="status"></div>
 </div>
 
 <script>
@@ -470,17 +799,20 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const ri = (a, b) => Math.floor(rnd(a, b + 1));
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NUMF = "'Lilita One','Chiron GoRound TC','PingFang TC','Microsoft JhengHei',sans-serif";
+const ZHF = "'Chiron GoRound TC','Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif";
 const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null }, set: { mix: false, sound: true, music: true, sudden: false } });
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true },
+  daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
+  pet: { kind: '', name: '', dust: 0, fed: 0, wear: '', released: [] } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) {
     const d = JSON.parse(raw), f = fresh();
-    DB = { facts: d.facts || {}, best: Object.assign(f.best, d.best || {}), set: Object.assign(f.set, d.set || {}) };
+    DB = { facts: d.facts || {}, best: Object.assign(f.best, d.best || {}), set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) };
   }
 } catch (e) {}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
@@ -488,8 +820,9 @@ function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (
 /* ================= 題庫與錯題加權 ================= */
 const MUL = [], ADDSUB = [];
 for (let a = 1; a <= 9; a++) for (let b = 1; b <= 9; b++) MUL.push({ k: a + 'x' + b, a, b, op: '×', ans: a * b });
-for (let a = 1; a <= 9; a++) for (let b = 1; b <= 9; b++) if (a + b <= 10) ADDSUB.push({ k: a + '+' + b, a, b, op: '+', ans: a + b });
-for (let a = 2; a <= 10; a++) for (let b = 1; b < a; b++) ADDSUB.push({ k: a + '-' + b, a, b, op: '−', ans: a - b });
+// 十以內加減不出現 1：兩個數都 ≥ 2，減法答案也 ≥ 2（3−2 這種太簡單）
+for (let a = 2; a <= 8; a++) for (let b = 2; b <= 8; b++) if (a + b <= 10) ADDSUB.push({ k: a + '+' + b, a, b, op: '+', ans: a + b });
+for (let a = 4; a <= 10; a++) for (let b = 2; b <= a - 2; b++) ADDSUB.push({ k: a + '-' + b, a, b, op: '−', ans: a - b });
 
 let recent = [];
 function weightOf(f) {
@@ -498,16 +831,29 @@ function weightOf(f) {
   if (f.op === '×' && (f.a === 1 || f.b === 1)) w *= 0.25;
   return w;
 }
-function pickFact(pool) {
-  pool = pool || ((DB.set.mix && Math.random() < 0.25) ? ADDSUB : MUL);
+const MUL2 = MUL.filter(f => f.a > 1 && f.b > 1);   // 不含 ×1 的 64 題
+// no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）。混入加減開著時每題 20% 抽加減
+function pickFact(pool, no1) {
+  pool = pool || ((DB.set.mix && Math.random() < 0.2) ? ADDSUB : (no1 ? MUL2 : MUL));
   let tot = 0;
   const ws = pool.map(f => { const w = recent.includes(f.k) ? 0 : weightOf(f); tot += w; return w; });
+  if (tot === 0) { tot = 0; pool.forEach((f, i) => { ws[i] = weightOf(f); tot += ws[i]; }); }   // 題庫很小時（魔王）不要卡在同一題
   let r = Math.random() * tot, pick = pool[0];
   for (let i = 0; i < pool.length; i++) { r -= ws[i]; if (r <= 0) { pick = pool[i]; break; } }
   recent.push(pick.k); if (recent.length > 5) recent.shift();
   return pick;
 }
-function makeQ(f, rev) {
+// 數列題：取包含 n×k 的連續四個倍數（n ≥ 2），把 n×k 那格換成問號；答題紀錄仍算在 n×k 這題上
+function makeQ(f, rev, seq) {
+  if (seq && f.op === '×' && f.a >= 2 && Math.random() < 0.15) {
+    const n = f.a, k = f.b, s = clamp(k - ri(0, 3), 1, 6);
+    const terms = [0, 1, 2, 3].map(i => n * (s + i)), hide = k - s;
+    const show = terms.map((v, i) => i === hide ? '?' : String(v));
+    // label 標示是幾的倍數，孩子不用自己看出乘法表（實測不標示跟反向題一樣難）
+    const lines = [show.slice(0, 2).join('、'), show.slice(2).join('、')];
+    if (DB.set.seqLabel) lines.unshift(`${n} 的倍數`);
+    return { f, k: f.k, seq: true, ans: f.ans, label: DB.set.seqLabel ? `${n} 的倍數` : '', text: show.join('、'), lines };
+  }
   if (rev && f.op === '×' && Math.random() < 0.2) {
     const hideA = Math.random() < 0.5;
     return { f, k: f.k, rev: true, ans: hideA ? f.a : f.b, text: hideA ? `? × ${f.b} = ${f.ans}` : `${f.a} × ? = ${f.ans}` };
@@ -523,6 +869,7 @@ function record(k, ok, ms) {
   if (!ok) s.w = (s.w || 0) + 1;
   if (ok && ms > 0) { ms = Math.min(ms, 9000); s.t = Math.round(s.t ? s.t * 0.7 + ms * 0.3 : ms); }
   save();
+  if (ok) questStars();
 }
 function state(k) {
   const s = DB.facts[k];
@@ -735,13 +1082,15 @@ function drawWorld(gy, dt) {
     g.strokeStyle = lg; g.lineWidth = 2; g.beginPath(); g.moveTo(s.x, s.y); g.lineTo(s.x + 90, s.y - 36); g.stroke();
   }
   // 月亮
-  const mx = W * 0.82, my = Math.max(64, Math.min(120, gy * 0.13));
-  const mg = g.createRadialGradient(mx, my, 10, mx, my, 96);
-  mg.addColorStop(0, 'rgba(255,240,200,.32)'); mg.addColorStop(1, 'rgba(255,240,200,0)');
-  g.fillStyle = mg; g.beginPath(); g.arc(mx, my, 96, 0, 6.283); g.fill();
-  g.fillStyle = '#fff1cf'; g.beginPath(); g.arc(mx, my, 22, 0, 6.283); g.fill();
+  // 主選單時月亮縮小躲到右上角，不壓到「流星隊」標題；遊戲中維持原位
+  const menuMoon = mode === 'menu' || mode === 'pet' || mode === 'map';
+  const mx = menuMoon ? W - 46 : W * 0.82, my = menuMoon ? 46 : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
+  const mg = g.createRadialGradient(mx, my, 8, mx, my, mgr);
+  mg.addColorStop(0, 'rgba(255,240,200,.3)'); mg.addColorStop(1, 'rgba(255,240,200,0)');
+  g.fillStyle = mg; g.beginPath(); g.arc(mx, my, mgr, 0, 6.283); g.fill();
+  g.fillStyle = '#fff1cf'; g.beginPath(); g.arc(mx, my, mr, 0, 6.283); g.fill();
   g.fillStyle = 'rgba(205,180,150,.4)';
-  [[-7, -5, 5], [7, 4, 4], [-2, 10, 3]].forEach(([dx, dy, r]) => { g.beginPath(); g.arc(mx + dx, my + dy, r, 0, 6.283); g.fill(); });
+  const ms = mr / 22; [[-7, -5, 5], [7, 4, 4], [-2, 10, 3]].forEach(([dx, dy, r]) => { g.beginPath(); g.arc(mx + dx * ms, my + dy * ms, r * ms, 0, 6.283); g.fill(); });
   drawHill(hills[0], gy, '#173149');
   drawHill(hills[1], gy, '#0f2438');
   for (const b of town) {
@@ -762,6 +1111,7 @@ function drawWorld(gy, dt) {
 }
 
 function spark(x, y, n, cols, spd = 240, sz = 3, life = 0.8, grav = 120) {
+  if (RM) n = Math.ceil(n / 4);   // 減少動態：粒子剩四分之一
   for (let i = 0; i < n; i++) {
     const a = rnd(0, 6.283), v = spd * rnd(0.2, 1);
     P.push({ k: 0, x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, l: life * rnd(0.5, 1), m: life, s: sz * rnd(0.5, 1.4), c: cols[i % cols.length], gv: grav });
@@ -810,8 +1160,8 @@ let M = null, curT = null, tA = -Math.PI / 2, kick = 0, tHurt = 0, domeFlash = 0
 function newMeteor(q, boss) {
   const fs = boss ? clamp(W * 0.055, 22, 32) : clamp(W * 0.052, 19, 25);
   g.font = `${fs}px ${NUMF}`;
-  const lines = q.text.split(' = ');
-  let tw = 0; lines.forEach((s, i) => { tw = Math.max(tw, g.measureText(i ? '= ' + s : s).width); });
+  const lines = q.lines || q.text.split(' = ');
+  let tw = 0; lines.forEach((s, i) => { g.font = `${q.label && i === 0 ? fs * 0.72 : fs}px ${q.label && i === 0 ? ZHF : NUMF}`; tw = Math.max(tw, g.measureText(q.lines ? s : (i ? '= ' + s : s)).width); });
   const base = boss ? clamp(W * 0.17, 64, 98) : clamp(W * 0.075, 31, 44);
   const r = boss ? base : Math.max(base, tw * 0.58 + 10, lines.length * fs * 0.62 + 12);
   const pts = []; for (let i = 0; i < 12; i++) pts.push(r * rnd(0.84, 1.05));
@@ -825,15 +1175,15 @@ function newMeteor(q, boss) {
 }
 function startMeteor() {
   show('meteor');
-  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
+  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, shield: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
   P.length = 0; beams.length = 0; curT = null; lastBar = '';
   $('#m-freeze').hidden = true; $('#m-dbl').hidden = true; $('#m-inv').hidden = true;
   requestAnimationFrame(() => { measure(); nextWave(); hud(); bar(); });
 }
 function nextWave() {
   const perfect = M.wave > 0 && M.waveMiss === 0;
-  if (perfect) { M.score += 50; banner('完美一波！+50', 'good'); SFX.power(); setTimeout(() => M && !M.over && waveBanner(), 1300); }
-  M.wave++; M.kills = 0; M.waveMiss = 0;
+  if (perfect) { M.score += 50; earn(5); banner('完美一波！+50', 'good'); SFX.power(); setTimeout(() => M && !M.over && waveBanner(), 1300); }
+  M.wave++; M.kills = 0; M.waveMiss = 0; quest('wave', M.wave, 'max');
   const w = M.wave;
   M.fall = Math.max(5.4, 12.5 - w * 0.75);
   M.int = Math.max(1.25, 4 - w * 0.32);
@@ -849,22 +1199,25 @@ function waveBanner() {
   else { banner(`第 ${M.wave} 波`); musTrack('game', 1 + Math.min(0.22, (M.wave - 1) * 0.025)); }
   SFX.fan();
 }
+let bannerTok = 0;
 function banner(t, cls) {
   const b = $('#banner'); b.textContent = t; b.className = 'banner' + (cls ? ' ' + cls : ''); void b.offsetWidth; b.classList.add('on');
+  if (RM) { const tok = ++bannerTok; b.style.opacity = 1; setTimeout(() => { if (tok === bannerTok) b.style.opacity = ''; b.classList.remove('on'); }, 1900); }   // 減少動態時 CSS 動畫會瞬間結束，改用計時隱藏
 }
 function bossQ() {
   const ws = weakest(10);
   const pool = ws.length >= 4 ? ws : MUL.filter(f => f.a > 2 && f.b > 2);
-  return makeQ(pickFact(pool), true);
+  return makeQ(pickFact(pool), true, false);
 }
 function spawnBoss() {
   const m = newMeteor(bossQ(), true);
   m.hp = m.hpMax = 5 + Math.floor(M.wave / 5);
-  M.boss = m; M.list.push(m);
-  for (let i = 0; i < M.missiles; i++) setTimeout(launchMissile, 1100 + i * 450);
+  M.boss = m; M.list.push(m); hud();
+  if (M.missiles > 0) setTimeout(() => { if (M && M.boss) { ftxt(W / 2, GY - 60, '有飛彈！按「發射」', '#ffae57', 26); SFX.ding(); } }, 900);
 }
+// 飛彈手動發射：點 HUD 的飛彈圖示或按空白鍵／Enter，一次一枚
 function launchMissile() {
-  if (!M || M.over || !M.boss || M.missiles <= 0) return;
+  if (!M || M.over || M.paused || !M.boss || M.boss.dead || M.missiles <= 0) return;
   M.missiles--; hud();
   const tp = tipPos();
   M.rockets.push({ x: tp.x, y: tp.y, a: tA, v: 260, t: 0 });
@@ -902,26 +1255,31 @@ function drawRockets() {
     g.restore();
   }
 }
+// 瞄準規則：打字中鎖定（M.lock）；沒打字時「黏著」目前這顆，別顆快落地（剩不到 3 秒）才強制換，
+// 避免魔王戰時小流星一超過魔王就換題、手還在打魔王的答案。
 function getTarget() {
   if (M.lock && !M.lock.dead && M.list.includes(M.lock)) return M.lock;
   M.lock = null;
-  let best = null;
-  for (const m of M.list) if (!m.dead && m.y > -m.r * 0.6 && (!best || m.y + m.r > best.y + best.r)) best = m;
-  return best;
+  let low = null;
+  for (const m of M.list) if (!m.dead && m.y > -m.r * 0.6 && (!low || m.y + m.r > low.y + low.r)) low = m;
+  if (!low || !curT || curT.dead || low === curT || !M.list.includes(curT) || curT.y <= -curT.r * 0.6) return low;
+  const sm = M.freeze > 0 ? 0.25 : 1, left = (GY - 34 - (low.y + low.r * 0.45)) / Math.max(1, low.vy * sm);
+  return left < 3 ? low : curT;
 }
 function updateMeteor(dt) {
   const sm = M.freeze > 0 ? 0.25 : 1;
   if (M.freeze > 0) { M.freeze -= dt; $('#m-freeze').hidden = M.freeze <= 0; $('#m-freeze i').style.width = clamp(M.freeze / 4 * 100, 0, 100) + '%'; }
   if (M.dbl > 0) { M.dbl -= dt; $('#m-dbl').hidden = M.dbl <= 0; $('#m-dbl i').style.width = clamp(M.dbl / 10 * 100, 0, 100) + '%'; }
   if (M.inv > 0) { M.inv -= dt; $('#m-inv').hidden = M.inv <= 0; $('#m-inv i').style.width = clamp(M.inv / M.invMax * 100, 0, 100) + '%'; }
+  const invOn = M.inv > 0; $('#m-hshield').hidden = !invOn; $('#m-hearts').classList.toggle('inv', invOn);   // 無敵：心旁邊有盾牌、心發光
   updateDrops(dt); updateRockets(dt);
   if (M.bossDelay > 0) { M.bossDelay -= dt; if (M.bossDelay <= 0) spawnBoss(); }
   M.spawnT -= dt;
   const smalls = M.list.filter(m => !m.boss).length;
   if (!M.list.length && M.spawnT > 0.5 && M.bossDelay <= 0) M.spawnT = 0.5;
-  if (M.spawnT <= 0) {
-    if (smalls < (M.boss ? 2 : M.max)) M.list.push(newMeteor(makeQ(pickFact(), M.wave >= 2), false));
-    M.spawnT = M.int * (M.boss ? 1.9 : 1) * rnd(0.8, 1.2);
+  if (M.spawnT <= 0 && !M.bossWave) {   // 魔王波只有魔王，不出小流星
+    if (smalls < M.max) M.list.push(newMeteor(makeQ(pickFact(), M.wave >= 2, M.wave >= 2), false));
+    M.spawnT = M.int * rnd(0.8, 1.2);
   }
   for (const m of M.list) {
     m.y += m.vy * dt * sm; m.x += m.vx * dt * sm; m.rot += m.vr * dt * sm;
@@ -937,7 +1295,10 @@ function updateMeteor(dt) {
   M.list = M.list.filter(m => !m.dead);
   const tg = getTarget();
   if (tg && !tg.tStart) tg.tStart = now();
-  if (tg !== curT) { curT = tg; if (!M.buf) bar(); }
+  if (tg !== curT) {
+    const had = !!curT; curT = tg; if (had) M.switchT = now();   // 魔王換題不是真的換目標，不用擋按鍵
+    if (!M.buf) { bar(); if (had && tg) { const a = $('#m-answer'); a.classList.remove('pop'); void a.offsetWidth; a.classList.add('pop'); } }
+  }
 }
 function impact(m) {
   m.dead = true;
@@ -952,7 +1313,7 @@ function impact(m) {
   }
   spark(m.x, y, 46, ['#ffae57', '#ff6161', '#ffd23f'], 300, 4, 0.9, 260);
   rocks(m.x, y, 10, '#5b4a5f'); ring(m.x, y, 120, 'rgba(255,120,90,.9)', 6);
-  M.hearts -= m.boss ? 2 : 1; M.combo = 0; M.waveMiss++;
+  M.hearts -= m.boss ? 2 : 1; if (!shieldSave(m.x, y - 100)) M.combo = 0; M.waveMiss++;
   domeFlash = 1; shake(0.45, 12); flashA = 0.25; SFX.hurt();
   if (m.boss) { M.boss = null; if (M.hearts > 0) setTimeout(() => M && !M.over && nextWave(), 900); }
   hud(); bar();
@@ -961,9 +1322,25 @@ function impact(m) {
 
 /* ---- 寶箱掉落 ---- */
 const DROPS = [
-  { id: 'score', p: 20, col: '#ffd23f' }, { id: 'freeze', p: 20, col: '#9fdcff' }, { id: 'combo', p: 15, col: '#ffae57' }, { id: 'double', p: 10, col: '#ffd23f' },
-  { id: 'missile', p: 10, col: '#ffae57' }, { id: 'inv', p: 10, col: '#ff6161' }, { id: 'nova', p: 5, col: '#ffd23f' }, { id: 'heart', p: 5, col: '#ff6161' }, { id: 'inv20', p: 5, col: '#ff6161' },
+  { id: 'score', p: 20, col: '#ffd23f' }, { id: 'freeze', p: 20, col: '#9fdcff' }, { id: 'shield', p: 15, col: '#9fdcff' }, { id: 'double', p: 10, col: '#ffd23f' },
+  { id: 'missile', p: 10, col: '#ffae57' }, { id: 'inv', p: 10, col: '#ff6161' },
+  { id: 'nova', p: 5, col: '#ffd23f' }, { id: 'heart', p: 5, col: '#ff6161' }, { id: 'inv20', p: 5, col: '#ff6161' },
 ];
+// 稀有度：1 常見（20%／15%）、2 少見（10%）、3 稀有（5%）。越稀有寶箱越亮、開起來越浮誇
+const TIER = { score: 1, freeze: 1, shield: 1, double: 2, missile: 2, inv: 2, nova: 3, heart: 3, inv20: 3 };
+const TIER_COL = ['', '#d8dee9', '#ffd23f', '#ff6161'];   // 銀、金、彩虹（第 3 級實際用變色）
+const TIER_NAME = { nova: '超新星！', heart: '補一顆心！', inv20: '無敵 20 秒！' };
+function celebrate(d, x, y) {
+  const tier = TIER[d.id] || 1, col = TIER_COL[tier];
+  const cols = tier === 3 ? ['#ff6161', '#ffd23f', '#5ff2d0', '#9fdcff', '#ffffff'] : tier === 2 ? [col, '#ffae57', '#ffffff'] : [col, '#ffffff'];
+  spark(x, y, 40 + tier * 45, cols, 240 + tier * 100, 3 + tier, 0.7 + tier * 0.25, 120);
+  ring(x, y, 110, col, 5);
+  if (tier >= 2) { ring(x, y, 200, cols[1], 6); confetti(14 * tier); flashA = Math.max(flashA, 0.1 + tier * 0.1); shake(0.1 + tier * 0.1, 2 + tier * 3); }
+  if (tier >= 3) {
+    for (let i = 1; i <= 3; i++) setTimeout(() => { if (!M || M.over) return; ring(x, y, 150 + i * 80, cols[i], 8); spark(x + rnd(-90, 90), y + rnd(-70, 70), 45, cols, 340, 4.5, 1, 150); }, i * 130);
+    banner(TIER_NAME[d.id] || '稀有寶箱！', 'mega t2'); SFX.milestone(2);
+  } else SFX.power();
+}
 function rollDrop() {
   const pool = DROPS, tot = pool.reduce((s, d) => s + d.p, 0);
   let r = Math.random() * tot;
@@ -974,7 +1351,8 @@ function spawnDrop(x, y) { M.drops.push({ x, y, vy: 70, t: 0, d: rollDrop(), rot
 function updateDrops(dt) {
   for (const o of M.drops) {
     o.t += dt; o.y += o.vy * dt; o.rot += dt * 5;
-    if (Math.random() < 0.6) P.push({ k: 0, x: o.x + rnd(-10, 10), y: o.y + rnd(-10, 10), vx: rnd(-10, 10), vy: rnd(-25, 15), l: 0.4, m: 0.4, s: 2.5, c: '#ffd23f', gv: 0 });
+    const tier = TIER[o.d.id] || 1;
+    if (Math.random() < 0.4 + tier * 0.25) P.push({ k: 0, x: o.x + rnd(-14, 14), y: o.y + rnd(-14, 14), vx: rnd(-14, 14), vy: rnd(-35, 15), l: 0.45, m: 0.45, s: 2 + tier, c: tier === 3 ? ['#ff6161', '#ffd23f', '#5ff2d0', '#ffffff'][ri(0, 3)] : TIER_COL[tier], gv: 0 });
     if (o.t >= 1 || o.y > GY - 90) applyDrop(o);
   }
   M.drops = M.drops.filter(o => !o.done);
@@ -982,22 +1360,22 @@ function updateDrops(dt) {
 function applyDrop(o) {
   o.done = true;
   const d = o.d, x = o.x, y = o.y;
-  spark(x, y, 44, [d.col, '#ffffff'], 260, 3.5, 0.8, 100); ring(x, y, 120, d.col, 5);
+  celebrate(d, x, y); quest('chest');
   switch (d.id) {
     case 'heart':
-      if (!M.sudden && M.hearts < 3) { M.hearts++; ftxt(x, y, '生命 +1', '#ff8a8a', 32); } else { M.score += 100; ftxt(x, y, M.sudden ? '+100' : '生命已滿 +100', '#ffd23f', 30); }
+      if (!M.sudden && M.hearts < 3) { M.hearts++; ftxt(x, y, '心 +1', '#ff8a8a', 32); } else { M.score += 100; ftxt(x, y, M.sudden ? '+100' : '心已經滿了 +100', '#ffd23f', 30); }
       break;
     case 'nova': nova(); break;
     case 'freeze': freeze(); break;
-    case 'score': M.score += 30; ftxt(x, y, '+30', '#ffd23f', 36); break;
-    case 'combo':
-      if (M.combo >= 20) { M.score += 50; ftxt(x, y, '倍率已滿 +50', '#ffd23f', 28); }
-      else { M.combo += 5; M.maxCombo = Math.max(M.maxCombo, M.combo); ftxt(x, y, '連擊 +5', '#ffae57', 32); }
-      break;
+    case 'score': M.score += 30; ftxt(x, y, '+30', '#ffd23f', 38); break;
     case 'double': M.dbl = 10; $('#m-dbl').hidden = false; ftxt(x, y, '雙倍得分！', '#ffd23f', 32); break;
     case 'missile':
-      if (M.missiles < 3) { M.missiles++; ftxt(x, y, '追蹤飛彈 +1', '#ffae57', 30); if (M.boss) setTimeout(launchMissile, 600); }
+      if (M.missiles < 3) { M.missiles++; ftxt(x, y, '追蹤飛彈 +1', '#ffae57', 30); }
       else { M.score += 50; ftxt(x, y, '飛彈已滿 +50', '#ffd23f', 28); }
+      break;
+    case 'shield':
+      if (!M.shield) { M.shield = 1; ftxt(x, y, '連擊護盾！', '#9fdcff', 32); }
+      else { M.score += 50; ftxt(x, y, '護盾已有 +50', '#ffd23f', 28); }
       break;
     case 'inv': case 'inv20': {
       const sec = d.id === 'inv20' ? 20 : 10;
@@ -1007,23 +1385,33 @@ function applyDrop(o) {
       break;
     }
   }
-  if (d.id !== 'nova' && d.id !== 'freeze') SFX.power();
   hud();
 }
 function drawDrop(o) {
+  const tier = TIER[o.d.id] || 1;
+  const col = tier === 3 ? `hsl(${(T * 160) % 360} 95% 68%)` : TIER_COL[tier];   // 稀有寶箱彩虹變色
+  const R = 36 + tier * 8, hs = 15 + tier * 2;
   g.save(); g.translate(o.x, o.y);
-  const hg = g.createRadialGradient(0, 0, 4, 0, 0, 36);
-  hg.addColorStop(0, 'rgba(255,210,63,.55)'); hg.addColorStop(1, 'rgba(255,210,63,0)');
-  g.fillStyle = hg; g.beginPath(); g.arc(0, 0, 36, 0, 6.283); g.fill();
-  g.rotate(Math.sin(o.rot) * 0.3);
-  g.fillStyle = '#ffd23f'; rr(-15, -15, 30, 30, 8); g.fill();
-  g.strokeStyle = '#a87a00'; g.lineWidth = 2; g.stroke();
-  g.fillStyle = '#3b2a00'; g.font = `24px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', 0, 1);
+  const hg = g.createRadialGradient(0, 0, 4, 0, 0, R);
+  hg.addColorStop(0, col); hg.addColorStop(1, 'rgba(255,210,63,0)');
+  g.globalAlpha = 0.5 + 0.15 * Math.sin(T * (4 + tier * 3)); g.fillStyle = hg; g.beginPath(); g.arc(0, 0, R, 0, 6.283); g.fill(); g.globalAlpha = 1;
+  if (tier >= 2) {   // 少見以上：外圈旋轉的小星星
+    g.save(); g.rotate(T * (tier === 3 ? 3 : 1.6)); g.fillStyle = col;
+    for (let i = 0; i < 3 + tier; i++) { g.rotate(6.283 / (3 + tier)); g.beginPath(); g.arc(R - 6, 0, 2 + tier, 0, 6.283); g.fill(); }
+    g.restore();
+  }
+  const open = o.t > 0.65;   // 快開了：抖得更兇、一脹一縮
+  g.rotate(Math.sin(o.rot * (open ? 4 : 1)) * (open ? 0.22 : 0.3));
+  if (open) { const k = 1 + 0.12 * Math.sin(o.t * 40); g.scale(k, k); }
+  g.fillStyle = tier === 3 ? col : TIER_COL[tier]; rr(-hs, -hs, hs * 2, hs * 2, 8); g.fill();
+  g.strokeStyle = tier === 1 ? '#7b8794' : tier === 2 ? '#a87a00' : '#ffffff'; g.lineWidth = 2.5; g.stroke();
+  g.fillStyle = tier === 1 ? '#2b3440' : '#3b2a00'; g.font = `${22 + tier * 2}px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', 0, 1);
   g.restore();
 }
 function meteorKey(d) {
   if (!M || M.over || M.paused) return;
   const tg = getTarget(); if (!tg) return;
+  if (!M.buf && now() - M.switchT < 250) return;   // 剛換目標，這一下八成是打給上一顆的
   if (d === 'back') { M.buf = M.buf.slice(0, -1); if (!M.buf) M.lock = null; bar(); return; }
   M.buf += d; M.lock = tg; SFX.key();
   if (M.buf.length >= String(tg.q.ans).length) {
@@ -1036,17 +1424,18 @@ function meteorKey(d) {
 function tipPos() { return { x: W / 2 + Math.cos(tA) * 48, y: GY - 26 + Math.sin(tA) * 48 }; }
 function hit(m) {
   const ms = now() - (m.tStart || now()), fresh = !m.revealed;
-  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); }
+  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
   const mult = 1 + Math.min(4, Math.floor(M.combo / 5));
   const pts = fresh ? (10 + (ms < 2500 ? 5 : 0)) * mult * (M.dbl > 0 ? 2 : 1) : 3;
   M.score += pts;
   const tp = tipPos(); beams.push({ x1: tp.x, y1: tp.y, x2: m.x, y2: m.y, l: 0.2 }); kick = 1;
   SFX.zap(M.combo);
   if (m.boss) {
-    m.hp--; m.flash = 0; spark(m.x, m.y, 30, ['#5ff2d0', '#ffffff', '#ffd23f'], 260, 3.5, 0.7, 80); ring(m.x, m.y, m.r * 1.6, '#5ff2d0', 5);
+    if (fresh) m.hp--;   // 故意答錯再抄答案不算打中
+    m.flash = 0; spark(m.x, m.y, 30, ['#5ff2d0', '#ffffff', '#ffd23f'], 260, 3.5, 0.7, 80); ring(m.x, m.y, m.r * 1.6, '#5ff2d0', 5);
     ftxt(m.x, m.y - m.r - 30, `+${pts}`, '#ffd23f', 26); shake(0.15, 4);
     if (m.hp <= 0) killBoss(m);
-    else { m.q = bossQ(); m.revealed = false; m.tStart = now(); m.vy *= 0.97; }
+    else { m.q = bossQ(); m.revealed = false; m.tStart = now(); m.vy *= 0.97; curT = null; }   // 魔王換題算一個段落，重新挑最低的
   } else {
     destroy(m, pts);
     M.kills++;
@@ -1071,16 +1460,22 @@ function killBoss(m) {
   m.dead = true; M.boss = null;
   for (let i = 0; i < 3; i++) setTimeout(() => { spark(m.x + rnd(-40, 40), m.y + rnd(-40, 40), 50, ['#ff6161', '#ffd23f', '#ffffff', '#ffae57'], 380, 5, 1.1, 120); ring(m.x, m.y, 220, 'rgba(255,210,63,.9)', 8); }, i * 140);
   rocks(m.x, m.y, 18, '#6b3048');
-  M.score += 200;
+  M.score += 200; quest('boss'); earn(20); ftxt(m.x, m.y - 40, '星塵 +20', '#9fdcff', 22);
   ftxt(m.x, m.y, '+200', '#ffd23f', 40);
   ftxt(m.x, m.y + 44, '寶箱掉落！', '#ffd23f', 24);
   flashA = 0.6; shake(0.6, 14); SFX.big();
   setTimeout(() => { if (M && !M.over) spawnDrop(m.x, Math.min(m.y, GY - 220)); }, 500);
   setTimeout(() => M && !M.over && nextWave(), 1200);
 }
+// 連擊護盾：答錯或流星落地時擋一次，連擊不歸零；用掉就沒了
+function shieldSave(x, y) {
+  if (!M.shield) return false;
+  M.shield = 0; ftxt(x, y, '護盾擋住！連擊保住', '#9fdcff', 26); ring(x, y, 100, '#9fdcff', 5); SFX.ding();
+  return true;
+}
 function miss(m) {
   if (!m.revealed) { M.tot++; record(m.q.k, false, 0); M.wrongs.push(m.q); }
-  m.revealed = true; m.flash = 0.6; M.combo = 0; M.waveMiss++;
+  m.revealed = true; m.flash = 0.6; if (!shieldSave(m.x, m.y - m.r - 30)) M.combo = 0; M.waveMiss++;
   tHurt = 0.35; SFX.wrong();
   const el = $('#m-answer'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
   hud();
@@ -1093,13 +1488,15 @@ function nova() {
   ftxt(W / 2, GY - 130, '超新星！', '#ffd23f', 38);
   flashA = 0.7; shake(0.5, 10); SFX.big();
   for (const m of M.list) if (!m.boss && !m.dead && m !== M.lock) { destroy(m, 5); M.score += 5; M.kills++; }
+  if (!M.bossWave && M.kills >= M.goal) nextWave();
 }
 function gameOver() {
-  M.over = true; M.buf = ''; musTrack('menu');
+  M.over = true; M.buf = ''; musTrack('menu'); bar();
   const bk = M.sudden ? 'sudden' : 'meteor', best = DB.best[bk] || 0, isBest = M.score > best;
   if (isBest) { DB.best[bk] = M.score; save(); }
+  const me = M;
   setTimeout(() => {
-    if (mode !== 'meteor') return;
+    if (mode !== 'meteor' || M !== me) return;
     const acc = M.tot ? M.ok / M.tot : 0;
     result({
       title: M.sudden ? '一擊即死，結束！' : '小鎮撐不住了！', big: M.score, label: '分數',
@@ -1193,16 +1590,18 @@ function drawRock(m, tgt) {
     for (let i = 0; i < m.hpMax; i++) { g.fillStyle = i < m.hp ? '#ff6161' : 'rgba(255,255,255,.18)'; rr(-m.hpMax * (pw + 3) / 2 + i * (pw + 3), -r - 22, pw, 8, 3); g.fill(); }
   }
   const parts = m.q.text.split(' = ');
-  const L = parts.length === 2 ? [parts[0], '= ' + parts[1]] : [parts[0]];
-  if (m.revealed) L.push(m.q.rev ? `? = ${m.q.ans}` : `= ${m.q.ans}`);
+  const L = m.q.lines ? m.q.lines.slice() : parts.length === 2 ? [parts[0], '= ' + parts[1]] : [parts[0]];
+  if (m.revealed) L.push(m.q.rev || m.q.seq ? `? = ${m.q.ans}` : `= ${m.q.ans}`);
   const fs = m.fs, lh = fs * 1.08, y0 = ty - (L.length - 1) * lh / 2;
-  g.font = `${fs}px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
-  let tw = 0; for (const s of L) tw = Math.max(tw, g.measureText(s).width);
+  const fontOf = i => `${m.q.label && i === 0 ? fs * 0.72 : fs}px ${m.q.label && i === 0 ? ZHF : NUMF}`;   // 數列題第一行是「n 的倍數」小字
+  g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+  let tw = 0; L.forEach((s, i) => { g.font = fontOf(i); tw = Math.max(tw, g.measureText(s).width); });
   g.fillStyle = 'rgba(6,12,24,.52)'; rr(-tw / 2 - 9, y0 - lh / 2 - 2, tw + 18, lh * L.length + 4, 10); g.fill();
   L.forEach((s, i) => {
-    const isAns = m.revealed && i === L.length - 1;
+    const isAns = m.revealed && i === L.length - 1, isLab = m.q.label && i === 0;
+    g.font = fontOf(i);
     g.lineWidth = 4; g.strokeStyle = 'rgba(6,12,24,.9)'; g.strokeText(s, 0, y0 + i * lh + 1);
-    g.fillStyle = isAns ? '#ff9a9a' : '#ffffff'; g.fillText(s, 0, y0 + i * lh + 1);
+    g.fillStyle = isAns ? '#ff9a9a' : isLab ? '#9fdcff' : '#ffffff'; g.fillText(s, 0, y0 + i * lh + 1);
   });
   if (tgt) {
     const R = r + 13 + Math.sin(T * 6) * 2;
@@ -1251,28 +1650,36 @@ function hud() {
   if (!M) return;
   let h = '';
   for (let i = 0; i < Math.max(M.sudden ? 1 : 3, M.hearts); i++) h += `<svg viewBox="0 0 24 24" aria-hidden="true" fill="${i < M.hearts ? '#ff6161' : 'none'}" stroke="${i < M.hearts ? '#ff6161' : 'rgba(147,169,192,.5)'}" stroke-width="2">${HEART}</svg>`;
-  for (let i = 0; i < M.missiles; i++) h += `<svg viewBox="0 0 24 24" aria-hidden="true" style="margin-left:${i ? 0 : 6}px"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>`;
-  $('#m-hearts').innerHTML = h; $('#m-hearts').setAttribute('aria-label', `生命 ${M.hearts}，飛彈 ${M.missiles}`);
+  $('#m-hearts').innerHTML = h; $('#m-hearts').setAttribute('aria-label', `生命 ${M.hearts}${M.shield ? '，有連擊護盾' : ''}`);
+  const f = $('#m-fire'); f.hidden = M.missiles <= 0;
+  f.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>'.repeat(M.missiles);
+  f.setAttribute('aria-label', `飛彈 ${M.missiles} 枚，點一下發射`);
+  const ready = !!M.boss && !M.boss.dead && M.missiles > 0;
+  f.classList.toggle('ready', ready);
+  const f2 = $('#m-fire2'); f2.hidden = !ready;   // 鍵盤上方的大發射鈕：魔王在場且有飛彈才出現
+  if (ready) f2.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffd23f"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#ffffff"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>發射`;
   $('#m-score').textContent = M.score;
   $('#m-wave').textContent = M.bossWave ? `第 ${M.wave} 波・魔王` : `第 ${M.wave} 波`;
   const c = $('#m-combo'), mult = 1 + Math.min(4, Math.floor(M.combo / 5));
-  c.className = 'combo' + (M.combo >= 5 ? ' hot' : '');
+  c.className = 'combo' + (M.combo >= 5 ? ' hot' : '') + (M.shield ? ' shield' : '');   // 有護盾時連擊字樣罩著發亮的氣泡
   c.innerHTML = `<b>${M.combo}</b>連擊${mult > 1 ? ` <em>×${mult}</em>` : ''}`;
 }
 let lastBar = '';
 const slots = (n, buf) => { let h = ''; for (let i = 0; i < n; i++) h += `<i class="slot${buf[i] ? ' on' : ''}">${buf[i] || ''}</i>`; return h; };
-const qHTML = (q, buf) => q.rev ? q.text.replace('?', slots(String(q.ans).length, buf)) : `${q.text} = ${slots(String(q.ans).length, buf)}`;
+const qHTML = (q, buf) => (q.label ? `<span class="qlab">${q.label}</span>` : '') + ((q.rev || q.seq) ? q.text.replace('?', slots(String(q.ans).length, buf)) : `${q.text} = ${slots(String(q.ans).length, buf)}`);
 function bar() {
   if (!M) return;
   const tg = M.lock || curT;
   let h;
   if (M.over) h = '<div class="aq dim">小鎮的燈熄了…</div>';
   else if (!tg) h = '<div class="aq dim">流星接近中…</div><div class="hint"></div>';
-  else h = `<div class="aq">${qHTML(tg.q, M.buf)}</div><div class="hint">${tg.revealed ? `答案是 ${tg.q.ans}，照著打一次` : ''}</div>`;
+  else h = `<div class="aq${tg.q.seq ? ' seq' : ''}">${qHTML(tg.q, M.buf)}</div><div class="hint">${tg.revealed ? `答案是 ${tg.q.ans}，照著打一次` : ''}</div>`;
   if (h !== lastBar) { $('#m-answer').innerHTML = h; lastBar = h; }
 }
 function pause(on) {
   if (!M || M.over || mode !== 'meteor') return;
+  if (on && !M.paused) M.pausedAt = now();
+  if (!on && M.paused) { const d = now() - M.pausedAt; M.list.forEach(m => { if (m.tStart) m.tStart += d; }); M.switchT += d; }   // 暫停的時間不算進反應時間
   M.paused = on; $('#o-pause').hidden = !on; musDuck(on);
 }
 
@@ -1283,16 +1690,16 @@ function startGhost() {
   const best = DB.best.ghost && DB.best.ghost.length === 20 ? DB.best.ghost : null;
   G = { i: 0, n: 20, q: null, buf: '', t0: 0, qt: 0, times: [], ok: 0, wrongs: [], rev: false, done: false, started: false,
         ghost: best || Array.from({ length: 20 }, (_, i) => (i + 1) * 3600), hasBest: !!best, gNoted: false };
-  $('#g-glabel').textContent = best ? '上次的你' : '新手幽靈';
+  $('#g-glabel').textContent = best ? '最快的你' : '新手幽靈';
   $('#g-note').textContent = best ? `目標：${(best[19] / 1000).toFixed(1)} 秒內完成` : '第一次挑戰：先贏過每題 3.6 秒的新手幽靈';
   $('#g-you').style.left = '0%'; $('#g-ghost').style.left = '0%';
   $('#g-timer').textContent = '0.0';
   $('#g-q').innerHTML = ''; $('#g-hint').textContent = ''; $('#g-prog').textContent = '準備好了嗎？';
   countdown(() => { G.started = true; G.t0 = now(); nextGQ(); });
 }
-function nextGQ() { G.q = makeQ(pickFact(), true); G.buf = ''; G.rev = false; G.qt = now(); gRender(); }
+function nextGQ() { G.q = makeQ(pickFact(null, true), true, true); G.buf = ''; G.rev = false; G.qt = now(); gRender(); }
 function gRender() {
-  $('#g-q').innerHTML = G.q ? qHTML(G.q, G.buf) : '';
+  $('#g-q').innerHTML = G.q ? qHTML(G.q, G.buf) : ''; $('#g-q').classList.toggle('seq', !!(G.q && G.q.seq));
   $('#g-hint').textContent = G.rev ? `答案是 ${G.q.ans}，照著打一次` : '';
   $('#g-prog').textContent = `第 ${Math.min(G.i + 1, G.n)} / ${G.n} 題`;
   $('#g-you').style.left = (G.i / G.n * 100) + '%';
@@ -1304,7 +1711,7 @@ function ghostKey(d) {
   if (G.buf.length >= String(G.q.ans).length) {
     const v = parseInt(G.buf, 10);
     if (v === G.q.ans) {
-      if (!G.rev) { G.ok++; record(G.q.k, true, now() - G.qt); }
+      if (!G.rev) { G.ok++; record(G.q.k, true, now() - G.qt); quest('answers'); earn(1); }
       G.times.push(Math.round(now() - G.t0)); G.i++;
       SFX.zap(G.i);
       const c = $('#g-card'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
@@ -1333,13 +1740,15 @@ function finishGhost() {
   const better = prev === null || total < prev;
   if (better) { DB.best.ghost = G.times.slice(); save(); }
   const beatGhost = total < G.ghost[G.n - 1];
+  quest('ghost'); if (beatGhost) quest('ghostwin');
   const acc = G.ok / G.n;
   let note;
   if (prev === null) note = beatGhost ? '贏過新手幽靈！這次成績會變成下次的幽靈' : '成績已記下，下次跟自己比';
-  else if (better) note = `新紀錄！比上次快 ${((prev - total) / 1000).toFixed(1)} 秒`;
-  else note = `差上次 ${((total - prev) / 1000).toFixed(1)} 秒，再一次！`;
+  else if (better) note = `新紀錄！比之前最快還快 ${((prev - total) / 1000).toFixed(1)} 秒`;
+  else note = `差最快紀錄 ${((total - prev) / 1000).toFixed(1)} 秒，再一次！`;
+  const me = G;
   setTimeout(() => {
-    if (mode !== 'ghost') return;
+    if (mode !== 'ghost' || G !== me) return;
     result({
       title: beatGhost ? '你追過幽靈了！' : '幽靈先到了…', big: (total / 1000).toFixed(1), label: '秒', note,
       stars: starsFor(acc, G.n), rows: [['答對率', pct(acc)], ['平均每題', (total / G.n / 1000).toFixed(1) + ' 秒'], ['最高紀錄', ((DB.best.ghost[19]) / 1000).toFixed(1) + ' 秒']],
@@ -1349,7 +1758,7 @@ function finishGhost() {
 }
 
 /* ================= 雙人拔河 ================= */
-let V = null, vHard = false;
+let V = null, vOpp = 'cpu';   // 對手：cpu 機器人／easy 真人一樣／hard 大人加難
 const vEl = [$('#v-bot'), $('#v-top')];
 function openVersus() {
   show('versus');
@@ -1359,9 +1768,12 @@ function openVersus() {
   $('#v-knot').style.left = '50%'; $('#v-btns').hidden = true; $('#v-rope').hidden = false; $$('.end').forEach(e => e.hidden = false); $('#v-quit').hidden = false;
 }
 function startVersus() {
-  $('#v-pausebox').hidden = true;
+  $('#v-pausebox').hidden = true; musDuck(false);
   $('#v-setup').hidden = true;
-  V = { pos: 0, win: 6, over: false, started: false, p: [{ q: null, buf: '', lock: 0, rev: false, qt: 0 }, { q: null, buf: '', lock: 0, rev: false, qt: 0 }] };
+  V = { pos: 0, win: 6, over: false, started: false, cpu: vOpp === 'cpu', p: [{ q: null, buf: '', lock: 0, rev: false, qt: 0 }, { q: null, buf: '', lock: 0, rev: false, qt: 0, due: 0 }] };
+  $('#s-versus').classList.toggle('cpu', V.cpu);
+  $('#v-cpu').hidden = !V.cpu; $('#v-topwho').textContent = V.cpu ? '機器人' : '挑戰者';
+  if (V.cpu) { V.base = cpuBase(); $('#v-say').textContent = '我準備好了！'; }
   openVersusReset();
   countdown(() => { V.started = true; newVQ(0); newVQ(1); });
 }
@@ -1371,24 +1783,62 @@ function openVersusReset() {
 }
 function vPause(on) {
   if (!V || V.over) { $('#v-pausebox').hidden = true; return; }
+  if (on && !V.paused) V.pausedAt = now();
+  if (!on && V.paused) { const d = now() - V.pausedAt; V.p.forEach(p => { p.qt += d; p.lock += d; if (p.due) p.due += d; }); }
   V.paused = on; $('#v-pausebox').hidden = !on; musDuck(on);
+}
+// 機器人速度：孩子歷史平均反應時間（沒紀錄用 3.6 秒），再依戰況調整：落後時機器人放慢、領先時加快，讓勝率在五五附近
+function cpuBase() {
+  const ts = Object.values(DB.facts).map(s => s.t).filter(t => t > 0);
+  const avg = ts.length >= 5 ? ts.reduce((a, b) => a + b, 0) / ts.length : 3600;
+  return clamp(avg + 600, 2200, 7000);   // 機器人略慢一點點，加上「打字」的時間
+}
+function cpuDelay() {
+  const lead = -V.pos;   // 小隊長領先幾格（pos 負的是小隊長那邊）
+  const k = lead >= 3 ? 0.8 : lead <= -3 ? 1.35 : lead <= -1 ? 1.15 : 1;
+  return V.base * k * rnd(0.75, 1.3);
+}
+function updateVersus() {
+  if (!V || !V.started || V.over || V.paused) return;
+  V.p.forEach((p, i) => vEl[i].classList.toggle('locked', now() < p.lock));   // 鎖定狀態每幀同步，暫停後不會卡住
+  if (!V.cpu) return;
+  const p = V.p[1]; if (!p.q) return;
+  const t = now();
+  if (t < p.lock) return;
+  $('#v-think').style.width = clamp((t - p.qt) / (p.due - p.qt) * 100, 0, 100) + '%';
+  if (t < p.due) return;
+  if (!p.rev && Math.random() < 0.1) {   // 偶爾算錯：停 1 秒，再想一次
+    p.rev = true; p.lock = t + 1000; p.due = t + 1000 + cpuDelay() * 0.6; p.qt = t + 1000;
+    $('#v-say').textContent = '啊，算錯了！'; $('#v-mouth').setAttribute('d', 'M23 45q9 -6 18 0');
+    const f = $('.cpu-face'); f.classList.remove('oops'); void f.offsetWidth; f.classList.add('oops'); SFX.wrong();
+    return;
+  }
+  $('#v-mouth').setAttribute('d', 'M23 43q9 6 18 0'); $('#v-say').textContent = ['算出來了！', `${p.q.text} = ${p.q.ans}`, '換我拉！'][ri(0, 2)];
+  V.pos += 1;
+  $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%';
+  SFX.zap(Math.abs(V.pos) * 2);
+  const r = $('#v-knot').getBoundingClientRect();
+  spark(r.left + 17, r.top + 17, 18, ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
+  if (Math.abs(V.pos) >= V.win) return endVersus(1);
+  newVQ(1);
 }
 function newVQ(i) {
   const p = V.p[i];
-  if (i === 0) p.q = makeQ(pickFact(), false);
-  else if (vHard) { const a = ri(11, 19), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
+  if (i === 0) p.q = makeQ(pickFact(null, true), false, true);
+  else if (vOpp === 'hard') { const a = ri(11, 19), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   else { const a = ri(2, 9), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   p.buf = ''; p.rev = false; p.qt = now();
+  if (i === 1 && V.cpu) { p.due = p.qt + cpuDelay(); $('#v-think').style.width = '0%'; $('.cpu-face').classList.add('thinking'); }
   vRender(i);
 }
 function vRender(i) {
   const p = V.p[i], e = vEl[i];
-  e.querySelector('[data-q]').innerHTML = p.q ? qHTML(p.q, p.buf) : '';
+  e.querySelector('[data-q]').innerHTML = p.q ? qHTML(p.q, p.buf) : ''; e.querySelector('[data-q]').classList.toggle('seq', !!(p.q && p.q.seq));
   e.querySelector('[data-hint]').textContent = p.rev ? `答案是 ${p.q.ans}，照著打一次` : '';
   e.classList.toggle('locked', now() < p.lock);
 }
 function vKey(i, d) {
-  if (!V || !V.started || V.over || V.paused) return;
+  if (!V || !V.started || V.over || V.paused || (i === 1 && V.cpu)) return;
   const p = V.p[i];
   if (!p.q || now() < p.lock) return;
   if (d === 'back') { p.buf = p.buf.slice(0, -1); vRender(i); return; }
@@ -1396,7 +1846,7 @@ function vKey(i, d) {
   if (p.buf.length >= String(p.q.ans).length) {
     const v = parseInt(p.buf, 10);
     if (v === p.q.ans) {
-      if (i === 0 && !p.rev) record(p.q.k, true, now() - p.qt);
+      if (i === 0 && !p.rev) { record(p.q.k, true, now() - p.qt); quest('answers'); earn(1); }
       V.pos += i === 0 ? -1 : 1;
       $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%';
       SFX.zap(Math.abs(V.pos) * 2);
@@ -1413,13 +1863,438 @@ function vKey(i, d) {
   vRender(i);
 }
 function endVersus(w) {
-  V.over = true; musTrack('menu');
+  V.over = true; musTrack('menu'); quest('versus');
   vEl.forEach((e, i) => { const r = e.querySelector('[data-res]'); r.hidden = false; r.className = 'vres ' + (i === w ? 'win' : 'lose'); r.textContent = i === w ? '勝利！' : '下次再拉回來！'; e.classList.add('locked'); });
+  if (V.cpu) { $('.cpu-face').classList.remove('thinking'); $('#v-say').textContent = w === 1 ? '嘿嘿，我贏了！' : '你好厲害，再來一次？'; }
   $('#v-rope').hidden = true; $$('.end').forEach(e => e.hidden = true); $('#v-quit').hidden = true; $('#v-btns').hidden = false;
   SFX.fan(); flashA = 0.3;
   const x = W / 2, y = w === 0 ? H * 0.75 : H * 0.25;
   spark(x, y, 80, ['#ffd23f', '#5ff2d0', '#ffae57', '#ffffff'], 420, 4.5, 1.3, 160);
 }
+
+/* ================= 哪個大／哪個小 ================= */
+let C = null;
+const CMP_ICON = {
+  big: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3l8 14H2z" fill="currentColor"/></svg>',
+  small: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17 2 3h16z" fill="currentColor"/></svg>',
+};
+function startCmp() {
+  show('cmp');
+  C = { i: 0, n: 10, ok: 0, streak: 0, wrongs: [], q: null, lock: true, done: false, t0: 0, end: 0 };
+  $('#c-ask').innerHTML = ''; $('#c-ask').className = 'cmp-ask'; $('#c-opts').innerHTML = ''; $('#c-hint').textContent = ''; $('#c-streak').textContent = '';
+  $('#c-time').textContent = '0.0'; $('#c-timer').classList.remove('off'); $('#c-prog').textContent = '準備好了嗎？';
+  countdown(() => { if (C) { C.t0 = now(); nextCmp(); } });
+}
+// 計時只拿來「跟自己比」：10 題全對的最短時間才算紀錄，答錯後計時變暗表示這局不算
+function updateCmp() {
+  if (!C || !C.t0) return;
+  $('#c-time').textContent = (((C.end || now()) - C.t0) / 1000).toFixed(1);
+}
+// 目標題走錯題加權；另外兩題從「乘積落在目標 ±w 內」抽，三個乘積互不相同、最大最小差 ≤ w。
+// 連對 3 題以上 w 縮到 12；候選不夠就放寬。與目標共用因數的題目權重降低，免得只比因數不算乘積。
+function cmpQ() {
+  const t = pickFact(MUL2), w0 = C.streak >= 3 ? 12 : 20;
+  const shares = f => f.a === t.a || f.a === t.b || f.b === t.a || f.b === t.b;
+  const draw = (lo, hi, used) => {
+    const cs = MUL2.filter(f => f.ans >= lo && f.ans <= hi && !used.includes(f.ans));
+    if (!cs.length) return null;
+    let tot = 0;
+    const ws = cs.map(f => { const w = weightOf(f) * (shares(f) ? 0.3 : 1); tot += w; return w; });
+    let r = Math.random() * tot;
+    for (let i = 0; i < cs.length; i++) { r -= ws[i]; if (r <= 0) return cs[i]; }
+    return cs[cs.length - 1];
+  };
+  let opts = null;
+  for (let w = w0; !opts && w <= 80; w += 8) {
+    const d1 = draw(t.ans - w, t.ans + w, [t.ans]); if (!d1) continue;
+    const d2 = draw(Math.max(t.ans, d1.ans) - w, Math.min(t.ans, d1.ans) + w, [t.ans, d1.ans]); if (!d2) continue;
+    opts = [t, d1, d2];
+  }
+  for (let i = opts.length - 1; i > 0; i--) { const j = ri(0, i); [opts[i], opts[j]] = [opts[j], opts[i]]; }
+  const big = Math.random() < 0.5;
+  const ans = opts.reduce((p, f) => (big ? f.ans > p.ans : f.ans < p.ans) ? f : p);
+  return { opts, big, ans, t0: now(), rev: false };
+}
+function nextCmp() {
+  if (C.i >= C.n) return finishCmp();
+  C.q = cmpQ(); C.lock = false;
+  const q = C.q, a = $('#c-ask');
+  a.className = 'cmp-ask ' + (q.big ? 'big' : 'small');
+  a.innerHTML = (q.big ? CMP_ICON.big : CMP_ICON.small) + (q.big ? '哪個最大？' : '哪個最小？');
+  $('#c-opts').innerHTML = q.opts.map((f, i) => `<button type="button" class="cmp-opt" data-i="${i}" aria-label="${f.a} 乘 ${f.b}"><span>${f.a} × ${f.b}</span><span class="eq">= ${f.ans}</span></button>`).join('');
+  $('#c-hint').textContent = '';
+  $('#c-streak').textContent = C.streak >= 3 ? `連對 ${C.streak} 題，數字更接近了` : '';
+  $('#c-prog').textContent = `第 ${C.i + 1} / ${C.n} 題・答對 ${C.ok}`;
+}
+function cmpChoose(i) {
+  if (!C || C.done || C.lock || !C.q) return;
+  const q = C.q, f = q.opts[i]; if (!f) return;
+  const els = $$('#c-opts .cmp-opt'), el = els[i], word = q.big ? '最大' : '最小';
+  els.forEach(e => e.classList.add('show'));
+  if (f === q.ans) {
+    el.classList.remove('want', 'bad'); el.classList.add('ok', 'pop');
+    if (!q.rev) {
+      C.ok++; C.streak++; quest('answers'); earn(1);
+      // 點對不記星圖：選擇題證明不了「能打出答案」；答錯才記（見下）
+      SFX.zap(C.streak);
+      const r = el.getBoundingClientRect();
+      spark(r.left + r.width / 2, r.top + r.height / 2, 24, ['#5ff2d0', '#ffd23f', '#ffffff'], 220, 3, 0.7, 80);
+    } else SFX.ding();
+    $('#c-hint').textContent = '';
+    C.i++; C.lock = true;
+    if (C.i >= C.n) { C.end = now(); updateCmp(); }
+    setTimeout(() => { if (C && !C.done) nextCmp(); }, q.rev ? 450 : 800);
+    return;
+  }
+  if (!q.rev) {
+    q.rev = true; C.streak = 0; $('#c-timer').classList.add('off');
+    record(q.ans.k, false, 0); record(f.k, false, 0);
+    C.wrongs.push({ f: q.ans, k: q.ans.k }, { f, k: f.k });
+    els[q.opts.indexOf(q.ans)].classList.add('want');
+  }
+  SFX.wrong();
+  el.classList.add('bad'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+  $('#c-hint').textContent = `${word}的是 ${q.ans.a} × ${q.ans.b} = ${q.ans.ans}，點它繼續`;
+}
+function finishCmp() {
+  C.done = true; musTrack('menu');
+  const ok = C.ok, n = C.n, acc = ok / n, perfect = ok === n, total = C.end - C.t0, prev = DB.best.cmpT;
+  const better = perfect && (prev === null || total < prev);
+  if (better) { DB.best.cmpT = total; save(); }
+  quest('cmp'); if (perfect) quest('cmpperfect');
+  const sec = ms => (ms / 1000).toFixed(1) + ' 秒';
+  let note;
+  if (!perfect) note = ok >= 8 ? '差一點就全對了！10 題全對才會算時間紀錄' : '答錯的題目之後會比較常出現，多練幾次就會了';
+  else if (prev === null) note = '10 題全對！這個時間就是你的第一個紀錄';
+  else if (better) note = `新紀錄！比上次快 ${sec(prev - total)}`;
+  else note = total - prev < 100 ? '全對！跟紀錄一樣快' : `全對！差紀錄 ${sec(total - prev)}，再一次！`;
+  $('#c-prog').textContent = '結束！';
+  const me = C;
+  setTimeout(() => {
+    if (mode !== 'cmp' || C !== me) return;
+    result({
+      title: perfect ? '眼光真準！' : ok >= 7 ? '很有感覺！' : '再練一下',
+      big: perfect ? (total / 1000).toFixed(1) : String(ok), label: perfect ? '秒・10 題全對' : `答對 / ${n} 題`, note,
+      stars: starsFor(acc, n), rows: [['答對率', pct(acc)], ['總時間', sec(total)], ['全對最快', DB.best.cmpT === null ? '—' : sec(DB.best.cmpT)]],
+      wrongs: C.wrongs, again: startCmp, celebrate: better
+    });
+  }, 500);
+}
+$('#c-opts').addEventListener('pointerdown', e => { const b = e.target.closest('.cmp-opt'); if (!b) return; e.preventDefault(); cmpChoose(+b.dataset.i); });
+$('#c-opts').addEventListener('click', e => { const b = e.target.closest('.cmp-opt'); if (b && e.detail === 0) cmpChoose(+b.dataset.i); });
+
+/* ================= 炸彈拆除 ================= */
+let BM = null;
+const FUSE = 25;   // 每顆炸彈的引線秒數（估的，看孩子玩的狀況調）
+function wpick(arr, wf) {
+  let tot = 0; const ws = arr.map(x => { const w = wf(x); tot += w; return w; });
+  let r = Math.random() * tot;
+  for (let i = 0; i < arr.length; i++) { r -= ws[i]; if (r <= 0) return arr[i]; }
+  return arr[arr.length - 1];
+}
+const factNK = (n, k) => MUL[(n - 1) * 9 + clamp(k, 1, 9) - 1];
+const tableW = n => MUL.filter(f => f.a === n && f.b > 1).reduce((s, f) => s + weightOf(f), 0) * (n === 2 ? 0.5 : 1);
+// 12 格：4～6 個 n 的倍數（錯題優先），其餘是干擾：倍數 ±1、±2 最多，再來是含數字 n 的（27、57），再來是別的乘法表的答案
+function bombBoard(n) {
+  const mults = []; for (let k = 1; k <= 9; k++) mults.push(n * k);
+  const pool = mults.slice(), got = [];
+  const want = ri(4, 6);
+  while (got.length < want) { const m = wpick(pool, m => weightOf(factNK(n, m / n))); pool.splice(pool.indexOf(m), 1); got.push(m); }
+  const seen = new Set(), cand = [];
+  // 數字都在 2～81（九九乘法的範圍）
+  const add = (v, w) => { if (v >= 2 && v <= 81 && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
+  mults.forEach(m => { add(m - 1, 3); add(m + 1, 3); add(m - 2, 1.5); add(m + 2, 1.5); });
+  for (let v = 10; v <= 81; v++) if (String(v).includes(String(n))) add(v, 2);
+  MUL2.forEach(f => add(f.ans, 1));
+  const tiles = got.slice();
+  while (tiles.length < 12) { const c = wpick(cand, c => c.w); cand.splice(cand.indexOf(c), 1); tiles.push(c.v); }
+  for (let i = tiles.length - 1; i > 0; i--) { const j = ri(0, i); [tiles[i], tiles[j]] = [tiles[j], tiles[i]]; }
+  return { n, tiles, count: got.length };
+}
+function startBomb() {
+  show('bomb');
+  BM = { i: 0, n: 5, done: 0, wrongs: [], t0: 0, end: 0, round: null, over: false, lastN: 0 };
+  ['#bm-tiles', '#bm-task'].forEach(s => { $(s).innerHTML = ''; });
+  ['#bm-msg', '#bm-why', '#bm-found'].forEach(s => { $(s).textContent = ''; });
+  $('#bm-next').hidden = true; $('#bm-time').textContent = '0.0'; $('#bm-prog').textContent = '準備好了嗎？';
+  $('#bm-head').hidden = true;   // 倒數時先不出現炸彈，第一題才亮相
+  countdown(() => { if (BM) { BM.t0 = now(); nextBomb(); } });
+}
+function bombHead(cls) { $('#bm-head').className = 'bm-head' + (cls ? ' ' + cls : ''); $('#bm-bomb').setAttribute('class', 'bomb' + (cls ? ' ' + cls : '')); }
+// 長引線＝進度條：從炸彈頂蓋拉到右邊，火花從最右端往炸彈燒回來。
+// 用 dasharray 只畫「還沒燒掉」的那段，燒過的露出底下灰燼虛線；火花跟著燒到的位置走。
+const fusePath = $('#bm-fusepath'); let fuseLen = 0, fuseW = 0;
+$('#bm-burst').setAttribute('d', (() => { let d = ''; for (let i = 0; i < 24; i++) { const a = i * Math.PI / 12, r = i % 2 ? 24 : 52; d += (i ? 'L' : 'M') + (60 + r * Math.cos(a)).toFixed(1) + ' ' + (74 + r * Math.sin(a)).toFixed(1); } return d + 'Z'; })());
+function fuseLayout() {
+  const svg = $('#bm-fuseline'), w = Math.round(svg.clientWidth);
+  if (!w || w === fuseW) return;
+  fuseW = w; svg.setAttribute('viewBox', `0 0 ${w} 28`);
+  let d = 'M0 14'; for (let x = 0; x < w - 4; x += 36) { const e = Math.min(x + 36, w - 4); d += ` Q ${x + 9} 3 ${x + 18} 14 Q ${x + 27} 25 ${e} 14`; }
+  $('#bm-ash').setAttribute('d', d); fusePath.setAttribute('d', d); fuseLen = fusePath.getTotalLength();
+}
+function bombFuse(frac) {
+  fuseLayout(); if (!fuseLen) return;
+  const rem = fuseLen * clamp(frac, 0, 1), pt = fusePath.getPointAtLength(rem);
+  fusePath.style.strokeDasharray = `${rem} ${fuseLen + 4}`;
+  $('#bm-spark').setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) scale(${(0.85 + Math.sin(T * 38) * 0.25).toFixed(2)})`);
+}
+function nextBomb() {
+  const n = wpick([2, 3, 4, 5, 6, 7, 8, 9].filter(n => n !== BM.lastN), tableW); BM.lastN = n;
+  const b = bombBoard(n);
+  BM.round = { n, tiles: b.tiles, count: b.count, got: new Set(), t0: now(), state: 'live', sec: -1, sparkT: 0 };
+  $('#bm-head').hidden = false; bombHead(''); $('#bm-n').textContent = n; bombFuse(1);
+  BM.i++;
+  $('#bm-prog').textContent = `第 ${BM.i} / ${BM.n} 顆`;
+  $('#bm-task').innerHTML = `點掉所有 <b>${n}</b> 的倍數<small>就是 ${n} × 1 到 ${n} × 9 的答案</small>`;
+  const t = $('#bm-tiles'); t.className = 'tiles';
+  t.innerHTML = b.tiles.map((v, i) => `<button type="button" class="tile" data-i="${i}">${v}</button>`).join('');
+  $('#bm-found').innerHTML = `找到 <b>0</b> / ${b.count}`;
+  $('#bm-msg').textContent = ''; $('#bm-msg').className = 'bm-msg'; $('#bm-why').textContent = ''; $('#bm-next').hidden = true;
+}
+function bombTap(i) {
+  if (!BM || !BM.round || BM.round.state !== 'live') return;
+  const r = BM.round, v = r.tiles[i], el = $$('#bm-tiles .tile')[i];
+  if (v === undefined || r.got.has(i)) return;
+  if (v % r.n === 0) {
+    r.got.add(i); el.classList.add('got'); SFX.zap(r.got.size * 3); quest('answers'); earn(1);
+    const rc = el.getBoundingClientRect();
+    spark(rc.left + rc.width / 2, rc.top + rc.height / 2, 14, ['#5ff2d0', '#ffffff'], 180, 3, 0.6, 80);
+    $('#bm-found').innerHTML = `找到 <b>${r.got.size}</b> / ${r.count}`;
+    if (r.got.size >= r.count) defused();
+    return;
+  }
+  const k = clamp(Math.round(v / r.n), 1, 9), near = r.n * k;
+  explode(`${v} 不是 ${r.n} 的倍數。${r.n} × ${k} = ${near}，差了 ${Math.abs(v - near)}`, [factNK(r.n, k)], el);
+}
+function bombEndRound() { if (BM.i >= BM.n) { BM.end = now(); updateBomb(); } }
+function explode(why, facts, el) {
+  const r = BM.round; r.state = 'dead'; bombEndRound();
+  if (el) el.classList.add('boom');
+  $$('#bm-tiles .tile').forEach((t, i) => { if (r.tiles[i] % r.n === 0 && !r.got.has(i)) t.classList.add('miss'); });
+  $('#bm-tiles').classList.add('off');
+  facts.forEach(f => { record(f.k, false, 0); BM.wrongs.push({ f, k: f.k }); });
+  SFX.big(); shake(0.6, 12); flashA = 0.45;
+  // 炸彈本體炸開（CSS 動畫）＋ 火花、碎片、擴散環
+  bombHead('boom');
+  const bc = $('#bm-bomb').getBoundingClientRect(), bx = bc.left + bc.width / 2, by = bc.top + bc.height * 0.6;
+  spark(bx, by, 70, ['#ff6161', '#ffae57', '#ffd23f', '#ffffff'], 420, 4.5, 1.2, 180); ring(bx, by, 200, '#ff6161', 7); ring(bx, by, 120, '#ffd23f', 4);
+  const dark = ['#2a3f58', '#4a5f78', '#1b2b40', '#93a9c0'];
+  for (let i = 0; i < 18; i++) P.push({ k: 1, x: bx, y: by, vx: rnd(-260, 260), vy: rnd(-380, -80), l: rnd(0.8, 1.4), m: 1.4, s: rnd(5, 11), c: dark[i % 4], gv: 520, r: rnd(0, 6), vr: rnd(-12, 12) });
+  if (el) { const rc = el.getBoundingClientRect(); spark(rc.left + rc.width / 2, rc.top + rc.height / 2, 24, ['#ff6161', '#ffffff'], 240, 3, 0.7, 120); }
+  $('#bm-msg').textContent = '碰！爆炸了'; $('#bm-msg').className = 'bm-msg bad';
+  $('#bm-why').textContent = why;
+  $('#bm-next').textContent = BM.i >= BM.n ? '看結果' : '下一顆炸彈'; $('#bm-next').hidden = false;
+}
+function defused() {
+  const r = BM.round; r.state = 'ok'; BM.done++; bombEndRound(); quest('bomb');
+  $('#bm-tiles').classList.add('off'); bombHead('ok');
+  $('#bm-msg').textContent = '拆除成功！'; $('#bm-msg').className = 'bm-msg good';
+  SFX.power(); flashA = 0.15;
+  const rc = $('#bm-tiles').getBoundingClientRect();
+  for (let i = 0; i < 3; i++) setTimeout(() => spark(rnd(rc.left, rc.right), rnd(rc.top, rc.bottom), 30, ['#5ff2d0', '#ffd23f', '#ffffff'], 260, 3.5, 0.9, 120), i * 120);
+  setTimeout(() => { if (BM && BM.round === r) bombAdvance(); }, 1000);
+}
+function bombAdvance() { if (!BM || BM.over) return; if (BM.i >= BM.n) finishBomb(); else nextBomb(); }
+function updateBomb() {
+  if (!BM || !BM.t0) return;
+  $('#bm-time').textContent = (((BM.end || now()) - BM.t0) / 1000).toFixed(1);
+  const r = BM.round; if (!r || r.state !== 'live') return;
+  const left = FUSE - (now() - r.t0) / 1000;
+  bombFuse(left / FUSE);
+  $('#bm-bomb').classList.toggle('low', left < 5);
+  if (!RM && T - r.sparkT > 0.07) {   // 引線火花往畫布灑小火星
+    r.sparkT = T; const sc = $('#bm-spark').getBoundingClientRect();
+    spark(sc.left + sc.width / 2, sc.top + sc.height / 2, 2, ['#ffd23f', '#ffffff', '#ffae57'], 70, 1.6, 0.35, 160);
+  }
+  if (left < 5 && Math.ceil(left) !== r.sec) { r.sec = Math.ceil(left); if (r.sec > 0) SFX.tick(); }
+  if (left <= 0) {
+    const missed = r.tiles.filter((v, i) => v % r.n === 0 && !r.got.has(i));
+    explode(`引線燒完了。還沒找到：${missed.join('、')}`, missed.map(m => factNK(r.n, m / r.n)), null);
+  }
+}
+function finishBomb() {
+  BM.over = true; musTrack('menu');
+  const done = BM.done, n = BM.n, all = done === n, total = BM.end - BM.t0, prev = DB.best.bomb;
+  const better = all && (prev === null || total < prev);
+  if (better) { DB.best.bomb = total; save(); }
+  if (all) quest('bomball');
+  const sec = ms => (ms / 1000).toFixed(1) + ' 秒';
+  let note;
+  if (!all) note = done >= 4 ? '差一顆就全拆了！5 顆全拆才比時間' : '爆掉的那幾題，之後會比較常出現';
+  else if (prev === null) note = '5 顆全拆！這個時間就是你的紀錄';
+  else if (better) note = `新紀錄！比上次快 ${sec(prev - total)}`;
+  else note = total - prev < 100 ? '全拆！跟紀錄一樣快' : `全拆！差紀錄 ${sec(total - prev)}，再一次！`;
+  const me = BM;
+  setTimeout(() => {
+    if (mode !== 'bomb' || BM !== me) return;
+    result({
+      title: all ? '拆彈專家！' : done >= 3 ? '差一點！' : '再練一下',
+      big: all ? (total / 1000).toFixed(1) : String(done), label: all ? '秒・5 顆全拆' : `拆除 / ${n} 顆`, note,
+      stars: all ? 3 : done >= 3 ? 2 : 1, rows: [['拆除', `${done}/${n}`], ['總時間', sec(total)], ['全拆最快', DB.best.bomb === null ? '—' : sec(DB.best.bomb)]],
+      wrongs: BM.wrongs, again: startBomb, celebrate: better
+    });
+  }, 400);
+}
+$('#bm-tiles').addEventListener('pointerdown', e => { const b = e.target.closest('.tile'); if (!b) return; e.preventDefault(); bombTap(+b.dataset.i); });
+$('#bm-tiles').addEventListener('click', e => { const b = e.target.closest('.tile'); if (b && e.detail === 0) bombTap(+b.dataset.i); });
+$('#bm-next').addEventListener('click', bombAdvance);
+
+/* ================= 寵物 ================= */
+// 星塵只會增加，沒有飢餓、沒有倒扣。五階段依累積餵食量 fed 決定
+const PET_KINDS = {
+  cute: { name: '毛毛', line: '可愛', c1: '#ffb3c7', c2: '#ff6f91', eye: '#3b1f2b' },
+  cool: { name: '小龍', line: '帥氣', c1: '#7fd3ff', c2: '#2c7fd6', eye: '#0b2340' },
+  funny: { name: '呱呱', line: '搞笑', c1: '#b6f27a', c2: '#5cb82e', eye: '#1e3310' },
+};
+const PET_STAGES = [{ at: 0, n: '蛋' }, { at: 30, n: '幼體' }, { at: 100, n: '少年' }, { at: 250, n: '成體' }, { at: 500, n: '究極' }];
+const FEED = 10;
+const PET_HOME = { cute: '山上', cool: '海裡', funny: '叢林' };
+// 徽章換配件：累積徽章數到 at 就解鎖，解鎖後永久保留（換寵物也在）
+const GEAR = [
+  { id: 'bow', at: 1, n: '蝴蝶結' }, { id: 'scarf', at: 3, n: '圍巾' }, { id: 'glasses', at: 7, n: '墨鏡' },
+  { id: 'balloon', at: 15, n: '氣球' }, { id: 'halo', at: 30, n: '彩虹光環' },
+];
+function gearSVG(id, hx, hy, hr) {   // 畫在頭上：hx,hy 頭中心、hr 半徑
+  switch (id) {
+    case 'bow': { const x = hx - hr * 0.6, y = hy - hr * 0.85; return `<g transform="translate(${x} ${y}) rotate(-15)"><path d="M0 0l-14 -9v18z" fill="#ff6161"/><path d="M0 0l14 -9v18z" fill="#ff6161"/><circle r="4" fill="#ffd23f"/></g>`; }
+    case 'scarf': { const y = hy + hr * 0.78; return `<path d="M${hx - hr * 0.7} ${y} q${hr * 0.7} 14 ${hr * 1.4} 0 v8 q-${hr * 0.7} 14 -${hr * 1.4} 0z" fill="#ff6161"/><path d="M${hx + hr * 0.3} ${y + 6} l10 22 h10 l-8 -24z" fill="#ff6161"/><path d="M${hx - hr * 0.6} ${y + 4} q${hr * 0.6} 10 ${hr * 1.2} 0" fill="none" stroke="#ffd23f" stroke-width="2.5"/>`; }
+    case 'glasses': { const y = hy - hr * 0.25, w = hr * 0.42; return `<rect x="${hx - w * 2 - 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><rect x="${hx + 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - 2} ${y}h4" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - w * 2 - 2} ${y - 2}h-6 M${hx + w * 2 + 2} ${y - 2}h6" stroke="#93a9c0" stroke-width="2"/>`; }
+    case 'balloon': { const x = hx + hr + 8, y = hy - hr - 10; return `<path d="M${hx + hr * 0.5} ${hy + hr * 0.6} Q${x - 4} ${y + 40} ${x} ${y + 16}" fill="none" stroke="#f2f6fb" stroke-width="1.5"/><ellipse cx="${x}" cy="${y}" rx="12" ry="15" fill="#5ff2d0"/><path d="M${x - 3} ${y + 15}l3 5 3 -5z" fill="#5ff2d0"/><ellipse cx="${x - 4}" cy="${y - 5}" rx="3" ry="5" fill="rgba(255,255,255,.5)"/>`; }
+    case 'halo': { const y = hy - hr - 12; return ['#ff6161', '#ffae57', '#ffd23f', '#5ff2d0', '#9fdcff'].map((c, i) => `<ellipse cx="${hx}" cy="${y}" rx="${hr * 0.9 - i * 2.5}" ry="${7 - i * 1.2}" fill="none" stroke="${c}" stroke-width="2.2"/>`).join(''); }
+  }
+  return '';
+}
+const petStage = fed => { let st = 0; PET_STAGES.forEach((s, i) => { if (fed >= s.at) st = i; }); return st; };
+function earn(n) { DB.pet.dust += n; save(); if (mode === 'menu') $('#b-pet').textContent = DB.pet.dust; }
+// 畫寵物：同一隻依階段長大、加配件。全部 inline SVG，沒有圖檔
+function petSVG(kind, st, wear = '') {
+  const K = PET_KINDS[kind], g = [];
+  if (st === 0) {   // 蛋：依路線不同花紋
+    const pat = kind === 'cute' ? '<path d="M52 58c-6-6 2-12 7-6 5-6 13 0 7 6l-7 7z" fill="' + K.c2 + '"/><path d="M38 74c-4-4 1-8 5-4 4-4 9 0 5 4l-5 5z" fill="' + K.c2 + '"/>'
+      : kind === 'cool' ? '<path d="M58 48l-8 14h8l-6 14 14-18h-8l6-10z" fill="' + K.c2 + '"/>'
+      : '<circle cx="48" cy="58" r="6" fill="' + K.c2 + '"/><circle cx="66" cy="70" r="4" fill="' + K.c2 + '"/><circle cx="54" cy="82" r="5" fill="' + K.c2 + '"/>';
+    return `<svg viewBox="0 -18 120 138" aria-hidden="true"><ellipse cx="60" cy="108" rx="34" ry="6" fill="rgba(0,0,0,.35)"/><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="${K.c1}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>${pat}<ellipse cx="46" cy="40" rx="6" ry="10" fill="rgba(255,255,255,.35)" transform="rotate(-20 46 40)"/>${gearSVG(wear, 60, 60, 34)}</svg>`;
+  }
+  const size = [0, 30, 38, 46, 50][st], cy = 70, c = K.c1, d = K.c2;
+  // 身體
+  if (kind === 'cute') g.push(`<circle cx="60" cy="${cy}" r="${size}" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2"/>`);
+  else if (kind === 'cool') g.push(`<path d="M60 ${cy - size} L${60 + size} ${cy} L60 ${cy + size} L${60 - size} ${cy} Z" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" stroke-linejoin="round"/>`);
+  else g.push(`<ellipse cx="60" cy="${cy + 4}" rx="${size + 6}" ry="${size - 4}" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2"/>`);
+  // 眼睛、嘴
+  const ex = kind === 'funny' ? 16 : 12, ey = cy - size * 0.25, er = kind === 'funny' ? 8 : 6;
+  if (kind === 'funny') g.push(`<circle cx="${60 - ex}" cy="${ey - 6}" r="${er}" fill="#fff"/><circle cx="${60 + ex}" cy="${ey - 6}" r="${er}" fill="#fff"/><circle cx="${60 - ex + 2}" cy="${ey - 5}" r="3.5" fill="${K.eye}"/><circle cx="${60 + ex - 1}" cy="${ey - 7}" r="3.5" fill="${K.eye}"/><path d="M${60 - size * 0.5} ${cy + 8} q${size * 0.5} ${size * 0.5} ${size} 0" fill="#1e3310" stroke="none"/><path d="M${60 - size * 0.3} ${cy + 12} q${size * 0.3} ${size * 0.25} ${size * 0.6} 0" fill="#ff6f91"/>`);
+  else if (kind === 'cool') g.push(`<path d="M${60 - ex - 6} ${ey - 4} l12 6 v4 h-12z" fill="${K.eye}"/><path d="M${60 + ex + 6} ${ey - 4} l-12 6 v4 h12z" fill="${K.eye}"/><path d="M${60 - 8} ${cy + 12} q8 5 16 0" fill="none" stroke="${K.eye}" stroke-width="3" stroke-linecap="round"/>`);
+  else g.push(`<circle cx="${60 - ex}" cy="${ey}" r="${er}" fill="${K.eye}"/><circle cx="${60 + ex}" cy="${ey}" r="${er}" fill="${K.eye}"/><circle cx="${60 - ex + 2}" cy="${ey - 2}" r="2" fill="#fff"/><circle cx="${60 + ex + 2}" cy="${ey - 2}" r="2" fill="#fff"/><circle cx="${60 - ex - 10}" cy="${ey + 10}" r="5" fill="rgba(255,111,145,.5)"/><circle cx="${60 + ex + 10}" cy="${ey + 10}" r="5" fill="rgba(255,111,145,.5)"/><path d="M${60 - 6} ${cy + 10} q6 6 12 0" fill="none" stroke="${K.eye}" stroke-width="3" stroke-linecap="round"/>`);
+  // 少年以上：耳朵／角／帽子
+  if (st >= 2) {
+    if (kind === 'cute') g.unshift(`<ellipse cx="${60 - size * 0.6}" cy="${cy - size * 0.9}" rx="9" ry="18" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" transform="rotate(-20 ${60 - size * 0.6} ${cy - size * 0.9})"/><ellipse cx="${60 + size * 0.6}" cy="${cy - size * 0.9}" rx="9" ry="18" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" transform="rotate(20 ${60 + size * 0.6} ${cy - size * 0.9})"/>`);
+    else if (kind === 'cool') g.unshift(`<path d="M${60 - 14} ${cy - size + 6} l-8 -22 l16 12z" fill="${d}"/><path d="M${60 + 14} ${cy - size + 6} l8 -22 l-16 12z" fill="${d}"/>`);
+    else g.push(`<path d="M${60 - 22} ${cy - size + 2} h44 l-6 -8 h-32z" fill="${d}"/><rect x="${60 - 14}" y="${cy - size - 26}" width="28" height="22" rx="4" fill="${d}"/>`);
+  }
+  // 成體以上：翅膀／披風／鬍子
+  if (st >= 3) {
+    if (kind === 'cute') g.unshift(`<path d="M${60 - size} ${cy} q-30 -26 -22 6 q6 18 22 10z" fill="#fff" opacity=".85"/><path d="M${60 + size} ${cy} q30 -26 22 6 q-6 18 -22 10z" fill="#fff" opacity=".85"/>`);
+    else if (kind === 'cool') g.unshift(`<path d="M${60 - size + 6} ${cy - 10} q-26 30 -10 56 h${2 * size - 12} q16 -26 -10 -56z" fill="${d}" opacity=".9"/>`);
+    else g.push(`<path d="M${60 - 4} ${cy + 6} q-14 -10 -22 2 q10 4 22 0z" fill="${K.eye}"/><path d="M${60 + 4} ${cy + 6} q14 -10 22 2 q-10 4 -22 0z" fill="${K.eye}"/>`);
+  }
+  // 究極：皇冠＋光環＋星星
+  if (st >= 4) {
+    g.unshift(`<circle cx="60" cy="${cy}" r="${size + 14}" fill="none" stroke="#ffd23f" stroke-width="3" stroke-dasharray="6 8" opacity=".8"/><circle cx="60" cy="${cy}" r="${size + 8}" fill="rgba(255,210,63,.12)"/>`);
+    const top = cy - size - (st >= 2 && kind === 'funny' ? 28 : 4);
+    g.push(`<path d="M${60 - 16} ${top} l6 -14 l10 10 l10 -10 l6 14z" fill="#ffd23f" stroke="#a87a00" stroke-width="2" stroke-linejoin="round"/><path d="M16 30l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#ffd23f"/><path d="M104 44l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#5ff2d0"/>`);
+  }
+  g.push(gearSVG(wear, 60, cy, size));
+  return `<svg viewBox="0 -18 120 138" aria-hidden="true"><ellipse cx="60" cy="112" rx="${size + 6}" ry="6" fill="rgba(0,0,0,.35)"/>${g.join('')}</svg>`;   // 上方留空間給帽子、皇冠
+}
+function openPet() {
+  show('pet'); renderPet();
+}
+function renderPet() {
+  const P_ = DB.pet, has = !!PET_KINDS[P_.kind];
+  $('#pet-dust').textContent = `★${P_.dust}`;
+  $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
+  renderAlumni();   // 挑蛋畫面也要看得到回家的夥伴
+  if (!has) {
+    $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}">${petSVG(k, 0)}<b>${PET_KINDS[k].name}</b><small>${PET_KINDS[k].line}</small></button>`).join('');
+    return;
+  }
+  const st = petStage(P_.fed), K = PET_KINDS[P_.kind], next = PET_STAGES[st + 1];
+  $('#pet-stage').innerHTML = petSVG(P_.kind, st, P_.wear);
+  $('#pet-stage').className = 'pet-stage' + (st === 0 && P_.dust >= FEED ? ' wobble' : '');
+  $('#pet-name').innerHTML = `${petName()}<small>${PET_STAGES[st].n}</small>`;
+  if (next) { const from = PET_STAGES[st].at; $('#pet-bar').style.width = Math.round(clamp((P_.fed - from) / (next.at - from), 0, 1) * 100) + '%'; }
+  else $('#pet-bar').style.width = '100%';
+  $('#pet-barwrap').hidden = !next; $('#pet-feed').hidden = !next;
+  $('#pet-feed').disabled = P_.dust < FEED;
+  $('#pet-feed').textContent = P_.dust < FEED ? `餵星塵 ×${FEED}（還差 ${FEED - P_.dust}）` : `餵星塵 ×${FEED}`;
+  const bye = $('#pet-bye'); bye.hidden = !!next;   // 究極才能放回家
+  if (!next) { bye.textContent = byeArm ? `再按一次，跟${petName()}說再見` : `放${petName()}回${PET_HOME[P_.kind]}`; }
+  renderGear(); renderAlumni();
+}
+let byeArm = 0;
+function renderGear() {
+  const B_ = DB.daily.badges, P_ = DB.pet;
+  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴）</div>' + GEAR.map(g => {
+    const ok = B_ >= g.at, on = P_.wear === g.id;
+    return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><svg viewBox="-20 -20 40 40" aria-hidden="true">${gearSVG(g.id, 0, 0, 14)}</svg>${g.n}<small>${ok ? (on ? '戴著' : '點一下戴上') : `徽章 ×${g.at}`}</small></button>`;
+  }).join('');
+}
+function renderAlumni() {
+  const R = DB.pet.released || [], el = $('#pet-alumni');
+  el.hidden = !R.length;
+  if (R.length) el.innerHTML = '回家的夥伴：' + R.map(r => `${petSVG(r.kind, 4)}<b>${esc(r.name || PET_KINDS[r.kind].name)}</b>（${PET_HOME[r.kind]}）`).join('、');
+}
+function releasePet() {
+  const P_ = DB.pet; if (!PET_KINDS[P_.kind] || petStage(P_.fed) < 4) return;
+  if (Date.now() - byeArm > 3000) { byeArm = Date.now(); renderPet(); setTimeout(() => { if (Date.now() - byeArm >= 2900) { byeArm = 0; if (mode === 'pet') renderPet(); } }, 3100); return; }
+  byeArm = 0;
+  const K = PET_KINDS[P_.kind], kind = P_.kind, el = $('#pet-stage'), r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  el.classList.add('bye'); $('#pet-bye').hidden = true;
+  spark(x, y, 60, ['#ffd23f', '#5ff2d0', '#ffffff', K.c2], 260, 4, 1.4, -40); SFX.fan(); confetti(40);
+  const nm = petName(); toast(`${nm}回到${PET_HOME[kind]}了，謝謝你把牠養大！`);
+  setTimeout(() => {
+    (P_.released = P_.released || []).push({ kind, name: nm, date: today() });
+    P_.kind = ''; P_.name = ''; P_.fed = 0; save();
+    if (mode === 'pet') renderPet();
+  }, 1700);
+}
+$('#pet-gear').addEventListener('click', e => { const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; DB.pet.wear = DB.pet.wear === b.dataset.gear ? '' : b.dataset.gear; save(); renderPet(); SFX.ding(); });
+$('#pet-bye').addEventListener('click', releasePet);
+function feedPet() {
+  const P_ = DB.pet; if (P_.dust < FEED || !PET_KINDS[P_.kind]) return;
+  const before = petStage(P_.fed);
+  P_.dust -= FEED; P_.fed += FEED; save();
+  const st = petStage(P_.fed), r = $('#pet-stage').getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  renderPet();
+  const el = $('#pet-stage'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  spark(x, y, 24, ['#ffd23f', '#ffffff', PET_KINDS[P_.kind].c2], 200, 3, 0.7, 60); SFX.ding();
+  if (st > before) {
+    setTimeout(() => { if (mode !== 'pet') return; toast(`${petName()}長大了！變成${PET_STAGES[st].n}`); confetti(40 + st * 20); flashA = 0.3; spark(x, y, 90, ['#ffd23f', '#5ff2d0', '#ff6161', '#ffffff'], 380, 4.5, 1.2, 150); ring(x, y, 220, '#ffd23f', 8); SFX.milestone(Math.min(4, st)); }, 350);
+  }
+}
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const petName = () => esc(DB.pet.name || (PET_KINDS[DB.pet.kind] || {}).name || '');
+// 取名：預設帶入建議名字，孩子可以直接按確定，也可以打自己想的（這裡需要系統鍵盤，是唯一的例外）
+const NAME_SUG = { cute: ['毛毛', '布丁', '棉花糖', '小粉'], cool: ['小龍', '閃電', '藍波', '阿鋼'], funny: ['呱呱', '皮皮', '大嘴', '豆豆'] };
+let nameKind = '';
+function openName(kind) {
+  nameKind = kind;
+  $('#name-egg').innerHTML = petSVG(kind, 0);
+  $('#name-in').value = NAME_SUG[kind][0];
+  $('#name-sug').innerHTML = NAME_SUG[kind].map(n => `<button type="button" data-n="${n}">${n}</button>`).join('');
+  $('#o-name').hidden = false;
+}
+$('#pet-cards').addEventListener('click', e => { const b = e.target.closest('.pet-card'); if (!b) return; openName(b.dataset.kind); });
+$('#name-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) $('#name-in').value = b.dataset.n; });
+$('#name-back').addEventListener('click', () => { $('#o-name').hidden = true; });
+$('#name-ok').addEventListener('click', () => {
+  const v = $('#name-in').value.trim().slice(0, 6) || NAME_SUG[nameKind][0];
+  DB.pet.kind = nameKind; DB.pet.name = v; save();
+  $('#o-name').hidden = true; $('#name-in').blur(); renderPet(); SFX.fan(); toast(`${v}來了！答對題目就能餵牠`);
+});
+$('#name-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#name-ok').click(); } e.stopPropagation(); });
+$('#pet-feed').addEventListener('click', feedPet);
+$('#go-pet').addEventListener('click', openPet);
 
 /* ================= 星圖 ================= */
 let resetArm = 0;
@@ -1449,7 +2324,7 @@ $('#grid99').addEventListener('click', e => {
   const k = c.dataset.k, [a, b] = k.split('x').map(Number), s = DB.facts[k], st = state(k);
   const label = { new: '還沒遇過', learn: '熟悉中', weak: '容易錯', star: '已點亮' }[st];
   $('#map-info').innerHTML = !s || !s.n ? `<b>${a} × ${b} = ${a * b}</b>　還沒遇過這題。`
-    : `<b>${a} × ${b} = ${a * b}</b>　${label}<br>答過 ${s.n} 次・平均 ${s.t ? (s.t / 1000).toFixed(1) + ' 秒' : '—'}・錯誤指數 ${Math.round(s.err * 100)}%`;
+    : `<b>${a} × ${b} = ${a * b}</b>　${label}<br>答過 ${s.n} 次・平均 ${s.t ? (s.t / 1000).toFixed(1) + ' 秒' : '—'}・答錯過 ${s.w || 0} 次`;
 });
 $('#map-reset').addEventListener('click', () => {
   if (Date.now() - resetArm < 3000) {
@@ -1457,6 +2332,69 @@ $('#map-reset').addEventListener('click', () => {
     $('#map-info').textContent = '紀錄已清除。';
   } else { resetArm = Date.now(); $('#map-reset').textContent = '再按一次確認清除'; setTimeout(() => { if (Date.now() - resetArm >= 2900) $('#map-reset').textContent = '清除所有紀錄'; }, 3000); }
 });
+
+/* ================= 每日任務 ================= */
+// 每天 3 個，跨模式；progress 用 quest(id, v, 'add'|'max'|'set') 推進。fam 同家族不會同一天出現兩個
+const QUESTS = [
+  { id: 'answers', n: 30, fam: 'any', t: n => `答對 ${n} 題（哪個遊戲都算）` },
+  { id: 'combo', n: 15, fam: 'meteor', t: n => `流星防衛戰連擊 ${n}` },
+  { id: 'wave', n: 4, fam: 'meteor', t: n => `流星防衛戰打到第 ${n} 波` },
+  { id: 'boss', n: 1, fam: 'meteor', t: () => '打倒 1 隻錯題魔王' },
+  { id: 'chest', n: 3, fam: 'chest', t: n => `開 ${n} 個寶箱` },
+  { id: 'ghost', n: 1, fam: 'ghost', t: () => '幽靈競速跑完 1 次' },
+  { id: 'ghostwin', n: 1, fam: 'ghost', t: () => '幽靈競速追過幽靈' },
+  { id: 'cmp', n: 1, fam: 'cmp', t: () => '哪個大？哪個小？玩 1 局' },
+  { id: 'cmpperfect', n: 1, fam: 'cmp', t: () => '哪個大？哪個小？10 題全對' },
+  { id: 'bomb', n: 5, fam: 'bomb', t: n => `拆掉 ${n} 顆炸彈` },
+  { id: 'bomball', n: 1, fam: 'bomb', t: () => '炸彈拆除 5 顆全拆' },
+  { id: 'versus', n: 1, fam: 'versus', t: () => '雙人拔河玩 1 局' },
+  { id: 'stars', n: 2, fam: 'stars', t: n => `點亮 ${n} 顆新星星` },
+];
+const QBY = {}; QUESTS.forEach(q => { QBY[q.id] = q; });
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+function ensureDaily() {
+  const D = DB.daily, t = today();
+  if (D.date === t && D.tasks.length === 3 && D.tasks.every(x => QBY[x.id])) return;
+  const pool = QUESTS.slice(), fams = new Set(), tasks = [];
+  while (tasks.length < 3 && pool.length) {
+    const q = pool.splice(ri(0, pool.length - 1), 1)[0];
+    if (fams.has(q.fam)) continue;
+    fams.add(q.fam); tasks.push({ id: q.id, n: q.n, p: 0, done: false });
+  }
+  D.date = t; D.tasks = tasks; D.starBase = starCount(); save();
+}
+function renderQuests() {
+  ensureDaily();
+  const D = DB.daily, done = D.tasks.filter(x => x.done).length, all = done === 3;
+  const chip = $('#go-quest'); chip.classList.toggle('todo', !all); chip.classList.toggle('ok', all);
+  $('#b-quest').textContent = all ? '✓' : `${done}/3`;
+  $('#q-list').innerHTML = D.tasks.map(x => `<div class="q-row${x.done ? ' done' : ''}"><i>✓</i><span>${QBY[x.id].t(x.n)}</span><em>${x.done ? '完成' : `${Math.min(x.p, x.n)}/${x.n}`}</em></div>`).join('') + (all ? '<div class="q-all">今天全部完成！明天再來</div>' : '');
+  $('#q-meta').innerHTML = `徽章 <em>×${D.badges}</em>${D.streak > 1 ? `・連續 <em>${D.streak}</em> 天` : ''}`;
+}
+$('#go-quest').addEventListener('click', () => { renderQuests(); $('#o-quest').hidden = false; });
+$('#q-close').addEventListener('click', () => { $('#o-quest').hidden = true; });
+let toastTok = 0;
+function toast(msg) {
+  const el = $('#toast'); el.textContent = msg; el.classList.add('on');
+  const tok = ++toastTok; setTimeout(() => { if (tok === toastTok) el.classList.remove('on'); }, 2400);
+}
+function quest(id, v = 1, how = 'add') {
+  ensureDaily();
+  const D = DB.daily, x = D.tasks.find(x => x.id === id && !x.done); if (!x) return;
+  x.p = how === 'add' ? x.p + v : how === 'max' ? Math.max(x.p, v) : v;
+  if (x.p >= x.n) {
+    x.done = true; toast(`任務完成：${QBY[id].t(x.n)}　星塵 +10`); SFX.fan(); earn(10);
+    if (D.tasks.every(y => y.done)) {
+      D.badges++; earn(30);
+      const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(`寵物可以戴${g.n}了！到寵物頁給牠戴上`), 4200); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
+      setTimeout(() => { toast(`今天的任務全部完成！徽章 +1${D.streak > 1 ? `，連續 ${D.streak} 天` : ''}`); confetti(60); SFX.milestone(2); }, 1500);
+    }
+  }
+  save();
+  if (mode === 'menu' || !$('#o-quest').hidden) renderQuests();
+}
+const questStars = () => quest('stars', Math.max(0, starCount() - DB.daily.starBase), 'max');
 
 /* ================= 錯題本 ================= */
 const ALL = {}; MUL.concat(ADDSUB).forEach(f => { ALL[f.k] = f; });
@@ -1469,7 +2407,7 @@ function openWrong() {
   const ks = wrongList();
   $('#w-list').innerHTML = ks.length ? ks.map((k, i) => {
     const f = ALL[k], s = DB.facts[k];
-    return `<div class="wrow"><span class="wrank">${i + 1}</span><div class="wmid"><div class="weq">${f.a} ${f.op} ${f.b} <span>=</span> ${f.ans}</div><div class="meter"><i style="width:${Math.round(clamp(s.err / 0.8, 0.06, 1) * 100)}%"></i></div><div class="wmeta">${s.w ? `錯過 ${s.w} 次` : '最近答錯'}・答過 ${s.n} 次</div></div><button class="wx" type="button" data-k="${k}">清除</button></div>`;
+    return `<div class="wrow"><span class="wrank">${i + 1}</span><div class="wmid"><div class="weq">${f.a} ${f.op} ${f.b} <span>=</span> ${f.ans}</div><div class="meter"><i style="width:${Math.round(clamp(s.err / 0.8, 0.06, 1) * 100)}%"></i></div><div class="wmeta">${s.w ? `答錯 ${s.w} 次` : '最近答錯'}・答過 ${s.n} 次</div></div><button class="wx" type="button" data-k="${k}">清除</button></div>`;
   }).join('') : '<div class="wempty">目前沒有容易錯的題目，太厲害了！</div>';
   $('#w-clear').hidden = !ks.length;
   wArm = 0; $('#w-clear').textContent = '全部清空';
@@ -1507,6 +2445,8 @@ function milestone(n) {
 
 /* ================= 遊戲說明 ================= */
 $('#go-help').addEventListener('click', () => { $('#o-help').hidden = false; });
+$('#go-set').addEventListener('click', () => { refreshMenu(); $('#o-set').hidden = false; });
+$('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 function pickMode() {
   $('#pk-std').textContent = DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '';
   $('#pk-sd').textContent = DB.best.sudden ? `最高 ${DB.best.sudden} 分` : '';
@@ -1545,19 +2485,25 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; });
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
-  musTrack(name === 'meteor' || name === 'ghost' || name === 'versus' ? 'game' : 'menu', name === 'ghost' ? 1.08 : 1);
+  if (name !== 'cmp') C = null;
+  if (name !== 'bomb') BM = null;
+  musTrack(name === 'menu' || name === 'map' || name === 'pet' ? 'menu' : 'game', name === 'ghost' ? 1.08 : 1);
   musDuck(false);
   measure();
 }
 function refreshMenu() {
   $('#b-meteor').textContent = [DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '', DB.best.sudden ? `即死 ${DB.best.sudden} 分` : ''].filter(Boolean).join('・');
   $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? `最佳 ${(DB.best.ghost[19] / 1000).toFixed(1)} 秒` : '';
+  $('#b-cmp').textContent = DB.best.cmpT !== null ? `全對最快 ${(DB.best.cmpT / 1000).toFixed(1)} 秒` : '';
+  $('#b-bomb').textContent = DB.best.bomb !== null ? `全拆最快 ${(DB.best.bomb / 1000).toFixed(1)} 秒` : '';
   $('#b-stars').textContent = `${starCount()}/81`;
   $('#b-wrong').textContent = wrongList().length;
+  $('#b-pet').textContent = DB.pet.dust;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
+  renderQuests();
 }
 function home() { show('menu'); refreshMenu(); }
 
@@ -1586,14 +2532,18 @@ addEventListener('keydown', e => {
   if (/^[0-9]$/.test(e.key)) d = e.key;
   else if (e.key === 'Backspace') d = 'back';
   else if (e.key === 'Escape' && mode === 'meteor' && M) { pause(!M.paused); return; }
+  else if ((e.key === ' ' || e.key === 'Enter') && mode === 'meteor' && M && !M.over && !M.paused) { launchMissile(); e.preventDefault(); return; }
   if (d === null) return;
-  if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d); else return;
+  if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d);
+  else if (mode === 'cmp' && /^[123]$/.test(d)) cmpChoose(+d - 1); else return;
   e.preventDefault();
 });
 addEventListener('pointerdown', () => { ctx(); musStart(); }, { once: true });
 $('#go-meteor').addEventListener('click', pickMode);
 $('#go-ghost').addEventListener('click', startGhost);
 $('#go-versus').addEventListener('click', openVersus);
+$('#go-cmp').addEventListener('click', startCmp);
+$('#go-bomb').addEventListener('click', startBomb);
 $('#go-map').addEventListener('click', openMap);
 $$('[data-set]').forEach(b => b.addEventListener('click', () => {
   const k = b.dataset.set; DB.set[k] = !DB.set[k]; save(); refreshMenu();
@@ -1602,6 +2552,10 @@ $$('[data-set]').forEach(b => b.addEventListener('click', () => {
 }));
 $$('[data-home]').forEach(b => b.addEventListener('click', home));
 $('#m-pause').addEventListener('click', () => pause(true));
+$('#m-fire').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
+$('#m-fire').addEventListener('click', e => { if (e.detail === 0) launchMissile(); });
+$('#m-fire2').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
+$('#m-fire2').addEventListener('click', e => { if (e.detail === 0) launchMissile(); });
 $('#p-resume').addEventListener('click', () => pause(false));
 $('#p-restart').addEventListener('click', startMeteor);
 $('#r-again').addEventListener('click', () => againFn && againFn());
@@ -1610,8 +2564,7 @@ $('#v-again').addEventListener('click', startVersus);
 $('#v-quit').addEventListener('click', () => { if (V) vPause(true); else home(); });
 $('#v-resume').addEventListener('click', () => vPause(false));
 $('#v-restart').addEventListener('click', startVersus);
-$('#v-easy').addEventListener('click', () => { vHard = false; $('#v-easy').setAttribute('aria-pressed', 'true'); $('#v-hard').setAttribute('aria-pressed', 'false'); });
-$('#v-hard').addEventListener('click', () => { vHard = true; $('#v-hard').setAttribute('aria-pressed', 'true'); $('#v-easy').setAttribute('aria-pressed', 'false'); });
+$$('#v-opp [data-opp]').forEach(b => b.addEventListener('click', () => { vOpp = b.dataset.opp; $$('#v-opp [data-opp]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); }));
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && mode === 'meteor' && M && !M.over) pause(true);
   if (actx) { try { document.hidden ? actx.suspend() : actx.resume(); } catch (e) {} }
@@ -1630,9 +2583,13 @@ function frame(t) {
   const frozen = mode === 'meteor' && M && M.paused;
   if (mode === 'meteor' && M) { if (!M.paused && !M.over) updateMeteor(dt); drawMeteorScene(frozen ? 0 : dt); }
   if (mode === 'ghost') updateGhost();
+  if (mode === 'versus') updateVersus();
+  if (mode === 'cmp') updateCmp();
+  if (mode === 'bomb') updateBomb();
   if (!frozen) stepP(dt);
   drawP();
   g.restore();
+  if (RM) flashA = 0;   // 減少動態：不做全螢幕閃白
   if (flashA > 0) { g.fillStyle = `rgba(255,248,225,${flashA})`; g.fillRect(0, 0, W, H); flashA = Math.max(0, flashA - dt * 2.2); }
   requestAnimationFrame(frame);
 }
