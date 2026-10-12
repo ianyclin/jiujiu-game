@@ -9,6 +9,7 @@
 - 所有紀錄存 `localStorage`（key：`jiujiu-meteor-v1`），只在該瀏覽器。
 - 音樂與音效全部用 Web Audio 即時合成，沒有任何音檔，無版權問題。
 - 字型：Google Fonts（Lilita One 數字、Chiron GoRound TC 中文），都有系統字型 fallback。
+- 著作權聲明放在設定頁最下面（`.legal`，小字不顯眼）：© 九九流星隊（ianyclin）、字型授權。寵物插畫是 AI 生成，著作權保護在多數地區不明確，商業化前要考慮請人重繪或至少留存生成紀錄。
 
 ## 語言與對象
 
