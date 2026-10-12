@@ -278,6 +278,31 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .bm-why{font-size:14px;color:var(--muted);font-weight:700;text-align:center;min-height:1.3em;line-height:1.4}
 #bm-timer{font-size:24px}
 
+/* ---------- 寵物 ---------- */
+.pet-intro{margin:0;color:var(--muted);font-size:15px;line-height:1.6;text-align:center;max-width:470px}
+.pet-intro b{color:var(--sun)}
+.pet-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:470px}
+.pet-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 5px 0 var(--keyEdge);cursor:pointer;color:var(--paper)}
+.pet-card:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
+.pet-card svg{width:72px;height:72px}
+.pet-card b{font-size:16px;font-weight:900}
+.pet-card small{font-size:12px;color:var(--muted)}
+.pet-show{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:470px}
+.pet-stage{width:min(70vw,260px);height:min(70vw,260px);display:grid;place-items:center}
+.pet-stage svg{width:100%;height:100%;animation:petIdle 2.4s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes petIdle{50%{transform:translateY(-6px) scale(1.02,.98)}}
+.pet-stage.pop svg{animation:petPop .5s ease}
+@keyframes petPop{30%{transform:scale(1.18,.86)}60%{transform:scale(.94,1.1) translateY(-10px)}}
+.pet-stage.wobble svg{animation:petWobble .9s ease-in-out infinite}
+@keyframes petWobble{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.pet-name{font-size:22px;font-weight:900}
+.pet-name small{display:block;font-size:13px;color:var(--muted);font-weight:700;margin-top:2px}
+.pet-bar{width:100%;max-width:320px;height:12px;border-radius:6px;background:rgba(255,210,63,.15);overflow:hidden}
+.pet-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ember),var(--sun));border-radius:6px;transition:width .4s}
+.pet-next{font-size:14px;color:var(--muted);font-weight:700;min-height:1.3em}
+.pet-tip{font-size:13px;color:var(--muted);text-align:center;line-height:1.5}
+#pet-feed:disabled{opacity:.45;box-shadow:none;transform:none}
+
 /* ---------- 覆蓋層 ---------- */
 .overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(4,9,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .card{width:100%;max-width:400px;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--line);border-radius:26px;padding:22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:14px;text-align:center;max-height:100%;overflow-y:auto}
@@ -378,6 +403,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <div class="menu-foot">
         <button class="chip" id="go-map" type="button">星圖 <b id="b-stars">0/81</b></button>
         <button class="chip" id="go-wrong" type="button">錯題本 <b id="b-wrong">0</b></button>
+        <button class="chip" id="go-pet" type="button">寵物 <b id="b-pet">0</b></button>
         <button class="chip" id="go-help" type="button">遊戲說明</button>
         <button class="chip" id="go-set" type="button">設定</button>
       </div>
@@ -540,6 +566,27 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </section>
 
+  <section class="screen" id="s-pet" hidden>
+    <div class="map-in">
+      <div class="map-head">
+        <button class="link-btn" type="button" data-home>‹ 主選單</button>
+        <h2>寵物<b id="pet-dust">★0</b></h2>
+      </div>
+      <div class="pet-pick" id="pet-pick" hidden>
+        <p class="pet-intro">答對題目會掉<b>星塵</b>，拿星塵餵寵物，牠就會慢慢長大。選一隻當夥伴：</p>
+        <div class="pet-cards" id="pet-cards"></div>
+      </div>
+      <div class="pet-show" id="pet-show" hidden>
+        <div class="pet-stage" id="pet-stage"></div>
+        <div class="pet-name" id="pet-name"></div>
+        <div class="pet-bar"><i id="pet-bar"></i></div>
+        <div class="pet-next" id="pet-next"></div>
+        <button class="btn" type="button" id="pet-feed">餵星塵 ×10</button>
+        <div class="pet-tip">星塵怎麼來？答對一題 +1、打倒魔王 +20、完成每日任務 +10。</div>
+      </div>
+    </div>
+  </section>
+
   <section class="screen" id="s-map" hidden>
     <div class="map-in">
       <div class="map-head">
@@ -660,6 +707,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>下方「小隊長」的作答會記進星圖和錯題本。</li>
         <li>沒有人陪你玩？選<b>機器人</b>當對手。它算題的速度跟你平常差不多，你落後它會慢一點，你領先它會快一點，偶爾也會算錯。</li>
       </ul>
+      <h4>寵物</h4>
+      <ul class="rules">
+        <li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li>
+        <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
+        <li>不餵也不會怎樣，牠會乖乖等你。</li>
+      </ul>
       <h4>每日任務</h4>
       <ul class="rules">
         <li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li>
@@ -702,13 +755,14 @@ const now = () => performance.now();
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
 const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true },
-  daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 } });
+  daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
+  pet: { kind: '', dust: 0, fed: 0 } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) {
     const d = JSON.parse(raw), f = fresh();
-    DB = { facts: d.facts || {}, best: Object.assign(f.best, d.best || {}), set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}) };
+    DB = { facts: d.facts || {}, best: Object.assign(f.best, d.best || {}), set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) };
   }
 } catch (e) {}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
@@ -1074,7 +1128,7 @@ function startMeteor() {
 }
 function nextWave() {
   const perfect = M.wave > 0 && M.waveMiss === 0;
-  if (perfect) { M.score += 50; banner('完美一波！+50', 'good'); SFX.power(); setTimeout(() => M && !M.over && waveBanner(), 1300); }
+  if (perfect) { M.score += 50; earn(5); banner('完美一波！+50', 'good'); SFX.power(); setTimeout(() => M && !M.over && waveBanner(), 1300); }
   M.wave++; M.kills = 0; M.waveMiss = 0; quest('wave', M.wave, 'max');
   const w = M.wave;
   M.fall = Math.max(5.4, 12.5 - w * 0.75);
@@ -1314,7 +1368,7 @@ function meteorKey(d) {
 function tipPos() { return { x: W / 2 + Math.cos(tA) * 48, y: GY - 26 + Math.sin(tA) * 48 }; }
 function hit(m) {
   const ms = now() - (m.tStart || now()), fresh = !m.revealed;
-  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); }
+  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
   const mult = 1 + Math.min(4, Math.floor(M.combo / 5));
   const pts = fresh ? (10 + (ms < 2500 ? 5 : 0)) * mult * (M.dbl > 0 ? 2 : 1) : 3;
   M.score += pts;
@@ -1349,7 +1403,7 @@ function killBoss(m) {
   m.dead = true; M.boss = null;
   for (let i = 0; i < 3; i++) setTimeout(() => { spark(m.x + rnd(-40, 40), m.y + rnd(-40, 40), 50, ['#ff6161', '#ffd23f', '#ffffff', '#ffae57'], 380, 5, 1.1, 120); ring(m.x, m.y, 220, 'rgba(255,210,63,.9)', 8); }, i * 140);
   rocks(m.x, m.y, 18, '#6b3048');
-  M.score += 200; quest('boss');
+  M.score += 200; quest('boss'); earn(20); ftxt(m.x, m.y - 40, '星塵 +20', '#9fdcff', 22);
   ftxt(m.x, m.y, '+200', '#ffd23f', 40);
   ftxt(m.x, m.y + 44, '寶箱掉落！', '#ffd23f', 24);
   flashA = 0.6; shake(0.6, 14); SFX.big();
@@ -1596,7 +1650,7 @@ function ghostKey(d) {
   if (G.buf.length >= String(G.q.ans).length) {
     const v = parseInt(G.buf, 10);
     if (v === G.q.ans) {
-      if (!G.rev) { G.ok++; record(G.q.k, true, now() - G.qt); quest('answers'); }
+      if (!G.rev) { G.ok++; record(G.q.k, true, now() - G.qt); quest('answers'); earn(1); }
       G.times.push(Math.round(now() - G.t0)); G.i++;
       SFX.zap(G.i);
       const c = $('#g-card'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
@@ -1728,7 +1782,7 @@ function vKey(i, d) {
   if (p.buf.length >= String(p.q.ans).length) {
     const v = parseInt(p.buf, 10);
     if (v === p.q.ans) {
-      if (i === 0 && !p.rev) { record(p.q.k, true, now() - p.qt); quest('answers'); }
+      if (i === 0 && !p.rev) { record(p.q.k, true, now() - p.qt); quest('answers'); earn(1); }
       V.pos += i === 0 ? -1 : 1;
       $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%';
       SFX.zap(Math.abs(V.pos) * 2);
@@ -1816,7 +1870,7 @@ function cmpChoose(i) {
   if (f === q.ans) {
     el.classList.remove('want', 'bad'); el.classList.add('ok', 'pop');
     if (!q.rev) {
-      C.ok++; C.streak++; quest('answers');
+      C.ok++; C.streak++; quest('answers'); earn(1);
       // 點對不記星圖：選擇題證明不了「能打出答案」；答錯才記（見下）
       SFX.zap(C.streak);
       const r = el.getBoundingClientRect();
@@ -1936,7 +1990,7 @@ function bombTap(i) {
   const r = BM.round, v = r.tiles[i], el = $$('#bm-tiles .tile')[i];
   if (v === undefined || r.got.has(i)) return;
   if (v % r.n === 0) {
-    r.got.add(i); el.classList.add('got'); SFX.zap(r.got.size * 3); quest('answers');
+    r.got.add(i); el.classList.add('got'); SFX.zap(r.got.size * 3); quest('answers'); earn(1);
     const rc = el.getBoundingClientRect();
     spark(rc.left + rc.width / 2, rc.top + rc.height / 2, 14, ['#5ff2d0', '#ffffff'], 180, 3, 0.6, 80);
     $('#bm-found').innerHTML = `找到 <b>${r.got.size}</b> / ${r.count}`;
@@ -2017,6 +2071,95 @@ function finishBomb() {
 $('#bm-tiles').addEventListener('pointerdown', e => { const b = e.target.closest('.tile'); if (!b) return; e.preventDefault(); bombTap(+b.dataset.i); });
 $('#bm-tiles').addEventListener('click', e => { const b = e.target.closest('.tile'); if (b && e.detail === 0) bombTap(+b.dataset.i); });
 $('#bm-next').addEventListener('click', bombAdvance);
+
+/* ================= 寵物 ================= */
+// 星塵只會增加，沒有飢餓、沒有倒扣。五階段依累積餵食量 fed 決定
+const PET_KINDS = {
+  cute: { name: '毛毛', line: '可愛', c1: '#ffb3c7', c2: '#ff6f91', eye: '#3b1f2b' },
+  cool: { name: '小龍', line: '帥氣', c1: '#7fd3ff', c2: '#2c7fd6', eye: '#0b2340' },
+  funny: { name: '呱呱', line: '搞笑', c1: '#b6f27a', c2: '#5cb82e', eye: '#1e3310' },
+};
+const PET_STAGES = [{ at: 0, n: '蛋' }, { at: 30, n: '幼體' }, { at: 100, n: '少年' }, { at: 250, n: '成體' }, { at: 500, n: '究極' }];
+const FEED = 10;
+const petStage = fed => { let st = 0; PET_STAGES.forEach((s, i) => { if (fed >= s.at) st = i; }); return st; };
+function earn(n) { DB.pet.dust += n; save(); if (mode === 'menu') $('#b-pet').textContent = DB.pet.dust; }
+// 畫寵物：同一隻依階段長大、加配件。全部 inline SVG，沒有圖檔
+function petSVG(kind, st) {
+  const K = PET_KINDS[kind], g = [];
+  if (st === 0) {   // 蛋：依路線不同花紋
+    const pat = kind === 'cute' ? '<path d="M52 58c-6-6 2-12 7-6 5-6 13 0 7 6l-7 7z" fill="' + K.c2 + '"/><path d="M38 74c-4-4 1-8 5-4 4-4 9 0 5 4l-5 5z" fill="' + K.c2 + '"/>'
+      : kind === 'cool' ? '<path d="M58 48l-8 14h8l-6 14 14-18h-8l6-10z" fill="' + K.c2 + '"/>'
+      : '<circle cx="48" cy="58" r="6" fill="' + K.c2 + '"/><circle cx="66" cy="70" r="4" fill="' + K.c2 + '"/><circle cx="54" cy="82" r="5" fill="' + K.c2 + '"/>';
+    return `<svg viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="108" rx="34" ry="6" fill="rgba(0,0,0,.35)"/><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="${K.c1}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>${pat}<ellipse cx="46" cy="40" rx="6" ry="10" fill="rgba(255,255,255,.35)" transform="rotate(-20 46 40)"/></svg>`;
+  }
+  const size = [0, 30, 38, 46, 50][st], cy = 70, c = K.c1, d = K.c2;
+  // 身體
+  if (kind === 'cute') g.push(`<circle cx="60" cy="${cy}" r="${size}" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2"/>`);
+  else if (kind === 'cool') g.push(`<path d="M60 ${cy - size} L${60 + size} ${cy} L60 ${cy + size} L${60 - size} ${cy} Z" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" stroke-linejoin="round"/>`);
+  else g.push(`<ellipse cx="60" cy="${cy + 4}" rx="${size + 6}" ry="${size - 4}" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2"/>`);
+  // 眼睛、嘴
+  const ex = kind === 'funny' ? 16 : 12, ey = cy - size * 0.25, er = kind === 'funny' ? 8 : 6;
+  if (kind === 'funny') g.push(`<circle cx="${60 - ex}" cy="${ey - 6}" r="${er}" fill="#fff"/><circle cx="${60 + ex}" cy="${ey - 6}" r="${er}" fill="#fff"/><circle cx="${60 - ex + 2}" cy="${ey - 5}" r="3.5" fill="${K.eye}"/><circle cx="${60 + ex - 1}" cy="${ey - 7}" r="3.5" fill="${K.eye}"/><path d="M${60 - size * 0.5} ${cy + 8} q${size * 0.5} ${size * 0.5} ${size} 0" fill="#1e3310" stroke="none"/><path d="M${60 - size * 0.3} ${cy + 12} q${size * 0.3} ${size * 0.25} ${size * 0.6} 0" fill="#ff6f91"/>`);
+  else if (kind === 'cool') g.push(`<path d="M${60 - ex - 6} ${ey - 4} l12 6 v4 h-12z" fill="${K.eye}"/><path d="M${60 + ex + 6} ${ey - 4} l-12 6 v4 h12z" fill="${K.eye}"/><path d="M${60 - 8} ${cy + 12} q8 5 16 0" fill="none" stroke="${K.eye}" stroke-width="3" stroke-linecap="round"/>`);
+  else g.push(`<circle cx="${60 - ex}" cy="${ey}" r="${er}" fill="${K.eye}"/><circle cx="${60 + ex}" cy="${ey}" r="${er}" fill="${K.eye}"/><circle cx="${60 - ex + 2}" cy="${ey - 2}" r="2" fill="#fff"/><circle cx="${60 + ex + 2}" cy="${ey - 2}" r="2" fill="#fff"/><circle cx="${60 - ex - 10}" cy="${ey + 10}" r="5" fill="rgba(255,111,145,.5)"/><circle cx="${60 + ex + 10}" cy="${ey + 10}" r="5" fill="rgba(255,111,145,.5)"/><path d="M${60 - 6} ${cy + 10} q6 6 12 0" fill="none" stroke="${K.eye}" stroke-width="3" stroke-linecap="round"/>`);
+  // 少年以上：耳朵／角／帽子
+  if (st >= 2) {
+    if (kind === 'cute') g.unshift(`<ellipse cx="${60 - size * 0.6}" cy="${cy - size * 0.9}" rx="9" ry="18" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" transform="rotate(-20 ${60 - size * 0.6} ${cy - size * 0.9})"/><ellipse cx="${60 + size * 0.6}" cy="${cy - size * 0.9}" rx="9" ry="18" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" transform="rotate(20 ${60 + size * 0.6} ${cy - size * 0.9})"/>`);
+    else if (kind === 'cool') g.unshift(`<path d="M${60 - 14} ${cy - size + 6} l-8 -22 l16 12z" fill="${d}"/><path d="M${60 + 14} ${cy - size + 6} l8 -22 l-16 12z" fill="${d}"/>`);
+    else g.push(`<path d="M${60 - 22} ${cy - size + 2} h44 l-6 -8 h-32z" fill="${d}"/><rect x="${60 - 14}" y="${cy - size - 26}" width="28" height="22" rx="4" fill="${d}"/>`);
+  }
+  // 成體以上：翅膀／披風／鬍子
+  if (st >= 3) {
+    if (kind === 'cute') g.unshift(`<path d="M${60 - size} ${cy} q-30 -26 -22 6 q6 18 22 10z" fill="#fff" opacity=".85"/><path d="M${60 + size} ${cy} q30 -26 22 6 q-6 18 -22 10z" fill="#fff" opacity=".85"/>`);
+    else if (kind === 'cool') g.unshift(`<path d="M${60 - size + 6} ${cy - 10} q-26 30 -10 56 h${2 * size - 12} q16 -26 -10 -56z" fill="${d}" opacity=".9"/>`);
+    else g.push(`<path d="M${60 - 4} ${cy + 6} q-14 -10 -22 2 q10 4 22 0z" fill="${K.eye}"/><path d="M${60 + 4} ${cy + 6} q14 -10 22 2 q-10 4 -22 0z" fill="${K.eye}"/>`);
+  }
+  // 究極：皇冠＋光環＋星星
+  if (st >= 4) {
+    g.unshift(`<circle cx="60" cy="${cy}" r="${size + 14}" fill="none" stroke="#ffd23f" stroke-width="3" stroke-dasharray="6 8" opacity=".8"/><circle cx="60" cy="${cy}" r="${size + 8}" fill="rgba(255,210,63,.12)"/>`);
+    const top = cy - size - (st >= 2 && kind === 'funny' ? 28 : 4);
+    g.push(`<path d="M${60 - 16} ${top} l6 -14 l10 10 l10 -10 l6 14z" fill="#ffd23f" stroke="#a87a00" stroke-width="2" stroke-linejoin="round"/><path d="M16 30l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#ffd23f"/><path d="M104 44l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#5ff2d0"/>`);
+  }
+  return `<svg viewBox="0 -18 120 138" aria-hidden="true"><ellipse cx="60" cy="112" rx="${size + 6}" ry="6" fill="rgba(0,0,0,.35)"/>${g.join('')}</svg>`;   // 上方留空間給帽子、皇冠
+}
+function openPet() {
+  show('pet'); renderPet();
+}
+function renderPet() {
+  const P_ = DB.pet, has = !!PET_KINDS[P_.kind];
+  $('#pet-dust').textContent = `★${P_.dust}`;
+  $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
+  if (!has) {
+    $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}">${petSVG(k, 0)}<b>${PET_KINDS[k].name}</b><small>${PET_KINDS[k].line}路線</small></button>`).join('');
+    return;
+  }
+  const st = petStage(P_.fed), K = PET_KINDS[P_.kind], next = PET_STAGES[st + 1];
+  $('#pet-stage').innerHTML = petSVG(P_.kind, st);
+  $('#pet-stage').classList.toggle('wobble', st === 0 && P_.dust >= FEED);
+  $('#pet-name').innerHTML = `${K.name}<small>${PET_STAGES[st].n}・${K.line}路線</small>`;
+  if (next) {
+    const from = PET_STAGES[st].at, pct_ = clamp((P_.fed - from) / (next.at - from), 0, 1);
+    $('#pet-bar').style.width = Math.round(pct_ * 100) + '%';
+    $('#pet-next').textContent = `再餵 ${Math.ceil((next.at - P_.fed) / FEED)} 次就會變成${next.n}`;
+  } else { $('#pet-bar').style.width = '100%'; $('#pet-next').textContent = '已經是究極型態，超厲害！'; }
+  $('#pet-feed').disabled = P_.dust < FEED;
+  $('#pet-feed').textContent = P_.dust < FEED ? `餵星塵 ×${FEED}（還差 ${FEED - P_.dust}）` : `餵星塵 ×${FEED}`;
+}
+function feedPet() {
+  const P_ = DB.pet; if (P_.dust < FEED || !PET_KINDS[P_.kind]) return;
+  const before = petStage(P_.fed);
+  P_.dust -= FEED; P_.fed += FEED; save();
+  const st = petStage(P_.fed), r = $('#pet-stage').getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  renderPet();
+  const el = $('#pet-stage'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  spark(x, y, 24, ['#ffd23f', '#ffffff', PET_KINDS[P_.kind].c2], 200, 3, 0.7, 60); SFX.ding();
+  if (st > before) {
+    setTimeout(() => { if (mode !== 'pet') return; toast(`${PET_KINDS[P_.kind].name}長大了！變成${PET_STAGES[st].n}`); confetti(40 + st * 20); flashA = 0.3; spark(x, y, 90, ['#ffd23f', '#5ff2d0', '#ff6161', '#ffffff'], 380, 4.5, 1.2, 150); ring(x, y, 220, '#ffd23f', 8); SFX.milestone(Math.min(4, st)); }, 350);
+  }
+}
+$('#pet-cards').addEventListener('click', e => { const b = e.target.closest('.pet-card'); if (!b) return; DB.pet.kind = b.dataset.kind; save(); renderPet(); SFX.fan(); toast(`${PET_KINDS[b.dataset.kind].name}來了！答對題目就能餵牠`); });
+$('#pet-feed').addEventListener('click', feedPet);
+$('#go-pet').addEventListener('click', openPet);
 
 /* ================= 星圖 ================= */
 let resetArm = 0;
@@ -2102,9 +2245,9 @@ function quest(id, v = 1, how = 'add') {
   const D = DB.daily, x = D.tasks.find(x => x.id === id && !x.done); if (!x) return;
   x.p = how === 'add' ? x.p + v : how === 'max' ? Math.max(x.p, v) : v;
   if (x.p >= x.n) {
-    x.done = true; toast(`任務完成：${QBY[id].t(x.n)}`); SFX.fan();
+    x.done = true; toast(`任務完成：${QBY[id].t(x.n)}　星塵 +10`); SFX.fan(); earn(10);
     if (D.tasks.every(y => y.done)) {
-      D.badges++; D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
+      D.badges++; earn(30); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
       setTimeout(() => { toast(`今天的任務全部完成！徽章 +1${D.streak > 1 ? `，連續 ${D.streak} 天` : ''}`); confetti(60); SFX.milestone(2); }, 1500);
     }
   }
@@ -2207,7 +2350,7 @@ function show(name) {
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
   if (name !== 'bomb') BM = null;
-  musTrack(name === 'menu' || name === 'map' ? 'menu' : 'game', name === 'ghost' ? 1.08 : 1);
+  musTrack(name === 'menu' || name === 'map' || name === 'pet' ? 'menu' : 'game', name === 'ghost' ? 1.08 : 1);
   musDuck(false);
   measure();
 }
@@ -2218,6 +2361,7 @@ function refreshMenu() {
   $('#b-bomb').textContent = DB.best.bomb !== null ? `全拆最快 ${(DB.best.bomb / 1000).toFixed(1)} 秒` : '';
   $('#b-stars').textContent = `${starCount()}/81`;
   $('#b-wrong').textContent = wrongList().length;
+  $('#b-pet').textContent = DB.pet.dust;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
   renderQuests();
 }
