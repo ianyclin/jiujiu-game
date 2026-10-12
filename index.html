@@ -296,10 +296,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 /* ---------- 寵物 ---------- */
 .pet-intro{margin:0;color:var(--muted);font-size:15px;line-height:1.6;text-align:center;max-width:470px}
 .pet-intro b{color:var(--sun)}
-.pet-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:470px}
+.pet-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:400px}
 .pet-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 5px 0 var(--keyEdge);cursor:pointer;color:var(--paper)}
 .pet-card:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
 .pet-card svg{width:72px;height:72px}
+.pet-card.locked{opacity:.75;cursor:default;box-shadow:none;border-style:dashed}
+.pet-card.locked small{color:var(--ember)}
 .pet-card b{font-size:16px;font-weight:900}
 .pet-card small{font-size:12px;color:var(--muted)}
 .pet-show{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:470px}
@@ -761,6 +763,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
         <li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉）：蝴蝶結、圍巾、墨鏡、氣球、彩虹光環。在寵物頁點一下就戴上。</li>
         <li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li>
+        <li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li>
         <li>不餵也不會怎樣，牠會乖乖等你。</li>
       </ul>
       <h4>每日任務</h4>
@@ -2145,10 +2148,15 @@ const PET_KINDS = {
   cute: { name: '毛毛', line: '可愛', c1: '#ffb3c7', c2: '#ff6f91', eye: '#3b1f2b' },
   cool: { name: '小龍', line: '帥氣', c1: '#7fd3ff', c2: '#2c7fd6', eye: '#0b2340' },
   funny: { name: '呱呱', line: '搞笑', c1: '#b6f27a', c2: '#5cb82e', eye: '#1e3310' },
+  legend: { name: '星狐', line: '傳說', c1: '#ffb347', c2: '#7c3aed', eye: '#1a0b2e', locked: true },
 };
+// 傳說蛋：徽章集滿 30 個，而且送過至少一隻回家才能選。圖檔到位前 LEGEND_READY 留 false
+const LEGEND_READY = false;
+const LEGEND_BADGES = 30;
+const legendUnlocked = () => DB.daily.badges >= LEGEND_BADGES && (DB.pet.released || []).length >= 1;
 const PET_STAGES = [{ at: 0, n: '蛋' }, { at: 30, n: '幼體' }, { at: 100, n: '少年' }, { at: 250, n: '成體' }, { at: 500, n: '究極' }];
 const FEED = 10;
-const PET_HOME = { cute: '山上', cool: '海裡', funny: '叢林' };
+const PET_HOME = { cute: '山上', cool: '海裡', funny: '叢林', legend: '星空' };
 // 徽章換配件：累積徽章數到 at 就解鎖，解鎖後永久保留（換寵物也在）
 const GEAR = [
   { id: 'bow', at: 1, n: '蝴蝶結' }, { id: 'scarf', at: 3, n: '圍巾' }, { id: 'glasses', at: 7, n: '墨鏡' },
@@ -2187,7 +2195,14 @@ function renderPet() {
   $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
   renderAlumni();   // 挑蛋畫面也要看得到回家的夥伴
   if (!has) {
-    $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}">${petSVG(k, 0)}<b>${PET_KINDS[k].name}</b><small>${PET_KINDS[k].line}</small></button>`).join('');
+    $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => {
+      const K = PET_KINDS[k], open = !K.locked || (LEGEND_READY && legendUnlocked());
+      if (open) return `<button type="button" class="pet-card" data-kind="${k}">${petSVG(k, 0)}<b>${K.name}</b><small>${K.line}</small></button>`;
+      const need = [];
+      if (DB.daily.badges < LEGEND_BADGES) need.push(`徽章 ${DB.daily.badges}/${LEGEND_BADGES}`);
+      if (!(DB.pet.released || []).length) need.push('送一隻回家');
+      return `<button type="button" class="pet-card locked" disabled aria-label="傳說蛋，還沒解鎖"><svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="#2a1b4a" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6 5"/><text x="60" y="78" text-anchor="middle" font-size="44" font-weight="900" fill="#ffb347" font-family="Lilita One,sans-serif">?</text></svg><b>？？？</b><small>${LEGEND_READY ? need.join('＋') || '可以選了' : '即將登場'}</small></button>`;
+    }).join('');
     return;
   }
   const st = petStage(P_.fed), K = PET_KINDS[P_.kind], next = PET_STAGES[st + 1];
@@ -2247,7 +2262,7 @@ function feedPet() {
 const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const petName = () => esc(DB.pet.name || (PET_KINDS[DB.pet.kind] || {}).name || '');
 // 取名：預設帶入建議名字，孩子可以直接按確定，也可以打自己想的（這裡需要系統鍵盤，是唯一的例外）
-const NAME_SUG = { cute: ['毛毛', '布丁', '棉花糖', '小粉'], cool: ['小龍', '閃電', '藍波', '阿鋼'], funny: ['呱呱', '皮皮', '大嘴', '豆豆'] };
+const NAME_SUG = { cute: ['毛毛', '布丁', '棉花糖', '小粉'], cool: ['小龍', '閃電', '藍波', '阿鋼'], funny: ['呱呱', '皮皮', '大嘴', '豆豆'], legend: ['星狐', '流火', '小隕', '彗彗'] };
 let nameKind = '';
 function openName(kind) {
   nameKind = kind;
