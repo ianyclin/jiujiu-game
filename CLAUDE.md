@@ -27,7 +27,7 @@
 ## 架構（index.html 內的區塊順序）
 
 1. `<style>`：`:root` tokens（夜空單一主題，刻意不做亮色）、各畫面 CSS。
-2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-pet`、`#s-map` 八個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、今日任務（`#o-quest`）、寵物取名（`#o-name`）、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理）、遊戲說明。
+2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-pet`、`#s-map` 八個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、今日任務（`#o-quest`）、寵物取名（`#o-name`）、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理）、關於（`#o-about`，從設定進，給家長看的：遊戲目的、隱私、製作與版本；版本號寫在這裡，發布時記得改）、遊戲說明。
 3. JS（IIFE）：
    - **存檔** `DB = { facts, best, set, daily, pet }`，`save()`。
    - **題庫與錯題加權** `MUL`（81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 20% 抽加減。`MUL2` 是不含 ×1 的 64 題；`pickFact(pool, no1)` 的 `no1` 讓幽靈競速、拔河小隊長不出 ×1（流星防衛戰留著當緩衝，權重 0.25）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
