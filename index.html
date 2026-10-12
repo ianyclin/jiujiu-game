@@ -765,6 +765,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
         <li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、圍巾、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。</li>
         <li>頭頂、臉、脖子、旁邊四個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li>
+        <li>徽章集很多的時候，還會出現<b>神祕的稀有配件</b>，到時候你就知道了。</li>
         <li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li>
         <li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li>
         <li>不餵也不會怎樣，牠會乖乖等你。</li>
@@ -2174,6 +2175,9 @@ const GEAR = [
   { id: 'star', at: 15, n: '星星髮夾', slot: 'head', ar: 1.497, place: (hx, hy, hr) => [hx + hr * 0.62, hy - hr * 0.8, hr * 0.85, 15] },
   { id: 'wizard', at: 20, n: '魔法師帽', slot: 'head', ar: 1.225, place: (hx, hy, hr) => [hx + hr * 0.1, hy - hr * 0.45 - hr * 1.9 / 1.225 * 0.4, hr * 1.9, 0] },
   { id: 'halo', at: 30, n: '彩虹光環', slot: 'head', ar: 2.415, place: (hx, hy, hr, top) => [hx, top - 8, hr * 1.9, 0] },
+  // 稀有（隱藏到門檻才出現）：依整隻的高度縮放，畫在寵物後面
+  { id: 'wings', at: 40, n: '星河之翼', slot: 'back', ar: 1.48, hidden: true, place: (hx, hy, hr, top) => { const H = 117 - top; return [60, top + H * 0.5, Math.max(H * 1.6, hr * 3.6), 0]; } },
+  { id: 'bubble', at: 50, n: '宇宙泡泡', slot: 'back', ar: 1.216, hidden: true, front: 0.4, place: (hx, hy, hr, top) => { const H = 117 - top; const w = Math.max(H * 1.4, hr * 3.6); return [60, top + H * 0.48, w, 0]; } },
 ];
 const GEAR_BY = {}; GEAR.forEach(g => { GEAR_BY[g.id] = g; });
 const SLOTS = ['side', 'neck', 'head', 'face'];   // 畫在寵物前面的順序：旁邊、脖子、頭頂、臉（臉最上層）
@@ -2206,7 +2210,8 @@ const PET_HEAD = {
 function petSVG(kind, st, wear = null) {   // wear：{ head, face, neck, side } 或 null（不戴）
   const [hx, hy, hr, top] = PET_HEAD[kind][st];
   const gear = wear ? SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '', back = wear ? BACK_SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '';
-  return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/>${back}<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gear}</svg>`;
+  const frontG = wear && GEAR_BY[wear.back] && GEAR_BY[wear.back].front ? `<g opacity="${GEAR_BY[wear.back].front}">${gearSVG(wear.back, hx, hy, hr, top)}</g>` : '';
+  return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/>${back}<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gear}${frontG}</svg>`;
 }
 function openPet() {
   show('pet'); renderPet();
