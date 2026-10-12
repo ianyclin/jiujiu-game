@@ -71,8 +71,9 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .key.hit{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge);background:linear-gradient(#30587d,#22405f)}
 .aq{font-family:var(--f-num);font-size:clamp(32px,8.4vw,44px);display:flex;align-items:center;justify-content:center;gap:.22em;white-space:nowrap;line-height:1.1}
 .aq.dim{font-family:var(--f-zh);font-size:18px;color:var(--muted);font-weight:700}
-.aq.seq,.half .aq.seq{font-size:clamp(24px,6.4vw,38px);gap:.1em}
+.aq.seq,.half .aq.seq{font-size:clamp(24px,6.4vw,38px);gap:.1em;flex-wrap:wrap;row-gap:.15em}
 .qcard .aq.seq{font-size:clamp(30px,8.6vw,54px)}
+.qlab{flex-basis:100%;text-align:center;font-family:var(--f-zh);font-size:.48em;font-weight:700;color:var(--ice);line-height:1;letter-spacing:.06em}
 .slot{display:inline-grid;place-items:center;width:.82em;height:1.08em;border-radius:.16em;background:rgba(255,255,255,.07);border-bottom:4px solid var(--muted);font-style:normal;color:var(--sun)}
 .slot.on{border-color:var(--sun);background:rgba(255,210,63,.1)}
 .hint{font-size:14px;color:#ff9a9a;font-weight:700;min-height:1.3em;text-align:center}
@@ -566,7 +567,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台會一直瞄準<b>同一顆</b>直到打掉；有別顆快掉到地上了，才會先轉過去打它，這時下面的題目會跳一下。</li>
         <li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。</li>
-        <li>有時候流星上是一串數字「7、14、?、28」，那是 7 的乘法表，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
+        <li>有時候流星上寫「7 的倍數」加一串數字「7、14、?、28」，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
         <li>流星掉到小鎮會<b>扣一顆心</b>。一整波都沒失誤 +50 分。</li>
         <li>每 5 波出現<b>錯題魔王</b>，專出你最常錯的題目，要連續答對 5 題以上才打得倒（波數越高血越多）。魔王來的時候不會有小流星，專心打它就好。打倒 +200 分、<b>必掉寶箱</b>。</li>
         <li>魔王掉到小鎮會<b>扣 2 顆心</b>，一擊即死模式等於直接結束。</li>
@@ -576,7 +577,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <h4>寶箱流星</h4>
       <ul class="rules">
         <li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱，打掉就隨機掉一樣東西。</li>
-        <li>常見：+30 分、時間凍結、連擊 +5（倍率已滿就改 +50 分）、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b></li>
+        <li>常見：+30 分、時間凍結、連擊 +5（倍率已滿就改 +50 分）、雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b>、<b>連擊護盾</b></li>
+        <li>連擊護盾：答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>。擋一次就破了，已經有一個時改 +50 分。</li>
         <li>追蹤飛彈最多存 3 枚（已滿改 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li>
         <li>稀有：<b>超新星</b>清光全場、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已滿 3 顆或一擊即死時改 +100 分）</li>
       </ul>
@@ -622,6 +624,7 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const ri = (a, b) => Math.floor(rnd(a, b + 1));
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NUMF = "'Lilita One','Chiron GoRound TC','PingFang TC','Microsoft JhengHei',sans-serif";
+const ZHF = "'Chiron GoRound TC','Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif";
 const now = () => performance.now();
 
 /* ================= 存檔 ================= */
@@ -668,7 +671,8 @@ function makeQ(f, rev, seq) {
     const n = f.a, k = f.b, s = clamp(k - ri(0, 3), 1, 6);
     const terms = [0, 1, 2, 3].map(i => n * (s + i)), hide = k - s;
     const show = terms.map((v, i) => i === hide ? '?' : String(v));
-    return { f, k: f.k, seq: true, ans: f.ans, text: show.join('、'), lines: [show.slice(0, 2).join('、'), show.slice(2).join('、')] };
+    // label 標示是幾的倍數，孩子不用自己看出乘法表（實測不標示跟反向題一樣難）
+    return { f, k: f.k, seq: true, ans: f.ans, label: `${n} 的倍數`, text: show.join('、'), lines: [`${n} 的倍數`, show.slice(0, 2).join('、'), show.slice(2).join('、')] };
   }
   if (rev && f.op === '×' && Math.random() < 0.2) {
     const hideA = Math.random() < 0.5;
@@ -973,7 +977,7 @@ function newMeteor(q, boss) {
   const fs = boss ? clamp(W * 0.055, 22, 32) : clamp(W * 0.052, 19, 25);
   g.font = `${fs}px ${NUMF}`;
   const lines = q.lines || q.text.split(' = ');
-  let tw = 0; lines.forEach((s, i) => { tw = Math.max(tw, g.measureText(q.lines ? s : (i ? '= ' + s : s)).width); });
+  let tw = 0; lines.forEach((s, i) => { g.font = `${q.label && i === 0 ? fs * 0.72 : fs}px ${q.label && i === 0 ? ZHF : NUMF}`; tw = Math.max(tw, g.measureText(q.lines ? s : (i ? '= ' + s : s)).width); });
   const base = boss ? clamp(W * 0.17, 64, 98) : clamp(W * 0.075, 31, 44);
   const r = boss ? base : Math.max(base, tw * 0.58 + 10, lines.length * fs * 0.62 + 12);
   const pts = []; for (let i = 0; i < 12; i++) pts.push(r * rnd(0.84, 1.05));
@@ -987,7 +991,7 @@ function newMeteor(q, boss) {
 }
 function startMeteor() {
   show('meteor');
-  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
+  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, shield: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
   P.length = 0; beams.length = 0; curT = null; lastBar = '';
   $('#m-freeze').hidden = true; $('#m-dbl').hidden = true; $('#m-inv').hidden = true;
   requestAnimationFrame(() => { measure(); nextWave(); hud(); bar(); });
@@ -1122,7 +1126,7 @@ function impact(m) {
   }
   spark(m.x, y, 46, ['#ffae57', '#ff6161', '#ffd23f'], 300, 4, 0.9, 260);
   rocks(m.x, y, 10, '#5b4a5f'); ring(m.x, y, 120, 'rgba(255,120,90,.9)', 6);
-  M.hearts -= m.boss ? 2 : 1; M.combo = 0; M.waveMiss++;
+  M.hearts -= m.boss ? 2 : 1; if (!shieldSave(m.x, y - 100)) M.combo = 0; M.waveMiss++;
   domeFlash = 1; shake(0.45, 12); flashA = 0.25; SFX.hurt();
   if (m.boss) { M.boss = null; if (M.hearts > 0) setTimeout(() => M && !M.over && nextWave(), 900); }
   hud(); bar();
@@ -1131,8 +1135,9 @@ function impact(m) {
 
 /* ---- 寶箱掉落 ---- */
 const DROPS = [
-  { id: 'score', p: 20, col: '#ffd23f' }, { id: 'freeze', p: 20, col: '#9fdcff' }, { id: 'combo', p: 15, col: '#ffae57' }, { id: 'double', p: 10, col: '#ffd23f' },
-  { id: 'missile', p: 10, col: '#ffae57' }, { id: 'inv', p: 10, col: '#ff6161' }, { id: 'nova', p: 5, col: '#ffd23f' }, { id: 'heart', p: 5, col: '#ff6161' }, { id: 'inv20', p: 5, col: '#ff6161' },
+  { id: 'score', p: 15, col: '#ffd23f' }, { id: 'freeze', p: 15, col: '#9fdcff' }, { id: 'combo', p: 15, col: '#ffae57' }, { id: 'double', p: 10, col: '#ffd23f' },
+  { id: 'missile', p: 10, col: '#ffae57' }, { id: 'inv', p: 10, col: '#ff6161' }, { id: 'shield', p: 10, col: '#9fdcff' },
+  { id: 'nova', p: 5, col: '#ffd23f' }, { id: 'heart', p: 5, col: '#ff6161' }, { id: 'inv20', p: 5, col: '#ff6161' },
 ];
 function rollDrop() {
   const pool = DROPS, tot = pool.reduce((s, d) => s + d.p, 0);
@@ -1168,6 +1173,10 @@ function applyDrop(o) {
     case 'missile':
       if (M.missiles < 3) { M.missiles++; ftxt(x, y, '追蹤飛彈 +1', '#ffae57', 30); }
       else { M.score += 50; ftxt(x, y, '飛彈已滿 +50', '#ffd23f', 28); }
+      break;
+    case 'shield':
+      if (!M.shield) { M.shield = 1; ftxt(x, y, '連擊護盾！', '#9fdcff', 32); }
+      else { M.score += 50; ftxt(x, y, '護盾已有 +50', '#ffd23f', 28); }
       break;
     case 'inv': case 'inv20': {
       const sec = d.id === 'inv20' ? 20 : 10;
@@ -1249,9 +1258,15 @@ function killBoss(m) {
   setTimeout(() => { if (M && !M.over) spawnDrop(m.x, Math.min(m.y, GY - 220)); }, 500);
   setTimeout(() => M && !M.over && nextWave(), 1200);
 }
+// 連擊護盾：答錯或流星落地時擋一次，連擊不歸零；用掉就沒了
+function shieldSave(x, y) {
+  if (!M.shield) return false;
+  M.shield = 0; ftxt(x, y, '護盾擋住！連擊保住', '#9fdcff', 26); ring(x, y, 100, '#9fdcff', 5); SFX.ding();
+  return true;
+}
 function miss(m) {
   if (!m.revealed) { M.tot++; record(m.q.k, false, 0); M.wrongs.push(m.q); }
-  m.revealed = true; m.flash = 0.6; M.combo = 0; M.waveMiss++;
+  m.revealed = true; m.flash = 0.6; if (!shieldSave(m.x, m.y - m.r - 30)) M.combo = 0; M.waveMiss++;
   tHurt = 0.35; SFX.wrong();
   const el = $('#m-answer'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
   hud();
@@ -1367,13 +1382,15 @@ function drawRock(m, tgt) {
   const L = m.q.lines ? m.q.lines.slice() : parts.length === 2 ? [parts[0], '= ' + parts[1]] : [parts[0]];
   if (m.revealed) L.push(m.q.rev || m.q.seq ? `? = ${m.q.ans}` : `= ${m.q.ans}`);
   const fs = m.fs, lh = fs * 1.08, y0 = ty - (L.length - 1) * lh / 2;
-  g.font = `${fs}px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
-  let tw = 0; for (const s of L) tw = Math.max(tw, g.measureText(s).width);
+  const fontOf = i => `${m.q.label && i === 0 ? fs * 0.72 : fs}px ${m.q.label && i === 0 ? ZHF : NUMF}`;   // 數列題第一行是「n 的倍數」小字
+  g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+  let tw = 0; L.forEach((s, i) => { g.font = fontOf(i); tw = Math.max(tw, g.measureText(s).width); });
   g.fillStyle = 'rgba(6,12,24,.52)'; rr(-tw / 2 - 9, y0 - lh / 2 - 2, tw + 18, lh * L.length + 4, 10); g.fill();
   L.forEach((s, i) => {
-    const isAns = m.revealed && i === L.length - 1;
+    const isAns = m.revealed && i === L.length - 1, isLab = m.q.label && i === 0;
+    g.font = fontOf(i);
     g.lineWidth = 4; g.strokeStyle = 'rgba(6,12,24,.9)'; g.strokeText(s, 0, y0 + i * lh + 1);
-    g.fillStyle = isAns ? '#ff9a9a' : '#ffffff'; g.fillText(s, 0, y0 + i * lh + 1);
+    g.fillStyle = isAns ? '#ff9a9a' : isLab ? '#9fdcff' : '#ffffff'; g.fillText(s, 0, y0 + i * lh + 1);
   });
   if (tgt) {
     const R = r + 13 + Math.sin(T * 6) * 2;
@@ -1422,7 +1439,8 @@ function hud() {
   if (!M) return;
   let h = '';
   for (let i = 0; i < Math.max(M.sudden ? 1 : 3, M.hearts); i++) h += `<svg viewBox="0 0 24 24" aria-hidden="true" fill="${i < M.hearts ? '#ff6161' : 'none'}" stroke="${i < M.hearts ? '#ff6161' : 'rgba(147,169,192,.5)'}" stroke-width="2">${HEART}</svg>`;
-  $('#m-hearts').innerHTML = h; $('#m-hearts').setAttribute('aria-label', `生命 ${M.hearts}`);
+  if (M.shield) h += '<svg viewBox="0 0 24 24" aria-hidden="true" style="margin-left:6px"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z" fill="rgba(159,220,255,.25)" stroke="#9fdcff" stroke-width="2"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="#9fdcff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  $('#m-hearts').innerHTML = h; $('#m-hearts').setAttribute('aria-label', `生命 ${M.hearts}${M.shield ? '，有連擊護盾' : ''}`);
   const f = $('#m-fire'); f.hidden = M.missiles <= 0;
   f.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>'.repeat(M.missiles);
   f.setAttribute('aria-label', `飛彈 ${M.missiles} 枚，點一下發射`);
@@ -1438,7 +1456,7 @@ function hud() {
 }
 let lastBar = '';
 const slots = (n, buf) => { let h = ''; for (let i = 0; i < n; i++) h += `<i class="slot${buf[i] ? ' on' : ''}">${buf[i] || ''}</i>`; return h; };
-const qHTML = (q, buf) => (q.rev || q.seq) ? q.text.replace('?', slots(String(q.ans).length, buf)) : `${q.text} = ${slots(String(q.ans).length, buf)}`;
+const qHTML = (q, buf) => (q.label ? `<span class="qlab">${q.label}</span>` : '') + ((q.rev || q.seq) ? q.text.replace('?', slots(String(q.ans).length, buf)) : `${q.text} = ${slots(String(q.ans).length, buf)}`);
 function bar() {
   if (!M) return;
   const tg = M.lock || curT;
