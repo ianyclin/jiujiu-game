@@ -54,7 +54,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .pick .sd b{color:var(--coral)}
 .mode svg{grid-row:span 2;width:62px;height:62px}
 .m-t{font-weight:900;font-size:20px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.m-t em{font-style:normal;font-family:var(--f-num);font-size:15px;color:var(--sun);font-weight:400;white-space:nowrap}
+.m-t em{font-style:normal;font-family:var(--f-num);font-size:14px;color:var(--sun);font-weight:400;white-space:nowrap;text-align:right}
 .m-d{color:var(--muted);font-size:14px;line-height:1.45}
 .menu-foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:470px;width:100%}
 .chip{border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
@@ -207,16 +207,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .wempty{color:var(--muted);padding:18px 8px;text-align:center;line-height:1.6}
 .rules{margin:0;padding-left:1.2em;text-align:left;color:var(--muted);font-size:14px;line-height:1.6;display:grid;gap:5px}
 .rules b{color:var(--paper)}
-.bd{display:grid;gap:6px;text-align:left}
-.bd-row{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
-.bd-rank{font-family:var(--f-num);font-size:18px;color:var(--muted);text-align:center}
-.bd-row:nth-child(1) .bd-rank{color:var(--sun)} .bd-row:nth-child(2) .bd-rank{color:#d8e2ec} .bd-row:nth-child(3) .bd-rank{color:#d99a5b}
-.bd-name{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bd-wave{font-size:12px;color:var(--muted);font-weight:700}
-.bd-score{font-family:var(--f-num);font-weight:400;font-size:20px;color:var(--sun);font-variant-numeric:tabular-nums}
-.nm{display:flex;gap:8px;align-items:center}
-.nm input{flex:1;min-width:0;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--paper);border-radius:12px;padding:10px 12px;font:inherit;font-size:16px}
-.nm input:focus-visible{outline:2px solid var(--mint)}
 .banner.mega{font-size:clamp(40px,11vw,74px);color:var(--sun);-webkit-text-stroke:1.5px #7a5200;text-shadow:0 6px 0 #7a5200,0 0 30px rgba(255,210,63,.6)}
 .banner.t3,.banner.t4{animation-duration:2.6s;font-size:clamp(46px,13vw,88px)}
 .banner.t4{color:#fff;-webkit-text-stroke:2px var(--coral);text-shadow:0 6px 0 var(--coral),0 0 40px rgba(255,97,97,.8)}
@@ -257,7 +247,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <div class="menu-foot">
         <button class="chip" id="go-map" type="button">星圖 <b id="b-stars">0/81</b></button>
         <button class="chip" id="go-wrong" type="button">錯題本 <b id="b-wrong">0</b></button>
-        <button class="chip" id="go-board" type="button">排行榜</button>
         <button class="chip" id="go-help" type="button">遊戲說明</button>
         <button class="chip tog" data-set="mix" type="button" aria-pressed="false">混入十以內加減</button>
         <button class="chip tog" data-set="music" type="button" aria-pressed="true">音樂</button>
@@ -400,10 +389,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <div class="res-big" id="r-big"></div>
       <div class="res-label" id="r-label"></div>
       <div class="res-note" id="r-note"></div>
-      <div id="r-nb" hidden>
-        <div class="wmeta" id="r-nbt" style="margin-bottom:6px">排行榜上的名字（可以改）</div>
-        <div class="nm"><input id="r-nm" type="text" maxlength="8" placeholder="輸入名字" autocomplete="off"><button class="link-btn" type="button" id="r-save">確定</button></div>
-      </div>
       <div class="res-rows" id="r-rows"></div>
       <div id="r-wwrap"><div class="wrongs-t">這次答錯的題目，再看一眼</div><div class="wrongs" id="r-wrongs"></div></div>
       <div class="btn-col">
@@ -447,7 +432,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>每 5 波出現<b>錯題魔王</b>，專出你最常錯的題目，要連續答對 5 題以上才打得倒（波數越高血越多）。打倒 +200 分、<b>必掉寶箱</b>。</li>
         <li>魔王掉到小鎮會<b>扣 2 顆心</b>，一擊即死模式等於直接結束。</li>
         <li>補心只靠寶箱，心最多 3 顆。</li>
-        <li><b>一擊即死</b>：只有 1 顆心，排行榜另計。</li>
+        <li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>
       </ul>
       <h4>寶箱流星</h4>
       <ul class="rules">
@@ -472,21 +457,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
-  <div class="overlay" id="o-board" hidden>
-    <div class="card">
-      <h3>排行榜</h3>
-      <div class="menu-foot">
-        <button class="chip tog" type="button" data-bm="std" aria-pressed="true">標準</button>
-        <button class="chip tog" type="button" data-bm="sd" aria-pressed="false">一擊即死</button>
-      </div>
-      <div class="bd" id="bd-list"></div>
-      <div class="btn-col">
-        <button class="danger" type="button" id="bd-clear">清除這個排行榜</button>
-        <button class="btn alt" type="button" id="bd-close">關閉</button>
-      </div>
-    </div>
-  </div>
-
   <div class="count" id="o-count" hidden></div>
 </div>
 
@@ -504,13 +474,13 @@ const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null }, set: { mix: false, sound: true, music: true, sudden: false, name: '' }, board: [] });
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null }, set: { mix: false, sound: true, music: true, sudden: false } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) {
     const d = JSON.parse(raw), f = fresh();
-    DB = { facts: d.facts || {}, best: Object.assign(f.best, d.best || {}), set: Object.assign(f.set, d.set || {}), board: Array.isArray(d.board) ? d.board : [] };
+    DB = { facts: d.facts || {}, best: Object.assign(f.best, d.best || {}), set: Object.assign(f.set, d.set || {}) };
   }
 } catch (e) {}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
@@ -1127,18 +1097,15 @@ function nova() {
 function gameOver() {
   M.over = true; M.buf = ''; musTrack('menu');
   const bk = M.sudden ? 'sudden' : 'meteor', best = DB.best[bk] || 0, isBest = M.score > best;
-  if (isBest) DB.best[bk] = M.score;
-  const entry = { s: M.score, w: M.wave, m: M.sudden ? 'sd' : 'std', n: DB.set.name || '小隊長', d: Date.now() };
-  const rank = M.score > 0 ? addBoard(entry) : 0;
-  save();
+  if (isBest) { DB.best[bk] = M.score; save(); }
   setTimeout(() => {
     if (mode !== 'meteor') return;
     const acc = M.tot ? M.ok / M.tot : 0;
     result({
       title: M.sudden ? '一擊即死，結束！' : '小鎮撐不住了！', big: M.score, label: '分數',
-      note: rank ? `排行榜第 ${rank} 名！${isBest ? ' 新紀錄！' : ''}` : `最高紀錄 ${best} 分`, stars: starsFor(acc, M.tot),
+      note: isBest ? '新紀錄！' : `最高紀錄 ${best} 分`, stars: starsFor(acc, M.tot),
       rows: [['抵達波數', M.wave], ['最高連擊', M.maxCombo], ['答對率', pct(acc)]],
-      wrongs: M.wrongs, again: startMeteor, celebrate: isBest, entry: rank ? entry : null
+      wrongs: M.wrongs, again: startMeteor, celebrate: isBest
     });
   }, 1300);
 }
@@ -1538,39 +1505,6 @@ function milestone(n) {
   SFX.milestone(tier);
 }
 
-/* ================= 排行榜 ================= */
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-function addBoard(e) {
-  DB.board.push(e); DB.board.sort((a, b) => b.s - a.s || a.d - b.d);
-  DB.board = ['std', 'sd'].flatMap(m => DB.board.filter(b => b.m === m).slice(0, 10));
-  const i = DB.board.filter(b => b.m === e.m).indexOf(e);
-  return i < 0 ? 0 : i + 1;
-}
-let bdMode = 'std', bdArm = 0;
-function renderBoard() {
-  const rows = DB.board.filter(b => b.m === bdMode);
-  $('#bd-list').innerHTML = rows.length ? rows.map((b, i) => `<div class="bd-row"><span class="bd-rank">${i + 1}</span><span class="bd-name">${esc(b.n)}</span><span class="bd-wave">第 ${b.w} 波</span><b class="bd-score">${b.s}</b></div>`).join('') : '<div class="wempty">還沒有紀錄，去打一場吧！</div>';
-  $$('[data-bm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.bm === bdMode)));
-  $('#bd-clear').hidden = !rows.length;
-}
-function openBoard() { bdArm = 0; $('#bd-clear').textContent = '清除這個排行榜'; renderBoard(); $('#o-board').hidden = false; }
-$$('[data-bm]').forEach(b => b.addEventListener('click', () => { bdMode = b.dataset.bm; renderBoard(); }));
-$('#bd-clear').addEventListener('click', () => {
-  if (Date.now() - bdArm < 3000) { DB.board = DB.board.filter(b => b.m !== bdMode); save(); openBoard(); }
-  else { bdArm = Date.now(); $('#bd-clear').textContent = '再按一次確認清除'; setTimeout(() => { if (Date.now() - bdArm >= 2900) $('#bd-clear').textContent = '清除這個排行榜'; }, 3000); }
-});
-$('#bd-close').addEventListener('click', () => { $('#o-board').hidden = true; });
-$('#go-board').addEventListener('click', openBoard);
-let pendingEntry = null;
-function saveName() {
-  const v = $('#r-nm').value.trim().slice(0, 8);
-  if (!v || !pendingEntry) return;
-  pendingEntry.n = v; DB.set.name = v; save();
-  $('#r-nbt').textContent = `已記錄為「${v}」`; SFX.ding();
-}
-$('#r-save').addEventListener('click', saveName);
-$('#r-nm').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); saveName(); $('#r-nm').blur(); } });
-
 /* ================= 遊戲說明 ================= */
 $('#go-help').addEventListener('click', () => { $('#o-help').hidden = false; });
 function pickMode() {
@@ -1589,8 +1523,6 @@ function result(o) {
   $('#r-title').textContent = o.title;
   $('#r-stars').innerHTML = '★'.repeat(o.stars) + `<span>${'★'.repeat(3 - o.stars)}</span>`;
   $('#r-big').textContent = o.big; $('#r-label').textContent = o.label; $('#r-note').textContent = o.note || '';
-  pendingEntry = o.entry || null; $('#r-nb').hidden = !o.entry;
-  if (o.entry) { $('#r-nm').value = o.entry.n; $('#r-nbt').textContent = '排行榜上的名字（可以改）'; }
   $('#r-rows').innerHTML = o.rows.map(([l, v]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
   const seen = new Set(), ws = o.wrongs.filter(q => !seen.has(q.k) && seen.add(q.k));
   $('#r-wwrap').hidden = !ws.length;
@@ -1613,7 +1545,7 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; });
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-board').hidden = true; $('#o-mode').hidden = true; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   musTrack(name === 'meteor' || name === 'ghost' || name === 'versus' ? 'game' : 'menu', name === 'ghost' ? 1.08 : 1);
@@ -1621,7 +1553,7 @@ function show(name) {
   measure();
 }
 function refreshMenu() {
-  $('#b-meteor').textContent = DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '';
+  $('#b-meteor').textContent = [DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '', DB.best.sudden ? `即死 ${DB.best.sudden} 分` : ''].filter(Boolean).join('・');
   $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? `最佳 ${(DB.best.ghost[19] / 1000).toFixed(1)} 秒` : '';
   $('#b-stars').textContent = `${starCount()}/81`;
   $('#b-wrong').textContent = wrongList().length;
