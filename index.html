@@ -176,6 +176,17 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .half .pad{max-width:360px;gap:7px}
 .half .key{height:clamp(38px,5.4vh,56px);font-size:clamp(20px,3.4vh,30px)}
 .half.locked .pad{opacity:.3;pointer-events:none}
+#s-versus.cpu .half.top{transform:none;justify-content:center}
+#s-versus.cpu .half.top .pad{display:none}
+#s-versus.cpu .half.top .aq{font-size:clamp(26px,7vw,40px)}
+.cpu{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cpu-face{width:clamp(64px,14vh,96px);height:auto}
+.cpu-face.think{animation:cpuThink .5s ease-in-out infinite}
+@keyframes cpuThink{50%{transform:translateY(-4px) rotate(3deg)}}
+.cpu-face.oops{animation:shk .35s}
+.think{width:min(60%,220px);height:8px;border-radius:4px;background:rgba(255,174,87,.18);overflow:hidden}
+.think i{display:block;height:100%;width:0;background:var(--ember);border-radius:4px}
+.cpu-say{font-size:13px;color:var(--ember);font-weight:700;min-height:1.2em}
 .vres{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:clamp(40px,11vw,70px);pointer-events:none;text-shadow:0 5px 0 rgba(0,0,0,.45)}
 .vres.win{color:var(--sun)} .vres.lose{color:var(--muted);font-size:clamp(28px,8vw,48px)}
 .band{flex:none;height:60px;display:flex;align-items:center;gap:10px;padding-inline:16px;background:rgba(6,12,24,.78);border-block:1px solid var(--line)}
@@ -347,7 +358,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <button class="mode" id="go-versus" type="button">
           <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 32h48" stroke="#d1a86e" stroke-width="6" stroke-linecap="round"/><circle cx="8" cy="32" r="7" fill="#5ff2d0"/><circle cx="56" cy="32" r="7" fill="#ffae57"/><path d="m32 22 3 6.5 7 .8-5.2 4.8 1.5 7-6.3-3.6-6.3 3.6 1.5-7-5.2-4.8 7-.8z" fill="#ffd23f"/></svg>
           <span class="m-t">雙人拔河</span>
-          <span class="m-d">平板放中間，面對面搶答，跟爸爸媽媽一決勝負。</span>
+          <span class="m-d">平板放中間面對面搶答，跟爸爸媽媽一決勝負。一個人也可以跟機器人比。</span>
         </button>
         <button class="mode" id="go-cmp" type="button">
           <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="34" width="12" height="24" rx="4" fill="#5ff2d0"/><rect x="26" y="18" width="12" height="40" rx="4" fill="#ffd23f"/><rect x="44" y="28" width="12" height="30" rx="4" fill="#ffae57"/><path d="m32 2 2.3 5 5.5.6-4.1 3.7 1.2 5.4L32 14l-4.9 2.7 1.2-5.4-4.1-3.7 5.5-.6z" fill="#ffd23f" stroke="#a87a00" stroke-width="1.5"/></svg>
@@ -421,7 +432,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
   <section class="screen" id="s-versus" hidden>
     <div class="half top" id="v-top">
-      <div class="who">挑戰者</div>
+      <div class="who" id="v-topwho">挑戰者</div>
+      <div class="cpu" id="v-cpu" hidden>
+        <svg class="cpu-face" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="14" width="44" height="38" rx="12" fill="#2a3f58" stroke="#93a9c0" stroke-width="2"/><path d="M32 14V6" stroke="#93a9c0" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="5" r="3" fill="#ff6161"/><circle cx="23" cy="31" r="5" fill="#5ff2d0"/><circle cx="41" cy="31" r="5" fill="#5ff2d0"/><path id="v-mouth" d="M23 43q9 6 18 0" fill="none" stroke="#5ff2d0" stroke-width="3" stroke-linecap="round"/></svg>
+        <div class="think"><i id="v-think"></i></div>
+        <div class="cpu-say" id="v-say">我在算…</div>
+      </div>
       <div class="aq" data-q></div>
       <div class="hint" data-hint></div>
       <div class="pad" data-pad></div>
@@ -451,9 +467,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <h3>雙人拔河</h3>
         <p>平板平放在兩人中間。答對一題就把星星往自己這邊拉一格，先拉到底的人贏。答錯會停 1 秒。</p>
         <p style="color:var(--mint)">下方「小隊長」的答題會記進星圖。</p>
-        <div class="opt" role="group" aria-label="挑戰者的題目">
-          <button type="button" id="v-easy" aria-pressed="true">挑戰者：一樣的九九乘法</button>
-          <button type="button" id="v-hard" aria-pressed="false">挑戰者：大人加難（兩位數 × 一位數）</button>
+        <div class="opt" role="group" aria-label="對手" id="v-opp">
+          <button type="button" data-opp="cpu" aria-pressed="true">對手：機器人（一個人也能玩，速度跟你差不多）</button>
+          <button type="button" data-opp="easy" aria-pressed="false">對手：真人，一樣的九九乘法</button>
+          <button type="button" data-opp="hard" aria-pressed="false">對手：大人加難（兩位數 × 一位數）</button>
         </div>
         <div class="btn-col">
           <button class="btn" type="button" id="v-start">開始對戰</button>
@@ -641,6 +658,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>平板放中間，面對面搶答。答對把星星拉過來一格，先拉到底的贏；答錯停 1 秒。</li>
         <li>下方「小隊長」的作答會記進星圖和錯題本。</li>
+        <li>沒有人陪你玩？選<b>機器人</b>當對手。它算題的速度跟你平常差不多，你落後它會慢一點，你領先它會快一點，偶爾也會算錯。</li>
       </ul>
       <h4>每日任務</h4>
       <ul class="rules">
@@ -1624,7 +1642,7 @@ function finishGhost() {
 }
 
 /* ================= 雙人拔河 ================= */
-let V = null, vHard = false;
+let V = null, vOpp = 'cpu';   // 對手：cpu 機器人／easy 真人一樣／hard 大人加難
 const vEl = [$('#v-bot'), $('#v-top')];
 function openVersus() {
   show('versus');
@@ -1636,7 +1654,10 @@ function openVersus() {
 function startVersus() {
   $('#v-pausebox').hidden = true;
   $('#v-setup').hidden = true;
-  V = { pos: 0, win: 6, over: false, started: false, p: [{ q: null, buf: '', lock: 0, rev: false, qt: 0 }, { q: null, buf: '', lock: 0, rev: false, qt: 0 }] };
+  V = { pos: 0, win: 6, over: false, started: false, cpu: vOpp === 'cpu', p: [{ q: null, buf: '', lock: 0, rev: false, qt: 0 }, { q: null, buf: '', lock: 0, rev: false, qt: 0, due: 0 }] };
+  $('#s-versus').classList.toggle('cpu', V.cpu);
+  $('#v-cpu').hidden = !V.cpu; $('#v-topwho').textContent = V.cpu ? '機器人' : '挑戰者';
+  if (V.cpu) { V.base = cpuBase(); $('#v-say').textContent = '我準備好了！'; }
   openVersusReset();
   countdown(() => { V.started = true; newVQ(0); newVQ(1); });
 }
@@ -1646,14 +1667,50 @@ function openVersusReset() {
 }
 function vPause(on) {
   if (!V || V.over) { $('#v-pausebox').hidden = true; return; }
+  if (on && !V.paused) V.pausedAt = now();
+  if (!on && V.paused) { const d = now() - V.pausedAt; V.p.forEach(p => { p.qt += d; p.lock += d; if (p.due) p.due += d; }); }
   V.paused = on; $('#v-pausebox').hidden = !on; musDuck(on);
+}
+// 機器人速度：孩子歷史平均反應時間（沒紀錄用 3.6 秒），再依戰況調整：落後時機器人放慢、領先時加快，讓勝率在五五附近
+function cpuBase() {
+  const ts = Object.values(DB.facts).map(s => s.t).filter(t => t > 0);
+  const avg = ts.length >= 5 ? ts.reduce((a, b) => a + b, 0) / ts.length : 3600;
+  return clamp(avg + 600, 2200, 7000);   // 機器人略慢一點點，加上「打字」的時間
+}
+function cpuDelay() {
+  const lead = -V.pos;   // 小隊長領先幾格（pos 負的是小隊長那邊）
+  const k = lead >= 3 ? 0.8 : lead <= -3 ? 1.35 : lead <= -1 ? 1.15 : 1;
+  return V.base * k * rnd(0.75, 1.3);
+}
+function updateVersus() {
+  if (!V || !V.cpu || !V.started || V.over || V.paused) return;
+  const p = V.p[1]; if (!p.q) return;
+  const t = now();
+  if (t < p.lock) return;
+  $('#v-think').style.width = clamp((t - p.qt) / (p.due - p.qt) * 100, 0, 100) + '%';
+  if (t < p.due) return;
+  if (!p.rev && Math.random() < 0.1) {   // 偶爾算錯：停 1 秒，再想一次
+    p.rev = true; p.lock = t + 1000; p.due = t + 1000 + cpuDelay() * 0.6; p.qt = t + 1000;
+    $('#v-say').textContent = '啊，算錯了！'; $('#v-mouth').setAttribute('d', 'M23 45q9 -6 18 0');
+    const f = $('.cpu-face'); f.classList.remove('oops'); void f.offsetWidth; f.classList.add('oops'); SFX.wrong();
+    return;
+  }
+  $('#v-mouth').setAttribute('d', 'M23 43q9 6 18 0'); $('#v-say').textContent = ['算出來了！', `${p.q.text} = ${p.q.ans}`, '換我拉！'][ri(0, 2)];
+  V.pos += 1;
+  $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%';
+  SFX.zap(Math.abs(V.pos) * 2);
+  const r = $('#v-knot').getBoundingClientRect();
+  spark(r.left + 17, r.top + 17, 18, ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
+  if (Math.abs(V.pos) >= V.win) return endVersus(1);
+  newVQ(1);
 }
 function newVQ(i) {
   const p = V.p[i];
   if (i === 0) p.q = makeQ(pickFact(null, true), false, true);
-  else if (vHard) { const a = ri(11, 19), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
+  else if (vOpp === 'hard') { const a = ri(11, 19), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   else { const a = ri(2, 9), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   p.buf = ''; p.rev = false; p.qt = now();
+  if (i === 1 && V.cpu) { p.due = p.qt + cpuDelay(); $('#v-think').style.width = '0%'; $('.cpu-face').classList.add('think'); }
   vRender(i);
 }
 function vRender(i) {
@@ -1663,7 +1720,7 @@ function vRender(i) {
   e.classList.toggle('locked', now() < p.lock);
 }
 function vKey(i, d) {
-  if (!V || !V.started || V.over || V.paused) return;
+  if (!V || !V.started || V.over || V.paused || (i === 1 && V.cpu)) return;
   const p = V.p[i];
   if (!p.q || now() < p.lock) return;
   if (d === 'back') { p.buf = p.buf.slice(0, -1); vRender(i); return; }
@@ -1690,6 +1747,7 @@ function vKey(i, d) {
 function endVersus(w) {
   V.over = true; musTrack('menu'); quest('versus');
   vEl.forEach((e, i) => { const r = e.querySelector('[data-res]'); r.hidden = false; r.className = 'vres ' + (i === w ? 'win' : 'lose'); r.textContent = i === w ? '勝利！' : '下次再拉回來！'; e.classList.add('locked'); });
+  if (V.cpu) { $('.cpu-face').classList.remove('think'); $('#v-say').textContent = w === 1 ? '嘿嘿，我贏了！' : '你好厲害，再來一次？'; }
   $('#v-rope').hidden = true; $$('.end').forEach(e => e.hidden = true); $('#v-quit').hidden = true; $('#v-btns').hidden = false;
   SFX.fan(); flashA = 0.3;
   const x = W / 2, y = w === 0 ? H * 0.75 : H * 0.25;
@@ -2222,8 +2280,7 @@ $('#v-again').addEventListener('click', startVersus);
 $('#v-quit').addEventListener('click', () => { if (V) vPause(true); else home(); });
 $('#v-resume').addEventListener('click', () => vPause(false));
 $('#v-restart').addEventListener('click', startVersus);
-$('#v-easy').addEventListener('click', () => { vHard = false; $('#v-easy').setAttribute('aria-pressed', 'true'); $('#v-hard').setAttribute('aria-pressed', 'false'); });
-$('#v-hard').addEventListener('click', () => { vHard = true; $('#v-hard').setAttribute('aria-pressed', 'true'); $('#v-easy').setAttribute('aria-pressed', 'false'); });
+$$('#v-opp [data-opp]').forEach(b => b.addEventListener('click', () => { vOpp = b.dataset.opp; $$('#v-opp [data-opp]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); }));
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && mode === 'meteor' && M && !M.over) pause(true);
   if (actx) { try { document.hidden ? actx.suspend() : actx.resume(); } catch (e) {} }
@@ -2242,6 +2299,7 @@ function frame(t) {
   const frozen = mode === 'meteor' && M && M.paused;
   if (mode === 'meteor' && M) { if (!M.paused && !M.over) updateMeteor(dt); drawMeteorScene(frozen ? 0 : dt); }
   if (mode === 'ghost') updateGhost();
+  if (mode === 'versus') updateVersus();
   if (mode === 'cmp') updateCmp();
   if (mode === 'bomb') updateBomb();
   if (!frozen) stepP(dt);
