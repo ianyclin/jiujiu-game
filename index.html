@@ -179,7 +179,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 #s-versus.cpu .half.top{transform:none;justify-content:center}
 #s-versus.cpu .half.top .pad{display:none}
 #s-versus.cpu .half.top .aq{font-size:clamp(26px,7vw,40px)}
-.cpu{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cpubox{display:flex;flex-direction:column;align-items:center;gap:6px}
 .cpu-face{width:clamp(64px,14vh,96px);height:auto}
 .cpu-face.think{animation:cpuThink .5s ease-in-out infinite}
 @keyframes cpuThink{50%{transform:translateY(-4px) rotate(3deg)}}
@@ -433,7 +433,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
   <section class="screen" id="s-versus" hidden>
     <div class="half top" id="v-top">
       <div class="who" id="v-topwho">挑戰者</div>
-      <div class="cpu" id="v-cpu" hidden>
+      <div class="cpubox" id="v-cpu" hidden>
         <svg class="cpu-face" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="14" width="44" height="38" rx="12" fill="#2a3f58" stroke="#93a9c0" stroke-width="2"/><path d="M32 14V6" stroke="#93a9c0" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="5" r="3" fill="#ff6161"/><circle cx="23" cy="31" r="5" fill="#5ff2d0"/><circle cx="41" cy="31" r="5" fill="#5ff2d0"/><path id="v-mouth" d="M23 43q9 6 18 0" fill="none" stroke="#5ff2d0" stroke-width="3" stroke-linecap="round"/></svg>
         <div class="think"><i id="v-think"></i></div>
         <div class="cpu-say" id="v-say">我在算…</div>
