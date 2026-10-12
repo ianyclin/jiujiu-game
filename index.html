@@ -76,6 +76,17 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .q-row em{font-style:normal;font-family:var(--f-num);color:var(--sun);font-size:15px;white-space:nowrap}
 .q-row.done em{color:var(--mint)}
 .q-all{text-align:center;color:var(--mint);font-weight:900;font-size:14px}
+.q-list{display:grid;gap:8px;text-align:left}
+.q-head{justify-content:center}
+.chip.todo{position:relative}
+.chip.todo::after{content:'';position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 2px var(--ink),0 0 10px var(--coral);animation:dot 1.2s ease-in-out infinite}
+@keyframes dot{50%{transform:scale(1.35);box-shadow:0 0 0 2px var(--ink),0 0 16px var(--coral)}}
+.chip.ok b{color:var(--mint)}
+.name-egg svg{width:110px;height:110px}
+.name-in{width:100%;font:inherit;font-size:24px;font-weight:900;text-align:center;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--paper)}
+.name-in:focus{outline:2px solid var(--mint);border-color:var(--mint)}
+.name-sug{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 .toast.on{transform:translate(-50%,0);opacity:1}
 
@@ -408,14 +419,11 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
           <span class="m-d">炸彈說幾的倍數，就在引線燒完前把它們全部點掉。點到不是的會爆炸！</span>
         </button>
       </nav>
-      <section class="quests" id="quests" aria-label="今日任務">
-        <div class="q-head"><b>今日任務</b><span id="q-meta"></span></div>
-        <div id="q-list"></div>
-      </section>
       <div class="menu-foot">
         <button class="chip" id="go-map" type="button">星圖 <b id="b-stars">0/81</b></button>
         <button class="chip" id="go-wrong" type="button">錯題本 <b id="b-wrong">0</b></button>
         <button class="chip" id="go-pet" type="button">寵物 <b id="b-pet">0</b></button>
+        <button class="chip" id="go-quest" type="button">今日任務 <b id="b-quest">0/3</b></button>
         <button class="chip" id="go-help" type="button">遊戲說明</button>
         <button class="chip" id="go-set" type="button">設定</button>
       </div>
@@ -672,6 +680,28 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
+  <div class="overlay" id="o-quest" hidden>
+    <div class="card">
+      <h3>今日任務</h3>
+      <div class="q-head"><span id="q-meta"></span></div>
+      <div class="q-list" id="q-list"></div>
+      <div class="btn-col"><button class="btn alt" type="button" id="q-close">關閉</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="o-name" hidden>
+    <div class="card">
+      <h3>幫牠取個名字</h3>
+      <div class="name-egg" id="name-egg"></div>
+      <input class="name-in" id="name-in" type="text" maxlength="6" autocomplete="off" aria-label="寵物名字">
+      <div class="name-sug" id="name-sug"></div>
+      <div class="btn-col">
+        <button class="btn" type="button" id="name-ok">就叫這個名字</button>
+        <button class="btn alt" type="button" id="name-back">換一顆蛋</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="o-set" hidden>
     <div class="card">
       <h3>設定</h3>
@@ -771,7 +801,7 @@ const now = () => performance.now();
 const KEY = 'jiujiu-meteor-v1';
 const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
-  pet: { kind: '', dust: 0, fed: 0, wear: '', released: [] } });
+  pet: { kind: '', name: '', dust: 0, fed: 0, wear: '', released: [] } });
 let DB = fresh();
 try {
   const raw = localStorage.getItem(KEY);
@@ -2169,14 +2199,14 @@ function renderPet() {
   const st = petStage(P_.fed), K = PET_KINDS[P_.kind], next = PET_STAGES[st + 1];
   $('#pet-stage').innerHTML = petSVG(P_.kind, st, P_.wear);
   $('#pet-stage').className = 'pet-stage' + (st === 0 && P_.dust >= FEED ? ' wobble' : '');
-  $('#pet-name').innerHTML = `${K.name}<small>${PET_STAGES[st].n}</small>`;
+  $('#pet-name').innerHTML = `${petName()}<small>${PET_STAGES[st].n}</small>`;
   if (next) { const from = PET_STAGES[st].at; $('#pet-bar').style.width = Math.round(clamp((P_.fed - from) / (next.at - from), 0, 1) * 100) + '%'; }
   else $('#pet-bar').style.width = '100%';
   $('#pet-barwrap').hidden = !next; $('#pet-feed').hidden = !next;
   $('#pet-feed').disabled = P_.dust < FEED;
   $('#pet-feed').textContent = P_.dust < FEED ? `餵星塵 ×${FEED}（還差 ${FEED - P_.dust}）` : `餵星塵 ×${FEED}`;
   const bye = $('#pet-bye'); bye.hidden = !!next;   // 究極才能放回家
-  if (!next) { bye.textContent = byeArm ? `再按一次，跟${K.name}說再見` : `放${K.name}回${PET_HOME[P_.kind]}`; }
+  if (!next) { bye.textContent = byeArm ? `再按一次，跟${petName()}說再見` : `放${petName()}回${PET_HOME[P_.kind]}`; }
   renderGear(); renderAlumni();
 }
 let byeArm = 0;
@@ -2190,7 +2220,7 @@ function renderGear() {
 function renderAlumni() {
   const R = DB.pet.released || [], el = $('#pet-alumni');
   el.hidden = !R.length;
-  if (R.length) el.innerHTML = '回家的夥伴：' + R.map(r => `${petSVG(r.kind, 4)}<b>${PET_KINDS[r.kind].name}</b>（${PET_HOME[r.kind]}）`).join('、');
+  if (R.length) el.innerHTML = '回家的夥伴：' + R.map(r => `${petSVG(r.kind, 4)}<b>${r.name || PET_KINDS[r.kind].name}</b>（${PET_HOME[r.kind]}）`).join('、');
 }
 function releasePet() {
   const P_ = DB.pet; if (!PET_KINDS[P_.kind] || petStage(P_.fed) < 4) return;
@@ -2199,10 +2229,10 @@ function releasePet() {
   const K = PET_KINDS[P_.kind], kind = P_.kind, el = $('#pet-stage'), r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
   el.classList.add('bye'); $('#pet-bye').hidden = true;
   spark(x, y, 60, ['#ffd23f', '#5ff2d0', '#ffffff', K.c2], 260, 4, 1.4, -40); SFX.fan(); confetti(40);
-  toast(`${K.name}回到${PET_HOME[kind]}了，謝謝你把牠養大！`);
+  const nm = petName(); toast(`${nm}回到${PET_HOME[kind]}了，謝謝你把牠養大！`);
   setTimeout(() => {
-    (P_.released = P_.released || []).push({ kind, date: today() });
-    P_.kind = ''; P_.fed = 0; save();
+    (P_.released = P_.released || []).push({ kind, name: nm, date: today() });
+    P_.kind = ''; P_.name = ''; P_.fed = 0; save();
     if (mode === 'pet') renderPet();
   }, 1700);
 }
@@ -2217,10 +2247,29 @@ function feedPet() {
   const el = $('#pet-stage'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   spark(x, y, 24, ['#ffd23f', '#ffffff', PET_KINDS[P_.kind].c2], 200, 3, 0.7, 60); SFX.ding();
   if (st > before) {
-    setTimeout(() => { if (mode !== 'pet') return; toast(`${PET_KINDS[P_.kind].name}長大了！變成${PET_STAGES[st].n}`); confetti(40 + st * 20); flashA = 0.3; spark(x, y, 90, ['#ffd23f', '#5ff2d0', '#ff6161', '#ffffff'], 380, 4.5, 1.2, 150); ring(x, y, 220, '#ffd23f', 8); SFX.milestone(Math.min(4, st)); }, 350);
+    setTimeout(() => { if (mode !== 'pet') return; toast(`${petName()}長大了！變成${PET_STAGES[st].n}`); confetti(40 + st * 20); flashA = 0.3; spark(x, y, 90, ['#ffd23f', '#5ff2d0', '#ff6161', '#ffffff'], 380, 4.5, 1.2, 150); ring(x, y, 220, '#ffd23f', 8); SFX.milestone(Math.min(4, st)); }, 350);
   }
 }
-$('#pet-cards').addEventListener('click', e => { const b = e.target.closest('.pet-card'); if (!b) return; DB.pet.kind = b.dataset.kind; save(); renderPet(); SFX.fan(); toast(`${PET_KINDS[b.dataset.kind].name}來了！答對題目就能餵牠`); });
+const petName = () => DB.pet.name || (PET_KINDS[DB.pet.kind] || {}).name || '';
+// 取名：預設帶入建議名字，孩子可以直接按確定，也可以打自己想的（這裡需要系統鍵盤，是唯一的例外）
+const NAME_SUG = { cute: ['毛毛', '布丁', '棉花糖', '小粉'], cool: ['小龍', '閃電', '藍波', '阿鋼'], funny: ['呱呱', '皮皮', '大嘴', '豆豆'] };
+let nameKind = '';
+function openName(kind) {
+  nameKind = kind;
+  $('#name-egg').innerHTML = petSVG(kind, 0);
+  $('#name-in').value = NAME_SUG[kind][0];
+  $('#name-sug').innerHTML = NAME_SUG[kind].map(n => `<button type="button" data-n="${n}">${n}</button>`).join('');
+  $('#o-name').hidden = false;
+}
+$('#pet-cards').addEventListener('click', e => { const b = e.target.closest('.pet-card'); if (!b) return; openName(b.dataset.kind); });
+$('#name-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) $('#name-in').value = b.dataset.n; });
+$('#name-back').addEventListener('click', () => { $('#o-name').hidden = true; });
+$('#name-ok').addEventListener('click', () => {
+  const v = $('#name-in').value.trim().slice(0, 6) || NAME_SUG[nameKind][0];
+  DB.pet.kind = nameKind; DB.pet.name = v; save();
+  $('#o-name').hidden = true; $('#name-in').blur(); renderPet(); SFX.fan(); toast(`${v}來了！答對題目就能餵牠`);
+});
+$('#name-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#name-ok').click(); } e.stopPropagation(); });
 $('#pet-feed').addEventListener('click', feedPet);
 $('#go-pet').addEventListener('click', openPet);
 
@@ -2294,10 +2343,14 @@ function ensureDaily() {
 }
 function renderQuests() {
   ensureDaily();
-  const D = DB.daily, all = D.tasks.every(x => x.done);
+  const D = DB.daily, done = D.tasks.filter(x => x.done).length, all = done === 3;
+  const chip = $('#go-quest'); chip.classList.toggle('todo', !all); chip.classList.toggle('ok', all);
+  $('#b-quest').textContent = all ? '✓' : `${done}/3`;
   $('#q-list').innerHTML = D.tasks.map(x => `<div class="q-row${x.done ? ' done' : ''}"><i>✓</i><span>${QBY[x.id].t(x.n)}</span><em>${x.done ? '完成' : `${Math.min(x.p, x.n)}/${x.n}`}</em></div>`).join('') + (all ? '<div class="q-all">今天全部完成！明天再來</div>' : '');
   $('#q-meta').innerHTML = `徽章 <em>×${D.badges}</em>${D.streak > 1 ? `・連續 <em>${D.streak}</em> 天` : ''}`;
 }
+$('#go-quest').addEventListener('click', () => { renderQuests(); $('#o-quest').hidden = false; });
+$('#q-close').addEventListener('click', () => { $('#o-quest').hidden = true; });
 let toastTok = 0;
 function toast(msg) {
   const el = $('#toast'); el.textContent = msg; el.classList.add('on');
@@ -2316,7 +2369,7 @@ function quest(id, v = 1, how = 'add') {
     }
   }
   save();
-  if (mode === 'menu') renderQuests();
+  if (mode === 'menu' || !$('#o-quest').hidden) renderQuests();
 }
 const questStars = () => quest('stars', starCount() - DB.daily.starBase, 'set');
 
@@ -2409,7 +2462,7 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; });
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;

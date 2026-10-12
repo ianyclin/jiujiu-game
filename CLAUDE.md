@@ -26,7 +26,7 @@
 ## 架構（index.html 內的區塊順序）
 
 1. `<style>`：`:root` tokens（夜空單一主題，刻意不做亮色）、各畫面 CSS。
-2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-pet`、`#s-map` 八個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理）、遊戲說明。
+2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-pet`、`#s-map` 八個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、今日任務（`#o-quest`）、寵物取名（`#o-name`）、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理）、遊戲說明。
 3. JS（IIFE）：
    - **存檔** `DB = { facts, best, set, daily, pet }`，`save()`。
    - **題庫與錯題加權** `MUL`（81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 20% 抽加減。`MUL2` 是不含 ×1 的 64 題；`pickFact(pool, no1)` 的 `no1` 讓幽靈競速、拔河小隊長不出 ×1（流星防衛戰留著當緩衝，權重 0.25）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
@@ -57,12 +57,13 @@
 
 ### 每日任務
 - 每天 3 個，從 `QUESTS` 抽、同家族（`fam`）不重複，存 `DB.daily = { date, tasks:[{id,n,p,done}], badges, streak, lastDone, starBase }`。換日由 `ensureDaily()` 在主選單與每次 `quest()` 時檢查。
+- 主選單**不放任務卡**（手機會太長），只有「今日任務」chip：沒完成顯示 `0/3` 加發亮紅點（`.todo`），全完成顯示 ✓（`.ok`）；點開 `#o-quest` 看三項。
 - 推進點：答對（所有模式）、連擊 max、波數 max、魔王、寶箱、幽靈跑完／追過、哪個大玩完／全對、拆彈顆數／全拆、拔河一局、新星星（`starCount() - starBase`）。
 - 單項完成：toast + `SFX.fan`；三項全完成：徽章 +1、連續天數（昨天也完成才累計）、彩帶。沒有懲罰、沒有過期提醒。
 
 ### 寵物
 - 星塵 `DB.pet.dust` 只增不減（餵食才扣）：答對一題 +1（所有模式）、完美一波 +5、魔王 +20、每日任務單項 +10、全完成 +30。
-- 三隻可選（`cute` 毛毛／`cool` 小龍／`funny` 呱呱），選了就固定。餵一次 10 星塵，`fed` 累積到 30／100／250／500 升到幼體／少年／成體／究極。
+- 三隻可選（`cute` 毛毛／`cool` 小龍／`funny` 呱呱），點蛋後跳**取名視窗** `#o-name`：預設帶入建議名字（`NAME_SUG`，可直接確定）、可改 6 字內，這是全 app 唯一會叫出系統鍵盤的地方。名字存 `DB.pet.name`，`petName()` 取用；放回家時名字一起記進 `released`。餵一次 10 星塵，`fed` 累積到 30／100／250／500 升到幼體／少年／成體／究極。
 - 外觀全是 `petSVG()` 組出來的 inline SVG：蛋有路線花紋；少年加耳朵／角／帽子；成體加翅膀／披風／鬍子；究極加皇冠、光環、星星。viewBox 上方留 18 單位給帽子。
 - 升級時 toast＋彩帶＋里程碑音效。**沒有飢餓、沒有倒扣、沒有提醒**，刻意不做壓力。
 - 寵物頁只顯示名字、階段、進度條、餵食鈕；不寫「再餵幾次」、不寫星塵來源（在遊戲說明）。
