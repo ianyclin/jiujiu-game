@@ -497,7 +497,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>一次出三個算式，看題目問的是<b>最大</b>還是<b>最小</b>，點出那一個。三個乘積都很接近，要算過才分得出來。</li>
         <li>連續答對 3 題後，三個乘積會更接近。答錯會亮出三個答案，<b>點正確的那個</b>才能繼續。</li>
-        <li>一局 10 題。<b>10 題全對</b>的最短時間會記成紀錄，答錯一題這局就不算時間，所以先求對再求快。答錯時「正確的」和「你點的」兩題都會記進錯題本。</li>
+        <li>一局 10 題。<b>10 題全對</b>的最短時間會記成紀錄，答錯一題這局就不算時間，所以先求對再求快。</li>
+        <li>點對不會點亮星圖（星圖要靠自己打出答案）；點錯時「正確的」和「你點的」兩題都會記進錯題本。</li>
       </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
@@ -1530,9 +1531,8 @@ function cmpChoose(i) {
   if (f === q.ans) {
     el.classList.remove('want', 'bad'); el.classList.add('ok', 'pop');
     if (!q.rev) {
-      const ms = now() - q.t0;
       C.ok++; C.streak++;
-      q.opts.forEach(o => record(o.k, true, ms / 3));
+      // 點對不記星圖：選擇題證明不了「能打出答案」；答錯才記（見下）
       SFX.zap(C.streak);
       const r = el.getBoundingClientRect();
       spark(r.left + r.width / 2, r.top + r.height / 2, 24, ['#5ff2d0', '#ffd23f', '#ffffff'], 220, 3, 0.7, 80);
