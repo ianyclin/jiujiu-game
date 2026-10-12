@@ -108,6 +108,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 @keyframes ban{0%{opacity:0;transform:scale(.5)}14%{opacity:1;transform:scale(1.1)}24%{transform:scale(1)}78%{opacity:1}100%{opacity:0;transform:translateY(-24px) scale(1.05)}}
 .dock{padding-block:2px 12px}
 .answer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:82px;padding-block:8px 6px}
+.answer.pop{animation:pop .32s ease}
 
 /* ---------- 幽靈競速 ---------- */
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-block:10px 4px}
@@ -548,7 +549,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <h3>遊戲說明</h3>
       <h4>流星防衛戰</h4>
       <ul class="rules">
-        <li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台自動瞄準<b>最低的那顆</b>。</li>
+        <li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台會一直瞄準<b>同一顆</b>直到打掉；有別顆快掉到地上了，才會先轉過去打它，這時下面的題目會跳一下。</li>
         <li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。</li>
         <li>有時候流星上是一串數字「7、14、?、28」，那是 7 的乘法表，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
         <li>流星掉到小鎮會<b>扣一顆心</b>。一整波都沒失誤 +50 分。</li>
@@ -969,7 +970,7 @@ function newMeteor(q, boss) {
 }
 function startMeteor() {
   show('meteor');
-  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
+  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
   P.length = 0; beams.length = 0; curT = null; lastBar = '';
   $('#m-freeze').hidden = true; $('#m-dbl').hidden = true; $('#m-inv').hidden = true;
   requestAnimationFrame(() => { measure(); nextWave(); hud(); bar(); });
@@ -1046,12 +1047,16 @@ function drawRockets() {
     g.restore();
   }
 }
+// 瞄準規則：打字中鎖定（M.lock）；沒打字時「黏著」目前這顆，別顆快落地（剩不到 3 秒）才強制換，
+// 避免魔王戰時小流星一超過魔王就換題、手還在打魔王的答案。
 function getTarget() {
   if (M.lock && !M.lock.dead && M.list.includes(M.lock)) return M.lock;
   M.lock = null;
-  let best = null;
-  for (const m of M.list) if (!m.dead && m.y > -m.r * 0.6 && (!best || m.y + m.r > best.y + best.r)) best = m;
-  return best;
+  let low = null;
+  for (const m of M.list) if (!m.dead && m.y > -m.r * 0.6 && (!low || m.y + m.r > low.y + low.r)) low = m;
+  if (!low || !curT || curT.dead || low === curT || !M.list.includes(curT) || curT.y <= -curT.r * 0.6) return low;
+  const sm = M.freeze > 0 ? 0.25 : 1, left = (GY - 34 - (low.y + low.r * 0.45)) / Math.max(1, low.vy * sm);
+  return left < 3 ? low : curT;
 }
 function updateMeteor(dt) {
   const sm = M.freeze > 0 ? 0.25 : 1;
@@ -1081,7 +1086,10 @@ function updateMeteor(dt) {
   M.list = M.list.filter(m => !m.dead);
   const tg = getTarget();
   if (tg && !tg.tStart) tg.tStart = now();
-  if (tg !== curT) { curT = tg; if (!M.buf) bar(); }
+  if (tg !== curT) {
+    const had = !!curT; curT = tg; M.switchT = now();
+    if (!M.buf) { bar(); if (had && tg) { const a = $('#m-answer'); a.classList.remove('pop'); void a.offsetWidth; a.classList.add('pop'); } }
+  }
 }
 function impact(m) {
   m.dead = true;
@@ -1168,6 +1176,7 @@ function drawDrop(o) {
 function meteorKey(d) {
   if (!M || M.over || M.paused) return;
   const tg = getTarget(); if (!tg) return;
+  if (!M.buf && now() - M.switchT < 250) return;   // 剛換目標，這一下八成是打給上一顆的
   if (d === 'back') { M.buf = M.buf.slice(0, -1); if (!M.buf) M.lock = null; bar(); return; }
   M.buf += d; M.lock = tg; SFX.key();
   if (M.buf.length >= String(tg.q.ans).length) {
@@ -1190,7 +1199,7 @@ function hit(m) {
     m.hp--; m.flash = 0; spark(m.x, m.y, 30, ['#5ff2d0', '#ffffff', '#ffd23f'], 260, 3.5, 0.7, 80); ring(m.x, m.y, m.r * 1.6, '#5ff2d0', 5);
     ftxt(m.x, m.y - m.r - 30, `+${pts}`, '#ffd23f', 26); shake(0.15, 4);
     if (m.hp <= 0) killBoss(m);
-    else { m.q = bossQ(); m.revealed = false; m.tStart = now(); m.vy *= 0.97; }
+    else { m.q = bossQ(); m.revealed = false; m.tStart = now(); m.vy *= 0.97; curT = null; }   // 魔王換題算一個段落，重新挑最低的
   } else {
     destroy(m, pts);
     M.kills++;
