@@ -354,6 +354,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .wrongs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .wrongs i{font-style:normal;font-family:var(--f-num);background:rgba(255,97,97,.14);color:#ffbcbc;border-radius:10px;padding:4px 10px;font-size:17px}
 .legal{margin:0;font-size:11px;line-height:1.5;color:rgba(147,169,192,.7);text-align:center}
+.legal a{color:var(--ice);text-decoration:underline;text-underline-offset:2px}
+#gate-pad{margin-block:4px}
 .setlist{display:grid;gap:8px;text-align:left}
 .setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .setrow b{display:block;font-size:16px;font-weight:900}
@@ -709,6 +711,17 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
+  <div class="overlay" id="o-gate" hidden style="z-index:8">
+    <div class="card">
+      <h3>請大人來一下</h3>
+      <p>要打開外面的網頁，請大人先回答這一題。</p>
+      <div class="aq" id="gate-q"></div>
+      <div class="hint" id="gate-hint"></div>
+      <div class="pad" id="gate-pad"></div>
+      <div class="btn-col"><button class="btn alt" type="button" id="gate-close">取消</button></div>
+    </div>
+  </div>
+
   <div class="overlay" id="o-set" hidden>
     <div class="card">
       <h3>設定</h3>
@@ -719,7 +732,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <div class="setrow"><div><b>數列題提示</b><small>數列題上面會寫出是幾的倍數。關掉就要自己看出是幾的乘法表，比較難</small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" aria-label="數列題提示"><i></i></button></div>
       </div>
       <div class="btn-col"><button class="btn alt" type="button" id="set-close">關閉</button></div>
-      <p class="legal">© 2026 九九流星隊（ianyclin）保留所有權利。<br>字型來自 Google Fonts：Lilita One、Chiron GoRound TC（SIL Open Font License）。</p>
+      <p class="legal">© 2026 <a href="#" id="legal-fb">指數三寶飯</a>（ianyclin）保留所有權利。<br>字型來自 Google Fonts：Lilita One、Chiron GoRound TC（SIL Open Font License）。</p>
     </div>
   </div>
 
@@ -2499,7 +2512,7 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; });
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; gate = null; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
@@ -2539,6 +2552,28 @@ makePad($('#m-pad'), meteorKey);
 makePad($('#g-pad'), ghostKey);
 makePad($('#v-bot [data-pad]'), d => vKey(0, d));
 makePad($('#v-top [data-pad]'), d => vKey(1, d));
+// 家長關卡：外部連結前要大人解一題（兩位數 × 一位數），答對才開新分頁。兒童 app 硬限制。
+const FB_URL = 'https://www.facebook.com/search/top?q=' + encodeURIComponent('指數三寶飯');
+let gate = null;
+function openGate(url) {
+  const a = ri(12, 19), b = ri(3, 9);
+  gate = { ans: a * b, buf: '', url };
+  $('#gate-q').innerHTML = `${a} × ${b} = ${slots(String(a * b).length, '')}`; $('#gate-hint').textContent = '';
+  $('#o-gate').hidden = false;
+}
+function gateKey(d) {
+  if (!gate) return;
+  if (d === 'back') gate.buf = gate.buf.slice(0, -1); else { gate.buf += d; SFX.key(); }
+  const n = String(gate.ans).length;
+  if (gate.buf.length >= n) {
+    if (parseInt(gate.buf, 10) === gate.ans) { const u = gate.url; gate = null; $('#o-gate').hidden = true; window.open(u, '_blank', 'noopener'); return; }
+    gate.buf = ''; SFX.wrong(); $('#gate-hint').textContent = '不對喔，再試一次'; const c = $('#gate-q'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+  }
+  const m = $('#gate-q').innerHTML.match(/^(\d+) × (\d+) = /); if (m) $('#gate-q').innerHTML = `${m[1]} × ${m[2]} = ${slots(n, gate.buf)}`;
+}
+makePad($('#gate-pad'), gateKey);
+$('#legal-fb').addEventListener('click', e => { e.preventDefault(); openGate(FB_URL); });
+$('#gate-close').addEventListener('click', () => { gate = null; $('#o-gate').hidden = true; });
 
 addEventListener('keydown', e => {
   if (e.repeat || (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName))) return;
@@ -2548,7 +2583,8 @@ addEventListener('keydown', e => {
   else if (e.key === 'Escape' && mode === 'meteor' && M) { pause(!M.paused); return; }
   else if ((e.key === ' ' || e.key === 'Enter') && mode === 'meteor' && M && !M.over && !M.paused) { launchMissile(); e.preventDefault(); return; }
   if (d === null) return;
-  if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d);
+  if (!$('#o-gate').hidden) gateKey(d);
+  else if (mode === 'meteor') meteorKey(d); else if (mode === 'ghost') ghostKey(d); else if (mode === 'versus') vKey(0, d);
   else if (mode === 'cmp' && /^[123]$/.test(d)) cmpChoose(+d - 1); else return;
   e.preventDefault();
 });

@@ -9,7 +9,7 @@
 - 所有紀錄存 `localStorage`（key：`jiujiu-meteor-v1`），只在該瀏覽器。
 - 音樂與音效全部用 Web Audio 即時合成，沒有任何音檔，無版權問題。
 - 字型：Google Fonts（Lilita One 數字、Chiron GoRound TC 中文），都有系統字型 fallback。
-- 著作權聲明放在設定頁最下面（`.legal`，小字不顯眼）：© 九九流星隊（ianyclin）、字型授權。寵物插畫是 AI 生成，著作權保護在多數地區不明確，商業化前要考慮請人重繪或至少留存生成紀錄。
+- 著作權聲明放在設定頁最下面（`.legal`，小字不顯眼）：© 指數三寶飯（ianyclin）、字型授權。「指數三寶飯」是連結，走**家長關卡** `#o-gate`（`openGate(url)`：兩位數 × 一位數，答對才 `window.open`），`FB_URL` 目前是 Facebook 搜尋頁，拿到粉專正式網址後換掉。寵物插畫是 AI 生成，著作權保護在多數地區不明確，商業化前要考慮請人重繪或至少留存生成紀錄。
 
 ## 語言與對象
 
