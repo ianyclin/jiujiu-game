@@ -195,10 +195,21 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .bm-task{text-align:center;font-weight:900;font-size:clamp(22px,6vw,32px);line-height:1.25}
 .bm-task b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:1.5em;vertical-align:-.08em;margin-inline:.08em}
 .bm-task small{display:block;font-size:14px;color:var(--muted);font-weight:700;margin-top:4px}
-.fuse{width:100%;max-width:400px;height:10px;border-radius:5px;background:rgba(255,97,97,.18);overflow:hidden}
-.fuse i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--ember),var(--coral));border-radius:5px}
-.fuse.low i{animation:fuseblink .4s steps(2) infinite}
-@keyframes fuseblink{50%{opacity:.35}}
+.bm-head{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;max-width:400px}
+.bm-head .bm-task{text-align:left}
+.bomb{width:clamp(88px,24vw,116px);height:auto;flex:none;overflow:visible}
+.bomb .body{transform-origin:60px 74px}
+.bomb .spark{transform-origin:center;transform-box:fill-box}
+.bomb.low .body{animation:wobble .22s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.bomb.boom .body{animation:bombgone .45s ease-out forwards}
+@keyframes bombgone{0%{transform:scale(1);opacity:1}35%{transform:scale(1.4);opacity:1}100%{transform:scale(2);opacity:0}}
+.bomb .burst{transform-origin:60px 74px;transform:scale(0);opacity:0}
+.bomb.boom .burst{animation:burst .75s ease-out forwards}
+@keyframes burst{0%{transform:scale(.15) rotate(0);opacity:1}55%{transform:scale(1.7) rotate(18deg);opacity:1}100%{transform:scale(2.4) rotate(30deg);opacity:0}}
+.bomb.boom .fuse,.bomb.boom .spark,.bomb.ok .fuse,.bomb.ok .spark{opacity:0}
+.bomb.ok .body{animation:pop .4s ease}
+.bomb.ok .body circle{stroke:var(--mint)}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:400px}
 .tile{height:clamp(54px,8.4vh,74px);border-radius:16px;border:2px solid var(--line);background:var(--panel);box-shadow:0 5px 0 var(--keyEdge);font-family:var(--f-num);font-size:clamp(26px,7vw,36px);color:var(--paper);display:grid;place-items:center;cursor:pointer;padding:0;touch-action:manipulation;transition:transform .06s,box-shadow .06s,border-color .15s,background .15s}
 .tile:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
@@ -296,7 +307,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <button class="mode" id="go-bomb" type="button">
           <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="28" cy="38" r="20" fill="#2a3f58" stroke="#93a9c0" stroke-width="2"/><path d="M38 20l6-8" stroke="#93a9c0" stroke-width="4" stroke-linecap="round"/><path d="M44 12c4-6 10-4 12 0" stroke="#ffae57" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="56" cy="12" r="5" fill="#ffd23f"/><circle cx="56" cy="12" r="2" fill="#fff"/><text x="28" y="46" text-anchor="middle" font-family="Lilita One,sans-serif" font-size="22" fill="#5ff2d0">7</text></svg>
           <span class="m-t">炸彈拆除<em id="b-bomb"></em></span>
-          <span class="m-d">引線燒完前，把 7 的倍數全部點掉。點到不是的會爆炸！</span>
+          <span class="m-d">炸彈說幾的倍數，就在引線燒完前把它們全部點掉。點到不是的會爆炸！</span>
         </button>
       </nav>
       <div class="menu-foot">
@@ -425,8 +436,20 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <div class="timer" id="bm-timer"><span id="bm-time">0.0</span><small>秒</small></div>
     </div>
     <div class="bm-in">
-      <div class="bm-task" id="bm-task"></div>
-      <div class="fuse" id="bm-fuse" hidden><i></i></div>
+      <div class="bm-head">
+        <svg class="bomb" id="bm-bomb" viewBox="0 0 120 120" aria-hidden="true">
+          <path class="burst" id="bm-burst" fill="#ffd23f" stroke="#ff6161" stroke-width="3" stroke-linejoin="round"/>
+          <path class="fuse" id="bm-fusepath" d="M66 24 C 64 6, 90 22, 106 6" fill="none" stroke="#c9a46b" stroke-width="5" stroke-linecap="round"/>
+          <g class="spark" id="bm-spark"><circle r="11" fill="rgba(255,210,63,.3)"/><circle r="5.5" fill="#ffd23f"/><circle r="2.2" fill="#fff"/></g>
+          <g class="body">
+            <rect x="52" y="18" width="24" height="16" rx="5" fill="#4a5f78" stroke="#93a9c0" stroke-width="2"/>
+            <circle cx="60" cy="74" r="42" fill="#1b2b40" stroke="#93a9c0" stroke-width="3"/>
+            <ellipse cx="44" cy="56" rx="11" ry="6" fill="rgba(255,255,255,.16)" transform="rotate(-35 44 56)"/>
+            <text id="bm-n" x="60" y="90" text-anchor="middle" font-family="Lilita One,'Chiron GoRound TC',sans-serif" font-size="46" fill="#5ff2d0"></text>
+          </g>
+        </svg>
+        <div class="bm-task" id="bm-task"></div>
+      </div>
       <div class="tiles" id="bm-tiles"></div>
       <div class="bm-found" id="bm-found"></div>
       <div class="bm-msg" id="bm-msg"></div>
@@ -1648,9 +1671,10 @@ function bombBoard(n) {
   const pool = mults.slice(), got = [];
   while (got.length < ri(4, 6)) { const m = wpick(pool, m => weightOf(factNK(n, m / n))); pool.splice(pool.indexOf(m), 1); got.push(m); }
   const seen = new Set(), cand = [];
-  const add = (v, w) => { if (v >= 2 && v <= 90 && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
+  // 數字都在 2～81（九九乘法的範圍）
+  const add = (v, w) => { if (v >= 2 && v <= 81 && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
   mults.forEach(m => { add(m - 1, 3); add(m + 1, 3); add(m - 2, 1.5); add(m + 2, 1.5); });
-  for (let v = 10; v <= 89; v++) if (String(v).includes(String(n))) add(v, 2);
+  for (let v = 10; v <= 81; v++) if (String(v).includes(String(n))) add(v, 2);
   MUL2.forEach(f => add(f.ans, 1));
   const tiles = got.slice();
   while (tiles.length < 12) { const c = wpick(cand, c => c.w); cand.splice(cand.indexOf(c), 1); tiles.push(c.v); }
@@ -1662,13 +1686,24 @@ function startBomb() {
   BM = { i: 0, n: 5, done: 0, wrongs: [], t0: 0, end: 0, round: null, over: false, lastN: 0 };
   ['#bm-tiles', '#bm-task'].forEach(s => { $(s).innerHTML = ''; });
   ['#bm-msg', '#bm-why', '#bm-found'].forEach(s => { $(s).textContent = ''; });
-  $('#bm-next').hidden = true; $('#bm-fuse').hidden = true; $('#bm-time').textContent = '0.0'; $('#bm-prog').textContent = '準備好了嗎？';
+  $('#bm-next').hidden = true; $('#bm-time').textContent = '0.0'; $('#bm-prog').textContent = '準備好了嗎？';
+  $('#bm-bomb').setAttribute('class', 'bomb'); $('#bm-n').textContent = '?'; bombFuse(1);
   countdown(() => { if (BM) { BM.t0 = now(); nextBomb(); } });
+}
+// 引線：用 dasharray 只畫「還沒燒掉」的那段，火花跟著燒到的位置走
+const fusePath = $('#bm-fusepath'); let fuseLen = 0;   // 長度等畫面顯示後再量，避免 display:none 時量到 0
+$('#bm-burst').setAttribute('d', (() => { let d = ''; for (let i = 0; i < 24; i++) { const a = i * Math.PI / 12, r = i % 2 ? 24 : 52; d += (i ? 'L' : 'M') + (60 + r * Math.cos(a)).toFixed(1) + ' ' + (74 + r * Math.sin(a)).toFixed(1); } return d + 'Z'; })());
+function bombFuse(frac) {
+  if (!fuseLen) fuseLen = fusePath.getTotalLength();
+  const rem = fuseLen * clamp(frac, 0, 1), pt = fusePath.getPointAtLength(rem);
+  fusePath.style.strokeDasharray = `${rem} ${fuseLen + 4}`;
+  $('#bm-spark').setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) scale(${(0.85 + Math.sin(T * 38) * 0.25).toFixed(2)})`);
 }
 function nextBomb() {
   const n = wpick([2, 3, 4, 5, 6, 7, 8, 9].filter(n => n !== BM.lastN), tableW); BM.lastN = n;
   const b = bombBoard(n);
-  BM.round = { n, tiles: b.tiles, count: b.count, got: new Set(), t0: now(), state: 'live', sec: -1 };
+  BM.round = { n, tiles: b.tiles, count: b.count, got: new Set(), t0: now(), state: 'live', sec: -1, sparkT: 0 };
+  $('#bm-bomb').setAttribute('class', 'bomb'); $('#bm-n').textContent = n; bombFuse(1);
   BM.i++;
   $('#bm-prog').textContent = `第 ${BM.i} / ${BM.n} 顆`;
   $('#bm-task').innerHTML = `點掉所有 <b>${n}</b> 的倍數<small>就是 ${n} × 1 到 ${n} × 9 的答案</small>`;
@@ -1676,7 +1711,6 @@ function nextBomb() {
   t.innerHTML = b.tiles.map((v, i) => `<button type="button" class="tile" data-i="${i}">${v}</button>`).join('');
   $('#bm-found').innerHTML = `找到 <b>0</b> / ${b.count}`;
   $('#bm-msg').textContent = ''; $('#bm-msg').className = 'bm-msg'; $('#bm-why').textContent = ''; $('#bm-next').hidden = true;
-  const f = $('#bm-fuse'); f.hidden = false; f.className = 'fuse'; f.firstElementChild.style.width = '100%';
 }
 function bombTap(i) {
   if (!BM || !BM.round || BM.round.state !== 'live') return;
@@ -1698,18 +1732,23 @@ function explode(why, facts, el) {
   const r = BM.round; r.state = 'dead'; bombEndRound();
   if (el) el.classList.add('boom');
   $$('#bm-tiles .tile').forEach((t, i) => { if (r.tiles[i] % r.n === 0 && !r.got.has(i)) t.classList.add('miss'); });
-  $('#bm-tiles').classList.add('off'); $('#bm-fuse').hidden = true;
+  $('#bm-tiles').classList.add('off');
   facts.forEach(f => { record(f.k, false, 0); BM.wrongs.push({ f, k: f.k }); });
-  SFX.big(); shake(0.5, 10); flashA = 0.35;
-  const rc = (el || $('#bm-tiles')).getBoundingClientRect(), x = rc.left + rc.width / 2, y = rc.top + rc.height / 2;
-  spark(x, y, 60, ['#ff6161', '#ffae57', '#ffd23f', '#ffffff'], 380, 4, 1.1, 160); ring(x, y, 160, '#ff6161', 6);
+  SFX.big(); shake(0.6, 12); flashA = 0.45;
+  // 炸彈本體炸開（CSS 動畫）＋ 火花、碎片、擴散環
+  $('#bm-bomb').setAttribute('class', 'bomb boom');
+  const bc = $('#bm-bomb').getBoundingClientRect(), bx = bc.left + bc.width / 2, by = bc.top + bc.height * 0.6;
+  spark(bx, by, 70, ['#ff6161', '#ffae57', '#ffd23f', '#ffffff'], 420, 4.5, 1.2, 180); ring(bx, by, 200, '#ff6161', 7); ring(bx, by, 120, '#ffd23f', 4);
+  const dark = ['#2a3f58', '#4a5f78', '#1b2b40', '#93a9c0'];
+  for (let i = 0; i < 18; i++) P.push({ k: 1, x: bx, y: by, vx: rnd(-260, 260), vy: rnd(-380, -80), l: rnd(0.8, 1.4), m: 1.4, s: rnd(5, 11), c: dark[i % 4], gv: 520, r: rnd(0, 6), vr: rnd(-12, 12) });
+  if (el) { const rc = el.getBoundingClientRect(); spark(rc.left + rc.width / 2, rc.top + rc.height / 2, 24, ['#ff6161', '#ffffff'], 240, 3, 0.7, 120); }
   $('#bm-msg').textContent = '碰！爆炸了'; $('#bm-msg').className = 'bm-msg bad';
   $('#bm-why').textContent = why;
   $('#bm-next').textContent = BM.i >= BM.n ? '看結果' : '下一顆炸彈'; $('#bm-next').hidden = false;
 }
 function defused() {
   const r = BM.round; r.state = 'ok'; BM.done++; bombEndRound();
-  $('#bm-tiles').classList.add('off'); $('#bm-fuse').hidden = true;
+  $('#bm-tiles').classList.add('off'); $('#bm-bomb').setAttribute('class', 'bomb ok');
   $('#bm-msg').textContent = '拆除成功！'; $('#bm-msg').className = 'bm-msg good';
   SFX.power(); flashA = 0.15;
   const rc = $('#bm-tiles').getBoundingClientRect();
@@ -1722,8 +1761,12 @@ function updateBomb() {
   $('#bm-time').textContent = (((BM.end || now()) - BM.t0) / 1000).toFixed(1);
   const r = BM.round; if (!r || r.state !== 'live') return;
   const left = FUSE - (now() - r.t0) / 1000;
-  $('#bm-fuse').firstElementChild.style.width = clamp(left / FUSE * 100, 0, 100) + '%';
-  $('#bm-fuse').classList.toggle('low', left < 5);
+  bombFuse(left / FUSE);
+  $('#bm-bomb').classList.toggle('low', left < 5);
+  if (!RM && T - r.sparkT > 0.07) {   // 引線火花往畫布灑小火星
+    r.sparkT = T; const sc = $('#bm-spark').getBoundingClientRect();
+    spark(sc.left + sc.width / 2, sc.top + sc.height / 2, 2, ['#ffd23f', '#ffffff', '#ffae57'], 70, 1.6, 0.35, 160);
+  }
   if (left < 5 && Math.ceil(left) !== r.sec) { r.sec = Math.ceil(left); if (r.sec > 0) SFX.tick(); }
   if (left <= 0) {
     const missed = r.tiles.filter((v, i) => v % r.n === 0 && !r.got.has(i));
