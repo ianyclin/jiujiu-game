@@ -2553,7 +2553,7 @@ makePad($('#g-pad'), ghostKey);
 makePad($('#v-bot [data-pad]'), d => vKey(0, d));
 makePad($('#v-top [data-pad]'), d => vKey(1, d));
 // 家長關卡：外部連結前要大人解一題（兩位數 × 一位數），答對才開新分頁。兒童 app 硬限制。
-const FB_URL = 'https://www.facebook.com/search/top?q=' + encodeURIComponent('指數三寶飯');
+const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
 function openGate(url) {
   const a = ri(12, 19), b = ri(3, 9);
