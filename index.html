@@ -304,7 +304,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .pet-card small{font-size:12px;color:var(--muted)}
 .pet-show{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:470px}
 .pet-stage{width:min(70vw,260px);height:min(70vw,260px);display:grid;place-items:center}
-.pet-stage svg{width:100%;height:100%;animation:petIdle 2.4s ease-in-out infinite;transform-origin:50% 90%}
+.pet-stage svg{width:100%;height:100%;overflow:visible;animation:petIdle 2.4s ease-in-out infinite;transform-origin:50% 90%}
 @keyframes petIdle{50%{transform:translateY(-6px) scale(1.02,.98)}}
 .pet-stage.pop svg{animation:petPop .5s ease}
 @keyframes petPop{30%{transform:scale(1.18,.86)}60%{transform:scale(.94,1.1) translateY(-10px)}}
@@ -2154,57 +2154,29 @@ const GEAR = [
   { id: 'bow', at: 1, n: '蝴蝶結' }, { id: 'scarf', at: 3, n: '圍巾' }, { id: 'glasses', at: 7, n: '墨鏡' },
   { id: 'balloon', at: 15, n: '氣球' }, { id: 'halo', at: 30, n: '彩虹光環' },
 ];
-function gearSVG(id, hx, hy, hr) {   // 畫在頭上：hx,hy 頭中心、hr 半徑
+function gearSVG(id, hx, hy, hr, top) {   // 畫在頭上：hx,hy 頭中心、hr 半徑；top 圖最高點（沒給就用 hy - hr）
+  if (top === undefined) top = hy - hr;
   switch (id) {
     case 'bow': { const x = hx - hr * 0.6, y = hy - hr * 0.85; return `<g transform="translate(${x} ${y}) rotate(-15)"><path d="M0 0l-14 -9v18z" fill="#ff6161"/><path d="M0 0l14 -9v18z" fill="#ff6161"/><circle r="4" fill="#ffd23f"/></g>`; }
     case 'scarf': { const y = hy + hr * 0.78; return `<path d="M${hx - hr * 0.7} ${y} q${hr * 0.7} 14 ${hr * 1.4} 0 v8 q-${hr * 0.7} 14 -${hr * 1.4} 0z" fill="#ff6161"/><path d="M${hx + hr * 0.3} ${y + 6} l10 22 h10 l-8 -24z" fill="#ff6161"/><path d="M${hx - hr * 0.6} ${y + 4} q${hr * 0.6} 10 ${hr * 1.2} 0" fill="none" stroke="#ffd23f" stroke-width="2.5"/>`; }
     case 'glasses': { const y = hy - hr * 0.25, w = hr * 0.42; return `<rect x="${hx - w * 2 - 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><rect x="${hx + 2}" y="${y - 7}" width="${w * 2}" height="15" rx="6" fill="#0b1626" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - 2} ${y}h4" stroke="#93a9c0" stroke-width="2"/><path d="M${hx - w * 2 - 2} ${y - 2}h-6 M${hx + w * 2 + 2} ${y - 2}h6" stroke="#93a9c0" stroke-width="2"/>`; }
-    case 'balloon': { const x = hx + hr + 8, y = hy - hr - 10; return `<path d="M${hx + hr * 0.5} ${hy + hr * 0.6} Q${x - 4} ${y + 40} ${x} ${y + 16}" fill="none" stroke="#f2f6fb" stroke-width="1.5"/><ellipse cx="${x}" cy="${y}" rx="12" ry="15" fill="#5ff2d0"/><path d="M${x - 3} ${y + 15}l3 5 3 -5z" fill="#5ff2d0"/><ellipse cx="${x - 4}" cy="${y - 5}" rx="3" ry="5" fill="rgba(255,255,255,.5)"/>`; }
-    case 'halo': { const y = hy - hr - 12; return ['#ff6161', '#ffae57', '#ffd23f', '#5ff2d0', '#9fdcff'].map((c, i) => `<ellipse cx="${hx}" cy="${y}" rx="${hr * 0.9 - i * 2.5}" ry="${7 - i * 1.2}" fill="none" stroke="${c}" stroke-width="2.2"/>`).join(''); }
+    case 'balloon': { const x = hx + hr + 14, y = top - 6; return `<path d="M${hx + hr * 0.5} ${hy + hr * 0.6} Q${x - 4} ${y + 40} ${x} ${y + 16}" fill="none" stroke="#f2f6fb" stroke-width="1.5"/><ellipse cx="${x}" cy="${y}" rx="12" ry="15" fill="#5ff2d0"/><path d="M${x - 3} ${y + 15}l3 5 3 -5z" fill="#5ff2d0"/><ellipse cx="${x - 4}" cy="${y - 5}" rx="3" ry="5" fill="rgba(255,255,255,.5)"/>`; }
+    case 'halo': { const y = top - 9; return ['#ff6161', '#ffae57', '#ffd23f', '#5ff2d0', '#9fdcff'].map((c, i) => `<ellipse cx="${hx}" cy="${y}" rx="${hr * 0.9 - i * 2.5}" ry="${7 - i * 1.2}" fill="none" stroke="${c}" stroke-width="2.2"/>`).join(''); }
   }
   return '';
 }
 const petStage = fed => { let st = 0; PET_STAGES.forEach((s, i) => { if (fed >= s.at) st = i; }); return st; };
 function earn(n) { DB.pet.dust += n; save(); if (mode === 'menu') $('#b-pet').textContent = DB.pet.dust; }
-// 畫寵物：同一隻依階段長大、加配件。全部 inline SVG，沒有圖檔
+// 寵物圖是 assets/pets/{kind}-{stage}.png（400×400 透明 PNG，由 ChatGPT 生成的角色成長圖用 tools/cut-pets.py 切出來）。
+// 配件仍用 SVG 疊在頭上：PET_HEAD 是每張圖的 [頭中心 x, 頭中心 y, 頭半徑, 圖最高點 y]（120 單位座標）。眼睛約在 hy - 0.25*hr。
+const PET_HEAD = {
+  funny: [[59.8, 96.0, 14.8, 75.0], [59.8, 94.1, 18.7, 78.9], [60.0, 78.0, 23.4, 53.1], [60.0, 68.1, 29.4, 36.9], [60.0, 55.7, 32.9, 16.5]],
+  cool: [[59.8, 94.3, 14.2, 71.7], [60.0, 85.9, 11.7, 63.3], [59.8, 70.0, 14.1, 38.7], [59.8, 56.0, 16.1, 18.6], [59.8, 42.9, 18.1, 3.0]],
+  cute: [[60.0, 89.8, 17.5, 62.7], [60.0, 96.8, 15.4, 71.1], [60.0, 91.7, 27.0, 50.4], [59.8, 85.6, 31.9, 34.5], [60.0, 74.6, 35.3, 11.1]],
+};
 function petSVG(kind, st, wear = '') {
-  const K = PET_KINDS[kind], g = [];
-  if (st === 0) {   // 蛋：依路線不同花紋
-    const pat = kind === 'cute' ? '<path d="M52 58c-6-6 2-12 7-6 5-6 13 0 7 6l-7 7z" fill="' + K.c2 + '"/><path d="M38 74c-4-4 1-8 5-4 4-4 9 0 5 4l-5 5z" fill="' + K.c2 + '"/>'
-      : kind === 'cool' ? '<path d="M58 48l-8 14h8l-6 14 14-18h-8l6-10z" fill="' + K.c2 + '"/>'
-      : '<circle cx="48" cy="58" r="6" fill="' + K.c2 + '"/><circle cx="66" cy="70" r="4" fill="' + K.c2 + '"/><circle cx="54" cy="82" r="5" fill="' + K.c2 + '"/>';
-    return `<svg viewBox="0 -18 120 138" aria-hidden="true"><ellipse cx="60" cy="108" rx="34" ry="6" fill="rgba(0,0,0,.35)"/><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="${K.c1}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>${pat}<ellipse cx="46" cy="40" rx="6" ry="10" fill="rgba(255,255,255,.35)" transform="rotate(-20 46 40)"/>${gearSVG(wear, 60, 60, 34)}</svg>`;
-  }
-  const size = [0, 30, 38, 46, 50][st], cy = 70, c = K.c1, d = K.c2;
-  // 身體
-  if (kind === 'cute') g.push(`<circle cx="60" cy="${cy}" r="${size}" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2"/>`);
-  else if (kind === 'cool') g.push(`<path d="M60 ${cy - size} L${60 + size} ${cy} L60 ${cy + size} L${60 - size} ${cy} Z" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" stroke-linejoin="round"/>`);
-  else g.push(`<ellipse cx="60" cy="${cy + 4}" rx="${size + 6}" ry="${size - 4}" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2"/>`);
-  // 眼睛、嘴
-  const ex = kind === 'funny' ? 16 : 12, ey = cy - size * 0.25, er = kind === 'funny' ? 8 : 6;
-  if (kind === 'funny') g.push(`<circle cx="${60 - ex}" cy="${ey - 6}" r="${er}" fill="#fff"/><circle cx="${60 + ex}" cy="${ey - 6}" r="${er}" fill="#fff"/><circle cx="${60 - ex + 2}" cy="${ey - 5}" r="3.5" fill="${K.eye}"/><circle cx="${60 + ex - 1}" cy="${ey - 7}" r="3.5" fill="${K.eye}"/><path d="M${60 - size * 0.5} ${cy + 8} q${size * 0.5} ${size * 0.5} ${size} 0" fill="#1e3310" stroke="none"/><path d="M${60 - size * 0.3} ${cy + 12} q${size * 0.3} ${size * 0.25} ${size * 0.6} 0" fill="#ff6f91"/>`);
-  else if (kind === 'cool') g.push(`<path d="M${60 - ex - 6} ${ey - 4} l12 6 v4 h-12z" fill="${K.eye}"/><path d="M${60 + ex + 6} ${ey - 4} l-12 6 v4 h12z" fill="${K.eye}"/><path d="M${60 - 8} ${cy + 12} q8 5 16 0" fill="none" stroke="${K.eye}" stroke-width="3" stroke-linecap="round"/>`);
-  else g.push(`<circle cx="${60 - ex}" cy="${ey}" r="${er}" fill="${K.eye}"/><circle cx="${60 + ex}" cy="${ey}" r="${er}" fill="${K.eye}"/><circle cx="${60 - ex + 2}" cy="${ey - 2}" r="2" fill="#fff"/><circle cx="${60 + ex + 2}" cy="${ey - 2}" r="2" fill="#fff"/><circle cx="${60 - ex - 10}" cy="${ey + 10}" r="5" fill="rgba(255,111,145,.5)"/><circle cx="${60 + ex + 10}" cy="${ey + 10}" r="5" fill="rgba(255,111,145,.5)"/><path d="M${60 - 6} ${cy + 10} q6 6 12 0" fill="none" stroke="${K.eye}" stroke-width="3" stroke-linecap="round"/>`);
-  // 少年以上：耳朵／角／帽子
-  if (st >= 2) {
-    if (kind === 'cute') g.unshift(`<ellipse cx="${60 - size * 0.6}" cy="${cy - size * 0.9}" rx="9" ry="18" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" transform="rotate(-20 ${60 - size * 0.6} ${cy - size * 0.9})"/><ellipse cx="${60 + size * 0.6}" cy="${cy - size * 0.9}" rx="9" ry="18" fill="${c}" stroke="rgba(0,0,0,.2)" stroke-width="2" transform="rotate(20 ${60 + size * 0.6} ${cy - size * 0.9})"/>`);
-    else if (kind === 'cool') g.unshift(`<path d="M${60 - 14} ${cy - size + 6} l-8 -22 l16 12z" fill="${d}"/><path d="M${60 + 14} ${cy - size + 6} l8 -22 l-16 12z" fill="${d}"/>`);
-    else g.push(`<path d="M${60 - 22} ${cy - size + 2} h44 l-6 -8 h-32z" fill="${d}"/><rect x="${60 - 14}" y="${cy - size - 26}" width="28" height="22" rx="4" fill="${d}"/>`);
-  }
-  // 成體以上：翅膀／披風／鬍子
-  if (st >= 3) {
-    if (kind === 'cute') g.unshift(`<path d="M${60 - size} ${cy} q-30 -26 -22 6 q6 18 22 10z" fill="#fff" opacity=".85"/><path d="M${60 + size} ${cy} q30 -26 22 6 q-6 18 -22 10z" fill="#fff" opacity=".85"/>`);
-    else if (kind === 'cool') g.unshift(`<path d="M${60 - size + 6} ${cy - 10} q-26 30 -10 56 h${2 * size - 12} q16 -26 -10 -56z" fill="${d}" opacity=".9"/>`);
-    else g.push(`<path d="M${60 - 4} ${cy + 6} q-14 -10 -22 2 q10 4 22 0z" fill="${K.eye}"/><path d="M${60 + 4} ${cy + 6} q14 -10 22 2 q-10 4 -22 0z" fill="${K.eye}"/>`);
-  }
-  // 究極：皇冠＋光環＋星星
-  if (st >= 4) {
-    g.unshift(`<circle cx="60" cy="${cy}" r="${size + 14}" fill="none" stroke="#ffd23f" stroke-width="3" stroke-dasharray="6 8" opacity=".8"/><circle cx="60" cy="${cy}" r="${size + 8}" fill="rgba(255,210,63,.12)"/>`);
-    const top = cy - size - (st >= 2 && kind === 'funny' ? 28 : 4);
-    g.push(`<path d="M${60 - 16} ${top} l6 -14 l10 10 l10 -10 l6 14z" fill="#ffd23f" stroke="#a87a00" stroke-width="2" stroke-linejoin="round"/><path d="M16 30l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#ffd23f"/><path d="M104 44l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#5ff2d0"/>`);
-  }
-  g.push(gearSVG(wear, 60, cy, size));
-  return `<svg viewBox="0 -18 120 138" aria-hidden="true"><ellipse cx="60" cy="112" rx="${size + 6}" ry="6" fill="rgba(0,0,0,.35)"/>${g.join('')}</svg>`;   // 上方留空間給帽子、皇冠
+  const [hx, hy, hr, top] = PET_HEAD[kind][st];
+  return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/><image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gearSVG(wear, hx, hy, hr, top)}</svg>`;
 }
 function openPet() {
   show('pet'); renderPet();
