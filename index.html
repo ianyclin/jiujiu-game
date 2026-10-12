@@ -1429,7 +1429,7 @@ function hud() {
   const ready = !!M.boss && !M.boss.dead && M.missiles > 0;
   f.classList.toggle('ready', ready);
   const f2 = $('#m-fire2'); f2.hidden = !ready;   // 鍵盤上方的大發射鈕：魔王在場且有飛彈才出現
-  if (ready) f2.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffd23f"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#ffffff"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>發射 ×${M.missiles}`;
+  if (ready) f2.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffd23f"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#ffffff"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>發射`;
   $('#m-score').textContent = M.score;
   $('#m-wave').textContent = M.bossWave ? `第 ${M.wave} 波・魔王` : `第 ${M.wave} 波`;
   const c = $('#m-combo'), mult = 1 + Math.min(4, Math.floor(M.combo / 5));
