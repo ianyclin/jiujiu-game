@@ -71,6 +71,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .key.hit{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge);background:linear-gradient(#30587d,#22405f)}
 .aq{font-family:var(--f-num);font-size:clamp(32px,8.4vw,44px);display:flex;align-items:center;justify-content:center;gap:.22em;white-space:nowrap;line-height:1.1}
 .aq.dim{font-family:var(--f-zh);font-size:18px;color:var(--muted);font-weight:700}
+.aq.seq,.half .aq.seq{font-size:clamp(24px,6.4vw,38px);gap:.1em}
+.qcard .aq.seq{font-size:clamp(30px,8.6vw,54px)}
 .slot{display:inline-grid;place-items:center;width:.82em;height:1.08em;border-radius:.16em;background:rgba(255,255,255,.07);border-bottom:4px solid var(--muted);font-style:normal;color:var(--sun)}
 .slot.on{border-color:var(--sun);background:rgba(255,210,63,.1)}
 .hint{font-size:14px;color:#ff9a9a;font-weight:700;min-height:1.3em;text-align:center}
@@ -548,6 +550,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台自動瞄準<b>最低的那顆</b>。</li>
         <li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。</li>
+        <li>有時候流星上是一串數字「7、14、?、28」，那是 7 的乘法表，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
         <li>流星掉到小鎮會<b>扣一顆心</b>。一整波都沒失誤 +50 分。</li>
         <li>每 5 波出現<b>錯題魔王</b>，專出你最常錯的題目，要連續答對 5 題以上才打得倒（波數越高血越多）。打倒 +200 分、<b>必掉寶箱</b>。</li>
         <li>魔王掉到小鎮會<b>扣 2 顆心</b>，一擊即死模式等於直接結束。</li>
@@ -641,7 +644,14 @@ function pickFact(pool) {
   recent.push(pick.k); if (recent.length > 5) recent.shift();
   return pick;
 }
-function makeQ(f, rev) {
+// 數列題：取包含 n×k 的連續四個倍數（n ≥ 2），把 n×k 那格換成問號；答題紀錄仍算在 n×k 這題上
+function makeQ(f, rev, seq) {
+  if (seq && f.op === '×' && f.a >= 2 && Math.random() < 0.15) {
+    const n = f.a, k = f.b, s = clamp(k - ri(0, 3), 1, 6);
+    const terms = [0, 1, 2, 3].map(i => n * (s + i)), hide = k - s;
+    const show = terms.map((v, i) => i === hide ? '?' : String(v));
+    return { f, k: f.k, seq: true, ans: f.ans, text: show.join('、'), lines: [show.slice(0, 2).join('、'), show.slice(2).join('、')] };
+  }
   if (rev && f.op === '×' && Math.random() < 0.2) {
     const hideA = Math.random() < 0.5;
     return { f, k: f.k, rev: true, ans: hideA ? f.a : f.b, text: hideA ? `? × ${f.b} = ${f.ans}` : `${f.a} × ? = ${f.ans}` };
@@ -944,8 +954,8 @@ let M = null, curT = null, tA = -Math.PI / 2, kick = 0, tHurt = 0, domeFlash = 0
 function newMeteor(q, boss) {
   const fs = boss ? clamp(W * 0.055, 22, 32) : clamp(W * 0.052, 19, 25);
   g.font = `${fs}px ${NUMF}`;
-  const lines = q.text.split(' = ');
-  let tw = 0; lines.forEach((s, i) => { tw = Math.max(tw, g.measureText(i ? '= ' + s : s).width); });
+  const lines = q.lines || q.text.split(' = ');
+  let tw = 0; lines.forEach((s, i) => { tw = Math.max(tw, g.measureText(q.lines ? s : (i ? '= ' + s : s)).width); });
   const base = boss ? clamp(W * 0.17, 64, 98) : clamp(W * 0.075, 31, 44);
   const r = boss ? base : Math.max(base, tw * 0.58 + 10, lines.length * fs * 0.62 + 12);
   const pts = []; for (let i = 0; i < 12; i++) pts.push(r * rnd(0.84, 1.05));
@@ -989,7 +999,7 @@ function banner(t, cls) {
 function bossQ() {
   const ws = weakest(10);
   const pool = ws.length >= 4 ? ws : MUL.filter(f => f.a > 2 && f.b > 2);
-  return makeQ(pickFact(pool), true);
+  return makeQ(pickFact(pool), true, false);
 }
 function spawnBoss() {
   const m = newMeteor(bossQ(), true);
@@ -1054,7 +1064,7 @@ function updateMeteor(dt) {
   const smalls = M.list.filter(m => !m.boss).length;
   if (!M.list.length && M.spawnT > 0.5 && M.bossDelay <= 0) M.spawnT = 0.5;
   if (M.spawnT <= 0) {
-    if (smalls < (M.boss ? 2 : M.max)) M.list.push(newMeteor(makeQ(pickFact(), M.wave >= 2), false));
+    if (smalls < (M.boss ? 2 : M.max)) M.list.push(newMeteor(makeQ(pickFact(), M.wave >= 2, M.wave >= 2), false));
     M.spawnT = M.int * (M.boss ? 1.9 : 1) * rnd(0.8, 1.2);
   }
   for (const m of M.list) {
@@ -1327,8 +1337,8 @@ function drawRock(m, tgt) {
     for (let i = 0; i < m.hpMax; i++) { g.fillStyle = i < m.hp ? '#ff6161' : 'rgba(255,255,255,.18)'; rr(-m.hpMax * (pw + 3) / 2 + i * (pw + 3), -r - 22, pw, 8, 3); g.fill(); }
   }
   const parts = m.q.text.split(' = ');
-  const L = parts.length === 2 ? [parts[0], '= ' + parts[1]] : [parts[0]];
-  if (m.revealed) L.push(m.q.rev ? `? = ${m.q.ans}` : `= ${m.q.ans}`);
+  const L = m.q.lines ? m.q.lines.slice() : parts.length === 2 ? [parts[0], '= ' + parts[1]] : [parts[0]];
+  if (m.revealed) L.push(m.q.rev || m.q.seq ? `? = ${m.q.ans}` : `= ${m.q.ans}`);
   const fs = m.fs, lh = fs * 1.08, y0 = ty - (L.length - 1) * lh / 2;
   g.font = `${fs}px ${NUMF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
   let tw = 0; for (const s of L) tw = Math.max(tw, g.measureText(s).width);
@@ -1395,14 +1405,14 @@ function hud() {
 }
 let lastBar = '';
 const slots = (n, buf) => { let h = ''; for (let i = 0; i < n; i++) h += `<i class="slot${buf[i] ? ' on' : ''}">${buf[i] || ''}</i>`; return h; };
-const qHTML = (q, buf) => q.rev ? q.text.replace('?', slots(String(q.ans).length, buf)) : `${q.text} = ${slots(String(q.ans).length, buf)}`;
+const qHTML = (q, buf) => (q.rev || q.seq) ? q.text.replace('?', slots(String(q.ans).length, buf)) : `${q.text} = ${slots(String(q.ans).length, buf)}`;
 function bar() {
   if (!M) return;
   const tg = M.lock || curT;
   let h;
   if (M.over) h = '<div class="aq dim">小鎮的燈熄了…</div>';
   else if (!tg) h = '<div class="aq dim">流星接近中…</div><div class="hint"></div>';
-  else h = `<div class="aq">${qHTML(tg.q, M.buf)}</div><div class="hint">${tg.revealed ? `答案是 ${tg.q.ans}，照著打一次` : ''}</div>`;
+  else h = `<div class="aq${tg.q.seq ? ' seq' : ''}">${qHTML(tg.q, M.buf)}</div><div class="hint">${tg.revealed ? `答案是 ${tg.q.ans}，照著打一次` : ''}</div>`;
   if (h !== lastBar) { $('#m-answer').innerHTML = h; lastBar = h; }
 }
 function pause(on) {
@@ -1424,9 +1434,9 @@ function startGhost() {
   $('#g-q').innerHTML = ''; $('#g-hint').textContent = ''; $('#g-prog').textContent = '準備好了嗎？';
   countdown(() => { G.started = true; G.t0 = now(); nextGQ(); });
 }
-function nextGQ() { G.q = makeQ(pickFact(), true); G.buf = ''; G.rev = false; G.qt = now(); gRender(); }
+function nextGQ() { G.q = makeQ(pickFact(), true, true); G.buf = ''; G.rev = false; G.qt = now(); gRender(); }
 function gRender() {
-  $('#g-q').innerHTML = G.q ? qHTML(G.q, G.buf) : '';
+  $('#g-q').innerHTML = G.q ? qHTML(G.q, G.buf) : ''; $('#g-q').classList.toggle('seq', !!(G.q && G.q.seq));
   $('#g-hint').textContent = G.rev ? `答案是 ${G.q.ans}，照著打一次` : '';
   $('#g-prog').textContent = `第 ${Math.min(G.i + 1, G.n)} / ${G.n} 題`;
   $('#g-you').style.left = (G.i / G.n * 100) + '%';
@@ -1509,7 +1519,7 @@ function vPause(on) {
 }
 function newVQ(i) {
   const p = V.p[i];
-  if (i === 0) p.q = makeQ(pickFact(), false);
+  if (i === 0) p.q = makeQ(pickFact(), false, true);
   else if (vHard) { const a = ri(11, 19), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   else { const a = ri(2, 9), b = ri(2, 9); p.q = { k: null, text: `${a} × ${b}`, ans: a * b }; }
   p.buf = ''; p.rev = false; p.qt = now();
@@ -1517,7 +1527,7 @@ function newVQ(i) {
 }
 function vRender(i) {
   const p = V.p[i], e = vEl[i];
-  e.querySelector('[data-q]').innerHTML = p.q ? qHTML(p.q, p.buf) : '';
+  e.querySelector('[data-q]').innerHTML = p.q ? qHTML(p.q, p.buf) : ''; e.querySelector('[data-q]').classList.toggle('seq', !!(p.q && p.q.seq));
   e.querySelector('[data-hint]').textContent = p.rev ? `答案是 ${p.q.ans}，照著打一次` : '';
   e.classList.toggle('locked', now() < p.lock);
 }
@@ -1698,7 +1708,7 @@ function startBomb() {
   ['#bm-tiles', '#bm-task'].forEach(s => { $(s).innerHTML = ''; });
   ['#bm-msg', '#bm-why', '#bm-found'].forEach(s => { $(s).textContent = ''; });
   $('#bm-next').hidden = true; $('#bm-time').textContent = '0.0'; $('#bm-prog').textContent = '準備好了嗎？';
-  bombHead(''); $('#bm-n').textContent = '?'; bombFuse(1);
+  $('#bm-head').hidden = true;   // 倒數時先不出現炸彈，第一題才亮相
   countdown(() => { if (BM) { BM.t0 = now(); nextBomb(); } });
 }
 function bombHead(cls) { $('#bm-head').className = 'bm-head' + (cls ? ' ' + cls : ''); $('#bm-bomb').setAttribute('class', 'bomb' + (cls ? ' ' + cls : '')); }
@@ -1723,7 +1733,7 @@ function nextBomb() {
   const n = wpick([2, 3, 4, 5, 6, 7, 8, 9].filter(n => n !== BM.lastN), tableW); BM.lastN = n;
   const b = bombBoard(n);
   BM.round = { n, tiles: b.tiles, count: b.count, got: new Set(), t0: now(), state: 'live', sec: -1, sparkT: 0 };
-  bombHead(''); $('#bm-n').textContent = n; bombFuse(1);
+  $('#bm-head').hidden = false; bombHead(''); $('#bm-n').textContent = n; bombFuse(1);
   BM.i++;
   $('#bm-prog').textContent = `第 ${BM.i} / ${BM.n} 顆`;
   $('#bm-task').innerHTML = `點掉所有 <b>${n}</b> 的倍數<small>就是 ${n} × 1 到 ${n} × 9 的答案</small>`;
