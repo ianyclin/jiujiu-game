@@ -64,7 +64,7 @@
 
 ### 寵物
 - 星塵 `DB.pet.dust` 只增不減（餵食才扣）：答對一題 +1（所有模式）、完美一波 +5、魔王 +20、每日任務單項 +10、全完成 +30。
-- 三隻可選（`cute` 毛毛／`cool` 小龍／`funny` 呱呱），外加第四顆**傳說蛋** `legend` 星狐：`legendUnlocked()` = 徽章 ≥ `LEGEND_BADGES`（30）且 `released` 至少一筆；圖檔到位前 `LEGEND_READY = false`，卡片一律顯示鎖定剪影與「即將登場」；到位後改 true、補 `PET_HEAD.legend`，卡片改顯示解鎖條件進度。放回家的地點是「星空」。點蛋後跳**取名視窗** `#o-name`：預設帶入建議名字（`NAME_SUG`，可直接確定）、可改 6 字內，這是全 app 唯一會叫出系統鍵盤的地方。名字存 `DB.pet.name`，`petName()` 取用；放回家時名字一起記進 `released`。餵一次 10 星塵，`fed` 累積到 30／100／250／500 升到幼體／少年／成體／究極。
+- 三隻可選（`cute` 毛毛／`cool` 小龍／`funny` 呱呱），外加第四顆**傳說蛋** `legend` 星狐：`legendUnlocked()` = 徽章 ≥ `LEGEND_BADGES`（30）且 `released` 至少一筆；圖已到位（`assets/pets/legend-*.png`，`LEGEND_READY = true`），沒解鎖時卡片顯示「？？？」剪影與條件進度（徽章 12/30＋送一隻回家）。放回家的地點是「星空」。點蛋後跳**取名視窗** `#o-name`：預設帶入建議名字（`NAME_SUG`，可直接確定）、可改 6 字內，這是全 app 唯一會叫出系統鍵盤的地方。名字存 `DB.pet.name`，`petName()` 取用；放回家時名字一起記進 `released`。餵一次 10 星塵，`fed` 累積到 30／100／250／500 升到幼體／少年／成體／究極。
 - 外觀是圖檔 `assets/pets/{kind}-{stage}.png`（400×400 透明 PNG、256 色，三隻共約 250 KB）：來源是 ChatGPT 生成的三張「角色成長圖」（一隻五階段並排、白底），用 `tools/cut-pets.py` 切圖、去白底、統一比例、底部對齊。`petSVG(kind, st, wear)` 回傳一個 120 單位的 SVG，裡面放 `<image>` 加地上陰影，配件用 `gearSVG()` 疊上去。
 - `PET_HEAD[kind][stage] = [hx, hy, hr, top]`：每張圖的頭中心、頭半徑、圖最高點（120 單位）。眼睛約在 `hy - 0.25*hr`（墨鏡對這裡），光環與氣球用 `top` 定位。換圖之後要重量這張表（截圖戴墨鏡看位置）。
 - 升級時 toast＋彩帶＋里程碑音效。**沒有飢餓、沒有倒扣、沒有提醒**，刻意不做壓力。
