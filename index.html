@@ -146,7 +146,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 @keyframes hsh{50%{transform:scale(1.18);filter:drop-shadow(0 0 8px rgba(255,210,63,.9))}}
 .fire{display:flex;gap:1px;align-items:center;min-height:44px;border:2px solid transparent;background:transparent;border-radius:12px;padding:4px 7px;cursor:pointer;touch-action:manipulation}
 .fire svg{width:24px;height:24px}
-@media (max-width:400px){.fire{padding:2px 3px;gap:0}.fire svg{width:17px;height:17px}.hearts svg{width:19px;height:19px}.hud{gap:4px}}
+@media (max-width:400px){.score small{letter-spacing:.06em}.fire{padding:2px 3px;gap:0}.fire svg{width:17px;height:17px}.hearts svg{width:19px;height:19px}.hud{gap:4px}}
 .score{min-width:0} .score small{white-space:nowrap}
 .fire.ready{border-color:var(--ember);background:rgba(255,174,87,.18)}
 .hearts svg{width:22px;height:22px}
@@ -169,9 +169,9 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .card.help{gap:8px;text-align:left}
 .xbtn{align-self:flex-end;margin:-6px -6px -44px 0;z-index:2;font-size:18px;font-weight:900;color:var(--muted)}
 .help h3{text-align:center;margin-bottom:4px}
-.help .hhead{position:sticky;top:-22px;z-index:2;margin:-22px -20px 0;padding:16px 20px 8px;background:#152a45;border-bottom:1px solid var(--line)}
-.help .hhead h3{margin:0}
-.help .hhead .xbtn{position:absolute;top:10px;right:12px;margin:0}
+.card .hhead{position:sticky;top:-22px;z-index:2;margin:-22px -20px 0;padding:16px 20px 8px;background:#152a45;border-bottom:1px solid var(--line)}
+.card .hhead h3{margin:0}
+.card .hhead .xbtn{position:absolute;top:10px;right:12px;margin:0}
 .brand-t{color:var(--sun);text-shadow:0 2px 0 #a87a00}
 .help h4{margin:8px 0 0;font-size:15px;color:var(--sun);letter-spacing:.08em}
 .rotate{display:none;position:fixed;inset:0;z-index:30;background:var(--ink);place-items:center;text-align:center;font-weight:900;font-size:22px;color:var(--paper)}
@@ -319,6 +319,7 @@ html,body{overscroll-behavior:none}
 .bomb.boom .burst{animation:burst .75s ease-out forwards}
 @keyframes burst{0%{transform:scale(.15) rotate(0);opacity:1}55%{transform:scale(1.7) rotate(18deg);opacity:1}100%{transform:scale(2.4) rotate(30deg);opacity:0}}
 .bm-head.boom .spark,.bm-head.ok .spark{opacity:0}
+.fuseline{transition:opacity .5s} .bm-head.boom .fuseline{opacity:0}   /* 炸彈炸掉了，引線不要單獨浮著 */
 .bm-head.ok .fuse{stroke:var(--mint)}
 .bomb.ok .body{animation:pop .4s ease}
 .bomb.ok .body circle{stroke:var(--mint)}
@@ -400,7 +401,7 @@ html,body{overscroll-behavior:none}
 .wrongs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .wrongs i{font-style:normal;font-family:var(--f-num);background:rgba(255,97,97,.14);color:#ffbcbc;border-radius:10px;padding:4px 10px;font-size:17px}
 .legal{margin:0;font-size:11px;line-height:1.5;color:rgba(147,169,192,.7);text-align:center}
-.legal a,.about-fb{color:var(--ice);text-decoration:underline;text-underline-offset:2px}
+.legal a,.about-fb{color:var(--ice);text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:12px 6px;margin:-12px -6px}   /* 觸控範圍 ≥ 44px，版面不變 */
 #gate-pad{margin-block:4px}
 .setlist{display:grid;gap:8px;text-align:left}
 .setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
@@ -727,7 +728,7 @@ html,body{overscroll-behavior:none}
 
   <div class="overlay" id="o-wrong" hidden>
     <div class="card">
-      <h3>錯題本</h3>
+      <div class="hhead"><h3>錯題本</h3><button class="icon-btn xbtn" type="button" id="w-close2" aria-label="關閉">✕</button></div>
       <p>這些是最近常錯的題目，遊戲裡會比較常出現。學會了可以按「清除」，它就不會特別常出現。</p>
       <div class="wlist" id="w-list"></div>
       <div class="btn-col">
@@ -1333,7 +1334,7 @@ function drawWorld(gy, dt) {
     if (hr && hr.height) { if (hr.top - safeTop() > 70) moonY = hr.top - 40; else { const bl = hd.querySelector('button').getBoundingClientRect(), rg = document.createRange(); rg.selectNodeContents(hd.querySelector('h2')); const h2 = rg.getBoundingClientRect(); moonY = hr.top + hr.height / 2; moonX = (bl.right + h2.left) / 2; if (h2.left - bl.right < 100) moonY = -200; } }   // 量標題「文字」的左邊不量 h2 的盒子（盒子在某些瀏覽器會撐滿）；矮螢幕：放在「主選單」鈕與標題之間，不壓到下面的格子；星塵位數多到塞不下就不畫
     else moonY = 112 + safeTop();
   }
-  const mx = menuMoon ? moonX : W * 0.82, my = menuMoon ? moonY : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
+  const mx = menuMoon ? moonX : W - 30, my = menuMoon ? moonY : safeTop() + 112, mr = menuMoon ? 16 : 18, mgr = menuMoon ? 64 : 72;   // 遊戲中：右上角、計時膠囊與 HUD 下面一點，小一號不擋題目
   const mg = g.createRadialGradient(mx, my, 8, mx, my, mgr);
   mg.addColorStop(0, 'rgba(255,240,200,.3)'); mg.addColorStop(1, 'rgba(255,240,200,0)');
   g.fillStyle = mg; g.beginPath(); g.arc(mx, my, mgr, 0, 6.283); g.fill();
@@ -1917,9 +1918,9 @@ function hud() {
   f.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>'.repeat(M.missiles);
   f.setAttribute('aria-label', `飛彈 ${M.missiles} 枚，點一下發射`);
   const ready = !!M.boss && !M.boss.dead && M.missiles > 0;
-  f.classList.toggle('ready', ready);
+  f.classList.toggle('ready', ready); if (ready) f.hidden = true;   // 魔王在場時庫存顯示在大發射鈕上，HUD 不重複（魔王波的 HUD 會擠到連擊）
   const f2 = $('#m-fire2'); f2.hidden = !ready;   // 鍵盤上方的大發射鈕：魔王在場且有飛彈才出現
-  if (ready) f2.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffd23f"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#ffffff"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>發射`;
+  if (ready) f2.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffd23f"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#ffffff"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>發射${M.missiles > 1 ? ` ×${M.missiles}` : ''}`;
   $('#m-score').textContent = M.score;
   $('#m-wave').textContent = M.bossWave ? `第 ${M.wave} 波・魔王` : `第 ${M.wave} 波`;
   const c = $('#m-combo'), mult = 1 + Math.min(4, Math.floor(M.combo / 5));
@@ -2795,6 +2796,7 @@ $('#w-clear').addEventListener('click', () => {
   else { wArm = Date.now(); $('#w-clear').textContent = '再按一次確認清空'; setTimeout(() => { if (Date.now() - wArm >= 2900) $('#w-clear').textContent = '全部清空'; }, 3000); }
 });
 $('#w-close').addEventListener('click', () => { $('#o-wrong').hidden = true; });
+$('#w-close2').addEventListener('click', () => { $('#o-wrong').hidden = true; });
 $('#go-wrong').addEventListener('click', openWrong);
 
 /* ================= 連擊里程碑 ================= */
