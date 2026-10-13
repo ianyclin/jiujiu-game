@@ -39,6 +39,15 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
 /* ---------- 主選單 ---------- */
 #s-menu,#s-map,#s-pet{overflow-y:auto}
+#s-menu{position:absolute}
+.menu-in{position:relative;z-index:1;pointer-events:none} .menu-in>*{pointer-events:auto}   /* 空白處讓點擊穿到後面走來走去的寵物 */
+.menu-pet{position:absolute;top:calc(env(safe-area-inset-top,0px) + 4px);left:0;width:64px;height:64px;padding:0;border:0;background:none;cursor:pointer;z-index:0;animation:petWalk 16s ease-in-out infinite alternate}
+.menu-pet span{display:block;width:100%;height:100%;animation:petFace 32s steps(1) infinite,petBob .5s ease-in-out infinite alternate}
+.menu-pet svg{width:100%;height:100%;overflow:visible}
+@keyframes petWalk{to{transform:translateX(calc(100vw - 64px))}}
+@keyframes petFace{0%{transform:scaleX(1)}50%{transform:scaleX(-1)}}
+@keyframes petBob{to{transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){.menu-pet,.menu-pet span{animation:none}}
 .menu-in{margin-block:auto;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3.2vh,30px);padding-block:24px;width:100%}
 .brand{display:flex;align-items:center;gap:14px}
 .brand-mark{font-weight:900;font-size:clamp(68px,19vw,116px);line-height:.9;color:var(--sun);letter-spacing:-.05em;text-shadow:0 5px 0 #a87a00,0 14px 40px rgba(255,210,63,.35);transform:rotate(-5deg)}
@@ -345,6 +354,8 @@ html,body{overscroll-behavior:none}
 .gear button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:78px;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
 .gear button img{height:32px;width:auto;max-width:52px}
 .gear button small{font-size:11px;color:var(--muted);font-weight:700}
+.gear button.mystery{border-style:dashed;border-color:rgba(159,220,255,.45);background:rgba(159,220,255,.05);color:var(--muted)}
+.gear button.mystery .qmark{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:2px dashed rgba(159,220,255,.6);color:var(--ice);font-weight:900;font-size:18px}
 .gear button[aria-pressed="true"]{border-color:var(--sun);background:rgba(255,210,63,.14);color:var(--sun)}
 .gear button:disabled{opacity:.45;cursor:default}
 .gear-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
@@ -430,6 +441,7 @@ html,body{overscroll-behavior:none}
 <div id="app">
 
   <section class="screen" id="s-menu">
+    <button class="menu-pet" id="menu-pet" type="button" aria-label="寵物" hidden><span id="menu-pet-img"></span></button>
     <div class="menu-in">
       <button class="who" type="button" id="go-who" aria-label="換人"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="currentColor"/></svg><span id="who-name">誰在玩？</span></button>
       <header class="brand">
@@ -1296,7 +1308,7 @@ function drawWorld(gy, dt) {
   // 主選單時月亮縮小躲到右上角，不壓到「流星隊」標題；遊戲中維持原位
   const menuMoon = mode === 'menu' || mode === 'pet' || mode === 'map';
   // 主選單：月亮跟著「九九流星隊」標題那一列（DOM 位置已含瀏海安全區），不會被狀態列或「誰在玩」鈕蓋掉
-  let moonY = 46 + safeTop();
+  let moonY = 112 + safeTop();   // 寵物頁、星圖：標題列右邊有數字，月亮放低一點
   if (mode === 'menu') { const br = $('#s-menu .brand').getBoundingClientRect(); if (br.height) moonY = br.top + Math.min(26, br.height * 0.28); }
   const mx = menuMoon ? W - 44 : W * 0.82, my = menuMoon ? moonY : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
   const mg = g.createRadialGradient(mx, my, 8, mx, my, mgr);
@@ -2482,8 +2494,9 @@ function renderPet() {
 let byeArm = 0;
 function renderGear() {
   const B_ = DB.daily.badges, W = wearObj();
-  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴，每個位置各一樣）</div>' + GEAR.filter(g => !g.hidden || B_ >= g.at).map(g => {
+  $('#pet-gear').innerHTML = '<div class="gear-t">配件（集到幾個徽章就能戴，每個位置各一樣）</div>' + GEAR.map(g => {
     const ok = B_ >= g.at, on = W[g.slot] === g.id;
+    if (g.hidden && !ok) return `<button type="button" class="mystery" disabled aria-label="神祕配件，徽章 ×${g.at}"><span class="qmark">？</span>？？？<small>徽章 ×${g.at}</small></button>`;   // 神祕配件：先給個問號，到門檻才現身
     return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><img src="assets/gear/${g.id}.png" alt="">${g.n}<small>${ok ? (on ? '戴著' : SLOT_NAME[g.slot]) : `徽章 ×${g.at}`}</small></button>`;
   }).join('');
 }
@@ -2543,6 +2556,7 @@ $('#name-ok').addEventListener('click', () => {
 $('#name-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#name-ok').click(); } e.stopPropagation(); });
 $('#pet-feed').addEventListener('click', feedPet);
 $('#go-pet').addEventListener('click', openPet);
+$('#menu-pet').addEventListener('click', openPet);
 
 /* ================= 星圖 ================= */
 let resetArm = 0;
@@ -2839,6 +2853,8 @@ function refreshMenu() {
   $('#brand-note').textContent = isStdRange() ? '打下流星・點亮星圖' : rangeText().replace('目前', '');
   $('#brand-note').classList.toggle('on', !isStdRange());
   $('#set-title').textContent = whoCur().name ? `設定（${whoCur().name}）` : '設定';   // 連續幫幾個孩子設定時知道現在是誰的
+  const mp = $('#menu-pet'), hasPet = !!(DB.pet.kind && PET_KINDS[DB.pet.kind]);
+  mp.hidden = !hasPet; if (hasPet) { const html = petSVG(DB.pet.kind, petStage(DB.pet.fed), wearObj()); if (mp.dataset.k !== html.length + DB.pet.kind) { $('#menu-pet-img').innerHTML = html; mp.dataset.k = html.length + DB.pet.kind; } }   // 主選單走來走去的寵物
   renderQuests(); renderWho();
 }
 function home() { show('menu'); refreshMenu(); }

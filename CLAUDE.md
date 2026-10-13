@@ -76,7 +76,8 @@
 - `PET_HEAD[kind][stage] = [hx, hy, hr, top]`：每張圖的頭中心、頭半徑、圖最高點（120 單位）。眼睛約在 `hy - 0.25*hr`（墨鏡對這裡），光環與氣球用 `top` 定位。換圖之後要重量這張表（截圖戴墨鏡看位置）。
 - 升級時 toast＋彩帶＋里程碑音效。**沒有飢餓、沒有倒扣、沒有提醒**，刻意不做壓力。
 - 寵物頁只顯示名字、階段、進度條、餵食鈕；不寫「再餵幾次」、不寫星塵來源（在遊戲說明）。
-- **配件**（`GEAR`，十樣）是圖檔 `assets/gear/{id}.png`（`tools/cut-gear.py` 切自 ChatGPT 貼紙圖，約 90 KB）。徽章門檻：蝴蝶結 1、圍巾 2、墨鏡 4、氣球 6、棒球帽 8、圓框眼鏡 10、領結 12、星星髮夾 15、魔法師帽 20、彩虹光環 30。另外兩樣**隱藏稀有**配件（`hidden: true`、`tools/cut-rare.py` 切圖）：星河之翼 40（back，依整隻高度 `117 - top` 縮放）、宇宙泡泡 50（back，`front: 0.4` 會在寵物前面再疊一層半透明，看起來像罩住；切圖時泡泡內淡色已改半透明）。五個位置（`slot`：head／face／neck／side 畫在寵物前面，back 畫在寵物後面）可同時各戴一樣，存 `DB.pet.wear = { head, face, neck, side, back }`（舊存檔是字串，`wearObj()` 自動轉並補欄位）。項目加 `hidden: true` 就是**隱藏配件**：徽章沒到門檻前清單上不出現，到門檻時 toast「神祕配件出現了」。每樣的 `place(hx, hy, hr, top)` 回 [中心 x, 中心 y, 寬, 旋轉]，`gearSVG()` 放 `<image>`；換配件圖後要重看截圖對位。解鎖看 `DB.daily.badges`（不另存），到門檻時 toast 提示。
+- 主選單最上面一排有一隻走來走去的寵物（`#menu-pet`，`refreshMenu()` 用 `petSVG` 畫目前的寵物與配件，CSS 動畫來回走、轉身、上下晃，減少動態時不動），點牠進寵物頁；`.menu-in` 用 `pointer-events:none` 讓空白處的點擊穿到牠。
+- **配件**（`GEAR`，十樣）是圖檔 `assets/gear/{id}.png`（`tools/cut-gear.py` 切自 ChatGPT 貼紙圖，約 90 KB）。徽章門檻：蝴蝶結 1、圍巾 2、墨鏡 4、氣球 6、棒球帽 8、圓框眼鏡 10、領結 12、星星髮夾 15、魔法師帽 20、彩虹光環 30。另外兩樣**隱藏稀有**配件（`hidden: true`、`tools/cut-rare.py` 切圖）：星河之翼 40（back，依整隻高度 `117 - top` 縮放）、宇宙泡泡 50（back，`front: 0.4` 會在寵物前面再疊一層半透明，看起來像罩住；切圖時泡泡內淡色已改半透明）。五個位置（`slot`：head／face／neck／side 畫在寵物前面，back 畫在寵物後面）可同時各戴一樣，存 `DB.pet.wear = { head, face, neck, side, back }`（舊存檔是字串，`wearObj()` 自動轉並補欄位）。項目加 `hidden: true` 就是**隱藏配件**：徽章沒到門檻前清單上只顯示虛線問號卡「？？？ 徽章 ×40」（`.mystery`），到門檻時現身並 toast「神祕配件出現了」。每樣的 `place(hx, hy, hr, top)` 回 [中心 x, 中心 y, 寬, 旋轉]，`gearSVG()` 放 `<image>`；換配件圖後要重看截圖對位。解鎖看 `DB.daily.badges`（不另存），到門檻時 toast 提示。
 - **放回家**：究極（`fed ≥ 500`）時出現「放牠回山上／海裡／叢林」（`PET_HOME`），兩次點擊確認；寵物飄走動畫後 `released` 記一筆、`kind/fed` 歸零、星塵與配件保留，可以再挑新蛋。回家的夥伴列在寵物頁下方。
 
 ### 幽靈競速
