@@ -261,6 +261,8 @@ html,body{overscroll-behavior:none}
 .map-head h2{margin:0;font-size:24px;font-weight:900}
 .map-head h2 b{font-family:var(--f-num);font-weight:400;color:var(--sun);margin-left:8px}
 .grid99{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;width:100%;max-width:520px}
+/* 平板：手機版面放大一點，不然卡片與鍵盤只佔三分之一寬；12×12 星圖的格子也要 ≥ 44px */
+@media (min-width:700px) and (min-height:700px){.modes,.menu-foot{max-width:560px}.pad{max-width:520px}.half .pad{max-width:440px}.cmp-opts,.tiles{max-width:520px}.card{max-width:480px}.grid99{max-width:660px}.grid99.wide .cell,.grid99.wide .h{font-size:17px}.cell,.grid99 .h{font-size:18px}}
 .grid99.wide{gap:2px} .grid99.wide .cell{font-size:clamp(11px,3vw,15px);border-radius:6px} .grid99.wide .h{font-size:clamp(11px,3vw,15px)}
 .grid99 .h{font-family:var(--f-num);color:var(--muted);display:grid;place-items:center;font-size:clamp(12px,3.4vw,18px)}
 .cell{aspect-ratio:1;border-radius:9px;display:grid;place-items:center;font-family:var(--f-num);font-size:clamp(11px,3.2vw,17px);border:1px solid var(--line);background:rgba(255,255,255,.03);color:#5d7590;cursor:pointer;padding:0;max-width:100%}
