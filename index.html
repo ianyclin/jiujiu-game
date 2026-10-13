@@ -233,7 +233,8 @@ html,body{overscroll-behavior:none}
 .half .pad{max-width:360px;gap:7px}
 .half .key{height:clamp(44px,5.4vh,56px);font-size:clamp(20px,3.4vh,30px)}
 .half.locked .pad{opacity:.3;pointer-events:none}
-@media (min-height:700px){.half{padding-bottom:30px}}   /* 鍵盤離螢幕邊緣遠一點：上方那位的鍵盤（轉 180°）原本只離上緣 12px，iOS 會把貼邊的觸控先扣住看是不是系統手勢 */
+@media (min-height:760px){.half{padding-bottom:30px}}
+@media (max-height:600px){.half{padding:4px 12px 6px;gap:2px}.half .aq{font-size:24px}.half .hint{min-height:0}.half .pad{gap:5px}.band{height:50px}}   /* 很矮的螢幕（iPhone SE 一代）：拔河兩半壓緊，內容才不會蓋到中間的繩子；鍵仍是 44px */   /* 鍵盤離螢幕邊緣遠一點：上方那位的鍵盤（轉 180°）原本只離上緣 12px，iOS 會把貼邊的觸控先扣住看是不是系統手勢 */
 #s-versus.cpu .half.top{transform:none;justify-content:center}
 #s-versus.cpu .half.top .pad{display:none}
 #s-versus.cpu .half.top .aq{font-size:clamp(26px,7vw,40px)}
