@@ -220,7 +220,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .map-head h2{margin:0;font-size:24px;font-weight:900}
 .map-head h2 b{font-family:var(--f-num);font-weight:400;color:var(--sun);margin-left:8px}
 .grid99{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;width:100%;max-width:520px}
-.grid99.wide{gap:3px} .grid99.wide .cell{font-size:clamp(10px,2.8vw,15px);border-radius:7px} .grid99.wide .h{font-size:clamp(10px,2.8vw,15px)}
+.grid99.wide{gap:2px} .grid99.wide .cell{font-size:clamp(11px,3vw,15px);border-radius:6px} .grid99.wide .h{font-size:clamp(11px,3vw,15px)}
 .grid99 .h{font-family:var(--f-num);color:var(--muted);display:grid;place-items:center;font-size:clamp(12px,3.4vw,18px)}
 .cell{aspect-ratio:1;border-radius:9px;display:grid;place-items:center;font-family:var(--f-num);font-size:clamp(11px,3.2vw,17px);border:1px solid var(--line);background:rgba(255,255,255,.03);color:#5d7590;cursor:pointer;padding:0;max-width:100%}
 .cell.learn{background:rgba(255,174,87,.16);color:#ffd2a1;border-color:rgba(255,174,87,.45)}
@@ -841,7 +841,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>在「設定」裡點數字，<b>亮的才會出</b>。平常 1 到 9 都亮，就是九九乘法。</li>
         <li>還在學的時候，可以只留學過的，例如只亮 2 和 5。</li>
         <li>想挑戰就把 10、11、12 也點亮，答案最大到 144。</li>
-        <li>所有遊戲和星圖都會跟著改。最快紀錄也是分開記的。</li>
+        <li>所有遊戲和星圖都會跟著改。換了乘法表，最快紀錄會重新算。</li>
       </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
@@ -2093,7 +2093,7 @@ function bombBoard(n) {
   while (got.length < want) { const m = wpick(pool, m => weightOf(factNK(n, m / n))); pool.splice(pool.indexOf(m), 1); got.push(m); }
   const seen = new Set(), cand = [];
   // 數字都在 2～題庫最大答案（九九是 81）
-  const top = maxAns();
+  const top = Math.min(maxAns(), n * cols() + 10);   // 干擾數字別比這個表最大的倍數大太多，不然一看就知道不是
   const add = (v, w) => { if (v >= 2 && v <= top && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
   mults.forEach(m => { add(m - 1, 3); add(m + 1, 3); add(m - 2, 1.5); add(m + 2, 1.5); });
   for (let v = 10; v <= top; v++) if (String(v).includes(String(n))) add(v, 2);
@@ -2157,7 +2157,8 @@ function bombTap(i) {
     return;
   }
   const k = clamp(Math.round(v / r.n), 1, cols()), near = r.n * k;
-  explode(`${v} 不是 ${r.n} 的倍數。${r.n} × ${k} = ${near}，差了 ${Math.abs(v - near)}`, [factNK(r.n, k)], el);
+  if (Math.abs(v - near) <= 2) explode(`${v} 不是 ${r.n} 的倍數。${r.n} × ${k} = ${near}，差了 ${Math.abs(v - near)}`, [factNK(r.n, k)], el);
+  else { const f = MUL2.find(f => f.ans === v); explode(`${v} 不是 ${r.n} 的倍數${f ? `，它是 ${f.a} × ${f.b}` : ''}`, [], el); }   // 離倍數很遠的干擾數字不算哪一題答錯
 }
 function bombEndRound() { if (BM.i >= BM.n) { BM.end = now(); updateBomb(); } }
 function explode(why, facts, el) {
@@ -2415,7 +2416,7 @@ function openMap() {
 function mapInfoDefault() {
   const ws = MUL.filter(f => state(f.k) === 'weak').sort((a, b) => weightOf(b) - weightOf(a)).slice(0, 6);
   const seen = MUL.filter(f => DB.facts[f.k] && DB.facts[f.k].n).length;
-  const pre = isStdRange() ? '' : `目前只練 <b>${fmtTables()}</b> 的乘法表。`;
+  const pre = isStdRange() ? '' : rangeText().replace(/目前(只練|加上) (.+) 的乘法表/, '目前$1 <b>$2</b> 的乘法表') + '。';
   if (!seen) $('#map-info').innerHTML = pre + '還沒有練習紀錄。每一題答對 3 次以上、又快又穩，就會點亮成一顆星。';
   else if (ws.length) $('#map-info').innerHTML = `${pre}最常出錯：${ws.map(f => `<b>${f.a}×${f.b}</b>`).join('、')}<br>這些題目在遊戲裡會比較常出現。`;
   else $('#map-info').innerHTML = `${pre}已經遇過 <b>${seen}</b> 題，目前沒有特別容易錯的題目。點任一格可以看細節。`;
@@ -2606,7 +2607,7 @@ function refreshMenu() {
   $('#b-pet').textContent = DB.pet.dust;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
   renderTables();
-  const rn = $('#range-note'); rn.hidden = isStdRange(); rn.textContent = isStdRange() ? '' : `目前只練 ${fmtTables()} 的乘法表`;
+  const rn = $('#range-note'); rn.hidden = isStdRange(); rn.textContent = isStdRange() ? '' : rangeText();
   renderQuests();
 }
 function home() { show('menu'); refreshMenu(); }
@@ -2681,8 +2682,10 @@ $$('[data-set]').forEach(b => b.addEventListener('click', () => {
   if (k === 'music') DB.set.music ? musStart() : musStop();
 }));
 // 「2、5」「5 到 9」「2、5 到 9」這樣壓縮連續的數字
-function fmtTables() {
-  const t = tables(), out = [];
+const superStd = () => STD_TABLES.every(n => tables().includes(n));   // 九九全亮、再多 10 以上
+const rangeText = () => superStd() ? `目前加上 ${fmtTables(tables().filter(n => n > 9))} 的乘法表` : `目前只練 ${fmtTables()} 的乘法表`;
+function fmtTables(t = tables()) {
+  const out = [];
   for (let i = 0; i < t.length;) { let j = i; while (j + 1 < t.length && t[j + 1] === t[j] + 1) j++; out.push(j - i >= 2 ? `${t[i]} 到 ${t[j]}` : t.slice(i, j + 1).join('、')); i = j + 1; }
   return out.join('、');
 }
@@ -2692,6 +2695,7 @@ function renderTables() {
   $$('#set-tables button').forEach(b => b.setAttribute('aria-pressed', String(tables().includes(+b.dataset.t))));
   const c = MUL.length;
   $('#set-t-d').textContent = isStdRange() ? `1 到 9 都亮，就是九九乘法，${c} 題`
+    : superStd() ? `九九再加上 ${fmtTables(tables().filter(n => n > 9))} 的乘法表，最大到 ${cols()} × ${cols()}，${c} 題`
     : `只出 ${fmtTables()} 的乘法表${cols() > 9 ? `，最大到 ${cols()} × ${cols()}` : ''}，${c} 題`;
 }
 $('#set-tables').addEventListener('click', e => {
