@@ -223,7 +223,7 @@ html,body{overscroll-behavior:none}
 .prog{font-size:14px;color:var(--muted);font-weight:700;letter-spacing:.12em}
 
 /* ---------- 雙人拔河 ---------- */
-#s-versus{padding-inline:0}
+#s-versus{padding-inline:0;touch-action:none}   /* 兩個人同時按會被 iOS 當成雙指縮放而吃掉一邊的觸控：這個畫面不給任何手勢 */
 .half{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:8px 16px 12px;min-height:0;position:relative}
 .half.top{transform:rotate(180deg);background:radial-gradient(120% 90% at 50% 100%,rgba(255,174,87,.14),transparent 70%)}
 .half.bot{background:radial-gradient(120% 90% at 50% 100%,rgba(95,242,208,.12),transparent 70%)}
@@ -233,6 +233,8 @@ html,body{overscroll-behavior:none}
 .half .pad{max-width:360px;gap:7px}
 .half .key{height:clamp(44px,5.4vh,56px);font-size:clamp(20px,3.4vh,30px)}
 .half.locked .pad{opacity:.3;pointer-events:none}
+@media (min-height:760px){.half{padding-bottom:30px}}
+@media (max-height:600px){.half{padding:4px 12px 6px;gap:2px}.half .aq{font-size:24px}.half .hint{min-height:0}.half .pad{gap:5px}.band{height:50px}}   /* 很矮的螢幕（iPhone SE 一代）：拔河兩半壓緊，內容才不會蓋到中間的繩子；鍵仍是 44px */   /* 鍵盤離螢幕邊緣遠一點：上方那位的鍵盤（轉 180°）原本只離上緣 12px，iOS 會把貼邊的觸控先扣住看是不是系統手勢 */
 #s-versus.cpu .half.top{transform:none;justify-content:center}
 #s-versus.cpu .half.top .pad{display:none}
 #s-versus.cpu .half.top .aq{font-size:clamp(26px,7vw,40px)}
@@ -3502,6 +3504,7 @@ document.addEventListener('visibilitychange', () => {
 addEventListener('resize', resize);
 addEventListener('resize', () => { if (mode === 'menu') placeMenuPet(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (mode === 'menu') placeMenuPet(); });   // 字型換好後鈕的寬度會變
+document.addEventListener('gesturestart', e => { if (mode === 'versus') e.preventDefault(); });   // iOS Safari 不理 user-scalable=no，拔河時擋掉雙指縮放
 const rotMQ = matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse)');
 rotMQ.addEventListener('change', () => { if (rotMQ.matches) pauseGames(); });   // 轉橫：頁面還在前景，計時由 frame() 逐幀凍結
 
