@@ -8,12 +8,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="九九乘法練習遊戲：流星防衛戰、幽靈競速、雙人拔河、哪個大哪個小、炸彈拆除。錯題會更常出現，星圖看熟練度，每日任務、養寵物。">
 <title>九九流星隊</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- 字型 CSS 不擋畫面：先用系統字型畫，載到了再換（media=print 的技巧，onload 後切回 all） -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@400;700;900&family=Lilita+One&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@400;700;900&family=Lilita+One&display=swap"></noscript>
+<!-- 字型自行託管（assets/fonts，OFL 授權，tools/make-fonts.py 只切出遊戲用到的字），不連 Google，離線也能用；swap：先用系統字型畫 -->
+<link rel="preload" href="assets/fonts/lilita.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/chiron-900.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:'Chiron GoRound TC';font-weight:400;font-display:swap;src:url(assets/fonts/chiron-400.woff2) format('woff2')}
+@font-face{font-family:'Chiron GoRound TC';font-weight:700;font-display:swap;src:url(assets/fonts/chiron-700.woff2) format('woff2')}
+@font-face{font-family:'Chiron GoRound TC';font-weight:900;font-display:swap;src:url(assets/fonts/chiron-900.woff2) format('woff2')}
+@font-face{font-family:'Lilita One';font-weight:400;font-display:swap;src:url(assets/fonts/lilita.woff2) format('woff2')}
 [hidden]{display:none!important}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 img{max-width:100%}
@@ -38,7 +40,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;padding-inline:16px}
 
 /* ---------- 主選單 ---------- */
-#s-menu,#s-map{overflow-y:auto}
+#s-menu,#s-map,#s-pet{overflow-y:auto}
 .menu-in{margin-block:auto;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3.2vh,30px);padding-block:24px;width:100%}
 .brand{display:flex;align-items:center;gap:14px}
 .brand-mark{font-weight:900;font-size:clamp(68px,19vw,116px);line-height:.9;color:var(--sun);letter-spacing:-.05em;text-shadow:0 5px 0 #a87a00,0 14px 40px rgba(255,210,63,.35);transform:rotate(-5deg)}
@@ -56,7 +58,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .pick .sd b{color:var(--coral)}
 .mode svg{grid-row:span 2;width:62px;height:62px}
 .m-t{font-weight:900;font-size:20px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.m-t em{font-style:normal;font-family:var(--f-num);font-size:14px;color:var(--sun);font-weight:400;white-space:nowrap;text-align:right}
+.m-t em{font-style:normal;font-family:var(--f-num);font-size:14px;color:var(--sun);font-weight:400;text-align:right;max-width:50%;line-height:1.2}
+.m-t>span:first-child,.m-t{white-space:nowrap} .m-t em{white-space:normal}
 .m-d{color:var(--muted);font-size:14px;line-height:1.45}
 .menu-foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:470px;width:100%}
 #s-menu .menu-foot{display:grid;grid-template-columns:repeat(3,1fr)}
@@ -85,7 +88,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .q-list{display:grid;gap:8px;text-align:left}
 .q-head{justify-content:center}
 .chip.todo{position:relative}
-.chip.todo::after{content:'';position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 2px var(--ink),0 0 10px var(--coral);animation:dot 1.2s ease-in-out infinite}
+.chip.todo::after{content:'';position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 2px var(--ink),0 0 10px var(--coral)}
 @keyframes dot{50%{transform:scale(1.35);box-shadow:0 0 0 2px var(--ink),0 0 16px var(--coral)}}
 .chip.ok b{color:var(--mint)}
 .name-egg svg{width:110px;height:110px}
@@ -93,7 +96,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .name-in:focus{outline:2px solid var(--mint);border-color:var(--mint)}
 .name-sug{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:11px 14px;min-height:44px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
-.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:normal;text-align:center;max-width:92vw;border-radius:18px;line-height:1.3}
 .toast.on{transform:translate(-50%,0);opacity:1}
 
 /* ---------- 共用：鍵盤、題目 ---------- */
@@ -144,9 +147,14 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .freeze.gold{background:rgba(255,210,63,.18)} .freeze.gold i{background:var(--sun)}
 .freeze.inv{background:rgba(255,97,97,.18)} .freeze.inv i{background:linear-gradient(90deg,var(--coral),var(--sun),var(--mint),var(--ice))}
 .card.help{gap:8px;text-align:left}
+.xbtn{position:sticky;top:0;align-self:flex-end;margin:-6px -6px -44px 0;z-index:2;font-size:18px;font-weight:900;color:var(--muted)}
 .help h3{text-align:center;margin-bottom:4px}
 .brand-t{color:var(--sun);text-shadow:0 2px 0 #a87a00}
 .help h4{margin:8px 0 0;font-size:15px;color:var(--sun);letter-spacing:.08em}
+.rotate{display:none;position:fixed;inset:0;z-index:30;background:var(--ink);place-items:center;text-align:center;font-weight:900;font-size:22px;color:var(--paper)}
+@media (orientation:landscape) and (max-height:500px){.rotate{display:grid}}
+img,svg,canvas{-webkit-touch-callout:none}
+html,body{overscroll-behavior:none}
 .help .hgrp{margin:14px 0 -2px;font-size:12px;letter-spacing:.3em;color:var(--muted);text-align:center}
 .stage{flex:1;position:relative;pointer-events:none;min-height:0}
 .banner{position:absolute;left:0;right:0;top:28%;text-align:center;font-weight:900;font-size:clamp(34px,9vw,60px);opacity:0;color:var(--paper);text-shadow:0 5px 0 rgba(0,0,0,.4)}
@@ -366,17 +374,22 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .setrow b{display:block;font-size:16px;font-weight:900}
 .setrow small{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px}
-.sw{width:56px;height:34px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
-.sw i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
+.sw{width:64px;height:44px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
+.sw i{position:absolute;top:4px;left:4px;width:34px;height:34px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
 .setrow.tables{grid-template-columns:minmax(0,1fr);row-gap:8px}
 .tgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
 .tgrid button{aspect-ratio:1;min-height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font-family:var(--f-num);font-size:22px;cursor:pointer;padding:0;touch-action:manipulation;transition:background .15s,border-color .15s,color .15s}
 .tgrid button[aria-pressed="true"]{background:rgba(255,210,63,.16);border-color:var(--sun);color:var(--sun)}
 .tgrid button.ext[aria-pressed="true"]{background:rgba(95,242,208,.14);border-color:var(--mint);color:var(--mint)}
 .tgrid button:active{transform:scale(.94)}
+.who{align-self:center;border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:8px 16px;min-height:44px;font-weight:700;font-size:14px;color:var(--ice);display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.who-list{display:grid;gap:8px}
+.who-list button{min-height:48px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--paper);font-weight:900;font-size:17px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:0 16px}
+.who-list button[aria-pressed="true"]{border-color:var(--sun);background:rgba(255,210,63,.14);color:var(--sun)}
+.who-list button small{font-weight:400;color:var(--muted);font-size:13px}
 .range-note{margin:0 0 8px;text-align:center;font-size:13px;color:var(--ice)}
 .sw[aria-pressed="true"]{background:rgba(95,242,208,.22);border-color:var(--mint)}
-.sw[aria-pressed="true"] i{left:29px;background:var(--mint)}
+.sw[aria-pressed="true"] i{left:26px;background:var(--mint)}
 .opt{display:grid;gap:8px}
 .opt button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:14px;padding:12px;font-weight:700;cursor:pointer;text-align:left;font-size:15px}
 .opt button[aria-pressed="true"]{border-color:var(--ember);background:rgba(255,174,87,.12);color:#ffd2a1}
@@ -401,7 +414,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .count span{font-family:var(--f-num);font-size:clamp(90px,30vw,160px);color:var(--sun);text-shadow:0 8px 0 #a87a00;animation:cnt .7s ease forwards}
 .count span.go{font-family:var(--f-zh);font-weight:900;font-size:clamp(56px,16vw,96px)}
 @keyframes cnt{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(.85);opacity:0}}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}.count span{animation:none;opacity:1}.banner.on{animation:none}}
+@media (prefers-reduced-motion:reduce){*,::before,::after{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}.count span{animation:none;opacity:1}.banner.on{animation:none}}
 </style>
 </head>
 <body>
@@ -410,6 +423,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
   <section class="screen" id="s-menu">
     <div class="menu-in">
+      <button class="who" type="button" id="go-who" aria-label="換人"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="currentColor"/></svg><span id="who-name">誰在玩？</span></button>
       <header class="brand">
         <div class="brand-mark">九九</div>
         <div class="brand-sub"><span>流星隊</span><small>打下流星・點亮星圖</small></div>
@@ -712,6 +726,21 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
+  <div class="overlay" id="o-who" hidden>
+    <div class="card">
+      <h3>誰在玩？</h3>
+      <p>每個人有自己的星圖、紀錄和寵物。</p>
+      <div class="who-list" id="who-list"></div>
+      <input class="name-in" id="who-in" type="text" maxlength="6" autocomplete="off" placeholder="名字（6 個字內）" aria-label="名字">
+      <div class="btn-col">
+        <button class="btn" type="button" id="who-add">新增一個人</button>
+        <button class="btn alt" type="button" id="who-rename">幫目前的人改名</button>
+        <button class="link-btn danger" type="button" id="who-del">刪除目前的人（要請大人）</button>
+        <button class="btn alt" type="button" id="who-close">關閉</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="o-name" hidden>
     <div class="card">
       <h3>幫牠取個名字</h3>
@@ -741,8 +770,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <h4>製作</h4>
       <ul class="rules">
         <li>作者：<a href="#" class="about-fb">指數三寶飯</a>（就是一個三寶爸）。</li>
-        <li>寵物與配件插畫由 AI 生成。字型來自 Google Fonts。音樂和音效都是程式即時合成的。</li>
-        <li>版本 1.0。© 2026 指數三寶飯 保留所有權利。</li>
+        <li>寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。</li>
+        <li>版本 1.1。© 2026 指數三寶飯 保留所有權利。</li>
       </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="about-close">關閉</button></div>
     </div>
@@ -751,11 +780,11 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
   <div class="overlay" id="o-gate" hidden style="z-index:8">
     <div class="card">
       <h3>請大人來一下</h3>
-      <p>要打開外面的網頁，請大人先回答這一題。</p>
+      <p id="gate-why">要打開外面的網頁，請大人先回答這一題。</p>
       <div class="aq" id="gate-q"></div>
       <div class="hint" id="gate-hint"></div>
       <div class="pad" id="gate-pad"></div>
-      <div class="btn-col"><button class="btn alt" type="button" id="gate-close">取消</button></div>
+      <div class="btn-col"><button class="btn" type="button" id="gate-go" hidden>前往</button><button class="btn alt" type="button" id="gate-close">取消</button></div>
     </div>
   </div>
 
@@ -776,6 +805,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
   <div class="overlay" id="o-help" hidden>
     <div class="card help">
+      <button class="icon-btn xbtn" type="button" id="h-close2" aria-label="關閉">✕</button>
       <h3>遊戲說明</h3>
       <div class="hgrp">五個遊戲</div>
       <h4>流星防衛戰</h4>
@@ -785,7 +815,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>有時候流星上寫「7 的倍數」加一串數字「7、14、?、28」，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li>
         <li>流星掉到小鎮會<b>扣一顆心</b>。一整波都沒失誤 +50 分。</li>
         <li>每 5 波出現<b>錯題魔王</b>，專出你常錯的題目。要<b>一次就答對</b>才算打中一下，打中 6 下以上才打得倒，波數越高血越多。魔王來的時候沒有小流星，專心打牠就好。打倒 +200 分、<b>必掉寶箱</b>。</li>
-        <li>魔王掉到小鎮會<b>扣 2 顆心</b>，一擊即死模式等於直接結束。</li>
+        <li>魔王掉到小鎮也是<b>扣 1 顆心</b>，然後下一波就開始了。</li>
         <li>補心只靠寶箱，心最多 3 顆。</li>
         <li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>
       </ul>
@@ -851,6 +881,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li>
         <li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>
       </ul>
+      <h4>誰在玩</h4>
+      <ul class="rules">
+        <li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li>
+      </ul>
       <h4>要練哪幾個乘法表</h4>
       <ul class="rules">
         <li>在「設定」裡點數字，<b>亮的才會出</b>。平常 1 到 9 都亮，就是九九乘法。</li>
@@ -862,6 +896,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
     </div>
   </div>
 
+  <div class="rotate" id="rotate" aria-hidden="true"><div><svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true"><rect x="18" y="6" width="28" height="52" rx="6" fill="none" stroke="#9fdcff" stroke-width="3"/><circle cx="32" cy="50" r="2.5" fill="#9fdcff"/><path d="M8 32a24 24 0 0 1 8-18" fill="none" stroke="#ffd23f" stroke-width="3" stroke-linecap="round"/><path d="M14 10l2 6-6 1z" fill="#ffd23f"/></svg><br>請把手機轉直</div></div>
   <div class="count" id="o-count" hidden></div>
   <div class="toast" id="toast" role="status"></div>
 </div>
@@ -881,15 +916,49 @@ const ZHF = "'Chiron GoRound TC','Noto Sans TC','PingFang TC','Microsoft JhengHe
 const now = () => performance.now();
 
 /* ================= 存檔 ================= */
-const KEY = 'jiujiu-meteor-v1';
+// 多人：WHO = { cur, list:[{id, name}] } 存在 PKEY；每個人一把存檔 key（第一個人 id 是空字串，沿用舊 key，舊存檔自動變成第一個人）
+let KEY = 'jiujiu-meteor-v1';
+const PKEY = 'jiujiu-meteor-who', WHO_MAX = 4;
+let WHO = { cur: '', list: [{ id: '', name: '' }] };
+try {
+  const w = JSON.parse(localStorage.getItem(PKEY));
+  if (w && Array.isArray(w.list) && w.list.length) WHO = { cur: typeof w.cur === 'string' ? w.cur : '', list: w.list.filter(x => x && typeof x.id === 'string').map(x => ({ id: x.id, name: String(x.name || '').slice(0, 6) })).slice(0, WHO_MAX) };
+} catch (e) {}
+if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
+if (!WHO.list.some(x => x.id === WHO.cur)) WHO.cur = WHO.list[0].id;
+const keyFor = id => id ? `jiujiu-meteor-v1:${id}` : 'jiujiu-meteor-v1';
+const saveWho = () => { try { localStorage.setItem(PKEY, JSON.stringify(WHO)); } catch (e) {} };
+const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
+KEY = keyFor(WHO.cur);
 const BEST0 = () => ({ meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null });
 const fresh = () => mkDB({ facts: {}, bests: {}, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice() },
-  daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
+  daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0, ans: 0, log: {} },
   pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [] } });
 // 最佳紀錄依乘法表範圍分開存（bests[rangeKey]），DB.best 永遠指向目前範圍那一份；getter 不可列舉所以不會存進 JSON
 function mkDB(o) {
   Object.defineProperty(o, 'best', { enumerable: false, configurable: true, get() { const k = rangeKey(); return o.bests[k] || (o.bests[k] = BEST0()); } });
   return o;
+}
+// 壞掉的 facts（null、缺欄位、字串）會讓加權變 NaN、整個遊戲每題都一樣，載入時只留合法的
+const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
+function cleanFacts(fc) {
+  const out = {};
+  if (!fc || typeof fc !== 'object' || Array.isArray(fc)) return out;
+  Object.keys(fc).forEach(k => {
+    const s = fc[k]; if (!s || typeof s !== 'object' || !/^\d+[x+\-]\d+$/.test(k)) return;
+    out[k] = { n: Math.max(0, Math.round(num(s.n))), err: clamp(num(s.err), 0, 1), t: Math.max(0, Math.round(num(s.t))) };
+    if (s.w) out[k].w = Math.max(0, Math.round(num(s.w)));
+  });
+  return out;
+}
+function cleanRest(D) {
+  Object.keys(D.bests).forEach(k => { const b = D.bests[k]; b.meteor = num(b.meteor); b.sudden = num(b.sudden); b.cmpT = b.cmpT === null ? null : num(b.cmpT, null); b.bomb = b.bomb === null ? null : num(b.bomb, null); if (!(Array.isArray(b.ghost) && b.ghost.length === 20 && b.ghost.every(v => typeof v === 'number' && Number.isFinite(v)))) b.ghost = null; });
+  const P = D.pet; P.dust = Math.max(0, Math.round(num(P.dust))); P.fed = Math.max(0, Math.round(num(P.fed))); P.name = String(P.name || '').slice(0, 6); if (typeof P.kind !== 'string') P.kind = '';
+  P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string');
+  const Y = D.daily; Y.badges = Math.max(0, Math.round(num(Y.badges))); Y.streak = Math.max(0, Math.round(num(Y.streak))); Y.ans = Math.max(0, Math.round(num(Y.ans))); Y.starBase = Math.round(num(Y.starBase));
+  if (!Y.log || typeof Y.log !== 'object') Y.log = {};
+  Y.tasks = (Array.isArray(Y.tasks) ? Y.tasks : []).filter(x => x && typeof x.id === 'string' && Number.isFinite(+x.n)).map(x => ({ id: x.id, n: Math.round(+x.n), p: Math.max(0, Math.round(num(+x.p))), done: !!x.done }));
+  if (typeof Y.date !== 'string') Y.date = ''; if (typeof Y.lastDone !== 'string') Y.lastDone = '';
 }
 const cleanTables = t => {
   const a = [...new Set((Array.isArray(t) ? t : []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= T_MAX))].sort((x, y) => x - y);
@@ -897,16 +966,21 @@ const cleanTables = t => {
 };
 const rangeKey = () => { const t = DB.set.tables; return t.length === 9 && t.every((n, i) => n === i + 1) ? 'std' : t.join(','); };
 let DB = fresh();
-try {
-  const raw = localStorage.getItem(KEY);
-  if (raw) {
-    const d = JSON.parse(raw), f = fresh();
-    const bests = {}; Object.keys(d.bests || {}).forEach(k => { bests[k] = Object.assign(BEST0(), d.bests[k]); });
-    if (d.best) bests.std = Object.assign(BEST0(), d.best, bests.std || {});   // 舊存檔只有一份 best，歸到標準九九
-    DB = mkDB({ facts: d.facts || {}, bests, set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) });
-    DB.set.tables = cleanTables(DB.set.tables);
-  }
-} catch (e) {}
+function loadDB() {
+  DB = fresh();
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) {
+      const d = JSON.parse(raw), f = fresh();
+      const bests = {}; Object.keys(d.bests || {}).forEach(k => { bests[k] = Object.assign(BEST0(), d.bests[k]); });
+      if (d.best) bests.std = Object.assign(BEST0(), d.best, bests.std || {});   // 舊存檔只有一份 best，歸到標準九九
+      DB = mkDB({ facts: cleanFacts(d.facts), bests, set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) });
+      DB.set.tables = cleanTables(DB.set.tables);
+      cleanRest(DB);
+    }
+  } catch (e) { DB = fresh(); }
+}
+loadDB();
 function save() {
   Object.keys(DB.bests).forEach(k => { if (JSON.stringify(DB.bests[k]) === JSON.stringify(BEST0())) delete DB.bests[k]; });   // 沒紀錄的範圍不存
   try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {}
@@ -922,13 +996,13 @@ const isStdRange = () => rangeKey() === 'std';
 function rebuildPool() {
   MUL.length = 0; MUL2.length = 0;
   MUL_ALL.forEach(f => { if (tables().includes(f.a) && f.b <= cols()) { MUL.push(f); if (f.a > 1 && f.b > 1) MUL2.push(f); } });
-  recent = [];
+  recent = []; retest = [];
 }
 // 十以內加減不出現 1：兩個數都 ≥ 2，減法答案也 ≥ 2（3−2 這種太簡單）
 for (let a = 2; a <= 8; a++) for (let b = 2; b <= 8; b++) if (a + b <= 10) ADDSUB.push({ k: a + '+' + b, a, b, op: '+', ans: a + b });
 for (let a = 4; a <= 10; a++) for (let b = 2; b <= a - 2; b++) ADDSUB.push({ k: a + '-' + b, a, b, op: '−', ans: a - b });
 
-let recent = [];
+let recent = [], retest = [], draws = 0;   // retest：答錯的題 6～12 題後一定再考一次（延遲重測比立刻照抄有效）
 rebuildPool();
 const slowAllow = k => (FACT[k] && FACT[k].ans >= 100) ? 600 : 0;   // 三位數答案多按一鍵，速度門檻放寬
 function weightOf(f) {
@@ -940,6 +1014,9 @@ function weightOf(f) {
 // no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）。混入加減開著時每題 20% 抽加減
 function pickFact(pool, no1) {
   pool = pool || ((DB.set.mix && Math.random() < 0.2) ? ADDSUB : (no1 ? MUL2 : MUL));
+  draws++;
+  const ri_ = retest.findIndex(r => r.due <= draws && pool.some(f => f.k === r.k));
+  if (ri_ >= 0) { const k = retest.splice(ri_, 1)[0].k; const f = pool.find(f => f.k === k); recent.push(k); if (recent.length > 5) recent.shift(); return f; }
   let tot = 0;
   const ws = pool.map(f => { const w = recent.includes(f.k) ? 0 : weightOf(f); tot += w; return w; });
   if (tot === 0) { tot = 0; pool.forEach((f, i) => { ws[i] = weightOf(f); tot += ws[i]; }); }   // 題庫很小時（魔王）不要卡在同一題
@@ -966,23 +1043,30 @@ function makeQ(f, rev, seq) {
   return { f, k: f.k, ans: f.ans, text: `${f.a} ${f.op} ${f.b}` };
 }
 const fullEq = q => q.f ? `${q.f.a} ${q.f.op} ${q.f.b} = ${q.f.ans}` : `${q.text} = ${q.ans}`;
-function record(k, ok, ms) {
+// soft：選擇題／炸彈的證據比較弱（認得出 ≠ 打得出），只輕推錯誤指數，不算答題次數、不記時間、不點亮星星
+// 反向題與數列題呼叫時 ms 傳 0：它們本來就慢半秒到一秒，不該拖慢熟練判定
+function record(k, ok, ms, soft) {
   if (!k) return;
   const s = DB.facts[k] || (DB.facts[k] = { n: 0, err: 0, t: 0 });
+  if (soft) { if (ok && !s.n && !s.err) { if (!DB.facts[k].n) delete DB.facts[k]; return; } s.err = +(ok ? s.err * 0.85 : s.err * 0.8 + 0.2).toFixed(4); save(); return; }   // 沒遇過的題輕量記對不用留紀錄
   s.n++;
   s.err = +(s.err * 0.6 + (ok ? 0 : 0.4)).toFixed(4);
-  if (!ok) s.w = (s.w || 0) + 1;
+  if (!ok) { s.w = (s.w || 0) + 1; if (!retest.some(r => r.k === k)) retest.push({ k, due: draws + ri(6, 12) }); }
   if (ok && ms > 0) { ms = Math.min(ms, 9000); s.t = Math.round(s.t ? s.t * 0.7 + ms * 0.3 : ms); }
+  if (ok) DB.daily.ans = (DB.daily.ans || 0) + 1;
   save();
   if (ok) questStars();
 }
+// 一次失手只到「熟悉中」（0.4），短期內再錯一次才「容易錯」；×1 的題答對 1 次就算星（出現率低、又簡單）
 function state(k) {
   const s = DB.facts[k];
   if (!s || !s.n) return 'new';
-  if (s.err >= 0.3) return 'weak';
-  if (s.n < 3 || s.err >= 0.12 || s.t > 3600 + slowAllow(k)) return 'learn';
+  if (s.err >= 0.45) return 'weak';
+  const need = (FACT[k] && (FACT[k].a === 1 || FACT[k].b === 1)) ? 1 : 3;
+  if (s.n < need || s.err >= 0.12 || s.t > 3600 + slowAllow(k)) return 'learn';
   return 'star';
 }
+const avgT = () => { const ts = MUL.map(f => DB.facts[f.k]).filter(s => s && s.t > 0).map(s => s.t); return ts.length ? Math.round(ts.reduce((a, b) => a + b, 0) / ts.length) : 0; };
 const weakest = n => MUL.filter(f => DB.facts[f.k] && DB.facts[f.k].n && state(f.k) !== 'star').sort((a, b) => weightOf(b) - weightOf(a)).slice(0, n);
 const starCount = () => MUL.filter(f => state(f.k) === 'star').length;
 
@@ -1007,7 +1091,8 @@ function tone(f, d, type = 'sine', v = 0.12, f2 = 0, delay = 0) {
 function noise(d = 0.4, v = 0.3, cut = 1000) {
   const c = ac(); if (!c) return;
   const len = Math.floor(c.sampleRate * d), b = c.createBuffer(1, len, c.sampleRate), ch = b.getChannelData(0);
-  for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+  const ramp = c.sampleRate * 0.004;
+  for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2) * Math.min(1, i / ramp);
   const s = c.createBufferSource(), fl = c.createBiquadFilter(), gn = c.createGain();
   s.buffer = b; fl.type = 'lowpass'; fl.frequency.value = cut; gn.gain.value = v;
   s.connect(fl).connect(gn).connect(c.destination); s.start();
@@ -1016,9 +1101,9 @@ const SFX = {
   key() { tone(540, 0.045, 'triangle', 0.05); },
   zap(c) { const b = 440 * Math.pow(1.06, Math.min(c, 24)); tone(b * 2.2, 0.13, 'sawtooth', 0.045, b * 0.7); tone(b, 0.2, 'triangle', 0.09, b * 2); },
   boom() { noise(0.4, 0.32, 900); },
-  big() { noise(1, 0.5, 520); tone(110, 0.7, 'sine', 0.22, 38); },
+  big() { noise(1, 0.35, 520); tone(110, 0.7, 'sine', 0.22, 38); },
   wrong() { tone(210, 0.22, 'square', 0.06, 140); },
-  hurt() { noise(0.6, 0.45, 380); tone(130, 0.45, 'sawtooth', 0.08, 55); },
+  hurt() { noise(0.6, 0.3, 380); tone(130, 0.45, 'sawtooth', 0.08, 55); },
   power() { [0, 4, 7, 12].forEach((s, i) => tone(660 * Math.pow(2, s / 12), 0.2, 'triangle', 0.08, 0, i * 0.06)); },
   fan() { [0, 4, 7, 12, 16].forEach((s, i) => tone(523 * Math.pow(2, s / 12), 0.24, 'square', 0.045, 0, i * 0.08)); },
   tick() { tone(880, 0.09, 'sine', 0.09); },
@@ -1123,10 +1208,11 @@ const P = [], beams = [];
 
 function resize() {
   DPR = Math.min(2, window.devicePixelRatio || 1);
-  W = cv.clientWidth; H = cv.clientHeight;
+  const w0 = W; W = cv.clientWidth; H = cv.clientHeight;
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
   g.setTransform(DPR, 0, 0, DPR, 0, 0);
-  genWorld(); measure();
+  if (W !== w0 || !stars.length) genWorld();   // 手機網址列收合、叫出鍵盤只改高度，不要重新生成小鎮
+  measure();
 }
 function measure() {
   if (mode === 'meteor') GY = $('#m-dock').getBoundingClientRect().top;
@@ -1223,6 +1309,7 @@ function spark(x, y, n, cols, spd = 240, sz = 3, life = 0.8, grav = 120) {
   }
 }
 function rocks(x, y, n, col) {
+  if (RM) n = Math.ceil(n / 4);
   for (let i = 0; i < n; i++) P.push({ k: 1, x, y, vx: rnd(-160, 160), vy: -rnd(40, 240), l: 1.1, m: 1.1, s: rnd(3, 8), c: col, gv: 560, r: rnd(0, 6), vr: rnd(-9, 9) });
 }
 const ring = (x, y, R, c, w = 4) => P.push({ k: 2, x, y, R, l: 0.5, m: 0.5, c, w });
@@ -1268,7 +1355,7 @@ function newMeteor(q, boss) {
   const lines = q.lines || q.text.split(' = ');
   let tw = 0; lines.forEach((s, i) => { g.font = `${q.label && i === 0 ? fs * 0.72 : fs}px ${q.label && i === 0 ? ZHF : NUMF}`; tw = Math.max(tw, g.measureText(q.lines ? s : (i ? '= ' + s : s)).width); });
   const base = boss ? clamp(W * 0.17, 64, 98) : clamp(W * 0.075, 31, 44);
-  const r = boss ? base : Math.max(base, tw * 0.58 + 10, lines.length * fs * 0.62 + 12);
+  const r = boss ? Math.max(base, lines.length * fs * 0.62 + 12) : Math.max(base, tw * 0.58 + 10, lines.length * fs * 0.62 + 12);
   const pts = []; for (let i = 0; i < 12; i++) pts.push(r * rnd(0.84, 1.05));
   const cr = []; for (let i = 0; i < 4; i++) cr.push({ a: rnd(0, 6.3), d: rnd(0.25, 0.65), s: rnd(0.1, 0.2) });
   let x = rnd(r + 8, W - r - 8);
@@ -1283,11 +1370,14 @@ function startMeteor() {
   M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, shield: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
   P.length = 0; beams.length = 0; curT = null; lastBar = '';
   $('#m-freeze').hidden = true; $('#m-dbl').hidden = true; $('#m-inv').hidden = true;
-  requestAnimationFrame(() => { measure(); nextWave(); hud(); bar(); });
+  const me = M;
+  requestAnimationFrame(() => { if (M !== me) return; measure(); nextWave(); hud(); bar(); });
+  if (!Object.keys(DB.facts).length) setTimeout(() => { if (M === me && !M.over) ftxt(W / 2, GY - 150, '打出答案，就能打下流星', '#9fdcff', 24); }, 2200);   // 第一次玩的提示
 }
 function nextWave() {
   const perfect = M.wave > 0 && M.waveMiss === 0;
-  if (perfect) { M.score += 50; earn(5); banner('完美一波！+50', 'good'); SFX.power(); setTimeout(() => M && !M.over && waveBanner(), 1300); }
+  const me = M;
+  if (perfect) { M.score += 50; earn(5); banner('完美一波！+50', 'good'); SFX.power(); setTimeout(() => M === me && !M.over && waveBanner(), 1300); }
   M.wave++; M.kills = 0; M.waveMiss = 0; quest('wave', M.wave, 'max');
   const w = M.wave;
   M.fall = Math.max(5.4, 12.5 - w * 0.75);
@@ -1309,17 +1399,18 @@ function banner(t, cls) {
   const b = $('#banner'); b.textContent = t; b.className = 'banner' + (cls ? ' ' + cls : ''); void b.offsetWidth; b.classList.add('on');
   if (RM) { const tok = ++bannerTok; b.style.opacity = 1; setTimeout(() => { if (tok === bannerTok) b.style.opacity = ''; b.classList.remove('on'); }, 1900); }   // 減少動態時 CSS 動畫會瞬間結束，改用計時隱藏
 }
+// 題庫是最常錯的 10 題；不足 6 題就拿次弱的（權重最高的）補到 6 題，才不會一場魔王一直重複同一題
 function bossQ() {
-  const ws = weakest(10);
-  let pool = ws.length >= 4 ? ws : MUL.filter(f => f.a > 2 && f.b > 2);
-  if (pool.length < 4) pool = MUL2.length ? MUL2 : MUL;   // 只勾一兩個表時題庫很小
-  return makeQ(pickFact(pool), true, false);
+  let pool = weakest(10);
+  if (pool.length < 6) { const extra = (MUL2.length ? MUL2 : MUL).filter(f => !pool.includes(f)).sort((a, b) => weightOf(b) - weightOf(a)); pool = pool.concat(extra.slice(0, 6 - pool.length)); }
+  return makeQ(pickFact(pool), true, true);
 }
 function spawnBoss() {
   const m = newMeteor(bossQ(), true);
   m.hp = m.hpMax = 5 + Math.floor(M.wave / 5);
   M.boss = m; M.list.push(m); hud();
-  if (M.missiles > 0) setTimeout(() => { if (M && M.boss) { ftxt(W / 2, GY - 60, '有飛彈！按「發射」', '#ffae57', 26); SFX.ding(); } }, 900);
+  const me = M;
+  if (M.missiles > 0) setTimeout(() => { if (M === me && M.boss) { ftxt(W / 2, GY - 60, '有飛彈！按「發射」', '#ffae57', 26); SFX.ding(); } }, 900);
 }
 // 飛彈手動發射：點 HUD 的飛彈圖示或按空白鍵／Enter，一次一枚
 function launchMissile() {
@@ -1402,26 +1493,27 @@ function updateMeteor(dt) {
   const tg = getTarget();
   if (tg && !tg.tStart) tg.tStart = now();
   if (tg !== curT) {
-    const had = !!curT; curT = tg; if (had) M.switchT = now();   // 魔王換題不是真的換目標，不用擋按鍵
+    const had = !!curT && !curT.dead; curT = tg; if (had) M.switchT = now();   // 魔王換題、自己打掉的那顆都不算真的換目標，不擋按鍵
     if (!M.buf) { bar(); if (had && tg) { const a = $('#m-answer'); a.classList.remove('pop'); void a.offsetWidth; a.classList.add('pop'); } }
   }
 }
 function impact(m) {
+  if (M.over) return;   // 同一幀兩顆落地，只結束一次
   m.dead = true;
-  const y = GY - 30;
-  if (m.tStart && !m.revealed) { M.tot++; record(m.q.k, false, 0); M.wrongs.push(m.q); }
+  const y = GY - 30, me = M;
   if (M.lock === m) { M.lock = null; M.buf = ''; }
-  if (M.inv > 0) {
+  if (M.inv > 0) {   // 無敵時落地不算答錯
     spark(m.x, y, 40, ['#ffd23f', '#ffffff'], 280, 4, 0.8, 200); ring(m.x, y, 170, '#ffd23f', 8);
     ftxt(m.x, y - 70, '無敵！', '#ffd23f', 30); domeFlash = 1; shake(0.2, 5); SFX.power();
-    if (m.boss) { M.boss = null; setTimeout(() => M && !M.over && nextWave(), 900); }
+    if (m.boss) { M.boss = null; setTimeout(() => M === me && !M.over && nextWave(), 900); }
     hud(); bar(); return;
   }
+  if (m.tStart && !m.revealed) { M.tot++; record(m.q.k, false, 0); M.wrongs.push(m.q); }
   spark(m.x, y, 46, ['#ffae57', '#ff6161', '#ffd23f'], 300, 4, 0.9, 260);
   rocks(m.x, y, 10, '#5b4a5f'); ring(m.x, y, 120, 'rgba(255,120,90,.9)', 6);
-  M.hearts -= m.boss ? 2 : 1; if (!shieldSave(m.x, y - 100)) M.combo = 0; M.waveMiss++;
+  M.hearts -= 1; if (!shieldSave(m.x, y - 100)) M.combo = 0; M.waveMiss++;   // 魔王落地也只扣 1 顆：扣 2 顆再立刻下一波對小二是懸崖
   domeFlash = 1; shake(0.45, 12); flashA = 0.25; SFX.hurt();
-  if (m.boss) { M.boss = null; if (M.hearts > 0) setTimeout(() => M && !M.over && nextWave(), 900); }
+  if (m.boss) { M.boss = null; if (M.hearts > 0) setTimeout(() => M === me && !M.over && nextWave(), 900); }
   hud(); bar();
   if (M.hearts <= 0) gameOver();
 }
@@ -1443,7 +1535,8 @@ function celebrate(d, x, y) {
   ring(x, y, 110, col, 5);
   if (tier >= 2) { ring(x, y, 200, cols[1], 6); confetti(14 * tier); flashA = Math.max(flashA, 0.1 + tier * 0.1); shake(0.1 + tier * 0.1, 2 + tier * 3); }
   if (tier >= 3) {
-    for (let i = 1; i <= 3; i++) setTimeout(() => { if (!M || M.over) return; ring(x, y, 150 + i * 80, cols[i], 8); spark(x + rnd(-90, 90), y + rnd(-70, 70), 45, cols, 340, 4.5, 1, 150); }, i * 130);
+    const me = M;
+    for (let i = 1; i <= 3; i++) setTimeout(() => { if (M !== me || M.over) return; ring(x, y, 150 + i * 80, cols[i], 8); spark(x + rnd(-90, 90), y + rnd(-70, 70), 45, cols, 340, 4.5, 1, 150); }, i * 130);
     banner(TIER_NAME[d.id] || '稀有寶箱！', 'mega t2'); SFX.milestone(2);
   } else SFX.power();
 }
@@ -1485,7 +1578,7 @@ function applyDrop(o) {
       break;
     case 'inv': case 'inv20': {
       const sec = d.id === 'inv20' ? 20 : 10;
-      M.inv = Math.max(M.inv, sec); M.invMax = sec; $('#m-inv').hidden = false;
+      M.inv = Math.max(M.inv, sec); M.invMax = Math.max(M.inv, sec); $('#m-inv').hidden = false;
       ftxt(W / 2, GY - 130, `無敵 ${sec} 秒！`, '#ffd23f', sec === 20 ? 44 : 36); flashA = sec === 20 ? 0.6 : 0.3;
       if (sec === 20) { confetti(40); shake(0.3, 6); }
       break;
@@ -1530,7 +1623,7 @@ function meteorKey(d) {
 function tipPos() { return { x: W / 2 + Math.cos(tA) * 48, y: GY - 26 + Math.sin(tA) * 48 }; }
 function hit(m) {
   const ms = now() - (m.tStart || now()), fresh = !m.revealed;
-  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
+  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, (m.q.rev || m.q.seq) ? 0 : ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
   const mult = 1 + Math.min(4, Math.floor(M.combo / 5));
   const pts = fresh ? (10 + (ms < 2500 ? 5 : 0)) * mult * (M.dbl > 0 ? 2 : 1) : 3;
   M.score += pts;
@@ -1570,8 +1663,9 @@ function killBoss(m) {
   ftxt(m.x, m.y, '+200', '#ffd23f', 40);
   ftxt(m.x, m.y + 44, '寶箱掉落！', '#ffd23f', 24);
   flashA = 0.6; shake(0.6, 14); SFX.big();
-  setTimeout(() => { if (M && !M.over) spawnDrop(m.x, Math.min(m.y, GY - 220)); }, 500);
-  setTimeout(() => M && !M.over && nextWave(), 1200);
+  const me = M;
+  setTimeout(() => { if (M === me && !M.over) spawnDrop(m.x, Math.min(m.y, GY - 220)); }, 500);
+  setTimeout(() => M === me && !M.over && nextWave(), 1200);
 }
 // 連擊護盾：答錯或流星落地時擋一次，連擊不歸零；用掉就沒了
 function shieldSave(x, y) {
@@ -1597,7 +1691,8 @@ function nova() {
   if (!M.bossWave && M.kills >= M.goal) nextWave();
 }
 function gameOver() {
-  M.over = true; M.buf = ''; musTrack('menu'); bar();
+  if (M.over) return;
+  M.over = true; M.buf = ''; musTrack('menu'); bar(); hud();
   const bk = M.sudden ? 'sudden' : 'meteor', best = DB.best[bk] || 0, isBest = M.score > best;
   if (isBest) { DB.best[bk] = M.score; save(); }
   const me = M;
@@ -1606,7 +1701,7 @@ function gameOver() {
     const acc = M.tot ? M.ok / M.tot : 0;
     result({
       title: M.sudden ? '一擊即死，結束！' : '小鎮撐不住了！', big: M.score, label: '分數',
-      note: isBest ? '新紀錄！' : `最高紀錄 ${best} 分`, stars: starsFor(acc, M.tot),
+      note: isBest ? '新紀錄！' : best ? `最高紀錄 ${best} 分` : '', stars: starsFor(acc, M.tot),
       rows: [['抵達波數', M.wave], ['最高連擊', M.maxCombo], ['答對率', pct(acc)]],
       wrongs: M.wrongs, again: startMeteor, celebrate: isBest
     });
@@ -1817,7 +1912,7 @@ function ghostKey(d) {
   if (G.buf.length >= String(G.q.ans).length) {
     const v = parseInt(G.buf, 10);
     if (v === G.q.ans) {
-      if (!G.rev) { G.ok++; record(G.q.k, true, now() - G.qt); quest('answers'); earn(1); }
+      if (!G.rev) { G.ok++; record(G.q.k, true, (G.q.rev || G.q.seq) ? 0 : now() - G.qt); quest('answers'); earn(1); }
       G.times.push(Math.round(now() - G.t0)); G.i++;
       SFX.zap(G.i);
       const c = $('#g-card'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
@@ -1874,7 +1969,7 @@ function openVersus() {
   $('#v-knot').style.left = '50%'; $('#v-btns').hidden = true; $('#v-rope').hidden = false; $$('.end').forEach(e => e.hidden = false); $('#v-quit').hidden = false;
 }
 function startVersus() {
-  $('#v-pausebox').hidden = true; musDuck(false);
+  $('#v-pausebox').hidden = true; musDuck(false); musTrack('game');
   $('#v-setup').hidden = true;
   V = { pos: 0, win: 6, over: false, started: false, cpu: vOpp === 'cpu', p: [{ q: null, buf: '', lock: 0, rev: false, qt: 0 }, { q: null, buf: '', lock: 0, rev: false, qt: 0, due: 0 }] };
   $('#s-versus').classList.toggle('cpu', V.cpu);
@@ -1952,7 +2047,7 @@ function vKey(i, d) {
   if (p.buf.length >= String(p.q.ans).length) {
     const v = parseInt(p.buf, 10);
     if (v === p.q.ans) {
-      if (i === 0 && !p.rev) { record(p.q.k, true, now() - p.qt); quest('answers'); earn(1); }
+      if (i === 0 && !p.rev) { record(p.q.k, true, (p.q.rev || p.q.seq) ? 0 : now() - p.qt); quest('answers'); earn(1); }
       V.pos += i === 0 ? -1 : 1;
       $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%';
       SFX.zap(Math.abs(V.pos) * 2);
@@ -1970,8 +2065,8 @@ function vKey(i, d) {
 }
 function endVersus(w) {
   V.over = true; musTrack('menu'); quest('versus');
-  vEl.forEach((e, i) => { const r = e.querySelector('[data-res]'); r.hidden = false; r.className = 'vres ' + (i === w ? 'win' : 'lose'); r.textContent = i === w ? '勝利！' : '下次再拉回來！'; e.classList.add('locked'); });
-  if (V.cpu) { $('.cpu-face').classList.remove('thinking'); $('#v-say').textContent = w === 1 ? '嘿嘿，我贏了！' : '你好厲害，再來一次？'; }
+  vEl.forEach((e, i) => { const r = e.querySelector('[data-res]'); r.hidden = false; r.className = 'vres ' + (i === w ? 'win' : 'lose'); r.textContent = i === w ? (V.cpu && i === 1 ? '機器人贏了' : '勝利！') : '下次再拉回來！'; e.classList.add('locked'); });
+  if (V.cpu) { $('.cpu-face').classList.remove('thinking'); $('#v-say').textContent = w === 1 ? '好險！再一次？' : '你好厲害，再來一次？'; }
   $('#v-rope').hidden = true; $$('.end').forEach(e => e.hidden = true); $('#v-quit').hidden = true; $('#v-btns').hidden = false;
   SFX.fan(); flashA = 0.3;
   const x = W / 2, y = w === 0 ? H * 0.75 : H * 0.25;
@@ -2041,7 +2136,7 @@ function cmpChoose(i) {
     el.classList.remove('want', 'bad'); el.classList.add('ok', 'pop');
     if (!q.rev) {
       C.ok++; C.streak++; quest('answers'); earn(1);
-      // 點對不記星圖：選擇題證明不了「能打出答案」；答錯才記（見下）
+      record(f.k, true, 0, true);   // 輕量記對：選擇題證明不了「能打出答案」，不點亮星星
       SFX.zap(C.streak);
       const r = el.getBoundingClientRect();
       spark(r.left + r.width / 2, r.top + r.height / 2, 24, ['#5ff2d0', '#ffd23f', '#ffffff'], 220, 3, 0.7, 80);
@@ -2049,12 +2144,13 @@ function cmpChoose(i) {
     $('#c-hint').textContent = '';
     C.i++; C.lock = true;
     if (C.i >= C.n) { C.end = now(); updateCmp(); }
-    setTimeout(() => { if (C && !C.done) nextCmp(); }, q.rev ? 450 : 800);
+    const me = C;
+    setTimeout(() => { if (C === me && !C.done) nextCmp(); }, q.rev ? 450 : 800);
     return;
   }
   if (!q.rev) {
     q.rev = true; C.streak = 0; $('#c-timer').classList.add('off');
-    record(q.ans.k, false, 0); record(f.k, false, 0);
+    record(q.ans.k, false, 0, true); record(f.k, false, 0, true);   // 半強度：正確那題可能根本沒答錯
     C.wrongs.push({ f: q.ans, k: q.ans.k }, { f, k: f.k });
     els[q.opts.indexOf(q.ans)].classList.add('want');
   }
@@ -2087,7 +2183,7 @@ function finishCmp() {
   }, 500);
 }
 $('#c-opts').addEventListener('pointerdown', e => { const b = e.target.closest('.cmp-opt'); if (!b) return; e.preventDefault(); cmpChoose(+b.dataset.i); });
-$('#c-opts').addEventListener('click', e => { const b = e.target.closest('.cmp-opt'); if (b && e.detail === 0) cmpChoose(+b.dataset.i); });
+$('#c-opts').addEventListener('click', e => { const b = e.target.closest('.cmp-opt'); if (b && kbClick(e)) cmpChoose(+b.dataset.i); });
 
 /* ================= 炸彈拆除 ================= */
 let BM = null;
@@ -2164,7 +2260,7 @@ function bombTap(i) {
   const r = BM.round, v = r.tiles[i], el = $$('#bm-tiles .tile')[i];
   if (v === undefined || r.got.has(i)) return;
   if (v % r.n === 0) {
-    r.got.add(i); el.classList.add('got'); SFX.zap(r.got.size * 3); quest('answers'); earn(1);
+    r.got.add(i); el.classList.add('got'); SFX.zap(r.got.size * 3); quest('answers'); earn(1); record(factNK(r.n, v / r.n).k, true, 0, true);
     const rc = el.getBoundingClientRect();
     spark(rc.left + rc.width / 2, rc.top + rc.height / 2, 14, ['#5ff2d0', '#ffffff'], 180, 3, 0.6, 80);
     $('#bm-found').innerHTML = `找到 <b>${r.got.size}</b> / ${r.count}`;
@@ -2176,13 +2272,13 @@ function bombTap(i) {
   else { const f = MUL2.find(f => f.ans === v); explode(`${v} 不是 ${r.n} 的倍數${f ? `，它是 ${f.a} × ${f.b}` : ''}`, [], el); }   // 離倍數很遠的干擾數字不算哪一題答錯
 }
 function bombEndRound() { if (BM.i >= BM.n) { BM.end = now(); updateBomb(); } }
-function explode(why, facts, el) {
+function explode(why, facts, el, soft) {
   const r = BM.round; r.state = 'dead'; bombEndRound();
   if (el) el.classList.add('boom');
   $$('#bm-tiles .tile').forEach((t, i) => { if (r.tiles[i] % r.n === 0 && !r.got.has(i)) t.classList.add('miss'); });
   $('#bm-tiles').classList.add('off');
-  facts.forEach(f => { record(f.k, false, 0); BM.wrongs.push({ f, k: f.k }); });
-  SFX.big(); shake(0.6, 12); flashA = 0.45;
+  facts.forEach(f => { record(f.k, false, 0, soft); BM.wrongs.push({ f, k: f.k }); });
+  SFX.boom(); shake(0.3, 7); flashA = 0.22;   // 錯誤的特效要比成功小
   // 炸彈本體炸開（CSS 動畫）＋ 火花、碎片、擴散環
   bombHead('boom');
   const bc = $('#bm-bomb').getBoundingClientRect(), bx = bc.left + bc.width / 2, by = bc.top + bc.height * 0.6;
@@ -2218,7 +2314,7 @@ function updateBomb() {
   if (left < 5 && Math.ceil(left) !== r.sec) { r.sec = Math.ceil(left); if (r.sec > 0) SFX.tick(); }
   if (left <= 0) {
     const missed = r.tiles.filter((v, i) => v % r.n === 0 && !r.got.has(i));
-    explode(`引線燒完了。還沒找到：${missed.join('、')}`, missed.map(m => factNK(r.n, m / r.n)), null);
+    explode(`引線燒完了。還沒找到：${missed.join('、')}`, r.got.size ? missed.map(m => factNK(r.n, m / r.n)) : [], null, true);   // 一個都沒點（可能走開了）就不記
   }
 }
 function finishBomb() {
@@ -2245,7 +2341,7 @@ function finishBomb() {
   }, 400);
 }
 $('#bm-tiles').addEventListener('pointerdown', e => { const b = e.target.closest('.tile'); if (!b) return; e.preventDefault(); bombTap(+b.dataset.i); });
-$('#bm-tiles').addEventListener('click', e => { const b = e.target.closest('.tile'); if (b && e.detail === 0) bombTap(+b.dataset.i); });
+$('#bm-tiles').addEventListener('click', e => { const b = e.target.closest('.tile'); if (b && kbClick(e)) bombTap(+b.dataset.i); });
 $('#bm-next').addEventListener('click', bombAdvance);
 
 /* ================= 寵物 ================= */
@@ -2356,7 +2452,7 @@ function renderGear() {
   }).join('');
 }
 function renderAlumni() {
-  const R = DB.pet.released || [], el = $('#pet-alumni');
+  const R = (Array.isArray(DB.pet.released) ? DB.pet.released : []).filter(r => r && PET_KINDS[r.kind]), el = $('#pet-alumni');
   el.hidden = !R.length;
   if (R.length) el.innerHTML = '回家的夥伴：' + R.map(r => `${petSVG(r.kind, 4)}<b>${esc(r.name || PET_KINDS[r.kind].name)}</b>（${PET_HOME[r.kind]}）`).join('、');
 }
@@ -2431,7 +2527,11 @@ function openMap() {
 function mapInfoDefault() {
   const ws = MUL.filter(f => state(f.k) === 'weak').sort((a, b) => weightOf(b) - weightOf(a)).slice(0, 6);
   const seen = MUL.filter(f => DB.facts[f.k] && DB.facts[f.k].n).length;
-  const pre = isStdRange() ? '' : rangeText().replace(/目前(只練|加上) (.+) 的乘法表/, '目前$1 <b>$2</b> 的乘法表') + '。';
+  let pre = isStdRange() ? '' : rangeText().replace(/目前(只練|加上) (.+) 的乘法表/, '目前$1 <b>$2</b> 的乘法表') + '。';
+  const at = avgT(), D = DB.daily;
+  if (D.ans || at) pre += [D.ans ? `今天答對 <b>${D.ans}</b> 題` : '', at ? `平均 <b>${(at / 1000).toFixed(1)}</b> 秒` : ''].filter(Boolean).join('，') + '。';
+  const old = Object.keys(D.log || {}).filter(d => daysAgo(d) >= 7).sort().pop();   // 最近一筆 7 天以上的紀錄
+  if (old) { const L = D.log[old], ds = starCount() - L.s, dt = L.t && at ? (L.t - at) / 1000 : 0; pre += `比 ${daysAgo(old)} 天前：星 ${ds >= 0 ? '+' : ''}${ds}${dt ? `、${dt > 0 ? '快' : '慢'} ${Math.abs(dt).toFixed(1)} 秒` : ''}。`; }
   if (!seen) $('#map-info').innerHTML = pre + '還沒有練習紀錄。每一題答對 3 次以上、又快又穩，就會點亮成一顆星。';
   else if (ws.length) $('#map-info').innerHTML = `${pre}最常出錯：${ws.map(f => `<b>${f.a}×${f.b}</b>`).join('、')}<br>這些題目在遊戲裡會比較常出現。`;
   else $('#map-info').innerHTML = `${pre}已經遇過 <b>${seen}</b> 題，目前沒有特別容易錯的題目。點任一格可以看細節。`;
@@ -2445,10 +2545,10 @@ $('#grid99').addEventListener('click', e => {
     : `<b>${a} × ${b} = ${a * b}</b>　${label}<br>答過 ${s.n} 次・平均 ${s.t ? (s.t / 1000).toFixed(1) + ' 秒' : '—'}・答錯過 ${s.w || 0} 次`;
 });
 $('#map-reset').addEventListener('click', () => {
-  if (Date.now() - resetArm < 3000) {
+  openGate(() => {   // 清除要請大人解一題，孩子不能自己清
     const set = DB.set; DB = fresh(); DB.set = set; save(); openMap(); refreshMenu();
     $('#map-info').textContent = '紀錄已清除。';
-  } else { resetArm = Date.now(); $('#map-reset').textContent = '再按一次確認清除'; setTimeout(() => { if (Date.now() - resetArm >= 2900) $('#map-reset').textContent = '清除所有紀錄'; }, 3000); }
+  }, '要清除所有紀錄，請大人先回答這一題。');
 });
 
 /* ================= 每日任務 ================= */
@@ -2469,12 +2569,21 @@ const QUESTS = [
   { id: 'stars', n: 2, fam: 'stars', t: n => `點亮 ${n} 顆新星星` },
 ];
 const QBY = {}; QUESTS.forEach(q => { QBY[q.id] = q; });
+const daysAgo = d => Math.round((new Date(today()) - new Date(d)) / 864e5);
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 function ensureDaily() {
   const D = DB.daily, t = today();
+  if (!Array.isArray(D.tasks)) D.tasks = [];
   if (D.date === t && D.tasks.length === 3 && D.tasks.every(x => QBY[x.id])) return;
-  const pool = QUESTS.slice(), fams = new Set(), tasks = [];
+  if (D.date && D.date !== t) {   // 換日：留一筆昨天的星數與平均秒數給家長看趨勢，只留 30 天
+    D.log = D.log || {}; D.log[D.date] = { s: starCount(), t: avgT() };
+    Object.keys(D.log).sort().slice(0, -30).forEach(k => delete D.log[k]);
+    D.ans = 0;
+  }
+  // 還沒玩過流星防衛戰（或分數很低）的孩子，先不抽魔王、波數、連擊這種做不到的任務
+  const hard = DB.best.meteor < 200 ? ['boss', 'wave', 'combo'] : [];
+  const pool = QUESTS.filter(q => !hard.includes(q.id)), fams = new Set(), tasks = [];
   while (tasks.length < 3 && pool.length) {
     const q = pool.splice(ri(0, pool.length - 1), 1)[0];
     if (fams.has(q.fam)) continue;
@@ -2491,6 +2600,41 @@ function renderQuests() {
   $('#q-meta').innerHTML = `徽章 <em>×${D.badges}</em>${D.streak > 1 ? `・連續 <em>${D.streak}</em> 天` : ''}`;
 }
 $('#go-quest').addEventListener('click', () => { renderQuests(); $('#o-quest').hidden = false; });
+/* ================= 誰在玩（多人） ================= */
+const whoLabel = x => x.name || '沒有名字';
+function renderWho() {
+  $('#who-name').textContent = whoCur().name || '誰在玩？';
+  $('#who-list').innerHTML = WHO.list.map(x => `<button type="button" data-who="${esc(x.id)}" aria-pressed="${x.id === WHO.cur}">${esc(whoLabel(x))}<small>${x.id === WHO.cur ? '現在是你' : '換我'}</small></button>`).join('');
+  $('#who-add').hidden = WHO.list.length >= WHO_MAX;
+}
+function switchWho(id) {
+  if (!WHO.list.some(x => x.id === id)) return;
+  save(); WHO.cur = id; saveWho(); KEY = keyFor(id); loadDB(); rebuildPool(); ensureDaily(); refreshMenu(); renderWho();
+}
+$('#go-who').addEventListener('click', () => { renderWho(); $('#who-in').value = ''; $('#o-who').hidden = false; });
+$('#who-close').addEventListener('click', () => { $('#o-who').hidden = true; $('#who-in').blur(); });
+$('#who-list').addEventListener('click', e => { const b = e.target.closest('[data-who]'); if (!b) return; switchWho(b.dataset.who); $('#o-who').hidden = true; SFX.ding(); toast(`${whoLabel(whoCur())}，換你玩！`); });
+$('#who-add').addEventListener('click', () => {
+  const name = $('#who-in').value.trim().slice(0, 6); if (!name) { $('#who-in').focus(); return; }
+  if (WHO.list.length >= WHO_MAX) return;
+  const id = 'p' + Date.now().toString(36);
+  WHO.list.push({ id, name }); saveWho(); switchWho(id); $('#who-in').value = ''; $('#o-who').hidden = true; SFX.fan(); toast(`${name}，歡迎加入！`);
+});
+$('#who-rename').addEventListener('click', () => {
+  const name = $('#who-in').value.trim().slice(0, 6); if (!name) { $('#who-in').focus(); return; }
+  whoCur().name = name; saveWho(); renderWho(); $('#who-in').value = ''; SFX.ding();
+});
+$('#who-del').addEventListener('click', () => {
+  const me = whoCur();
+  openGate(() => {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    WHO.list = WHO.list.filter(x => x.id !== me.id);
+    if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
+    const next = WHO.list[0].id; WHO.cur = next; saveWho(); KEY = keyFor(next); loadDB(); rebuildPool(); ensureDaily(); refreshMenu(); renderWho();
+    toast(`${whoLabel(me)} 的紀錄已刪除`);
+  }, `要刪除「${whoLabel(me)}」的所有紀錄，請大人先回答這一題。`);
+});
+$('#who-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#who-add').click(); } e.stopPropagation(); });
 $('#q-close').addEventListener('click', () => { $('#o-quest').hidden = true; });
 let toastTok = 0;
 function toast(msg) {
@@ -2545,6 +2689,7 @@ $('#go-wrong').addEventListener('click', openWrong);
 
 /* ================= 連擊里程碑 ================= */
 function confetti(n) {
+  if (RM) n = Math.ceil(n / 4);
   const cols = ['#ffd23f', '#5ff2d0', '#ff6161', '#ffae57', '#ffffff', '#9fdcff'];
   for (let i = 0; i < n; i++) P.push({ k: 1, x: rnd(0, W), y: rnd(-60, -5), vx: rnd(-40, 40), vy: rnd(60, 180), l: rnd(1.8, 3), m: 3, s: rnd(5, 10), c: cols[i % 6], gv: 120, r: rnd(0, 6), vr: rnd(-8, 8) });
 }
@@ -2566,12 +2711,14 @@ $('#go-help').addEventListener('click', () => { $('#o-help').hidden = false; });
 $('#go-set').addEventListener('click', () => { refreshMenu(); $('#o-set').hidden = false; });
 $('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 function pickMode() {
+  if (!DB.best.meteor && !DB.best.sudden) { DB.set.sudden = false; save(); return startMeteor(); }   // 第一次玩先不問模式
   $('#pk-std').textContent = DB.best.meteor ? `最高 ${DB.best.meteor} 分` : '';
   $('#pk-sd').textContent = DB.best.sudden ? `最高 ${DB.best.sudden} 分` : '';
   $('#o-mode').hidden = false;
 }
 $$('[data-sd]').forEach(b => b.addEventListener('click', () => { DB.set.sudden = b.dataset.sd === '1'; save(); $('#o-mode').hidden = true; startMeteor(); }));
 $('#h-close').addEventListener('click', () => { $('#o-help').hidden = true; });
+$('#h-close2').addEventListener('click', () => { $('#o-help').hidden = true; });
 
 /* ================= 共用：結果、倒數、導覽 ================= */
 const pct = v => Math.round(v * 100) + '%';
@@ -2603,11 +2750,12 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; });
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; $('#o-about').hidden = true; gate = null; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; $('#o-about').hidden = true; $('#o-who').hidden = true; gate = null; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
   if (name !== 'bomb') BM = null;
+  if (name !== 'versus') V = null;
   musTrack(name === 'menu' || name === 'map' || name === 'pet' ? 'menu' : 'game', name === 'ghost' ? 1.08 : 1);
   musDuck(false);
   measure();
@@ -2623,7 +2771,7 @@ function refreshMenu() {
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
   renderTables();
   const rn = $('#range-note'); rn.hidden = isStdRange(); rn.textContent = isStdRange() ? '' : rangeText();
-  renderQuests();
+  renderQuests(); renderWho();
 }
 function home() { show('menu'); refreshMenu(); }
 
@@ -2637,7 +2785,7 @@ function makePad(el, fn) {
     if (k === 'back') b.setAttribute('aria-label', '刪除');
     const press = e => { e.preventDefault(); b.classList.add('hit'); setTimeout(() => b.classList.remove('hit'), 90); fn(k); };
     b.addEventListener('pointerdown', press);
-    b.addEventListener('click', e => { if (e.detail === 0) press(e); });
+    b.addEventListener('click', e => { if (kbClick(e)) press(e); });
     el.appendChild(b);
   }
 }
@@ -2648,24 +2796,31 @@ makePad($('#v-top [data-pad]'), d => vKey(1, d));
 // 家長關卡：外部連結前要大人解一題（兩位數 × 一位數），答對才開新分頁。兒童 app 硬限制。
 const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
-function openGate(url) {
+// target 是網址（答對後出現「前往」鈕，用 click 開才不會被 iOS 擋）或函式（答對直接執行，例如清除紀錄）
+function openGate(target, why) {
   const a = ri(12, 19), b = ri(3, 9);
-  gate = { ans: a * b, buf: '', url };
-  $('#gate-q').innerHTML = `${a} × ${b} = ${slots(String(a * b).length, '')}`; $('#gate-hint').textContent = '';
+  gate = { ans: a * b, buf: '', target };
+  $('#gate-why').textContent = why || '要打開外面的網頁，請大人先回答這一題。';
+  $('#gate-q').innerHTML = `${a} × ${b} = ${slots(String(a * b).length, '')}`; $('#gate-hint').textContent = ''; $('#gate-go').hidden = true; $('#gate-pad').hidden = false;
   $('#o-gate').hidden = false;
 }
 function gateKey(d) {
-  if (!gate) return;
+  if (!gate || gate.ok) return;
   if (d === 'back') gate.buf = gate.buf.slice(0, -1); else { gate.buf += d; SFX.key(); }
   const n = String(gate.ans).length;
   if (gate.buf.length >= n) {
-    if (parseInt(gate.buf, 10) === gate.ans) { const u = gate.url; gate = null; $('#o-gate').hidden = true; window.open(u, '_blank', 'noopener'); return; }
+    if (parseInt(gate.buf, 10) === gate.ans) {
+      const t = gate.target;
+      if (typeof t === 'function') { gate = null; $('#o-gate').hidden = true; t(); return; }
+      gate.buf = ''; gate.ok = true; SFX.ding(); $('#gate-hint').textContent = '答對了！'; $('#gate-pad').hidden = true; $('#gate-go').hidden = false; return;
+    }
     gate.buf = ''; SFX.wrong(); $('#gate-hint').textContent = '不對喔，再試一次'; const c = $('#gate-q'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
   }
   const m = $('#gate-q').innerHTML.match(/^(\d+) × (\d+) = /); if (m) $('#gate-q').innerHTML = `${m[1]} × ${m[2]} = ${slots(n, gate.buf)}`;
 }
 makePad($('#gate-pad'), gateKey);
 $('#legal-fb').addEventListener('click', e => { e.preventDefault(); openGate(FB_URL); });
+$('#gate-go').addEventListener('click', () => { if (!gate || !gate.ok) return; const u = gate.target; gate = null; $('#o-gate').hidden = true; window.open(u, '_blank', 'noopener'); });
 $$('.about-fb').forEach(a => a.addEventListener('click', e => { e.preventDefault(); openGate(FB_URL); }));
 $('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; });
 $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; });
@@ -2684,7 +2839,8 @@ addEventListener('keydown', e => {
   else if (mode === 'cmp' && /^[123]$/.test(d)) cmpChoose(+d - 1); else return;
   e.preventDefault();
 });
-addEventListener('pointerdown', () => { ctx(); musStart(); }, { once: true });
+const firstGesture = () => { ctx(); musStart(); removeEventListener('pointerdown', firstGesture); removeEventListener('keydown', firstGesture); };
+addEventListener('pointerdown', firstGesture); addEventListener('keydown', firstGesture);
 $('#go-meteor').addEventListener('click', pickMode);
 $('#go-ghost').addEventListener('click', startGhost);
 $('#go-versus').addEventListener('click', openVersus);
@@ -2725,9 +2881,9 @@ $('#set-tables').addEventListener('click', e => {
 $$('[data-home]').forEach(b => b.addEventListener('click', home));
 $('#m-pause').addEventListener('click', () => pause(true));
 $('#m-fire').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
-$('#m-fire').addEventListener('click', e => { if (e.detail === 0) launchMissile(); });
+$('#m-fire').addEventListener('click', e => { if (kbClick(e)) launchMissile(); });
 $('#m-fire2').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
-$('#m-fire2').addEventListener('click', e => { if (e.detail === 0) launchMissile(); });
+$('#m-fire2').addEventListener('click', e => { if (kbClick(e)) launchMissile(); });
 $('#p-resume').addEventListener('click', () => pause(false));
 $('#p-restart').addEventListener('click', startMeteor);
 $('#r-again').addEventListener('click', () => againFn && againFn());
@@ -2737,11 +2893,26 @@ $('#v-quit').addEventListener('click', () => { if (V) vPause(true); else home();
 $('#v-resume').addEventListener('click', () => vPause(false));
 $('#v-restart').addEventListener('click', startVersus);
 $$('#v-opp [data-opp]').forEach(b => b.addEventListener('click', () => { vOpp = b.dataset.opp; $$('#v-opp [data-opp]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); }));
+// 切到背景（來電、按 Home）：流星與拔河直接暫停；幽靈、哪個大、炸彈把計時起點往後平移，回來不會被算成慢或超時
+let hiddenAt = 0, lastPD = 0;
+addEventListener('pointerdown', () => { lastPD = now(); }, true);
+const kbClick = e => e.detail === 0 && now() - lastPD > 400;   // 真的用鍵盤／輔助工具觸發的 click 才算
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && mode === 'meteor' && M && !M.over) pause(true);
+  if (document.hidden) {
+    hiddenAt = now();
+    if (mode === 'meteor' && M && !M.over) pause(true);
+    if (mode === 'versus' && V && V.started && !V.over) vPause(true);
+  } else if (hiddenAt) {
+    const d = now() - hiddenAt; hiddenAt = 0;
+    if (mode === 'ghost' && G) { G.qt += d; G.t0 += d; }
+    if (mode === 'cmp' && C) { if (C.q) C.q.t0 += d; C.t0 += d; }
+    if (mode === 'bomb' && BM) { if (BM.t0) BM.t0 += d; if (BM.round) BM.round.t0 += d; }
+  }
   if (actx) { try { document.hidden ? actx.suspend() : actx.resume(); } catch (e) {} }
 });
 addEventListener('resize', resize);
+const rotMQ = matchMedia('(orientation:landscape) and (max-height:500px)');
+rotMQ.addEventListener('change', () => { if (!rotMQ.matches) return; if (mode === 'meteor' && M && !M.over) pause(true); if (mode === 'versus' && V && V.started && !V.over) vPause(true); });
 
 /* ================= 主迴圈 ================= */
 let last = now();
