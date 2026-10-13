@@ -111,6 +111,7 @@
 - 存檔格式變動要向下相容：在載入時用 `Object.assign(fresh(), …)` 補欄位；若結構不相容才升 key 版本。
 - 新模式請沿用 `show('name')` + `#s-name` 的畫面慣例，打答案的模式作答用 `makePad()`（選擇題模式如「哪個大」可用大按鈕），紀錄一律用 `record()`，不要另開一套錯題系統。
 - 任何視覺效果都要尊重 `prefers-reduced-motion`（`RM` 旗標）：`spark()` 粒子剩四分之一、`frame()` 不畫全螢幕閃白、`shake()` 不震、`banner()` 改用計時隱藏（CSS 動畫被縮到 .01ms 時 `forwards` 會讓橫幅瞬間消失）。
+- 平板（`min-width:700px` 且 `min-height:700px`）把容器放大一號：模式卡 560、鍵盤 520、卡片 480、星圖 660（12×12 的格子才 ≥ 44px）。iPad 橫向沒有「請轉直」提示，直接玩。
 - 錯題本與遊戲說明的卡片都有固定在頂端的標題列 `.card .hhead` 加 ✕（`.xbtn`），內容長要捲也關得掉。
 - 觸控目標一律 ≥ 44px（`.key`、`.chip`、`.icon-btn`、`.link-btn`、`.wx`、`.danger`、`.sw`（64×44）、`.name-sug button`、`.who`、`.tgrid button` 都有）。
 - 按鈕都綁 `pointerdown`（無延遲）＋ `click`；click 只在 `kbClick(e)` 才處理：`pointerType` 是 mouse／touch／pen 的一律忽略（觸控長按的 click 在 Chromium 也是 `detail 0`），沒有 pointerType（鍵盤、輔助工具、舊 Safari）才看 `detail === 0` 且 400 ms 內沒有 pointerdown。
