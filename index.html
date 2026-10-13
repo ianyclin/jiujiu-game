@@ -44,7 +44,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .brand-mark{font-weight:900;font-size:clamp(68px,19vw,116px);line-height:.9;color:var(--sun);letter-spacing:-.05em;text-shadow:0 5px 0 #a87a00,0 14px 40px rgba(255,210,63,.35);transform:rotate(-5deg)}
 .brand-sub span{display:block;font-weight:900;font-size:clamp(32px,8.6vw,50px);line-height:1;letter-spacing:.04em;text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 18px rgba(8,17,31,.9)}
 .brand-sub small{display:block;color:var(--muted);font-size:14px;letter-spacing:.24em;margin-top:10px}
-.brand-sub small.on{color:var(--ice);letter-spacing:.06em}
+.brand-sub small.on{color:var(--ice);letter-spacing:.06em;text-wrap:balance}
 .modes{display:grid;gap:12px;width:100%;max-width:470px}
 .mode{display:grid;grid-template-columns:62px 1fr;column-gap:14px;row-gap:3px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;transition:transform .08s,box-shadow .08s}
 .mode:active{transform:translateY(4px);box-shadow:0 2px 0 var(--keyEdge)}
@@ -94,7 +94,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .name-in:focus{outline:2px solid var(--mint);border-color:var(--mint)}
 .name-sug{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:11px 14px;min-height:44px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
-.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:normal;text-align:center;max-width:92vw;border-radius:18px;line-height:1.3}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 68px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:normal;text-align:center;max-width:92vw;border-radius:18px;line-height:1.3}
 .toast.on{transform:translate(-50%,0);opacity:1}
 
 /* ---------- 共用：鍵盤、題目 ---------- */
@@ -126,6 +126,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 @keyframes hsh{50%{transform:scale(1.18);filter:drop-shadow(0 0 8px rgba(255,210,63,.9))}}
 .fire{display:flex;gap:1px;align-items:center;min-height:44px;border:2px solid transparent;background:transparent;border-radius:12px;padding:4px 7px;cursor:pointer;touch-action:manipulation}
 .fire svg{width:24px;height:24px}
+@media (max-width:400px){.fire{padding:2px 3px;gap:0}.fire svg{width:17px;height:17px}.hearts svg{width:19px;height:19px}.hud{gap:4px}}
+.score{min-width:0} .score small{white-space:nowrap}
 .fire.ready{border-color:var(--ember);background:rgba(255,174,87,.18)}
 .hearts svg{width:22px;height:22px}
 .score{text-align:center;font-family:var(--f-num);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
@@ -147,6 +149,9 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .card.help{gap:8px;text-align:left}
 .xbtn{align-self:flex-end;margin:-6px -6px -44px 0;z-index:2;font-size:18px;font-weight:900;color:var(--muted)}
 .help h3{text-align:center;margin-bottom:4px}
+.help .hhead{position:sticky;top:-22px;z-index:2;margin:-22px -20px 0;padding:16px 20px 8px;background:#152a45;border-bottom:1px solid var(--line)}
+.help .hhead h3{margin:0}
+.help .hhead .xbtn{position:absolute;top:10px;right:12px;margin:0}
 .brand-t{color:var(--sun);text-shadow:0 2px 0 #a87a00}
 .help h4{margin:8px 0 0;font-size:15px;color:var(--sun);letter-spacing:.08em}
 .rotate{display:none;position:fixed;inset:0;z-index:30;background:var(--ink);place-items:center;text-align:center;font-weight:900;font-size:22px;color:var(--paper)}
@@ -789,7 +794,7 @@ html,body{overscroll-behavior:none}
 
   <div class="overlay" id="o-set" hidden>
     <div class="card">
-      <h3>設定</h3>
+      <h3 id="set-title">設定</h3>
       <div class="setlist">
         <div class="setrow"><div><b>音樂</b><small>背景音樂</small></div><button class="sw" data-set="music" type="button" aria-pressed="true" aria-label="音樂"><i></i></button></div>
         <div class="setrow"><div><b>音效</b><small>按鍵、打中、爆炸的聲音</small></div><button class="sw" data-set="sound" type="button" aria-pressed="true" aria-label="音效"><i></i></button></div>
@@ -798,14 +803,13 @@ html,body{overscroll-behavior:none}
         <div class="setrow"><div><b>數列題提示</b><small>數列題上面會寫出是幾的倍數。關掉就要自己看出是幾的乘法表，比較難</small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" aria-label="數列題提示"><i></i></button></div>
       </div>
       <div class="btn-col"><button class="btn alt" type="button" id="go-about">關於<span class="brand-t">九九流星隊</span></button><button class="btn alt" type="button" id="set-close">關閉</button></div>
-      <p class="legal">© 2026 <a href="#" id="legal-fb">指數三寶飯</a>（ianyclin）保留所有權利。</p>
+      <p class="legal">© 2026 <a href="#" id="legal-fb">指數三寶飯</a>（ianyclin）<span style="white-space:nowrap">保留所有權利。</span></p>
     </div>
   </div>
 
   <div class="overlay" id="o-help" hidden>
     <div class="card help">
-      <button class="icon-btn xbtn" type="button" id="h-close2" aria-label="關閉">✕</button>
-      <h3>遊戲說明</h3>
+      <div class="hhead"><h3>遊戲說明</h3><button class="icon-btn xbtn" type="button" id="h-close2" aria-label="關閉">✕</button></div>
       <div class="hgrp">五個遊戲</div>
       <h4>流星防衛戰</h4>
       <ul class="rules">
@@ -833,7 +837,7 @@ html,body{overscroll-behavior:none}
         <li>連擊 10、30、50、100 有慶祝動畫。答錯或流星落地，連擊歸零。</li>
       </ul>
       <h4>幽靈競速</h4>
-      <ul class="rules"><li>20 題計時。另一條跑道是<b>最快的你</b>（你最好的一次），追過它就是新紀錄。第一次是跟<b>新手幽靈</b>跑。</li><li>連輸 3 次，幽靈會慢一點點，讓你追得到。</li></ul>
+      <ul class="rules"><li>20 題計時。另一條跑道是<b>最快的你</b>（你最好的一次），追過它就是新紀錄。第一次是跟<b>新手幽靈</b>跑。</li><li>輸了幽靈會慢一點點（最多三次），追過它就會慢慢變回最快的你。</li></ul>
       <h4>雙人拔河</h4>
       <ul class="rules">
         <li>平板放中間，面對面搶答。答對把星星拉過來一格，先拉到底的贏；答錯停 1 秒。</li>
@@ -842,21 +846,21 @@ html,body{overscroll-behavior:none}
       </ul>
       <h4>哪個大？哪個小？</h4>
       <ul class="rules">
-        <li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。</li>
+        <li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。點對不會點亮星星（要打出答案才算）。</li>
         <li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li>
         <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現。</li>
         <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
       </ul>
       <h4>炸彈拆除</h4>
       <ul class="rules">
-        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。</li>
+        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。點對不會點亮星星（要打出答案才算）。</li>
         <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點。</li>
         <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
       </ul>
       <div class="hgrp">其他</div>
       <h4>星圖</h4>
       <ul class="rules">
-        <li>每一題答對 3 次以上、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li>
+        <li>每一題<b>打對</b> 3 次以上、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li>
         <li>紅色一閃一閃的是<b>容易錯</b>的題目，遊戲裡會偷偷更常出現，直到你把它練熟。</li>
       </ul>
       <h4>錯題本</h4>
@@ -923,6 +927,7 @@ try {
   const w = JSON.parse(localStorage.getItem(PKEY));
   if (w && Array.isArray(w.list) && w.list.length) WHO = { cur: typeof w.cur === 'string' ? w.cur : '', list: w.list.filter(x => x && typeof x.id === 'string').map(x => ({ id: x.id, name: String(x.name || '').slice(0, 6) })).slice(0, WHO_MAX), asked: !!w.asked };
 } catch (e) {}
+WHO.list = WHO.list.filter((x, i, a) => a.findIndex(y => y.id === x.id) === i);
 if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
 if (!WHO.list.some(x => x.id === WHO.cur)) WHO.cur = WHO.list[0].id;
 const keyFor = id => id ? `jiujiu-meteor-v1:${id}` : 'jiujiu-meteor-v1';
@@ -944,7 +949,7 @@ function cleanFacts(fc) {
   const out = {};
   if (!fc || typeof fc !== 'object' || Array.isArray(fc)) return out;
   Object.keys(fc).forEach(k => {
-    const s = fc[k], m = /^(\d{1,2})([x+\-])(\d{1,2})$/.exec(k); if (!s || typeof s !== 'object' || !m) return;
+    const s = fc[k], m = /^([1-9]\d?)([x+\-])([1-9]\d?)$/.exec(k); if (!s || typeof s !== 'object' || !m) return;
     const a = +m[1], b = +m[3]; if (m[2] === 'x' ? (a < 1 || a > T_MAX || b < 1 || b > T_MAX) : (a > 10 || b > 10)) return;   // 只留真的存在的題目
     out[k] = { n: clamp(Math.round(num(s.n)), 0, 1e6), err: clamp(num(s.err), 0, 1), t: clamp(Math.round(num(s.t)), 0, 9000) };
     if (s.w) out[k].w = clamp(Math.round(num(s.w)), 0, 1e6);
@@ -952,7 +957,8 @@ function cleanFacts(fc) {
   return out;
 }
 function cleanRest(D) {
-  Object.keys(D.bests).forEach(k => { const b = D.bests[k]; if (!/^(std|\d+(,\d+)*)$/.test(k) || !b || typeof b !== 'object') { delete D.bests[k]; return; } b.meteor = num(b.meteor); b.sudden = num(b.sudden); b.cmpT = b.cmpT === null ? null : num(b.cmpT, null); b.ghostLoss = clamp(Math.round(num(b.ghostLoss)), 0, 99); b.bomb = b.bomb === null ? null : num(b.bomb, null); if (!(Array.isArray(b.ghost) && b.ghost.length === 20 && b.ghost.every(v => typeof v === 'number' && Number.isFinite(v)))) b.ghost = null; });
+  Object.keys(D.bests).forEach(k => { const b = D.bests[k]; if (!/^(std|\d+(,\d+)*)$/.test(k) || !b || typeof b !== 'object') { delete D.bests[k]; return; } b.meteor = clamp(num(b.meteor), 0, 1e7); b.sudden = clamp(num(b.sudden), 0, 1e7); b.cmpT = num(b.cmpT, 0) > 0 ? Math.min(num(b.cmpT), 36e5) : null; b.ghostLoss = clamp(Math.round(num(b.ghostLoss)), 0, 99); b.bomb = num(b.bomb, 0) > 0 ? Math.min(num(b.bomb), 36e5) : null; if (!(Array.isArray(b.ghost) && b.ghost.length === 20 && b.ghost.every(v => typeof v === 'number' && Number.isFinite(v)))) b.ghost = null; });
+  ['mix', 'sound', 'music', 'sudden', 'seqLabel'].forEach(k => { D.set[k] = D.set[k] === true || D.set[k] === 'true' || D.set[k] === 1; });   // 字串 'false' 不能當 true
   const P = D.pet; P.dust = Math.max(0, Math.round(num(P.dust))); P.fed = Math.max(0, Math.round(num(P.fed))); P.name = String(P.name || '').slice(0, 6); if (typeof P.kind !== 'string') P.kind = '';
   P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string');
   const Y = D.daily; Y.badges = Math.max(0, Math.round(num(Y.badges))); Y.streak = Math.max(0, Math.round(num(Y.streak))); Y.ans = Math.max(0, Math.round(num(Y.ans))); Y.starBase = Math.round(num(Y.starBase));
@@ -973,7 +979,7 @@ function loadDB() {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const d = JSON.parse(raw), f = fresh();
-      const bests = {}; Object.keys(d.bests || {}).forEach(k => { if (k === '__proto__' || k === 'constructor') return; bests[k] = Object.assign(BEST0(), d.bests[k]); });
+      const bests = {}; Object.keys(d.bests || {}).forEach(k => { const b = d.bests[k]; if (k === '__proto__' || k === 'constructor' || !b || typeof b !== 'object' || Array.isArray(b)) return; bests[k] = Object.assign(BEST0(), b); });
       if (d.best) bests.std = Object.assign(BEST0(), d.best, bests.std || {});   // 舊存檔只有一份 best，歸到標準九九
       DB = mkDB({ facts: cleanFacts(d.facts), bests, set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) });
       DB.set.tables = cleanTables(DB.set.tables);
@@ -1050,7 +1056,12 @@ const fullEq = q => q.f ? `${q.f.a} ${q.f.op} ${q.f.b} = ${q.f.ans}` : `${q.text
 function record(k, ok, ms, soft) {
   if (!k) return;
   const s = DB.facts[k] || (DB.facts[k] = { n: 0, err: 0, t: 0 });
-  if (soft) { if (ok) { questStars(); DB.daily.ans = (DB.daily.ans || 0) + 1; } if (ok && !s.n && !s.err) { if (!DB.facts[k].n) delete DB.facts[k]; save(); return; } s.err = +(ok ? s.err * 0.85 : s.err * 0.85 + 0.1).toFixed(4); save(); return; }   // 輕量記錯一次不跨 learn 門檻（0.12），兩次才會；沒遇過的題輕量記對不用留紀錄
+  if (soft) {   // soft 可以是數字＝記錯的強度（預設 0.1，引線燒完一次好幾題用 0.05）
+    if (ok) { questStars(); DB.daily.ans = (DB.daily.ans || 0) + 1; if (!s.n && !s.err) { delete DB.facts[k]; save(); return; } }   // 沒遇過的題輕量記對不用留紀錄
+    else if (!retest.some(r => r.k === k)) retest.push({ k, due: draws + ri(6, 12) });   // 點錯的題下一場打答案的遊戲再考一次
+    const amt = typeof soft === 'number' ? soft : 0.1;
+    s.err = +(ok ? s.err * 0.85 : s.err * 0.85 + amt).toFixed(4); save(); return;
+  }
   s.n++;
   s.err = +(s.err * 0.6 + (ok ? 0 : 0.4)).toFixed(4);
   if (!ok) { s.w = (s.w || 0) + 1; if (!retest.some(r => r.k === k)) retest.push({ k, due: draws + ri(6, 12) }); }
@@ -1063,7 +1074,7 @@ function record(k, ok, ms, soft) {
 function state(k) {
   const s = DB.facts[k];
   if (!s || !s.n) return 'new';
-  if (s.err >= 0.45 || (s.err >= 0.24 && (s.w || 0) >= 2)) return 'weak';   // 一次失手不紅；以前錯過、剛又錯才紅
+  if (s.err >= 0.45 || (s.err >= 0.25 && (s.w || 0) >= 2)) return 'weak';   // 一次失手不紅；以前錯過、剛又錯才紅（0.25：錯一次再打對一次就退紅）
   const need = (FACT[k] && (FACT[k].a === 1 || FACT[k].b === 1)) ? 1 : 3;
   if (s.n < need || !s.t || s.err >= 0.12 || s.t > 3600 + slowAllow(k)) return 'learn';   // !s.t：至少要正著打對過一次才算星
   return 'star';
@@ -1474,7 +1485,7 @@ function updateMeteor(dt) {
   if (M.freeze > 0) { M.freeze -= dt; $('#m-freeze').hidden = M.freeze <= 0; $('#m-freeze i').style.width = clamp(M.freeze / 4 * 100, 0, 100) + '%'; }
   if (M.dbl > 0) { M.dbl -= dt; $('#m-dbl').hidden = M.dbl <= 0; $('#m-dbl i').style.width = clamp(M.dbl / 10 * 100, 0, 100) + '%'; }
   if (M.inv > 0) { M.inv -= dt; $('#m-inv').hidden = M.inv <= 0; $('#m-inv i').style.width = clamp(M.inv / M.invMax * 100, 0, 100) + '%'; }
-  const invOn = M.inv > 0; $('#m-hshield').hidden = !invOn; $('#m-hearts').classList.toggle('inv', invOn);   // 無敵：心旁邊有盾牌、心發光
+  const invOn = M.inv > 0; $('#m-hshield').toggleAttribute('hidden', !invOn); $('#m-hearts').classList.toggle('inv', invOn);   // 無敵：心旁邊有盾牌、心發光
   updateDrops(dt); updateRockets(dt);
   if (M.bossDelay > 0) { M.bossDelay -= dt; if (M.bossDelay <= 0) spawnBoss(); }
   M.spawnT -= dt;
@@ -1898,7 +1909,7 @@ function startGhost() {
   G = { i: 0, n: 20, q: null, buf: '', t0: 0, qt: 0, times: [], ok: 0, wrongs: [], rev: false, done: false, started: false,
         ghost: best ? best.map(t => t * (1 + 0.08 * Math.min(3, DB.best.ghostLoss || 0))) : Array.from({ length: 20 }, (_, i) => (i + 1) * 3600), hasBest: !!best, gNoted: false };   // 連輸就放慢一點，不然狀態好的一天會留下追不到的幽靈
   $('#g-glabel').textContent = best ? '最快的你' : '新手幽靈';
-  $('#g-note').textContent = best ? `目標：${(G.ghost[19] / 1000).toFixed(1)} 秒內完成${(DB.best.ghostLoss || 0) >= 3 ? '（幽靈放慢了一點）' : ''}` : '第一次挑戰：先贏過每題 3.6 秒的新手幽靈';
+  $('#g-note').textContent = best ? `目標：${(G.ghost[19] / 1000).toFixed(1)} 秒內完成${(DB.best.ghostLoss || 0) >= 1 ? '（幽靈放慢了一點）' : ''}` : '第一次挑戰：先贏過每題 3.6 秒的新手幽靈';
   $('#g-you').style.left = '0%'; $('#g-ghost').style.left = '0%';
   $('#g-timer').textContent = '0.0';
   $('#g-q').innerHTML = ''; $('#g-hint').textContent = ''; $('#g-prog').textContent = '準備好了嗎？';
@@ -1947,18 +1958,20 @@ function finishGhost() {
   const better = prev === null || total < prev;
   if (better) { DB.best.ghost = G.times.slice(); save(); }
   const beatGhost = total < G.ghost[G.n - 1];
-  DB.best.ghostLoss = beatGhost ? 0 : (DB.best.ghostLoss || 0) + 1; save();
+  const slowed = (DB.best.ghostLoss || 0) > 0;
+  DB.best.ghostLoss = better ? 0 : beatGhost ? Math.max(0, (DB.best.ghostLoss || 0) - 1) : (DB.best.ghostLoss || 0) + 1; save();   // 追過放慢的幽靈：少放慢一級，不要下一場又全速
   quest('ghost'); if (beatGhost) quest('ghostwin');
   const acc = G.ok / G.n;
   let note;
   if (prev === null) note = beatGhost ? '贏過新手幽靈！這次成績會變成下次的幽靈' : '成績已記下，下次跟自己比';
   else if (better) note = `新紀錄！比之前最快還快 ${((prev - total) / 1000).toFixed(1)} 秒`;
+  else if (beatGhost && slowed) note = `追過放慢的幽靈了！離最快紀錄還差 ${((total - prev) / 1000).toFixed(1)} 秒`;
   else note = `差最快紀錄 ${((total - prev) / 1000).toFixed(1)} 秒，再一次！`;
   const me = G;
   setTimeout(() => {
     if (mode !== 'ghost' || G !== me) return;
     result({
-      title: beatGhost ? '你追過幽靈了！' : '幽靈先到了…', big: (total / 1000).toFixed(1), label: '秒', note,
+      title: beatGhost ? (better || !slowed ? '你追過幽靈了！' : '追上幽靈了！') : '幽靈先到了…', big: (total / 1000).toFixed(1), label: '秒', note,
       stars: starsFor(acc, G.n), rows: [['答對率', pct(acc)], ['平均每題', (total / G.n / 1000).toFixed(1) + ' 秒'], ['最高紀錄', ((DB.best.ghost[19]) / 1000).toFixed(1) + ' 秒']],
       wrongs: G.wrongs, again: startGhost, celebrate: better
     });
@@ -2159,7 +2172,7 @@ function cmpChoose(i) {
   }
   if (!q.rev) {
     q.rev = true; C.streak = 0; $('#c-timer').classList.add('off');
-    record(q.ans.k, false, 0, true); record(f.k, false, 0, true);   // 半強度：正確那題可能根本沒答錯
+    record(q.ans.k, false, 0, 0.05); record(f.k, false, 0, 0.1); DB.daily.wrong = (DB.daily.wrong || 0) + 1;   // 輕量：正確那題可能根本沒答錯，更輕
     C.wrongs.push({ f: q.ans, k: q.ans.k }, { f, k: f.k });
     els[q.opts.indexOf(q.ans)].classList.add('want');
   }
@@ -2323,7 +2336,8 @@ function updateBomb() {
   if (left < 5 && Math.ceil(left) !== r.sec) { r.sec = Math.ceil(left); if (r.sec > 0) SFX.tick(); }
   if (left <= 0) {
     const missed = r.tiles.filter((v, i) => v % r.n === 0 && !r.got.has(i));
-    explode(`引線燒完了。還沒找到：${missed.join('、')}`, r.got.size ? missed.map(m => factNK(r.n, m / r.n)) : [], null, true);   // 一個都沒點（可能走開了）就不記
+    missed.sort((a, b) => a - b);
+    explode(`引線燒完了。還沒找到：${missed.join('、')}`, r.got.size ? missed.map(m => factNK(r.n, m / r.n)) : [], null, 0.05);   // 一次好幾題，每題更輕   // 一個都沒點（可能走開了）就不記
   }
 }
 function finishBomb() {
@@ -2538,8 +2552,8 @@ function mapInfoDefault() {
   const seen = MUL.filter(f => DB.facts[f.k] && DB.facts[f.k].n).length;
   let pre = isStdRange() ? '' : rangeText().replace(/目前(只練|加上) (.+) 的乘法表/, '目前$1 <b>$2</b> 的乘法表') + '。';
   const at = avgT(), D = DB.daily;
-  if (D.ans || D.wrong || at) pre += [D.ans || D.wrong ? `今天打對 <b>${D.ans || 0}</b> 題${D.wrong ? `、錯 <b>${D.wrong}</b> 題` : ''}` : '', at ? `最近每題大約 <b>${(at / 1000).toFixed(1)}</b> 秒` : ''].filter(Boolean).join('，') + '。';
-  const logs = D.log || {}, played = Object.keys(logs).filter(d => { const n = daysAgo(d); return n >= 1 && n <= 7 && logs[d] && logs[d].a; }).length + (D.ans ? 1 : 0);
+  if (D.ans || D.wrong || at) pre += [D.ans || D.wrong ? `今天答對 <b>${D.ans || 0}</b> 題${D.wrong ? `、錯 <b>${D.wrong}</b> 題` : ''}` : '', at ? `最近每題大約 <b>${(at / 1000).toFixed(1)}</b> 秒` : ''].filter(Boolean).join('，') + '。';
+  const logs = D.log || {}, played = Object.keys(logs).filter(d => { const n = daysAgo(d); return n >= 1 && n <= 6 && logs[d] && logs[d].a; }).length + (D.ans ? 1 : 0);   // 今天加前 6 天 = 7 天
   if (played) pre += `最近 7 天玩了 <b>${played}</b> 天。`;
   const old = Object.keys(logs).filter(d => daysAgo(d) >= 7 && logs[d] && logs[d].r === rangeKey()).sort().pop();   // 最近一筆 7 天以上、同乘法表範圍的紀錄
   if (old) {
@@ -2548,8 +2562,8 @@ function mapInfoDefault() {
     if (Math.abs(dt) >= 0.1) parts.push(`每題${dt > 0 ? '快' : '慢'} ${Math.abs(dt).toFixed(1)} 秒`);
     if (parts.length) pre += `比 ${daysAgo(old)} 天前：${parts.join('、')}。`;
   }
-  if (!seen) $('#map-info').innerHTML = pre + '還沒有練習紀錄。每一題答對 3 次以上、又快又穩，就會點亮成一顆星。';
-  else if (ws.length) $('#map-info').innerHTML = `${pre}最常出錯：${ws.map(f => `<b>${f.a}×${f.b}</b>`).join('、')}<br>這些題目在遊戲裡會比較常出現。`;
+  if (!seen) $('#map-info').innerHTML = pre + '還沒有打答案的紀錄。每一題打對 3 次以上、又快又穩，就會點亮成一顆星。';
+  else if (ws.length) $('#map-info').innerHTML = `${pre}最常出錯：${ws.map(f => `<b>${f.a}×${f.b}</b>`).join('、')}。<br>這些題目在遊戲裡會比較常出現，練熟了紅格會自己變回來。`;
   else $('#map-info').innerHTML = `${pre}已經遇過 <b>${seen}</b> 題，目前沒有特別容易錯的題目。點任一格可以看細節。`;
 }
 $('#grid99').addEventListener('click', e => {
@@ -2592,7 +2606,7 @@ function ensureDaily() {
   const D = DB.daily, t = today();
   if (!Array.isArray(D.tasks)) D.tasks = [];
   if (D.date === t && D.tasks.length === 3 && D.tasks.every(x => QBY[x.id])) return;
-  if (D.date && D.date !== t) {   // 換日：留一筆昨天的星數與平均秒數給家長看趨勢，只留 30 天
+  if (D.date && D.date !== t && /^\d{4}-\d{2}-\d{2}$/.test(D.date)) {   // 換日：留一筆昨天的星數與平均秒數給家長看趨勢，只留 30 天
     D.log = D.log || {}; D.log[D.date] = { s: starCount(), t: avgT(), r: rangeKey(), a: D.ans || 0 };
     Object.keys(D.log).sort().slice(0, -30).forEach(k => delete D.log[k]);
     D.ans = 0; D.wrong = 0;
@@ -2627,7 +2641,8 @@ function renderWho() {
   $('#who-rename').textContent = noName ? '我就叫這個名字' : '幫目前的人改名';
   $('#who-rename').className = noName ? 'btn' : 'btn alt';
   $('#who-hint').textContent = noName ? '先打你的名字，再按「我就叫這個名字」。' : (WHO.list.length >= WHO_MAX ? '最多 4 個人。' : '');
-  $('#who-del').textContent = `清掉${noName ? '這個人' : '「' + cur.name + '」'}的紀錄（要請大人）`;
+  $('#who-del').textContent = `清掉「${cur.name}」的紀錄（要請大人）`;
+  $('#who-del').hidden = noName; $('#who-list').hidden = noName && WHO.list.length === 1;   // 還沒取名：不要給紅色按鈕、名單也沒意義
 }
 function switchWho(id) {
   if (mode !== 'menu' || !WHO.list.some(x => x.id === id)) return;
@@ -2638,7 +2653,10 @@ const whoTaken = name => WHO.list.some(x => x.name === name);
 $('#go-who').addEventListener('click', () => { renderWho(); $('#who-in').value = ''; $('#o-who').hidden = false; });
 $('#who-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) $('#who-in').value = b.dataset.n; });
 // 第一次打開（只有一個人、還沒取名、也還沒玩過）就先問名字
-if (!WHO.asked && WHO.list.length === 1 && !WHO.list[0].name && !Object.keys(DB.facts).length) { WHO.asked = true; saveWho(); setTimeout(() => { if (mode === 'menu') { renderWho(); $('#o-who').hidden = false; } }, 700); }   // 只問一次
+if (!WHO.asked && WHO.list.length === 1 && !WHO.list[0].name && !Object.keys(DB.facts).length) setTimeout(() => {   // 只問一次，而且真的問到才算
+  if (mode !== 'menu' || $$('.overlay').some(o => !o.hidden && o.offsetParent)) return;   // 有別的視窗開著就先不問（#v-setup 在隱藏的畫面裡，用 offsetParent 判斷）
+  WHO.asked = true; saveWho(); renderWho(); $('#o-who').hidden = false;
+}, 700);
 $('#who-close').addEventListener('click', () => { $('#o-who').hidden = true; $('#who-in').blur(); });
 $('#who-list').addEventListener('click', e => { const b = e.target.closest('[data-who]'); if (!b) return; switchWho(b.dataset.who); $('#o-who').hidden = true; SFX.ding(); toast(`${whoLabel(whoCur())}，換你玩！`); });
 $('#who-add').addEventListener('click', () => {
@@ -2666,7 +2684,7 @@ $('#who-del').addEventListener('click', () => {
     toast(`${whoLabel(me)}的紀錄清掉了`);
   }, `要刪除「${whoLabel(me)}」的所有紀錄，請大人先回答這一題。`);
 });
-$('#who-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); (whoCur().name && WHO.list.length < WHO_MAX ? $('#who-add') : $('#who-rename')).click(); } e.stopPropagation(); });
+$('#who-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!whoCur().name) $('#who-rename').click(); else if (WHO.list.length < WHO_MAX) $('#who-add').click(); else toast('最多 4 個人，改名請按下面的按鈕'); } e.stopPropagation(); });
 $('#q-close').addEventListener('click', () => { $('#o-quest').hidden = true; });
 let toastTok = 0;
 function toast(msg) {
@@ -2693,7 +2711,8 @@ const questStars = () => quest('stars', Math.max(0, starCount() - DB.daily.starB
 /* ================= 錯題本 ================= */
 const ALL = {}; MUL_ALL.concat(ADDSUB).forEach(f => { ALL[f.k] = f; });
 function wrongList(n = 10) {
-  return Object.keys(DB.facts).filter(k => ALL[k] && DB.facts[k].err >= (DB.facts[k].n ? 0.05 : 0.25))   // 只在選擇題／炸彈點錯過的，要錯三次以上才列
+  // 只列目前範圍會出的題；打過的 err ≥ 0.12（手滑一次不列），只在選擇題／炸彈點錯過的要 ≥ 0.25
+  return Object.keys(DB.facts).filter(k => ALL[k] && (ALL[k].op !== '×' || (tables().includes(ALL[k].a) && ALL[k].b <= cols())) && DB.facts[k].err >= (DB.facts[k].n ? 0.12 : 0.25))
     .sort((a, b) => DB.facts[b].err - DB.facts[a].err || (DB.facts[b].w || 0) - (DB.facts[a].w || 0)).slice(0, n);
 }
 let wArm = 0;
@@ -2774,7 +2793,7 @@ function countdown(cb) {
   const el = $('#o-count'), tok = ++cdTok, m0 = mode;
   el.hidden = false; let n = 3;
   const step = () => {
-    if (tok !== cdTok || mode !== m0) { el.hidden = true; return; }
+    if (tok !== cdTok || mode !== m0) return;   // 舊倒數不要碰共用的元素（新倒數可能已經在用）
     if (covered()) { setTimeout(step, 250); return; }   // 切背景／轉橫時倒數停住，回來再繼續
     if (n > 0) { el.innerHTML = `<span>${n}</span>`; SFX.tick(); n--; setTimeout(step, 700); }
     else { el.innerHTML = '<span class="go">開始！</span>'; SFX.go(); setTimeout(() => { if (tok === cdTok) el.hidden = true; }, 600); cb(); }
@@ -2806,6 +2825,7 @@ function refreshMenu() {
   renderTables();
   $('#brand-note').textContent = isStdRange() ? '打下流星・點亮星圖' : rangeText().replace('目前', '');
   $('#brand-note').classList.toggle('on', !isStdRange());
+  $('#set-title').textContent = whoCur().name ? `設定（${whoCur().name}）` : '設定';   // 連續幫幾個孩子設定時知道現在是誰的
   renderQuests(); renderWho();
 }
 function home() { show('menu'); refreshMenu(); }
@@ -2938,34 +2958,38 @@ addEventListener('pointerdown', () => { lastPD = now(); }, true);
 const kbClick = e => (e.pointerType === 'mouse' || e.pointerType === 'touch' || e.pointerType === 'pen') ? false : (e.detail === 0 && now() - lastPD > 400);
 // 計時起點往後平移，但不能平移到未來（倒數在背景跑完時 t0 才剛設）
 const shiftT = (t, d) => t ? t + Math.min(d, Math.max(0, now() - t)) : t;
-function onHide() {
-  if (hiddenAt) return;
-  hiddenAt = now(); hiddenMode = mode;
-  if (mode === 'meteor' && M && !M.over) pause(true);
-  if (mode === 'versus' && V && V.started && !V.over) vPause(true);
+// 幽靈／哪個大／炸彈的計時起點往後平移 d（局已結束的不動，不然會算出假的最快紀錄）；流星、拔河用各自的暫停
+function shiftTimers(d) {
+  if (mode === 'ghost' && G && !G.done) { G.qt = shiftT(G.qt, d); G.t0 = shiftT(G.t0, d); }
+  if (mode === 'cmp' && C && !C.end) { if (C.q) C.q.t0 = shiftT(C.q.t0, d); C.t0 = shiftT(C.t0, d); }
+  if (mode === 'bomb' && BM && !BM.end) { BM.t0 = shiftT(BM.t0, d); if (BM.round && BM.round.state === 'live') BM.round.t0 = shiftT(BM.round.t0, d); }
 }
+function pauseGames() {
+  if (mode === 'meteor' && M && !M.over) pause(true);
+  if (mode === 'versus' && V && V.started && !V.over) vPause(true);   // 拔河的平移交給 vPause(false)
+}
+// 切到背景：rAF 停了，回來時一次平移整段時間
+function onHide() { hiddenAt = now(); hiddenMode = mode; pauseGames(); }
 function onShow() {
   if (!hiddenAt) return;
   const d = now() - hiddenAt; hiddenAt = 0;
-  if (mode !== hiddenMode) return;   // 藏著的時候換了模式（只有合成操作做得到），不要平移到別局
-  if (mode === 'ghost' && G) { G.qt = shiftT(G.qt, d); G.t0 = shiftT(G.t0, d); }
-  if (mode === 'cmp' && C) { if (C.q) C.q.t0 = shiftT(C.q.t0, d); C.t0 = shiftT(C.t0, d); }
-  if (mode === 'bomb' && BM) { BM.t0 = shiftT(BM.t0, d); if (BM.round) BM.round.t0 = shiftT(BM.round.t0, d); }
-  if (mode === 'versus' && V && !V.over) V.p.forEach(p => { p.qt = shiftT(p.qt, d); if (p.due) p.due += d; if (p.lock) p.lock += d; });
+  if (mode === hiddenMode) shiftTimers(d);   // 藏著的時候換了模式（只有合成操作做得到），不要平移到別局
 }
 const covered = () => document.hidden || rotMQ.matches;
 document.addEventListener('visibilitychange', () => {
-  covered() ? onHide() : onShow();
+  document.hidden ? onHide() : onShow();
   if (actx) { try { document.hidden ? actx.suspend() : actx.resume(); } catch (e) {} }
 });
 addEventListener('resize', resize);
 const rotMQ = matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse)');
-rotMQ.addEventListener('change', () => { covered() ? onHide() : onShow(); });
+rotMQ.addEventListener('change', () => { if (rotMQ.matches) pauseGames(); });   // 轉橫：頁面還在前景，計時由 frame() 逐幀凍結
 
 /* ================= 主迴圈 ================= */
 let last = now();
 function frame(t) {
-  const dt = Math.min(0.05, (t - last) / 1000); last = t; T += dt;
+  const raw = (t - last) / 1000, dt = Math.min(0.05, raw); last = t; T += dt;
+  const cov = covered();
+  if (cov && !document.hidden) shiftTimers(Math.max(0, raw) * 1000);   // 轉橫：畫面被「請轉直」蓋住，計時凍結（shiftTimers 吃毫秒）
   if (mode === 'meteor') { const r = $('#m-dock').getBoundingClientRect().top; if (Math.abs(r - GY) > 0.5) GY = r; }
   let sx = 0, sy = 0;
   if (shakeT > 0) { shakeT -= dt; const m = shakeM * Math.max(0, shakeT / 0.45); sx = rnd(-m, m); sy = rnd(-m, m); }
@@ -2973,10 +2997,12 @@ function frame(t) {
   drawWorld(GY, dt);
   const frozen = mode === 'meteor' && M && M.paused;
   if (mode === 'meteor' && M) { if (!M.paused && !M.over) updateMeteor(dt); drawMeteorScene(frozen ? 0 : dt); }
-  if (mode === 'ghost') updateGhost();
-  if (mode === 'versus') updateVersus();
-  if (mode === 'cmp') updateCmp();
-  if (mode === 'bomb') updateBomb();
+  if (!cov) {
+    if (mode === 'ghost') updateGhost();
+    if (mode === 'versus') updateVersus();
+    if (mode === 'cmp') updateCmp();
+    if (mode === 'bomb') updateBomb();
+  }
   if (!frozen) stepP(dt);
   drawP();
   g.restore();
