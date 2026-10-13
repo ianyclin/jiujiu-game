@@ -2066,7 +2066,7 @@ function cpuDelay() {
 const VF_AT = [45, 90];   // 拔河開局幾秒後力道變 2、3（實力相近的兩人是隨機漫步，平均 36 次答對才分勝負、尾巴很長）
 function vForce() {
   const el = (now() - V.t0) / 1000, f = el >= VF_AT[1] ? 3 : el >= VF_AT[0] ? 2 : 1;
-  if (f !== V.force) { V.force = f; $('#v-rope').classList.toggle('f2', f === 2); $('#v-rope').classList.toggle('f3', f === 3); toast(`繩子變滑了！一次拉${f === 2 ? '兩' : '三'}格`); SFX.power(); }
+  if (f !== V.force) { V.force = f; $('#v-rope').classList.toggle('f2', f === 2); $('#v-rope').classList.toggle('f3', f === 3); toast(`繩子變滑了！拉${f === 2 ? '兩' : '三'}格`); SFX.power(); }
   return f;
 }
 function vPull(dir) { V.pos = clamp(V.pos + dir * vForce(), -V.win, V.win); $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%'; SFX.zap(Math.abs(V.pos) * 2); }
