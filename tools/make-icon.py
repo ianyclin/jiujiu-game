@@ -7,12 +7,10 @@ src = sys.argv[1]; root = os.path.dirname(os.path.dirname(os.path.abspath(__file
 im = Image.open(src).convert('RGB'); assert im.size[0] == im.size[1], '要正方形'
 big = im.resize((1024, 1024), Image.LANCZOS); big.save(os.path.join(out, 'icon-1024.png'), optimize=True)
 for n in (512, 192, 180): big.resize((n, n), Image.LANCZOS).save(os.path.join(out, f'icon-{n}.png'), optimize=True)
-# maskable：上下各取圖的邊緣顏色做漸層底
-top, bot = im.getpixel((im.size[0] // 2, 2)), im.getpixel((im.size[0] // 2, im.size[1] - 3))
-m = Image.new('RGB', (512, 512))
-px = m.load()
-for y in range(512):
-    t = y / 511; c = tuple(round(top[i] * (1 - t) + bot[i] * t) for i in range(3))
-    for x in range(512): px[x, y] = c
-inner = big.resize((400, 400), Image.LANCZOS); m.paste(inner, (56, 56)); m.save(os.path.join(out, 'maskable-512.png'), optimize=True)
+# maskable：底是整張圖放大模糊後的版本（邊緣顏色自然接上），中間貼 78% 的圖，邊緣用圓角羽化
+from PIL import ImageFilter, ImageDraw
+bg = big.resize((640, 640), Image.LANCZOS).crop((64, 64, 576, 576)).filter(ImageFilter.GaussianBlur(14))
+inner = big.resize((400, 400), Image.LANCZOS)
+mask = Image.new('L', (400, 400), 0); ImageDraw.Draw(mask).rounded_rectangle((0, 0, 399, 399), radius=70, fill=255); mask = mask.filter(ImageFilter.GaussianBlur(3))
+bg.paste(inner, (56, 56), mask); bg.save(os.path.join(out, 'maskable-512.png'), optimize=True)
 print('ok', os.listdir(out))
