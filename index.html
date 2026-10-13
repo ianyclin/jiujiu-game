@@ -145,6 +145,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .help h3{text-align:center;margin-bottom:4px}
 .brand-t{color:var(--sun);text-shadow:0 2px 0 #a87a00}
 .help h4{margin:8px 0 0;font-size:15px;color:var(--sun);letter-spacing:.08em}
+.help .hgrp{margin:14px 0 -2px;font-size:12px;letter-spacing:.3em;color:var(--muted);text-align:center}
 .stage{flex:1;position:relative;pointer-events:none;min-height:0}
 .banner{position:absolute;left:0;right:0;top:28%;text-align:center;font-weight:900;font-size:clamp(34px,9vw,60px);opacity:0;color:var(--paper);text-shadow:0 5px 0 rgba(0,0,0,.4)}
 .banner.on{animation:ban 1.9s ease forwards}
@@ -774,6 +775,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
   <div class="overlay" id="o-help" hidden>
     <div class="card help">
       <h3>遊戲說明</h3>
+      <div class="hgrp">五個遊戲</div>
       <h4>流星防衛戰</h4>
       <ul class="rules">
         <li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台會一直瞄準<b>同一顆</b>直到打掉；有別顆快掉到地上了，才會先轉過去打它，這時下面的題目會跳一下。</li>
@@ -807,6 +809,30 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>下方「小隊長」的作答會記進星圖和錯題本。</li>
         <li>沒有人陪你玩？選<b>機器人</b>當對手。它算題的速度跟你平常差不多，你落後它會慢一點，你領先它會快一點，偶爾也會算錯。</li>
       </ul>
+      <h4>哪個大？哪個小？</h4>
+      <ul class="rules">
+        <li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。</li>
+        <li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li>
+        <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現。</li>
+        <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
+      </ul>
+      <h4>炸彈拆除</h4>
+      <ul class="rules">
+        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。</li>
+        <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！</li>
+        <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
+      </ul>
+      <div class="hgrp">其他</div>
+      <h4>星圖</h4>
+      <ul class="rules">
+        <li>每一題答對 3 次以上、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li>
+        <li>紅色一閃一閃的是<b>容易錯</b>的題目，遊戲裡會偷偷更常出現，直到你把它練熟。</li>
+      </ul>
+      <h4>錯題本</h4>
+      <ul class="rules">
+        <li>答錯過的題目都列在這裡，最常錯的排最前面。</li>
+        <li>練熟了它會自己消失；也可以按「清除」把那題的紀錄歸零。</li>
+      </ul>
       <h4>寵物</h4>
       <ul class="rules">
         <li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li>
@@ -822,19 +848,6 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li>
         <li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>
-      </ul>
-      <h4>哪個大？哪個小？</h4>
-      <ul class="rules">
-        <li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。</li>
-        <li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li>
-        <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現。</li>
-        <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
-      </ul>
-      <h4>炸彈拆除</h4>
-      <ul class="rules">
-        <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。</li>
-        <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！</li>
-        <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
       </ul>
       <h4>要練哪幾個乘法表</h4>
       <ul class="rules">
