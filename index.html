@@ -416,7 +416,7 @@ html,body{overscroll-behavior:none}
 .wrongs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .wrongs i{font-style:normal;font-family:var(--f-num);background:rgba(255,97,97,.14);color:#ffbcbc;border-radius:10px;padding:4px 10px;font-size:17px}
 .legal{margin:0;font-size:11px;line-height:1.5;color:rgba(147,169,192,.7);text-align:center}
-.legal a,.about-fb{color:var(--ice);text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:12px 6px;margin:-12px -6px}   /* 觸控範圍 ≥ 44px，版面不變 */
+.legal a,.about-fb,.about-priv{color:var(--ice);text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:12px 6px;margin:-12px -6px}   /* 觸控範圍 ≥ 44px，版面不變 */
 #gate-pad{margin-block:4px}
 .setlist{display:grid;gap:8px;text-align:left}
 .setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
@@ -853,6 +853,7 @@ html,body{overscroll-behavior:none}
       <h4 data-t="about.made"></h4>
       <ul class="rules">
         <li data-th="about.author"></li>
+        <li data-th="about.priv"></li>
         <li data-t="about.credits"></li>
         <li><span data-t="about.ver"></span><span id="about-env" style="color:var(--muted)"></span></li>
       </ul>
@@ -884,6 +885,7 @@ html,body{overscroll-behavior:none}
       </div>
       <div class="btn-col"><button class="btn alt" type="button" id="go-about" data-th="about.title"></button><button class="btn alt" type="button" id="set-close" data-t="close"></button></div>
       <p class="legal">© 2026 <a href="#" id="legal-fb" data-t="author"></a><span data-t="legal.id"></span><span style="white-space:nowrap" data-t="legal.rights"></span></p>
+      <p class="legal"><a href="#" class="legal-priv" data-t="privacy"></a></p>
     </div>
   </div>
 
@@ -1064,8 +1066,9 @@ const STR = {
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': '保留所有權利。',
     'about.title': '關於<span class="brand-t">九九流星隊</span>', 'about.what': '這是什麼', 'about.parents': '給家長', 'about.made': '製作',
     'about.whatL': '<li>給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，是把「都會但偶爾背錯」練到<b>又快又不會錯</b>。</li><li>答錯的題目會偷偷更常出現，孩子只覺得在玩。星圖看得到每一題熟不熟。</li>',
-    'about.parentsL': '<li><b>沒有廣告、沒有追蹤、不收集任何資料</b>。所有紀錄只存在這台裝置的瀏覽器裡。</li><li>每個人的紀錄分開存（主選單「誰在玩」）。換裝置或清除瀏覽器資料，紀錄不會跟著走。想重來可以在星圖頁「清除所有紀錄」（要大人解一題）。</li>',
+    'about.parentsL': '<li><b>沒有廣告、沒有追蹤、不收集任何資料</b>。所有紀錄只存在這台裝置裡。</li><li>每個人的紀錄分開存（主選單「誰在玩」）。換裝置、刪掉 app 或清除資料，紀錄不會跟著走。想重來可以在星圖頁「清除所有紀錄」（要大人解一題）。</li>',
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（就是一個三寶爸）。',
+    privacy: '隱私權政策', 'about.priv': '<a href="#" class="about-priv">隱私權政策</a>：我們不收集任何資料（要大人解一題才會打開）。',
     'about.credits': '寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC、Zen Maru Gothic 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。',
     'about.ver': '版本 1.2。© 2026 指數三寶飯 保留所有權利。', 'about.env': '　畫面 {w}×{h}，畫布 {cw}×{ch} @{d}',
     'gate.title': '請大人來一下', 'gate.why': '要打開外面的網頁，請大人先回答這一題。', 'gate.go': '前往', 'gate.ok': '答對了！', 'gate.no': '不對喔，再試一次',
@@ -1187,8 +1190,9 @@ const STR = {
     author: '指數三寶飯', 'legal.id': ' (ianyclin) ', 'legal.rights': 'All rights reserved.',
     'about.title': 'About <span class="brand-t">9×9 Meteor Squad</span>', 'about.what': 'What is this?', 'about.parents': 'For parents', 'about.made': 'Credits',
     'about.whatL': '<li>A times tables game for kids (around 2nd–3rd grade). The goal isn\'t learning the facts for the first time. It takes "I know them but slip sometimes" all the way to <b>fast and never wrong</b>.</li><li>Missed facts quietly come up more often, while your child just feels like they\'re playing. The Star Map shows how well each fact is known.</li>',
-    'about.parentsL': '<li><b>No ads, no tracking, no data collected.</b> All records stay in this device\'s browser.</li><li>Each player\'s records are kept separately ("Who\'s playing" on the menu). Records don\'t move to other devices, and clearing browser data erases them. To start over, use "Erase all records" on the Star Map page (a grown-up solves a problem first).</li>',
+    'about.parentsL': '<li><b>No ads, no tracking, no data collected.</b> All records stay on this device.</li><li>Each player\'s records are kept separately ("Who\'s playing" on the menu). Records don\'t move to other devices, and deleting the app or clearing data erases them. To start over, use "Erase all records" on the Star Map page (a grown-up solves a problem first).</li>',
     'about.author': 'Made by <a href="#" class="about-fb">指數三寶飯</a> (a dad of three).',
+    privacy: 'Privacy Policy', 'about.priv': '<a href="#" class="about-priv">Privacy Policy</a>: we collect no data at all (a grown-up solves a problem first to open it).',
     'about.credits': 'Pet and outfit art is AI-generated. Fonts are Chiron GoRound TC, Zen Maru Gothic and Lilita One (SIL Open Font License), bundled with the game, so nothing loads from outside. Music and sound effects are synthesized live in code.',
     'about.ver': 'Version 1.2. © 2026 指數三寶飯. All rights reserved.', 'about.env': '  Screen {w}×{h}, canvas {cw}×{ch} @{d}',
     'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.no': 'Not quite. Try again',
@@ -1308,8 +1312,9 @@ const STR = {
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': 'All rights reserved.',
     'about.title': '<span class="brand-t">九九流星隊</span>について', 'about.what': 'これは何？', 'about.parents': 'おうちの方へ', 'about.made': '制作',
     'about.whatL': '<li>小学生（2〜3年生くらい）が九九を練習するゲームです。目標は「覚える」ことではなく、「わかっているのに時々まちがえる」を<b>速く、まちがえずに</b>答えられるまで練習することです。</li><li>まちがえた問題はこっそり多めに出題されますが、子どもは遊んでいるだけに感じます。星マップで、一問ずつの習熟度が見られます。</li>',
-    'about.parentsL': '<li><b>広告なし・追跡なし・データ収集なし</b>。記録はすべて、この端末のブラウザの中だけに保存されます。</li><li>記録は人ごとに分けて保存されます（メニューの「だれがあそぶ？」）。端末を変えたりブラウザのデータを消したりすると、記録は引き継がれません。最初からやり直すときは、星マップの「記ろくをぜんぶけす」から（大人が一問解く必要があります）。</li>',
+    'about.parentsL': '<li><b>広告なし・追跡なし・データ収集なし</b>。記録はすべて、この端末の中だけに保存されます。</li><li>記録は人ごとに分けて保存されます（メニューの「だれがあそぶ？」）。端末を変えたり、アプリを消したり、データを消したりすると、記録は引き継がれません。最初からやり直すときは、星マップの「記ろくをぜんぶけす」から（大人が一問解く必要があります）。</li>',
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（3人の子のパパです）。',
+    privacy: 'プライバシーポリシー', 'about.priv': '<a href="#" class="about-priv">プライバシーポリシー</a>：データはいっさい集めません（大人が問題を1問解くと開きます）。',
     'about.credits': 'ペットときせかえのイラストはAIで生成しています。フォントは Zen Maru Gothic、Chiron GoRound TC、Lilita One（SIL Open Font License）で、ゲームといっしょに配布しているため外部には接続しません。音楽と効果音はプログラムでリアルタイムに合成しています。',
     'about.ver': 'バージョン 1.2。© 2026 指數三寶飯 All rights reserved.', 'about.env': '　画面 {w}×{h}、キャンバス {cw}×{ch} @{d}',
     'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.no': 'ちがいます。もう一度どうぞ',
@@ -3387,7 +3392,10 @@ function gateKey(d) {
 }
 makePad($('#gate-pad'), gateKey);
 $('#gate-go').addEventListener('click', () => { if (!gate || !gate.ok) return; const u = gate.target; gate = null; $('#o-gate').hidden = true; window.open(u, '_blank', 'noopener'); });
-document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#legal-fb, .about-fb')) { e.preventDefault(); openGate(FB_URL); } });   // 委派：applyStr() 重填 innerHTML 之後連結也要走家長關卡
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#legal-fb, .about-fb')) { e.preventDefault(); openGate(FB_URL); } });
+// 隱私權政策（GitHub Pages，privacy/ 底下三種語言各一頁）：app 內也要連得到，同樣走家長關卡
+const PRIVACY_URL = { 'zh-Hant': 'https://ianyclin.github.io/jiujiu-game/privacy/', en: 'https://ianyclin.github.io/jiujiu-game/privacy/en.html', ja: 'https://ianyclin.github.io/jiujiu-game/privacy/ja.html' };
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('.legal-priv, .about-priv')) { e.preventDefault(); openGate(PRIVACY_URL[LANG] || PRIVACY_URL.en); } });   // 委派：applyStr() 重填 innerHTML 之後連結也要走家長關卡
 $('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; $('#about-env').textContent = tx('about.env', { w: innerWidth, h: innerHeight, cw: W, ch: H, d: (window.devicePixelRatio || 1).toFixed(1) }); });   // 回報問題時好判斷是哪種裝置、畫布有沒有量錯
 $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; });
 $('#gate-close').addEventListener('click', () => { gate = null; $('#o-gate').hidden = true; });
