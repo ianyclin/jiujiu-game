@@ -15,7 +15,7 @@
 @font-face{font-family:'Chiron GoRound TC';font-weight:900;font-display:swap;src:url(assets/fonts/chiron-900.woff2) format('woff2')}
 @font-face{font-family:'Lilita One';font-weight:400;font-display:swap;src:url(assets/fonts/lilita.woff2) format('woff2')}
 [hidden]{display:none!important}
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--sat:env(safe-area-inset-top,0px);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 img{max-width:100%}
 :root{
   /* 世界觀：黃昏轉入夜的天空、遠山與一座小鎮；刻意只做夜空一種主題
@@ -910,6 +910,7 @@ html,body{overscroll-behavior:none}
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const safeTop = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0;   // 瀏海安全區（env() 只能從 CSS 讀）
 const T_MAX = 12, STD_TABLES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const rnd = (a, b) => a + Math.random() * (b - a);
 const ri = (a, b) => Math.floor(rnd(a, b + 1));
@@ -1289,7 +1290,10 @@ function drawWorld(gy, dt) {
   // 月亮
   // 主選單時月亮縮小躲到右上角，不壓到「流星隊」標題；遊戲中維持原位
   const menuMoon = mode === 'menu' || mode === 'pet' || mode === 'map';
-  const mx = menuMoon ? W - 46 : W * 0.82, my = menuMoon ? 46 : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
+  // 主選單：月亮跟著「九九流星隊」標題那一列（DOM 位置已含瀏海安全區），不會被狀態列或「誰在玩」鈕蓋掉
+  let moonY = 46 + safeTop();
+  if (mode === 'menu') { const br = $('#s-menu .brand').getBoundingClientRect(); if (br.height) moonY = br.top + Math.min(26, br.height * 0.28); }
+  const mx = menuMoon ? W - 44 : W * 0.82, my = menuMoon ? moonY : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
   const mg = g.createRadialGradient(mx, my, 8, mx, my, mgr);
   mg.addColorStop(0, 'rgba(255,240,200,.3)'); mg.addColorStop(1, 'rgba(255,240,200,0)');
   g.fillStyle = mg; g.beginPath(); g.arc(mx, my, mgr, 0, 6.283); g.fill();
