@@ -356,7 +356,7 @@ html,body{overscroll-behavior:none}
 @keyframes petPop{30%{transform:scale(1.18,.86)}60%{transform:scale(.94,1.1) translateY(-10px)}}
 .pet-stage.wobble svg{animation:petWobble .9s ease-in-out infinite}
 @keyframes petWobble{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
-.pet-name{font-size:22px;font-weight:900}
+.pet-name{font-size:22px;font-weight:900;text-align:center}
 .pet-name small{display:block;font-size:13px;color:var(--muted);font-weight:700;margin-top:2px}
 .pet-bar{width:100%;max-width:320px;height:12px;border-radius:6px;background:rgba(255,210,63,.15);overflow:hidden}
 .pet-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ember),var(--sun));border-radius:6px;transition:width .4s}
@@ -1330,7 +1330,7 @@ function drawWorld(gy, dt) {
   if (mode === 'menu') { const br = $('#s-menu .brand').getBoundingClientRect(); moonY = br.height ? br.top + Math.min(26, br.height * 0.28) : 112 + safeTop(); }
   else if (menuMoon) {
     const hd = $(mode === 'map' ? '#s-map .map-head' : '#s-pet .map-head'); const hr = hd ? hd.getBoundingClientRect() : null;
-    if (hr && hr.height) { if (hr.top - safeTop() > 70) moonY = hr.top - 40; else { const bl = hd.firstElementChild.getBoundingClientRect(), h2 = hd.querySelector('h2').getBoundingClientRect(); moonY = hr.top + hr.height / 2; moonX = (bl.right + h2.left) / 2; if (h2.left - bl.right < 100) moonY = -200; } }   // 矮螢幕：放在「主選單」鈕與標題之間，不壓到下面的格子；星塵位數多到塞不下就不畫
+    if (hr && hr.height) { if (hr.top - safeTop() > 70) moonY = hr.top - 40; else { const bl = hd.querySelector('button').getBoundingClientRect(), rg = document.createRange(); rg.selectNodeContents(hd.querySelector('h2')); const h2 = rg.getBoundingClientRect(); moonY = hr.top + hr.height / 2; moonX = (bl.right + h2.left) / 2; if (h2.left - bl.right < 100) moonY = -200; } }   // 量標題「文字」的左邊不量 h2 的盒子（盒子在某些瀏覽器會撐滿）；矮螢幕：放在「主選單」鈕與標題之間，不壓到下面的格子；星塵位數多到塞不下就不畫
     else moonY = 112 + safeTop();
   }
   const mx = menuMoon ? moonX : W * 0.82, my = menuMoon ? moonY : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
