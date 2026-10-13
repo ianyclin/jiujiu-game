@@ -14,6 +14,7 @@
 ## 語言與對象
 
 - 介面文字一律**繁體中文、台灣用語**，不得出現簡體字。
+- 介面文字**不寫死在 HTML 或 JS**：全部放在字串表 `STR['zh-Hant']`（見架構的「介面文字」），新增文字先加 key 再用 `tx()` 取。
 - 使用者是小學三年級，文字要短、口語，鍵盤用大顆按鈕，不叫出系統鍵盤。
 - 預設**不計時施壓**：計時只用在幽靈競速、哪個大「跟自己比」，而且哪個大要全對才算時間。
 
@@ -29,6 +30,7 @@
 1. `<style>`：`:root` tokens（夜空單一主題，刻意不做亮色）、各畫面 CSS。
 2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-pet`、`#s-map` 八個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、今日任務（`#o-quest`）、寵物取名（`#o-name`）、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理；「要練哪幾個乘法表」是數字方格 `#set-tables`，另有自己的 click 處理）、關於（`#o-about`，從設定進，給家長看的：遊戲目的、隱私、製作與版本；版本號寫在這裡，發布時記得改）、遊戲說明。
 3. JS（IIFE）：
+   - **介面文字** `STR[語言][key]`（表名不叫 `T`：`T` 是主迴圈的時間），`tx(key, { 參數 })` 取字串：`{n}` 換成參數，值也可以是陣列（`names.*` 建議名字、`who.sug`）；缺 key 退回中文、中文也沒有就露出 key 本身。HTML 不寫文字，用 `data-t`（textContent）、`data-th`（innerHTML，說明頁那種含 `<b>` 的 `<li>` 串）、`data-ta`（aria-label）、`data-tp`（placeholder）標 key，`applyStr()` 在腳本最前面填一次。組合字串整句一個 key、留參數（`b.found` 的「找到 <b>{k}</b> / {n}」、`seq.label`），不要用中文 regex 改字（`rangeText(where, bold)` 取代原本的 `replace('目前', '')`）；標點與分隔也走表（`sep` 、、`comma`、`period`、`dot`、`plus`、`sec` 的「{s} 秒」與 `secs(ms)`）。資料表只留 id，文字用 id 組 key：寵物 `kind.*`／`line.*`／`stage.0～4`／`home.*`、配件 `gear.{id}`／`slot.*`、任務 `q.{id}`（`questText()`）、寶箱橫幅 `tier.*`。外部連結（`#legal-fb`、`.about-fb`）用 document 委派綁家長關卡，重填 innerHTML 不會掉。`<title>`、meta description、`manifest.json` 仍是中文（給爬蟲與加入主畫面用）。
    - **存檔** `DB = { facts, best, set, daily, pet }`，`save()`。
    - **乘法表範圍** `DB.set.tables`（勾選 1～`T_MAX` 12 的乘法表，預設 `STD_TABLES` 1～9；至少要留一個 ≥ 2 的表，`cleanTables()` 載入與修改時都會清理）。題目是「勾選的表 a」× b，b 從 1 到 `cols()`（9，勾了 10 以上就到最大那個）。`MUL_ALL` 固定 12×12 全表、`FACT` 是 key→fact；`MUL`／`MUL2` 由 `rebuildPool()` **就地**重建（陣列物件不換，各處參考才不會失效）。設定頁是 6×2 的數字方格 `#set-tables`（`renderTables()`，10～12 用薄荷色表示挑戰），說明文字用 `fmtTables()` 壓縮成「2、5」「5 到 9」。星圖畫 1～`cols()` 全部的列，沒勾的列 `.off` 變暗；主選單非標準時副標題 `#brand-note` 改顯示「只練 2、5 的乘法表」（不另佔高度）。炸彈（表取勾選的 ≥ 2，只有一個就允許連續）、魔王（題庫太小就退到 `MUL2`／`MUL`）、哪個大、拔河機器人題目都跟著題庫走；大人加難和加減題庫固定不受影響。三位數答案的速度門檻放寬 600 ms（`slowAllow()`）。
    - **最佳紀錄分範圍** `DB.bests[rangeKey()]`（標準九九是 `'std'`，其他是勾選的表用逗號接起來）；`DB.best` 是 `mkDB()` 定義的不可列舉 getter，永遠指向目前範圍那一份，所以各處照舊寫 `DB.best.x`。`save()` 會把沒紀錄的範圍刪掉。舊存檔的 `best` 載入時歸到 `'std'`。改範圍時 `DB.daily.starBase` 重設成當下的 `starCount()`。
@@ -107,7 +109,7 @@
 
 ## 開發慣例
 
-- 改規則時，同一次 commit 要更新 `#o-help` 的遊戲說明。遊戲說明要 **ELI5**：小三自己看得懂，一句一件事，不講系統內部（星圖怎麼算、權重之類）。
+- 改規則時，同一次 commit 要更新遊戲說明（`STR` 的 `help.*`）。遊戲說明要 **ELI5**：小三自己看得懂，一句一件事，不講系統內部（星圖怎麼算、權重之類）。
 - 存檔格式變動要向下相容：在載入時用 `Object.assign(fresh(), …)` 補欄位；若結構不相容才升 key 版本。
 - 新模式請沿用 `show('name')` + `#s-name` 的畫面慣例，打答案的模式作答用 `makePad()`（選擇題模式如「哪個大」可用大按鈕），紀錄一律用 `record()`，不要另開一套錯題系統。
 - 任何視覺效果都要尊重 `prefers-reduced-motion`（`RM` 旗標）：`spark()` 粒子剩四分之一、`frame()` 不畫全螢幕閃白、`shake()` 不震、`banner()` 改用計時隱藏（CSS 動畫被縮到 .01ms 時 `forwards` 會讓橫幅瞬間消失）。
