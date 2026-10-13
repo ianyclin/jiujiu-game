@@ -19,7 +19,7 @@ a = html.index('\n  ja: {'); b = html.index('\n  },', a)
 ja_block, rest = html[a:b], html[:a] + html[b:]
 base = set('0123456789+−×÷=？?！!，。、：；「」（）〈〉《》…・·★☆♥✓✕～~%/-–—′″℃ 　')
 base |= set(chr(c) for c in range(0x20, 0x7f)) | set(chr(c) for c in range(0xff01, 0xff5f))
-clean = lambda chars: ''.join(sorted(c for c in chars if c >= ' ' and c not in '  '))
+clean = lambda chars: ''.join(sorted(c for c in chars if c >= ' ' and c not in '\u2028\u2029'))
 zh_text = clean(set(rest) | base)
 ja_text = clean(set(ja_block) | base | set(chr(c) for c in range(0x3041, 0x3097)) | set(chr(c) for c in range(0x30a1, 0x30fb)) | set('ーゝゞヽヾ〜'))
 print('chiron chars', len(zh_text), 'cjk', sum(1 for c in zh_text if '一' <= c <= '鿿'))
