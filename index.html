@@ -582,7 +582,7 @@ html,body{overscroll-behavior:none}
         <p style="color:var(--mint)">下方「小隊長」的答題會記進星圖。</p>
         <div class="opt" role="group" aria-label="對手" id="v-opp">
           <button type="button" data-opp="cpu" aria-pressed="true">對手：機器人（跟你差不多快）</button>
-          <button type="button" data-opp="easy" aria-pressed="false">對手：真人，一樣的題目</button>
+          <button type="button" data-opp="easy" aria-pressed="false">對手：真人，一樣難的題目</button>
           <button type="button" data-opp="hard" aria-pressed="false">對手：大人加難（兩位數 × 一位數）</button>
         </div>
         <div class="btn-col">
@@ -628,7 +628,6 @@ html,body{overscroll-behavior:none}
       <div class="bm-head" id="bm-head">
         <svg class="bomb" id="bm-bomb" viewBox="0 0 120 120" aria-hidden="true">
           <path class="burst" id="bm-burst" fill="#ffd23f" stroke="#ff6161" stroke-width="3" stroke-linejoin="round"/>
-          <path class="fuse" d="M70 26 H 132" fill="none" stroke="#c9a46b" stroke-width="5" stroke-linecap="round"/>
           <g class="body">
             <rect x="52" y="18" width="24" height="16" rx="5" fill="#4a5f78" stroke="#93a9c0" stroke-width="2"/>
             <circle cx="60" cy="74" r="42" fill="#1b2b40" stroke="#93a9c0" stroke-width="3"/>
@@ -2298,10 +2297,12 @@ function bombHead(cls) { $('#bm-head').className = 'bm-head' + (cls ? ' ' + cls 
 const fusePath = $('#bm-fusepath'); let fuseLen = 0, fuseW = 0;
 $('#bm-burst').setAttribute('d', (() => { let d = ''; for (let i = 0; i < 24; i++) { const a = i * Math.PI / 12, r = i % 2 ? 24 : 52; d += (i ? 'L' : 'M') + (60 + r * Math.cos(a)).toFixed(1) + ' ' + (74 + r * Math.sin(a)).toFixed(1); } return d + 'Z'; })());
 function fuseLayout() {
-  const svg = $('#bm-fuseline'), w = Math.round(svg.clientWidth);
-  if (!w || w === fuseW) return;
-  fuseW = w; svg.setAttribute('viewBox', `0 0 ${w} 28`);
-  let d = 'M0 14'; for (let x = 0; x < w - 4; x += 36) { const e = Math.min(x + 36, w - 4); d += ` Q ${x + 9} 3 ${x + 18} 14 Q ${x + 27} 25 ${e} 14`; }
+  const svg = $('#bm-fuseline'), w = Math.round(svg.clientWidth), bw = $('#bm-bomb').getBoundingClientRect().width;
+  if (!w || w + bw === fuseW) return;
+  fuseW = w + bw; svg.setAttribute('viewBox', `0 0 ${w} 28`);
+  // 引線從炸彈蓋子（炸彈圖 x=70/120）直線拉到這個 svg 的左邊（中間隔 10px），再開始波浪；整條都是路徑，火花會一路燒到蓋子才爆
+  const stub = bw * (50 / 120) + 10;
+  let d = `M${(-stub).toFixed(1)} 14 L0 14`; for (let x = 0; x < w - 4; x += 36) { const e = Math.min(x + 36, w - 4); d += ` Q ${x + 9} 3 ${x + 18} 14 Q ${x + 27} 25 ${e} 14`; }
   $('#bm-ash').setAttribute('d', d); fusePath.setAttribute('d', d); fuseLen = fusePath.getTotalLength();
 }
 function bombFuse(frac) {
