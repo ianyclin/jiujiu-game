@@ -804,7 +804,7 @@ html,body{overscroll-behavior:none}
       <ul class="rules">
         <li>作者：<a href="#" class="about-fb">指數三寶飯</a>（就是一個三寶爸）。</li>
         <li>寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。</li>
-        <li>版本 1.1。© 2026 指數三寶飯 保留所有權利。</li>
+        <li>版本 1.1。© 2026 指數三寶飯 保留所有權利。<span id="about-env" style="color:var(--muted)"></span></li>
       </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="about-close">關閉</button></div>
     </div>
@@ -2949,7 +2949,7 @@ makePad($('#gate-pad'), gateKey);
 $('#legal-fb').addEventListener('click', e => { e.preventDefault(); openGate(FB_URL); });
 $('#gate-go').addEventListener('click', () => { if (!gate || !gate.ok) return; const u = gate.target; gate = null; $('#o-gate').hidden = true; window.open(u, '_blank', 'noopener'); });
 $$('.about-fb').forEach(a => a.addEventListener('click', e => { e.preventDefault(); openGate(FB_URL); }));
-$('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; });
+$('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; $('#about-env').textContent = `　畫面 ${innerWidth}×${innerHeight}，畫布 ${W}×${H} @${(window.devicePixelRatio || 1).toFixed(1)}`; });   // 回報問題時好判斷是哪種裝置、畫布有沒有量錯
 $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; });
 $('#gate-close').addEventListener('click', () => { gate = null; $('#o-gate').hidden = true; });
 
@@ -3061,6 +3061,7 @@ rotMQ.addEventListener('change', () => { if (rotMQ.matches) pauseGames(); });   
 let last = now();
 function frame(t) {
   const raw = (t - last) / 1000, dt = Math.min(0.05, Math.max(0, raw)); last = t; T += dt;
+  if (cv.clientWidth !== W || cv.clientHeight !== H || Math.min(2, window.devicePixelRatio || 1) !== DPR) resize();   // iOS 轉向時 resize 事件可能量到舊尺寸，畫布就被橫向壓扁；每幀核對，下一幀自己修正
   const cov = covered();
   if (cov && !document.hidden) shiftTimers(Math.max(0, raw) * 1000);   // 轉橫：畫面被「請轉直」蓋住，計時凍結（shiftTimers 吃毫秒）
   if (mode === 'meteor') { const r = $('#m-dock').getBoundingClientRect().top; if (Math.abs(r - GY) > 0.5) GY = r; }
