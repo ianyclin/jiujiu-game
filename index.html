@@ -2290,7 +2290,7 @@ function bombTap(i) {
     return;
   }
   const k = clamp(Math.round(v / r.n), 1, cols()), near = r.n * k;
-  if (Math.abs(v - near) <= 2) explode(`${v} 不是 ${r.n} 的倍數。${r.n} × ${k} = ${near}，差了 ${Math.abs(v - near)}`, [factNK(r.n, k)], el);
+  if (Math.abs(v - near) <= 2) { DB.daily.wrong = (DB.daily.wrong || 0) + 1; explode(`${v} 不是 ${r.n} 的倍數。${r.n} × ${k} = ${near}，差了 ${Math.abs(v - near)}`, [factNK(r.n, k)], el, 0.1); }   // 輕量記錯＋排進重測：下一場打答案的遊戲再驗證（手滑不該熄星）
   else { const f = MUL2.find(f => f.ans === v); explode(`${v} 不是 ${r.n} 的倍數${f ? `，它是 ${f.a} × ${f.b}` : ''}`, [], el); }   // 離倍數很遠的干擾數字不算哪一題答錯
 }
 function bombEndRound() { if (BM.i >= BM.n) { BM.end = now(); updateBomb(); } }
