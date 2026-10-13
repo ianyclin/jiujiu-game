@@ -5,7 +5,7 @@
 ## 現況
 
 - 主程式單檔 `index.html`（HTML + CSS + JS 全在裡面），無建置步驟，開檔即玩。外部資源只有 `assets/pets/`（20 張寵物 PNG）與 `assets/gear/`（12 張配件 PNG，只在寵物頁載入）、`assets/fonts/`（自行託管的字型子集）。**不連任何外部網域**（關於頁承諾「沒有追蹤」，字型也不能連 Google）。
-- 部署：GitHub Pages（main 分支根目錄）。**加入主畫面**：`manifest.json`（standalone、portrait）＋ `apple-touch-icon`，圖示在 `assets/icon/`（1024／512／192／180／maskable），由 `tools/make-icon.js` 用 SVG 畫（夜空、流星、月亮、黃色「九九」），改設計改那支腳本重跑。
+- 部署：GitHub Pages（main 分支根目錄）。安全區只在 `:root` 的 `padding-top/bottom: env(safe-area-inset-*)` 處理一次，畫面內的元素不要再加 `env()`（iOS 加入主畫面會算兩次，主選單反而要捲）；`.toast` 是 `position:fixed` 所以自己有 `env()`，拔河時加 `.mid` 放中線免得蓋住機器人的臉。**加入主畫面**：`manifest.json`（standalone、portrait）＋ `apple-touch-icon`，圖示在 `assets/icon/`（1024／512／192／180／maskable），由 `tools/make-icon.js` 用 SVG 畫（夜空、流星、月亮、黃色「九九」），改設計改那支腳本重跑。
 - 所有紀錄存 `localStorage`，只在該瀏覽器。**多人**：`jiujiu-meteor-who` 存 `WHO = { cur, list:[{id, name}] }`（最多 `WHO_MAX` 4 人）；每個人一把存檔 key（`keyFor(id)`：第一個人 id 是空字串、沿用舊 key `jiujiu-meteor-v1`，其他是 `jiujiu-meteor-v1:<id>`），`loadDB()` 依 `KEY` 載入、`switchWho(id)` 切換（save → 換 KEY → loadDB → rebuildPool → ensureDaily → refreshMenu）。主選單最上面的 `#go-who` 小鈕開 `#o-who`（切換、新增、改名；清掉紀錄走家長關卡）。目前的人還沒有名字時只給「我就叫這個名字」（改名）與哥哥／姊姊／弟弟／妹妹建議，不給新增，紀錄才不會留在「沒有名字」那裡；全新安裝第一次進主選單 0.7 秒後自動打開取名（真的開了才記 `WHO.asked`；有別的 overlay 開著就不開）；還沒取名時不顯示清掉鈕與名單；設定頁標題顯示「設定（名字）」；同名擋掉；4 人滿了提示。只能在主選單切人（`switchWho` 檢查 `mode`），切完音樂跟著新的人的設定。名字輸入 `#who-in` 會叫出系統鍵盤（跟寵物取名一樣）。
 - 音樂與音效全部用 Web Audio 即時合成，沒有任何音檔，無版權問題。
 - 字型：Lilita One（數字）、Chiron GoRound TC（中文），OFL 授權，用 `tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切成只含遊戲用到的字（約 970 字、三個粗細共 700 KB woff2）放在 `assets/fonts/`，`@font-face` + `font-display:swap`，都有系統字型 fallback。**改了介面文字要重跑切字腳本**，不然新字會用系統字型顯示（孩子打的名字本來就會 fallback）。
@@ -33,11 +33,11 @@
    - **乘法表範圍** `DB.set.tables`（勾選 1～`T_MAX` 12 的乘法表，預設 `STD_TABLES` 1～9；至少要留一個 ≥ 2 的表，`cleanTables()` 載入與修改時都會清理）。題目是「勾選的表 a」× b，b 從 1 到 `cols()`（9，勾了 10 以上就到最大那個）。`MUL_ALL` 固定 12×12 全表、`FACT` 是 key→fact；`MUL`／`MUL2` 由 `rebuildPool()` **就地**重建（陣列物件不換，各處參考才不會失效）。設定頁是 6×2 的數字方格 `#set-tables`（`renderTables()`，10～12 用薄荷色表示挑戰），說明文字用 `fmtTables()` 壓縮成「2、5」「5 到 9」。星圖畫 1～`cols()` 全部的列，沒勾的列 `.off` 變暗；主選單非標準時副標題 `#brand-note` 改顯示「只練 2、5 的乘法表」（不另佔高度）。炸彈（表取勾選的 ≥ 2，只有一個就允許連續）、魔王（題庫太小就退到 `MUL2`／`MUL`）、哪個大、拔河機器人題目都跟著題庫走；大人加難和加減題庫固定不受影響。三位數答案的速度門檻放寬 600 ms（`slowAllow()`）。
    - **最佳紀錄分範圍** `DB.bests[rangeKey()]`（標準九九是 `'std'`，其他是勾選的表用逗號接起來）；`DB.best` 是 `mkDB()` 定義的不可列舉 getter，永遠指向目前範圍那一份，所以各處照舊寫 `DB.best.x`。`save()` 會把沒紀錄的範圍刪掉。舊存檔的 `best` 載入時歸到 `'std'`。改範圍時 `DB.daily.starBase` 重設成當下的 `starCount()`。
    - **載入消毒** `cleanFacts()`（只留真的存在的題目 key、`{n, err, t, w}` 都是有限數字且封頂）、`cleanRest()`（bests／pet／daily 逐欄位轉數字、`ghost` 不是 20 個數字就 null、`tasks` 不合法就丟掉重抽）：壞存檔不能讓 app 黑畫面或每題都一樣。
-   - **題庫與錯題加權** `MUL`（預設 81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 20% 抽加減。`MUL2` 是不含 ×1 的題（預設 64 題）；`pickFact(pool, no1)` 的 `no1` 讓幽靈競速、拔河小隊長不出 ×1（流星防衛戰留著當緩衝，權重 0.25）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms, soft)` 用指數平滑更新（`soft` 是選擇題／炸彈的弱證據：只動 `err`（對 ×0.85；錯 ×0.85+amt，`soft` 傳數字就是 amt，預設 0.1，引線燒完一次好幾題用 0.05），錯的也排進 `retest`（下一場打答案的遊戲再考），不算 `n`、不記 `t`、不點星；反向題與數列題呼叫時 `ms` 傳 0，不記時間）；答錯的題進 `retest` 佇列，`pickFact()` 在 6～12 次抽題後優先再考一次；`state(k)` 回 `new/learn/weak/star`（weak：`err ≥ 0.45` 或 `err ≥ 0.25 且 w ≥ 2`，一次失手只到 learn，以前錯過又錯才紅；star 要 `n ≥ 3`（×1 的題 1 次）、`t > 0`（至少正著打對過一次，選擇題洗不白）、`err < 0.12`、`t ≤ 3600 + slowAllow`）。`weightOf` 對 `n = 0` 的題也吃 `err`（`1.6 + err×8`），選擇題／炸彈的輕量記錯才會影響出題。自然抽到的題會從 `retest` 移除，重測避開 `recent`。
+   - **題庫與錯題加權** `MUL`（預設 81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 20% 抽加減。`MUL2` 是不含 ×1 的題（預設 64 題）；`pickFact(pool, no1)` 的 `no1` 讓幽靈競速、拔河小隊長不出 ×1（流星防衛戰留著當緩衝，權重 0.25）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms, soft)` 用指數平滑更新（`soft` 是選擇題／炸彈的弱證據：只動 `err`（對 ×0.85；錯 ×0.85+amt，`soft` 傳數字就是 amt，預設 0.1，引線燒完一次好幾題用 0.05），錯的也排進 `retest`（下一場打答案的遊戲再考），不算 `n`、不記 `t`、不點星；反向題與數列題呼叫時 `ms` 傳 0，不記時間）；答錯的題進 `retest` 佇列，`pickFact()` 在 6～12 次抽題後優先再考一次（兩次重測至少隔 2 題，一場才不會全是上一場點錯的題；哪個大是選擇題，不拿來重測也不算考過；佇列的 key 存在 `DB.retest`，關掉再開也會考）；`state(k)` 回 `new/learn/weak/star`（weak：`err ≥ 0.45` 或 `err ≥ 0.25 且 w ≥ 2`，一次失手只到 learn，以前錯過又錯才紅；star 要 `n ≥ 3`（×1 的題 1 次）、`t > 0`（至少正著打對過一次，選擇題洗不白）、`err < 0.12`、`t ≤ 3600 + slowAllow`）。`weightOf` 對 `n = 0` 的題也吃 `err`（`1.6 + err×8`），選擇題／炸彈的輕量記錯才會影響出題。自然抽到的題會從 `retest` 移除（哪個大除外），重測避開 `recent`。
    - **音效** `SFX.*`、**音樂** `TR` 三首曲子（menu / game / boss）由 `musTick()` 排程。
-   - **畫布**：背景（星空、月亮、遠山、小鎮）、粒子系統 `P`（`k` 0 火花、1 碎片、2 擴散環、3 浮動文字）。
+   - **畫布**：背景（星空、月亮、遠山、小鎮；主選單的月亮跟著標題列，寵物頁／星圖的月亮在標題列上面有空間就放上面，矮螢幕放「主選單」鈕與標題中間，不壓到格子）、粒子系統 `P`（`k` 0 火花、1 碎片、2 擴散環、3 浮動文字）。
    - **流星防衛戰** `M` 狀態；`newMeteor / updateMeteor / impact / hit / miss / destroy / killBoss`；寶箱 `DROPS / rollDrop / applyDrop`；追蹤飛彈 `launchMissile / updateRockets`。
-   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**炸彈拆除** `BM`（`bombBoard()` 鋪 12 格、`bombTap()` 作答、`explode()` / `defused()`）、**每日任務**（`QUESTS` 池、`ensureDaily()` 換日、`quest(id, v, how)` 推進、`toast()`）、**寵物**（`PET_KINDS` 三路線、`PET_STAGES` 五階段、`petSVG(kind, st)` 畫圖、`earn(n)` 星塵、`feedPet()`）、**星圖**、**錯題本**、**連擊里程碑**。
+   - **幽靈競速** `G`、**雙人拔河** `V`、**哪個大／哪個小** `C`（`cmpQ()` 出三題、`cmpChoose()` 作答）、**炸彈拆除** `BM`（`bombBoard()` 鋪 12 格、`bombTap()` 作答、`explode()` / `defused()`）、**每日任務**（`QUESTS` 池、查表物件 `QBY`／`GEAR_BY`／`PET_KINDS` 都是無原型（`Object.create(null)`），存檔寫 `constructor` 之類的字串不會查到東西、`ensureDaily()` 換日、`quest(id, v, how)` 推進、`toast()`）、**寵物**（`PET_KINDS` 三路線、`PET_STAGES` 五階段、`petSVG(kind, st)` 畫圖、`earn(n)` 星塵、`feedPet()`）、**星圖**、**錯題本**、**連擊里程碑**。
    - 共用：`result()` 結果卡、`countdown()`、`show(name)` 切畫面、`makePad()` 數字鍵盤。
    - 主迴圈 `frame()`。
 
@@ -48,7 +48,7 @@
 - 每題 10 分，2.5 秒內 +5。連擊每 5 次倍率 +1，最高 ×5。答錯後照答案重打給 3 分、不算連擊。
 - 答錯：流星亮出答案，要照著再打一次。流星落地扣 1 顆心、連擊歸零。
 - 瞄準（`getTarget()`）：打字中鎖定該顆；沒打字時黏著目前目標，只有別顆剩不到 3 秒落地才強制換；魔王換新題時 `curT = null` 重新挑最低的（這種情況不算換目標，不擋按鍵）。真的換目標時 `#m-answer` 彈一下，之後 250 ms 內的按鍵忽略。
-- 暫停（含切到背景自動暫停）的時間不算進反應時間：`pause(false)` 把每顆流星的 `tStart` 往後平移。拔河的 `vPause` 同理。畫面被蓋住（`covered()`：`document.hidden` 或 `rotMQ` 轉橫）時 `frame()` 不跑各模式的 update；切背景（rAF 停）用 `onHide()`／`onShow()` 回來時一次 `shiftTimers(d)`，轉橫（頁面還在前景）由 `frame()` 逐幀 `shiftTimers(raw)` 凍結；`shiftTimers` 只動幽靈／哪個大／炸彈且局已結束（`G.done`／`C.end`／`BM.end`）的不動（不然會算出假的最快紀錄），流星、拔河走各自的 `pause`／`vPause`（`pauseGames()`），不重複平移；`countdown()` 在被蓋住時停住、舊局的 step 不碰共用元素。`.rotate` 只在 `(pointer:coarse)` 的裝置橫向且高度 < 500px 出現。
+- 暫停（含切到背景自動暫停）的時間不算進反應時間：`pause(false)` 把每顆流星的 `tStart` 往後平移。拔河的 `vPause` 同理。畫面被蓋住（`covered()`：`document.hidden` 或 `rotMQ` 轉橫）時 `frame()` 不跑各模式的 update；切背景（rAF 停）用 `onHide()`／`onShow()` 回來時一次 `shiftTimers(d)` 並重設 `last`（不然轉橫中回前景的第一幀會拿整段背景時間再平移一次），轉橫（頁面還在前景）由 `frame()` 逐幀 `shiftTimers(raw)` 凍結；`shiftTimers` 只動幽靈／哪個大／炸彈且局已結束（`G.done`／`C.end`／`BM.end`）的不動（不然會算出假的最快紀錄），流星、拔河走各自的 `pause`／`vPause`（`pauseGames()`），不重複平移；`countdown()` 在被蓋住時停住、舊局的 step 不碰共用元素。`.rotate` 只在 `(pointer:coarse)` 的裝置橫向且高度 < 500px 出現。
 - 瞄準切換擋鍵只在「被迫換目標」：自己打掉那顆（`curT.dead`）或魔王換題都不擋。
 - 第一次玩（`best.meteor` 與 `best.sudden` 都是 0）不問模式直接進標準，2.2 秒後浮一行「打出答案，就能打下流星」。
 - 每波擊落數：`8 + 2 * min(wave, 6)`。完美一波 +50。
@@ -76,7 +76,7 @@
 - `PET_HEAD[kind][stage] = [hx, hy, hr, top]`：每張圖的頭中心、頭半徑、圖最高點（120 單位）。眼睛約在 `hy - 0.25*hr`（墨鏡對這裡），光環與氣球用 `top` 定位。換圖之後要重量這張表（截圖戴墨鏡看位置）。
 - 升級時 toast＋彩帶＋里程碑音效。**沒有飢餓、沒有倒扣、沒有提醒**，刻意不做壓力。
 - 寵物頁只顯示名字、階段、進度條、餵食鈕；不寫「再餵幾次」、不寫星塵來源（在遊戲說明）。
-- 主選單最上面一排有一隻走來走去的寵物（`#menu-pet`，`refreshMenu()` 用 `petSVG` 畫目前的寵物與配件，CSS 動畫來回走、轉身、上下晃，減少動態時不動），點牠進寵物頁；`.menu-in` 用 `pointer-events:none` 讓空白處的點擊穿到牠。
+- 主選單有一隻走來走去的寵物（`#menu-pet`，`refreshMenu()` 用 `petSVG` 畫目前的寵物與配件，整段 html 不同才重繪；CSS 動畫來回走、轉身（`span` 的 `petFace`）、上下晃（`svg` 的 `petBob`，翻面與晃動要分兩層，同一個 transform 疊兩個動畫會被矩陣內插壓扁），減少動態時不動），點牠進寵物頁；`.menu-in` 用 `pointer-events:none` 讓空白處的點擊穿到牠。走道跟「誰在玩」鈕同一列：鈕靠左，`placeMenuPet()` 算出鈕右邊到螢幕右邊的距離當 `--walk`（矮螢幕沒有多的一列可以給牠，跟鈕同列才不會躲到鈕或標題後面；resize 與字型載入後重算）。
 - **配件**（`GEAR`，十樣）是圖檔 `assets/gear/{id}.png`（`tools/cut-gear.py` 切自 ChatGPT 貼紙圖，約 90 KB）。徽章門檻：蝴蝶結 1、圍巾 2、墨鏡 4、氣球 6、棒球帽 8、圓框眼鏡 10、領結 12、星星髮夾 15、魔法師帽 20、彩虹光環 30。另外兩樣**隱藏稀有**配件（`hidden: true`、`tools/cut-rare.py` 切圖）：星河之翼 40（back，依整隻高度 `117 - top` 縮放）、宇宙泡泡 50（back，`front: 0.4` 會在寵物前面再疊一層半透明，看起來像罩住；切圖時泡泡內淡色已改半透明）。五個位置（`slot`：head／face／neck／side 畫在寵物前面，back 畫在寵物後面）可同時各戴一樣，存 `DB.pet.wear = { head, face, neck, side, back }`（舊存檔是字串，`wearObj()` 自動轉並補欄位）。項目加 `hidden: true` 就是**隱藏配件**：徽章沒到門檻前清單上只顯示虛線問號卡「？？？ 徽章 ×40」（`.mystery`），到門檻時現身並 toast「神祕配件出現了」。每樣的 `place(hx, hy, hr, top)` 回 [中心 x, 中心 y, 寬, 旋轉]，`gearSVG()` 放 `<image>`；換配件圖後要重看截圖對位。解鎖看 `DB.daily.badges`（不另存），到門檻時 toast 提示。
 - **放回家**：究極（`fed ≥ 500`）時出現「放牠回山上／海裡／叢林」（`PET_HOME`），兩次點擊確認；寵物飄走動畫後 `released` 記一筆、`kind/fed` 歸零、星塵與配件保留，可以再挑新蛋。回家的夥伴列在寵物頁下方。
 
@@ -100,7 +100,7 @@
 - 干擾數字：倍數 ±1、±2 權重最高，再來是含數字 n 的（27、57），再來是別的乘法表的答案；全部不整除 n、不重複，且都在 2～81。
 - 炸彈是 inline SVG（`#bm-bomb`），長引線 `#bm-fuseline` 就是進度條：從炸彈頂蓋拉到右邊，`fuseLayout()` 依實際寬度生成波浪路徑；`stroke-dasharray` 只畫還沒燒的部分，燒過露出灰燼虛線；火花 `#bm-spark` 從右端往炸彈燒並往畫布灑火星；剩 5 秒本體搖晃；爆炸時本體放大消失＋星芒 `#bm-burst`＋畫布碎片、擴散環、震動。
 - 全部倍數點完自動拆除。點到非倍數立刻爆炸（說明最近的 `n × k`）；引線 `FUSE` 25 秒燒完也爆炸（亮出沒找到的）。爆炸後按「下一顆」。
-- 錯題本只列目前乘法表範圍會出的題，打過的要 `err ≥ 0.12`（手滑一次不列）；沒打過（`n = 0`、只在選擇題／炸彈點錯）的要 `err ≥ 0.25`（約三次），而且文字標「在哪個大或炸彈點錯過，還沒打過答案」。
+- 錯題本只列目前乘法表範圍會出的題，打過的要 `err ≥ 0.12`（手滑一次會列，之後連對 3 次、大約一天就自己消失）；沒打過（`n = 0`、只在選擇題／炸彈點錯）的要 `err ≥ 0.25`（約三次），而且文字標「在炸彈或哪個大點錯過，還沒打過」。
 - 點對輕量記對（`soft`，不點星，理由同哪個大）；點錯且離倍數 ±2 以內輕量記最近的 `n×k`（0.1，並排進 `retest`：下一場打答案的遊戲 6～12 題內再驗證，真混淆會被抓到、手滑不會熄星；離得遠的只說「它是 a × b」、不記）；引線燒完把沒找到的倍數（由小到大列出）輕量記錯 0.05，**一個都沒點就不記**（可能走開了）。模擬：手滑型孩子一週因炸彈熄星 3.4 顆 → 0.16 顆。干擾數字不超過該表最大倍數 +10。爆炸的特效比成功小（`SFX.boom`、震動 0.3、閃白 0.22）。
 - 紀錄是「5 顆全拆的最短總時間」，存 `DB.best.bomb`（毫秒／`null`）。
 
