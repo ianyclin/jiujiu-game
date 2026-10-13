@@ -143,6 +143,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .freeze.inv{background:rgba(255,97,97,.18)} .freeze.inv i{background:linear-gradient(90deg,var(--coral),var(--sun),var(--mint),var(--ice))}
 .card.help{gap:8px;text-align:left}
 .help h3{text-align:center;margin-bottom:4px}
+.brand-t{color:var(--sun);text-shadow:0 2px 0 #a87a00}
 .help h4{margin:8px 0 0;font-size:15px;color:var(--sun);letter-spacing:.08em}
 .stage{flex:1;position:relative;pointer-events:none;min-height:0}
 .banner{position:absolute;left:0;right:0;top:28%;text-align:center;font-weight:900;font-size:clamp(34px,9vw,60px);opacity:0;color:var(--paper);text-shadow:0 5px 0 rgba(0,0,0,.4)}
@@ -713,7 +714,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
   <div class="overlay" id="o-about" hidden>
     <div class="card help">
-      <h3>關於九九流星隊</h3>
+      <h3>關於<span class="brand-t">九九流星隊</span></h3>
       <h4>這是什麼</h4>
       <ul class="rules">
         <li>給小學生練九九乘法的遊戲。目標不是「學會」，是把「都會但偶爾背錯」練到<b>又快又不會錯</b>。</li>
@@ -723,12 +724,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
       <ul class="rules">
         <li><b>沒有廣告、沒有追蹤、不收集任何資料</b>。所有紀錄只存在這台裝置的瀏覽器裡。</li>
         <li>換裝置或清除瀏覽器資料，紀錄不會跟著走。想重來可以在星圖頁「清除所有紀錄」。</li>
-        <li>要打開外面的網頁時，會先請大人解一題。</li>
-        <li>預設不計時，只有幽靈競速和哪個大是「跟自己比」的計時。</li>
       </ul>
       <h4>製作</h4>
       <ul class="rules">
-        <li>作者：<a href="#" class="about-fb">指數三寶飯</a>（點了會請大人解一題）。</li>
+        <li>作者：<a href="#" class="about-fb">指數三寶飯</a>（就是一個三寶爸）。</li>
         <li>寵物與配件插畫由 AI 生成。字型來自 Google Fonts。音樂和音效都是程式即時合成的。</li>
         <li>版本 1.0。© 2026 指數三寶飯 保留所有權利。</li>
       </ul>
