@@ -371,7 +371,12 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .setrow.range input::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-10px;border-radius:50%;background:var(--sun);border:3px solid #0d1526;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .setrow.range input::-moz-range-track{height:8px;border-radius:999px;background:rgba(255,255,255,.12)}
 .setrow.range input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--sun);border:3px solid #0d1526}
-.setrow.range .ticks{grid-column:1/-1;display:flex;justify-content:space-between;font-family:var(--f-num);font-size:12px;color:var(--muted);padding:0 6px}
+.setrow.range .track{grid-column:1/-1;position:relative;height:44px}
+.setrow.range .track input{position:absolute;inset:0}
+.setrow.range .track i{position:absolute;top:50%;width:3px;height:14px;margin:-7px 0 0 -1.5px;border-radius:2px;background:var(--ice);opacity:.7;pointer-events:none}
+.setrow.range .ticks{grid-column:1/-1;position:relative;height:16px;font-family:var(--f-num);font-size:12px;color:var(--muted)}
+.setrow.range .ticks span{position:absolute;top:0;transform:translateX(-50%)}
+.setrow.range .ticks span.std{color:var(--ice)}
 .sw[aria-pressed="true"]{background:rgba(95,242,208,.22);border-color:var(--mint)}
 .sw[aria-pressed="true"] i{left:29px;background:var(--mint)}
 .opt{display:grid;gap:8px}
@@ -762,7 +767,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <div class="setrow"><div><b>音樂</b><small>背景音樂</small></div><button class="sw" data-set="music" type="button" aria-pressed="true" aria-label="音樂"><i></i></button></div>
         <div class="setrow"><div><b>音效</b><small>按鍵、打中、爆炸的聲音</small></div><button class="sw" data-set="sound" type="button" aria-pressed="true" aria-label="音效"><i></i></button></div>
         <div class="setrow"><div><b>混入十以內加減</b><small>流星防衛戰、幽靈競速、拔河偶爾出現加減題</small></div><button class="sw" data-set="mix" type="button" aria-pressed="false" aria-label="混入十以內加減"><i></i></button></div>
-        <div class="setrow range"><div><b>乘法表到幾</b><small id="set-hi-d"></small></div><b class="hv" id="set-hi-v">9</b><input type="range" id="set-hi" min="5" max="12" step="1" value="9" aria-label="乘法表到幾"><div class="ticks"><span>5</span><span>9</span><span>12</span></div></div>
+        <div class="setrow range"><div><b>乘法表到幾</b><small id="set-hi-d"></small></div><b class="hv" id="set-hi-v">9</b><div class="track"><i style="left:calc(14px + (100% - 28px) * 4 / 7)"></i><input type="range" id="set-hi" min="5" max="12" step="1" value="9" aria-label="乘法表到幾"></div><div class="ticks"><span style="left:14px">5</span><span class="std" style="left:calc(14px + (100% - 28px) * 4 / 7)">9</span><span style="left:calc(100% - 14px)">12</span></div></div>
         <div class="setrow"><div><b>數列題提示</b><small>數列題上面會寫出是幾的倍數。關掉就要自己看出是幾的乘法表，比較難</small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" aria-label="數列題提示"><i></i></button></div>
       </div>
       <div class="btn-col"><button class="btn alt" type="button" id="go-about">關於九九流星隊</button><button class="btn alt" type="button" id="set-close">關閉</button></div>
