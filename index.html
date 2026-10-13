@@ -115,7 +115,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:11px 14px;min-height:44px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 68px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:normal;text-align:center;max-width:92vw;border-radius:18px;line-height:1.3}
 .toast.on{transform:translate(-50%,0);opacity:1}
-.toast.mid{top:50%;transform:translate(-50%,-50%)}   /* 拔河：上半是對手的臉，toast 放中線才不會蓋住表情 */
+.toast.mid{top:calc(50% - 60px);transform:translate(-50%,-50%)}   /* 拔河：上半是對手的臉，toast 放中線才不會蓋住表情 */
 
 /* ---------- 共用：鍵盤、題目 ---------- */
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:420px;margin-inline:auto}
@@ -876,13 +876,13 @@ html,body{overscroll-behavior:none}
       <ul class="rules">
         <li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。點對不會點亮星星（要打出答案才算）。</li>
         <li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li>
-        <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現。</li>
+        <li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現，你點的那題下次玩流星或幽靈時也會再考你一次。</li>
         <li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>
       </ul>
       <h4>炸彈拆除</h4>
       <ul class="rules">
         <li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。點對不會點亮星星（要打出答案才算）。</li>
-        <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點，下一次打答案的遊戲也會再考你一次。</li>
+        <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點，下次玩流星或幽靈時也會再考你一次。</li>
         <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
       </ul>
       <div class="hgrp">其他</div>
@@ -901,8 +901,7 @@ html,body{overscroll-behavior:none}
         <li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li>
         <li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li>
         <li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、圍巾、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li>
-        <li>頭頂、臉、脖子、旁邊四個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li>
-        <li>徽章集很多的時候，還會出現<b>神祕的稀有配件</b>，到時候你就知道了。</li>
+        <li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li>
         <li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li>
         <li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li>
         <li>不餵也不會怎樣，牠會乖乖等你。</li>
@@ -964,7 +963,7 @@ const saveWho = () => { try { localStorage.setItem(PKEY, JSON.stringify(WHO)); }
 const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
 KEY = keyFor(WHO.cur);
 const BEST0 = () => ({ meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null, ghostLoss: 0 });
-let recent = [], retest = [], draws = 0, lastRetest = -9;   // retest：答錯的題 6～12 題後一定再考一次（延遲重測比立刻照抄有效）；兩次重測至少隔 2 題；存檔存 key（DB.retest），關掉再開也會考
+let recent = [], retest = [], draws = 0, lastRetest = -9, retestPick = '';   // retest：答錯的題 6～12 題後一定再考一次（延遲重測比立刻照抄有效）；兩次重測至少隔 2 題；存檔存 key（DB.retest），關掉再開也會考
 const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice() },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0, ans: 0, wrong: 0, log: {} },
   pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [] } });
@@ -1034,7 +1033,7 @@ const isStdRange = () => rangeKey() === 'std';
 function rebuildPool() {
   MUL.length = 0; MUL2.length = 0;
   MUL_ALL.forEach(f => { if (tables().includes(f.a) && f.b <= cols()) { MUL.push(f); if (f.a > 1 && f.b > 1) MUL2.push(f); } });
-  recent = []; retest = (Array.isArray(DB.retest) ? DB.retest : []).filter(k => FACT[k] || ADDSUB.some(f => f.k === k)).slice(0, 40).map(k => ({ k, due: draws + ri(6, 12) }));   // 存檔裡的重測佇列（上一次點錯／答錯的題）重新給期限
+  recent = []; retest = [...new Set((Array.isArray(DB.retest) ? DB.retest : []).filter(k => typeof k === 'string' && (Object.prototype.hasOwnProperty.call(FACT, k) || (DB.set.mix && ADDSUB.some(f => f.k === k)))))].slice(0, 40).map(k => ({ k, due: draws + ri(6, 12) }));   // 存檔裡的重測佇列（上一次點錯／答錯的題）重新給期限
 }
 // 十以內加減不出現 1：兩個數都 ≥ 2，減法答案也 ≥ 2（3−2 這種太簡單）
 for (let a = 2; a <= 8; a++) for (let b = 2; b <= 8; b++) if (a + b <= 10) ADDSUB.push({ k: a + '+' + b, a, b, op: '+', ans: a + b });
@@ -1051,12 +1050,12 @@ function weightOf(f) {
 // no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）。混入加減開著時每題 20% 抽加減
 function pickFact(pool, no1) {
   pool = pool || ((DB.set.mix && Math.random() < 0.2) ? ADDSUB : (no1 ? MUL2 : MUL));
-  draws++;
+  if (mode !== 'cmp') draws++;   // 哪個大不計抽題數，不然點錯的題在下一場前 3 題就到期
   // 哪個大是選擇題，不拿來重測（會把該打字驗證的題吃掉）；兩次重測至少隔 2 題，才不會一場全是上一場點錯的題
   const ri_ = (mode === 'cmp' || draws - lastRetest <= 2) ? -1 : retest.findIndex(r => r.due <= draws && !recent.includes(r.k) && pool.some(f => f.k === r.k));
-  if (ri_ >= 0) { const k = retest.splice(ri_, 1)[0].k; lastRetest = draws; const f = pool.find(f => f.k === k); recent.push(k); if (recent.length > 5) recent.shift(); return f; }
+  if (ri_ >= 0) { const k = retest.splice(ri_, 1)[0].k; lastRetest = draws; retestPick = k; const f = pool.find(f => f.k === k); recent.push(k); if (recent.length > 5) recent.shift(); return f; }
   let tot = 0;
-  const ws = pool.map(f => { const w = recent.includes(f.k) ? 0 : weightOf(f); tot += w; return w; });
+  const ws = pool.map(f => { const w = (recent.includes(f.k) || (draws - lastRetest <= 1 && retest.some(r => r.k === f.k))) ? 0 : weightOf(f); tot += w; return w; });   // 剛重測完的下一題也不自然抽到佇列裡的題，才不會連兩題都是錯題
   if (tot === 0) { tot = 0; pool.forEach((f, i) => { ws[i] = weightOf(f); tot += ws[i]; }); }   // 題庫很小時（魔王）不要卡在同一題
   let r = Math.random() * tot, pick = pool[0];
   for (let i = 0; i < pool.length; i++) { r -= ws[i]; if (r <= 0) { pick = pool[i]; break; } }
@@ -1066,6 +1065,7 @@ function pickFact(pool, no1) {
 }
 // 數列題：取包含 n×k 的連續四個倍數（n ≥ 2），把 n×k 那格換成問號；答題紀錄仍算在 n×k 這題上
 function makeQ(f, rev, seq) {
+  if (f.k === retestPick) { rev = false; seq = false; retestPick = ''; }   // 重測的題正著出：點錯 40 再考「8 × ? = 40」孩子會覺得不是同一題
   if (seq && f.op === '×' && f.a >= 2 && Math.random() < 0.15) {
     const n = f.a, k = f.b, s = clamp(k - ri(0, 3), 1, cols() - 3);
     const terms = [0, 1, 2, 3].map(i => n * (s + i)), hide = k - s;
@@ -1326,7 +1326,7 @@ function drawWorld(gy, dt) {
   if (mode === 'menu') { const br = $('#s-menu .brand').getBoundingClientRect(); moonY = br.height ? br.top + Math.min(26, br.height * 0.28) : 112 + safeTop(); }
   else if (menuMoon) {
     const hd = $(mode === 'map' ? '#s-map .map-head' : '#s-pet .map-head'); const hr = hd ? hd.getBoundingClientRect() : null;
-    if (hr && hr.height) { if (hr.top - safeTop() > 70) moonY = hr.top - 40; else { moonY = hr.top + hr.height / 2; moonX = (hr.left + hr.right) / 2; } }   // 矮螢幕：放在「主選單」鈕與標題中間，不壓到下面的格子
+    if (hr && hr.height) { if (hr.top - safeTop() > 70) moonY = hr.top - 40; else { const bl = hd.firstElementChild.getBoundingClientRect(), h2 = hd.querySelector('h2').getBoundingClientRect(); moonY = hr.top + hr.height / 2; moonX = (bl.right + h2.left) / 2; if (h2.left - bl.right < 100) moonY = -200; } }   // 矮螢幕：放在「主選單」鈕與標題之間，不壓到下面的格子；星塵位數多到塞不下就不畫
     else moonY = 112 + safeTop();
   }
   const mx = menuMoon ? moonX : W * 0.82, my = menuMoon ? moonY : Math.max(64, Math.min(120, gy * 0.13)), mr = menuMoon ? 16 : 22, mgr = menuMoon ? 64 : 96;
@@ -2124,7 +2124,7 @@ function vKey(i, d) {
   vRender(i);
 }
 function endVersus(w) {
-  V.over = true; musTrack('menu'); quest('versus');
+  V.over = true; V.w = w; musTrack('menu'); quest('versus');
   vEl.forEach((e, i) => { const r = e.querySelector('[data-res]'); r.hidden = false; r.className = 'vres ' + (i === w && !(V.cpu && i === 1) ? 'win' : 'lose'); r.textContent = i === w ? (V.cpu && i === 1 ? '機器人贏了' : '勝利！') : '下次再拉回來！'; e.classList.add('locked'); });
   if (V.cpu) {   // 機器人贏了跳一跳、輸了垂頭，嘴巴跟著變
     const f = $('.cpu-face'); f.classList.remove('thinking', 'oops'); void f.offsetWidth; f.classList.add(w === 1 ? 'happy' : 'sad');
@@ -2216,7 +2216,8 @@ function cmpChoose(i) {
   }
   if (!q.rev) {
     q.rev = true; C.streak = 0; $('#c-timer').classList.add('off');
-    record(q.ans.k, false, 0, 0.05); record(f.k, false, 0, 0.1); DB.daily.wrong = (DB.daily.wrong || 0) + 1;   // 輕量：正確那題可能根本沒答錯，更輕
+    const had = retest.some(r => r.k === q.ans.k); record(q.ans.k, false, 0, 0.05); if (!had) retest = retest.filter(r => r.k !== q.ans.k);   // 輕量：正確那題可能根本沒答錯，更輕、也不排重測（孩子沒點它，「再考一次」說不通）
+    record(f.k, false, 0, 0.1); DB.daily.wrong = (DB.daily.wrong || 0) + 1;
     C.wrongs.push({ f: q.ans, k: q.ans.k }, { f, k: f.k });
     els[q.opts.indexOf(q.ans)].classList.add('want');
   }
@@ -2458,8 +2459,8 @@ function gearSVG(id, hx, hy, hr, top) {
 // 戴的東西存成 { head, face, neck, side }；舊存檔是字串（單一配件），載入時轉過來
 function wearObj() {
   let W = DB.pet.wear;
-  if (!W || typeof W !== 'object') { const old = typeof W === 'string' ? W : ''; W = { head: '', face: '', neck: '', side: '', back: '' }; if (GEAR_BY[old]) W[GEAR_BY[old].slot] = old; DB.pet.wear = W; save(); }
-  if (W.back === undefined) W.back = '';
+  if (!W || typeof W !== 'object' || Array.isArray(W)) { const old = typeof W === 'string' ? W : ''; W = { head: '', face: '', neck: '', side: '', back: '' }; if (GEAR_BY[old]) W[GEAR_BY[old].slot] = old; DB.pet.wear = W; save(); }
+  SLOTS.concat(BACK_SLOTS).forEach(sl => { if (typeof W[sl] !== 'string') W[sl] = ''; });
   SLOTS.concat(BACK_SLOTS).forEach(sl => { if (W[sl] && !(GEAR_BY[W[sl]] && GEAR_BY[W[sl]].slot === sl)) W[sl] = ''; });   // 壞存檔：不存在或放錯位置的配件
   return W;
 }
@@ -2624,9 +2625,9 @@ $('#grid99').addEventListener('click', e => {
 });
 $('#map-reset').addEventListener('click', () => {
   openGate(() => {   // 清除要請大人解一題，孩子不能自己清
-    const set = DB.set; DB = fresh(); DB.set = set; save(); rebuildPool(); openMap(); refreshMenu();
+    const set = DB.set; DB = fresh(); DB.set = set; retest = []; recent = []; save(); rebuildPool(); openMap(); refreshMenu();   // 重測佇列也要清，不然舊錯題會被再考
     $('#map-info').textContent = '紀錄已清除。';
-  }, '要清除所有紀錄，請大人先回答這一題。');
+  }, '要清除所有紀錄（星圖、寵物、星塵和徽章都會清掉），請大人先回答這一題。');
 });
 
 /* ================= 每日任務 ================= */
@@ -2736,7 +2737,7 @@ $('#who-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preve
 $('#q-close').addEventListener('click', () => { $('#o-quest').hidden = true; });
 let toastTok = 0;
 function toast(msg) {
-  const el = $('#toast'); el.textContent = msg; el.classList.toggle('mid', mode === 'versus'); el.classList.add('on');
+  const el = $('#toast'); el.textContent = msg; el.classList.toggle('mid', mode === 'versus'); el.classList.add('on');   // show() 切畫面時也會重設 .mid
   const tok = ++toastTok; setTimeout(() => { if (tok === toastTok) el.classList.remove('on'); }, 2400);
 }
 function quest(id, v = 1, how = 'add') {
@@ -2748,7 +2749,7 @@ function quest(id, v = 1, how = 'add') {
     if (D.tasks.every(y => y.done)) {
       D.badges++; earn(30);
       const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(g.hidden ? `神祕配件出現了：${g.n}！到寵物頁看看` : `寵物可以戴${g.n}了！到寵物頁給牠戴上`), 4200); D.streak = D.lastDone === yesterday() ? D.streak + 1 : 1; D.lastDone = today();
-      setTimeout(() => { toast(`今天的任務全部完成！徽章 +1${D.streak > 1 ? `，連續 ${D.streak} 天` : ''}`); confetti(60); SFX.milestone(2); }, 1500);
+      setTimeout(() => { toast(`今天的任務全部完成！徽章 +1${D.streak > 1 ? `，連續 ${D.streak} 天` : ''}`); if (!(mode === 'versus' && V && V.cpu && V.over && V.w === 1)) confetti(60); SFX.milestone(2); }, 1500);   // 剛輸給機器人就不放彩帶
     }
   }
   save();
@@ -2768,13 +2769,13 @@ function openWrong() {
   const ks = wrongList();
   $('#w-list').innerHTML = ks.length ? ks.map((k, i) => {
     const f = ALL[k], s = DB.facts[k];
-    return `<div class="wrow"><span class="wrank">${i + 1}</span><div class="wmid"><div class="weq">${f.a} ${f.op} ${f.b} <span>=</span> ${f.ans}</div><div class="meter"><i style="width:${Math.round(clamp(s.err / 0.8, 0.06, 1) * 100)}%"></i></div><div class="wmeta">${s.n ? `${s.w ? `答錯 ${s.w} 次` : '最近答錯'}・答過 ${s.n} 次` : '在炸彈或哪個大點錯過，還沒打過'}</div></div><button class="wx" type="button" data-k="${k}">清除</button></div>`;
+    return `<div class="wrow"><span class="wrank">${i + 1}</span><div class="wmid"><div class="weq">${f.a} ${f.op} ${f.b} <span>=</span> ${f.ans}</div><div class="meter"><i style="width:${Math.round(clamp(s.err / 0.8, 0.06, 1) * 100)}%"></i></div><div class="wmeta">${s.n ? `${s.w ? `答錯 ${s.w} 次` : '最近答錯'}・答過 ${s.n} 次` : '在炸彈或哪個大點錯過，還沒打過答案'}</div></div><button class="wx" type="button" data-k="${k}">清除</button></div>`;
   }).join('') : '<div class="wempty">目前沒有容易錯的題目，太厲害了！</div>';
   $('#w-clear').hidden = !ks.length;
   wArm = 0; $('#w-clear').textContent = '全部清空';
   $('#o-wrong').hidden = false;
 }
-function clearFact(k) { const s = DB.facts[k]; if (s) { s.err = 0; s.w = 0; } }
+function clearFact(k) { const s = DB.facts[k]; if (s) { s.err = 0; s.w = 0; } retest = retest.filter(r => r.k !== k); }
 $('#w-list').addEventListener('click', e => {
   const b = e.target.closest('.wx'); if (!b) return;
   clearFact(b.dataset.k); save(); openWrong(); refreshMenu();
@@ -2850,7 +2851,7 @@ function countdown(cb) {
 }
 function show(name) {
   mode = name;
-  $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; });
+  $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; }); $('#toast').classList.toggle('mid', name === 'versus');
   $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; $('#o-about').hidden = true; $('#o-who').hidden = true; gate = null; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
@@ -2875,15 +2876,17 @@ function refreshMenu() {
   $('#brand-note').classList.toggle('on', !isStdRange());
   $('#set-title').textContent = whoCur().name ? `設定（${whoCur().name}）` : '設定';   // 連續幫幾個孩子設定時知道現在是誰的
   const mp = $('#menu-pet'), hasPet = !!(DB.pet.kind && PET_KINDS[DB.pet.kind]);
-  mp.hidden = !hasPet; if (hasPet) { const html = petSVG(DB.pet.kind, petStage(DB.pet.fed), wearObj()); if (mp._html !== html) { $('#menu-pet-img').innerHTML = html; mp._html = html; } placeMenuPet(); }   // 主選單走來走去的寵物
-  renderQuests(); renderWho();
+  mp.hidden = !hasPet; if (hasPet) { const html = petSVG(DB.pet.kind, petStage(DB.pet.fed), wearObj()); if (mp._html !== html) { $('#menu-pet-img').innerHTML = html; mp._html = html; } }   // 主選單走來走去的寵物
+  renderQuests(); renderWho(); placeMenuPet();   // 走道在 renderWho 之後算（鈕寬跟著名字變）
 }
 // 走道：跟「誰在玩」鈕同一列，從鈕右邊走到螢幕右邊（矮螢幕沒有多的一列可以給牠，跟鈕同列才不會躲到鈕或標題後面）
 function placeMenuPet() {
   const mp = $('#menu-pet'); if (mp.hidden) return;
   const sm = $('#s-menu'), sr = sm.getBoundingClientRect(), pr = $('#go-who').getBoundingClientRect(); if (!pr.height || !sr.width) return;
   const left = Math.round(pr.right - sr.left + 4), top = Math.max(0, Math.round(pr.top - sr.top + sm.scrollTop + pr.height / 2 - 32));
-  mp.style.left = left + 'px'; mp.style.top = top + 'px'; mp.style.setProperty('--walk', Math.max(40, Math.round(sr.width - left - 64 - 6)) + 'px');
+  const walk = Math.max(40, Math.round(sm.clientWidth - left - 64 - 56)) + 'px';   // 終點離右邊 56px：不站到月亮上、不壓到桌機捲軸
+  mp.style.left = left + 'px'; mp.style.top = top + 'px';
+  if (mp.style.getPropertyValue('--walk') !== walk) { mp.style.setProperty('--walk', walk); mp.style.animation = 'none'; void mp.offsetWidth; mp.style.animation = ''; }   // 舊 Safari 的 keyframes 不會跟著 var() 變，重啟動畫
 }
 function home() { show('menu'); refreshMenu(); }
 
@@ -3047,7 +3050,7 @@ rotMQ.addEventListener('change', () => { if (rotMQ.matches) pauseGames(); });   
 /* ================= 主迴圈 ================= */
 let last = now();
 function frame(t) {
-  const raw = (t - last) / 1000, dt = Math.min(0.05, raw); last = t; T += dt;
+  const raw = (t - last) / 1000, dt = Math.min(0.05, Math.max(0, raw)); last = t; T += dt;
   const cov = covered();
   if (cov && !document.hidden) shiftTimers(Math.max(0, raw) * 1000);   // 轉橫：畫面被「請轉直」蓋住，計時凍結（shiftTimers 吃毫秒）
   if (mode === 'meteor') { const r = $('#m-dock').getBoundingClientRect().top; if (Math.abs(r - GY) > 0.5) GY = r; }
