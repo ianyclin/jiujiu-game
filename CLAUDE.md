@@ -27,10 +27,11 @@
 ## 架構（index.html 內的區塊順序）
 
 1. `<style>`：`:root` tokens（夜空單一主題，刻意不做亮色）、各畫面 CSS。
-2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-pet`、`#s-map` 八個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、今日任務（`#o-quest`）、寵物取名（`#o-name`）、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理）、關於（`#o-about`，從設定進，給家長看的：遊戲目的、隱私、製作與版本；版本號寫在這裡，發布時記得改）、遊戲說明。
+2. HTML：`#s-menu`、`#s-meteor`、`#s-ghost`、`#s-versus`、`#s-cmp`、`#s-bomb`、`#s-pet`、`#s-map` 八個 `.screen`，用 `hidden` 切換；overlay 卡片：暫停、結果、錯題本、模式選擇、今日任務（`#o-quest`）、寵物取名（`#o-name`）、設定（`#o-set`：音樂、音效、混入加減、數列題提示，開關用 `.sw[data-set]`，跟主選單 chip 共用同一個事件處理；「乘法表到幾」是滑桿 `#set-hi`，另有 `input` 事件處理，說明文字由 `hiDesc()` 產生）、關於（`#o-about`，從設定進，給家長看的：遊戲目的、隱私、製作與版本；版本號寫在這裡，發布時記得改）、遊戲說明。
 3. JS（IIFE）：
    - **存檔** `DB = { facts, best, set, daily, pet }`，`save()`。
-   - **題庫與錯題加權** `MUL`（81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 20% 抽加減。`MUL2` 是不含 ×1 的 64 題；`pickFact(pool, no1)` 的 `no1` 讓幽靈競速、拔河小隊長不出 ×1（流星防衛戰留著當緩衝，權重 0.25）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
+   - **乘法表範圍** `DB.set.hi`（`HI_MIN` 5～`HI_MAX` 12，預設 9）：`hi ≤ 9` 只出 1～hi 的乘法表（每表 ×1～×9）；`hi ≥ 10` 擴到 1～hi × 1～hi。`MUL_ALL` 固定 12×12 全表、`FACT` 是 key→fact；`MUL`／`MUL2` 由 `rebuildPool()` **就地**重建（陣列物件不換，各處參考才不會失效），`rows()`／`cols()`／`maxAns()` 取目前範圍。星圖、炸彈（表 2～rows、倍數到 cols、干擾數字到 maxAns）、魔王、哪個大都跟著題庫走；拔河上方（機器人、大人加難）和加減題庫固定不受影響。載入時 `hi` 會 clamp 回 5～12。
+   - **題庫與錯題加權** `MUL`（預設 81 題）、`ADDSUB`（十以內加減，56 題，不出現 1：兩數都 ≥ 2、減法答案 ≥ 2）。混入開關開著時每題 20% 抽加減。`MUL2` 是不含 ×1 的題（預設 64 題）；`pickFact(pool, no1)` 的 `no1` 讓幽靈競速、拔河小隊長不出 ×1（流星防衛戰留著當緩衝，權重 0.25）。`weightOf()` 依錯誤指數 `err` 與反應時間 `t` 加權；`pickFact()` 加權隨機並避開最近 5 題；`record(k, ok, ms)` 用指數平滑更新；`state(k)` 回 `new/learn/weak/star`。
    - **音效** `SFX.*`、**音樂** `TR` 三首曲子（menu / game / boss）由 `musTick()` 排程。
    - **畫布**：背景（星空、月亮、遠山、小鎮）、粒子系統 `P`（`k` 0 火花、1 碎片、2 擴散環、3 浮動文字）。
    - **流星防衛戰** `M` 狀態；`newMeteor / updateMeteor / impact / hit / miss / destroy / killBoss`；寶箱 `DROPS / rollDrop / applyDrop`；追蹤飛彈 `launchMissile / updateRockets`。

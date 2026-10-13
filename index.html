@@ -220,6 +220,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .map-head h2{margin:0;font-size:24px;font-weight:900}
 .map-head h2 b{font-family:var(--f-num);font-weight:400;color:var(--sun);margin-left:8px}
 .grid99{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;width:100%;max-width:520px}
+.grid99.wide{gap:3px} .grid99.wide .cell{font-size:clamp(9px,2.5vw,15px);border-radius:7px} .grid99.wide .h{font-size:clamp(10px,2.7vw,15px)}
 .grid99 .h{font-family:var(--f-num);color:var(--muted);display:grid;place-items:center;font-size:clamp(12px,3.4vw,18px)}
 .cell{aspect-ratio:1;border-radius:9px;display:grid;place-items:center;font-family:var(--f-num);font-size:clamp(11px,3.2vw,17px);border:1px solid var(--line);background:rgba(255,255,255,.03);color:#5d7590;cursor:pointer;padding:0;max-width:100%}
 .cell.learn{background:rgba(255,174,87,.16);color:#ffd2a1;border-color:rgba(255,174,87,.45)}
@@ -363,6 +364,14 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .setrow small{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px}
 .sw{width:56px;height:34px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
 .sw i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
+.setrow.range{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}
+.setrow.range .hv{font-family:var(--f-num);font-size:26px;color:var(--sun);min-width:44px;text-align:right}
+.setrow.range input{grid-column:1/-1;width:100%;height:44px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;touch-action:pan-y}
+.setrow.range input::-webkit-slider-runnable-track{height:8px;border-radius:999px;background:rgba(255,255,255,.12)}
+.setrow.range input::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-10px;border-radius:50%;background:var(--sun);border:3px solid #0d1526;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.setrow.range input::-moz-range-track{height:8px;border-radius:999px;background:rgba(255,255,255,.12)}
+.setrow.range input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--sun);border:3px solid #0d1526}
+.setrow.range .ticks{grid-column:1/-1;display:flex;justify-content:space-between;font-family:var(--f-num);font-size:12px;color:var(--muted);padding:0 6px}
 .sw[aria-pressed="true"]{background:rgba(95,242,208,.22);border-color:var(--mint)}
 .sw[aria-pressed="true"] i{left:29px;background:var(--mint)}
 .opt{display:grid;gap:8px}
@@ -753,6 +762,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <div class="setrow"><div><b>音樂</b><small>背景音樂</small></div><button class="sw" data-set="music" type="button" aria-pressed="true" aria-label="音樂"><i></i></button></div>
         <div class="setrow"><div><b>音效</b><small>按鍵、打中、爆炸的聲音</small></div><button class="sw" data-set="sound" type="button" aria-pressed="true" aria-label="音效"><i></i></button></div>
         <div class="setrow"><div><b>混入十以內加減</b><small>流星防衛戰、幽靈競速、拔河偶爾出現加減題</small></div><button class="sw" data-set="mix" type="button" aria-pressed="false" aria-label="混入十以內加減"><i></i></button></div>
+        <div class="setrow range"><div><b>乘法表到幾</b><small id="set-hi-d"></small></div><b class="hv" id="set-hi-v">9</b><input type="range" id="set-hi" min="5" max="12" step="1" value="9" aria-label="乘法表到幾"><div class="ticks"><span>5</span><span>9</span><span>12</span></div></div>
         <div class="setrow"><div><b>數列題提示</b><small>數列題上面會寫出是幾的倍數。關掉就要自己看出是幾的乘法表，比較難</small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" aria-label="數列題提示"><i></i></button></div>
       </div>
       <div class="btn-col"><button class="btn alt" type="button" id="go-about">關於九九流星隊</button><button class="btn alt" type="button" id="set-close">關閉</button></div>
@@ -825,6 +835,13 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
         <li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！</li>
         <li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>
       </ul>
+      <h4>乘法表到幾</h4>
+      <ul class="rules">
+        <li>在「設定」裡可以拉一拉。平常是 <b>9</b>，就是九九乘法。</li>
+        <li>還在學的時候可以先拉到 5 或 6，只會出到那幾個乘法表。</li>
+        <li>想挑戰就拉到 12，會多出 10、11、12 的乘法，答案最大到 144。</li>
+        <li>所有遊戲和星圖都會跟著改。</li>
+      </ul>
       <div class="btn-col"><button class="btn alt" type="button" id="h-close">關閉</button></div>
     </div>
   </div>
@@ -839,6 +856,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const HI_MIN = 5, HI_MAX = 12;
 const rnd = (a, b) => a + Math.random() * (b - a);
 const ri = (a, b) => Math.floor(rnd(a, b + 1));
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -848,7 +866,7 @@ const now = () => performance.now();
 
 /* ================= 存檔 ================= */
 const KEY = 'jiujiu-meteor-v1';
-const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true },
+const fresh = () => ({ facts: {}, best: { meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null }, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true, hi: 9 },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0 },
   pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [] } });
 let DB = fresh();
@@ -857,25 +875,34 @@ try {
   if (raw) {
     const d = JSON.parse(raw), f = fresh();
     DB = { facts: d.facts || {}, best: Object.assign(f.best, d.best || {}), set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) };
+    DB.set.hi = clamp(Math.round(+DB.set.hi) || 9, HI_MIN, HI_MAX);
   }
 } catch (e) {}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
 
 /* ================= 題庫與錯題加權 ================= */
-const MUL = [], ADDSUB = [];
-for (let a = 1; a <= 9; a++) for (let b = 1; b <= 9; b++) MUL.push({ k: a + 'x' + b, a, b, op: '×', ans: a * b });
+// 乘法表範圍 set.hi（5～12，預設 9）：hi ≤ 9 只出 1～hi 的乘法表（每表 ×1～×9）；hi > 9 擴到 hi × hi。
+// MUL_ALL 固定 12×12 全表，MUL / MUL2 由 rebuildPool() 依設定就地重建（陣列物件不換，別處的參考才不會失效）。
+const MUL_ALL = [], FACT = {}, MUL = [], MUL2 = [], ADDSUB = [];
+for (let a = 1; a <= HI_MAX; a++) for (let b = 1; b <= HI_MAX; b++) { const f = { k: a + 'x' + b, a, b, op: '×', ans: a * b }; MUL_ALL.push(f); FACT[f.k] = f; }
+const rows = () => DB.set.hi, cols = () => Math.max(9, DB.set.hi), maxAns = () => rows() * cols();
+function rebuildPool() {
+  MUL.length = 0; MUL2.length = 0;
+  MUL_ALL.forEach(f => { if (f.a <= rows() && f.b <= cols()) { MUL.push(f); if (f.a > 1 && f.b > 1) MUL2.push(f); } });
+  recent = [];
+}
 // 十以內加減不出現 1：兩個數都 ≥ 2，減法答案也 ≥ 2（3−2 這種太簡單）
 for (let a = 2; a <= 8; a++) for (let b = 2; b <= 8; b++) if (a + b <= 10) ADDSUB.push({ k: a + '+' + b, a, b, op: '+', ans: a + b });
 for (let a = 4; a <= 10; a++) for (let b = 2; b <= a - 2; b++) ADDSUB.push({ k: a + '-' + b, a, b, op: '−', ans: a - b });
 
 let recent = [];
+rebuildPool();
 function weightOf(f) {
   const s = DB.facts[f.k];
   let w = (!s || !s.n) ? 1.6 : 1 + s.err * 8 + clamp((s.t - 2600) / 2000, 0, 2);
   if (f.op === '×' && (f.a === 1 || f.b === 1)) w *= 0.25;
   return w;
 }
-const MUL2 = MUL.filter(f => f.a > 1 && f.b > 1);   // 不含 ×1 的 64 題
 // no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）。混入加減開著時每題 20% 抽加減
 function pickFact(pool, no1) {
   pool = pool || ((DB.set.mix && Math.random() < 0.2) ? ADDSUB : (no1 ? MUL2 : MUL));
@@ -890,7 +917,7 @@ function pickFact(pool, no1) {
 // 數列題：取包含 n×k 的連續四個倍數（n ≥ 2），把 n×k 那格換成問號；答題紀錄仍算在 n×k 這題上
 function makeQ(f, rev, seq) {
   if (seq && f.op === '×' && f.a >= 2 && Math.random() < 0.15) {
-    const n = f.a, k = f.b, s = clamp(k - ri(0, 3), 1, 6);
+    const n = f.a, k = f.b, s = clamp(k - ri(0, 3), 1, cols() - 3);
     const terms = [0, 1, 2, 3].map(i => n * (s + i)), hide = k - s;
     const show = terms.map((v, i) => i === hide ? '?' : String(v));
     // label 標示是幾的倍數，孩子不用自己看出乘法表（實測不標示跟反向題一樣難）
@@ -2036,19 +2063,20 @@ function wpick(arr, wf) {
   for (let i = 0; i < arr.length; i++) { r -= ws[i]; if (r <= 0) return arr[i]; }
   return arr[arr.length - 1];
 }
-const factNK = (n, k) => MUL[(n - 1) * 9 + clamp(k, 1, 9) - 1];
+const factNK = (n, k) => FACT[n + 'x' + clamp(k, 1, cols())];
 const tableW = n => MUL.filter(f => f.a === n && f.b > 1).reduce((s, f) => s + weightOf(f), 0) * (n === 2 ? 0.5 : 1);
 // 12 格：4～6 個 n 的倍數（錯題優先），其餘是干擾：倍數 ±1、±2 最多，再來是含數字 n 的（27、57），再來是別的乘法表的答案
 function bombBoard(n) {
-  const mults = []; for (let k = 1; k <= 9; k++) mults.push(n * k);
+  const mults = []; for (let k = 1; k <= cols(); k++) mults.push(n * k);
   const pool = mults.slice(), got = [];
   const want = ri(4, 6);
   while (got.length < want) { const m = wpick(pool, m => weightOf(factNK(n, m / n))); pool.splice(pool.indexOf(m), 1); got.push(m); }
   const seen = new Set(), cand = [];
-  // 數字都在 2～81（九九乘法的範圍）
-  const add = (v, w) => { if (v >= 2 && v <= 81 && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
+  // 數字都在 2～題庫最大答案（九九是 81）
+  const top = maxAns();
+  const add = (v, w) => { if (v >= 2 && v <= top && v % n !== 0 && !seen.has(v)) { seen.add(v); cand.push({ v, w }); } };
   mults.forEach(m => { add(m - 1, 3); add(m + 1, 3); add(m - 2, 1.5); add(m + 2, 1.5); });
-  for (let v = 10; v <= 81; v++) if (String(v).includes(String(n))) add(v, 2);
+  for (let v = 10; v <= top; v++) if (String(v).includes(String(n))) add(v, 2);
   MUL2.forEach(f => add(f.ans, 1));
   const tiles = got.slice();
   while (tiles.length < 12) { const c = wpick(cand, c => c.w); cand.splice(cand.indexOf(c), 1); tiles.push(c.v); }
@@ -2083,13 +2111,14 @@ function bombFuse(frac) {
   $('#bm-spark').setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) scale(${(0.85 + Math.sin(T * 38) * 0.25).toFixed(2)})`);
 }
 function nextBomb() {
-  const n = wpick([2, 3, 4, 5, 6, 7, 8, 9].filter(n => n !== BM.lastN), tableW); BM.lastN = n;
+  const tables = []; for (let t = 2; t <= rows(); t++) if (t !== BM.lastN) tables.push(t);
+  const n = wpick(tables, tableW); BM.lastN = n;
   const b = bombBoard(n);
   BM.round = { n, tiles: b.tiles, count: b.count, got: new Set(), t0: now(), state: 'live', sec: -1, sparkT: 0 };
   $('#bm-head').hidden = false; bombHead(''); $('#bm-n').textContent = n; bombFuse(1);
   BM.i++;
   $('#bm-prog').textContent = `第 ${BM.i} / ${BM.n} 顆`;
-  $('#bm-task').innerHTML = `點掉所有 <b>${n}</b> 的倍數<small>就是 ${n} × 1 到 ${n} × 9 的答案</small>`;
+  $('#bm-task').innerHTML = `點掉所有 <b>${n}</b> 的倍數<small>就是 ${n} × 1 到 ${n} × ${cols()} 的答案</small>`;
   const t = $('#bm-tiles'); t.className = 'tiles';
   t.innerHTML = b.tiles.map((v, i) => `<button type="button" class="tile" data-i="${i}">${v}</button>`).join('');
   $('#bm-found').innerHTML = `找到 <b>0</b> / ${b.count}`;
@@ -2352,13 +2381,13 @@ let resetArm = 0;
 function openMap() {
   show('map');
   let h = '<div class="h">×</div>';
-  for (let b = 1; b <= 9; b++) h += `<div class="h">${b}</div>`;
-  for (let a = 1; a <= 9; a++) {
+  for (let b = 1; b <= cols(); b++) h += `<div class="h">${b}</div>`;
+  for (let a = 1; a <= rows(); a++) {
     h += `<div class="h">${a}</div>`;
-    for (let b = 1; b <= 9; b++) { const k = a + 'x' + b; h += `<button type="button" class="cell ${state(k)}" data-k="${k}" aria-label="${a} 乘 ${b}">${a * b}</button>`; }
+    for (let b = 1; b <= cols(); b++) { const k = a + 'x' + b; h += `<button type="button" class="cell ${state(k)}" data-k="${k}" aria-label="${a} 乘 ${b}">${a * b}</button>`; }
   }
-  $('#grid99').innerHTML = h;
-  $('#map-count').textContent = `${starCount()}/81`;
+  const grid = $('#grid99'); grid.innerHTML = h; grid.className = 'grid99' + (cols() > 9 ? ' wide' : ''); grid.style.gridTemplateColumns = `repeat(${cols() + 1},minmax(0,1fr))`;
+  $('#map-count').textContent = `${starCount()}/${MUL.length}`;
   mapInfoDefault();
   resetArm = 0; $('#map-reset').textContent = '清除所有紀錄';
 }
@@ -2448,7 +2477,7 @@ function quest(id, v = 1, how = 'add') {
 const questStars = () => quest('stars', Math.max(0, starCount() - DB.daily.starBase), 'max');
 
 /* ================= 錯題本 ================= */
-const ALL = {}; MUL.concat(ADDSUB).forEach(f => { ALL[f.k] = f; });
+const ALL = {}; MUL_ALL.concat(ADDSUB).forEach(f => { ALL[f.k] = f; });
 function wrongList(n = 10) {
   return Object.keys(DB.facts).filter(k => ALL[k] && DB.facts[k].err >= 0.05)
     .sort((a, b) => DB.facts[b].err - DB.facts[a].err || (DB.facts[b].w || 0) - (DB.facts[a].w || 0)).slice(0, n);
@@ -2550,10 +2579,11 @@ function refreshMenu() {
   $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? `最佳 ${(DB.best.ghost[19] / 1000).toFixed(1)} 秒` : '';
   $('#b-cmp').textContent = DB.best.cmpT !== null ? `全對最快 ${(DB.best.cmpT / 1000).toFixed(1)} 秒` : '';
   $('#b-bomb').textContent = DB.best.bomb !== null ? `全拆最快 ${(DB.best.bomb / 1000).toFixed(1)} 秒` : '';
-  $('#b-stars').textContent = `${starCount()}/81`;
+  $('#b-stars').textContent = `${starCount()}/${MUL.length}`;
   $('#b-wrong').textContent = wrongList().length;
   $('#b-pet').textContent = DB.pet.dust;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
+  $('#set-hi').value = DB.set.hi; hiDesc();
   renderQuests();
 }
 function home() { show('menu'); refreshMenu(); }
@@ -2627,6 +2657,17 @@ $$('[data-set]').forEach(b => b.addEventListener('click', () => {
   if (k === 'sound' && DB.set.sound) SFX.ding();
   if (k === 'music') DB.set.music ? musStart() : musStop();
 }));
+function hiDesc() {
+  const n = DB.set.hi, c = MUL.length;
+  $('#set-hi-v').textContent = n;
+  $('#set-hi-d').textContent = n === 9 ? `九九乘法，1 到 9 的乘法表，${c} 題`
+    : n < 9 ? `只出 1 到 ${n} 的乘法表，${c} 題。還在學的時候用`
+    : `加上 10 到 ${n} 的乘法表，最大到 ${n} × ${n}，${c} 題`;
+}
+$('#set-hi').addEventListener('input', () => {
+  DB.set.hi = clamp(Math.round(+$('#set-hi').value) || 9, HI_MIN, HI_MAX); save(); rebuildPool(); hiDesc(); refreshMenu();
+});
+$('#set-hi').addEventListener('change', () => SFX.ding());
 $$('[data-home]').forEach(b => b.addEventListener('click', home));
 $('#m-pause').addEventListener('click', () => pause(true));
 $('#m-fire').addEventListener('pointerdown', e => { e.preventDefault(); launchMissile(); });
