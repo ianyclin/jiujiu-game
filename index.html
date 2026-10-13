@@ -58,6 +58,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .brand-sub span{display:block;font-weight:900;font-size:clamp(32px,8.6vw,50px);line-height:1;letter-spacing:.04em;text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 18px rgba(8,17,31,.9)}
 .brand-sub small{display:block;color:var(--muted);font-size:14px;letter-spacing:.24em;margin-top:10px}
 .brand-sub small.on{color:var(--ice);letter-spacing:.06em;text-wrap:balance}
+:root:not(:lang(zh)) .brand-sub small{letter-spacing:.06em}   /* 英文、日文的副標題比較長，中文的寬字距會折行 */
 .modes{display:grid;gap:12px;width:100%;max-width:470px}
 .mode{display:grid;grid-template-columns:62px 1fr;column-gap:14px;row-gap:3px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;transition:transform .08s,box-shadow .08s}
 .mode:active{transform:translateY(4px);box-shadow:0 2px 0 var(--keyEdge)}
@@ -417,6 +418,9 @@ html,body{overscroll-behavior:none}
 .tgrid button[aria-pressed="true"]{background:rgba(255,210,63,.16);border-color:var(--sun);color:var(--sun)}
 .tgrid button.ext[aria-pressed="true"]{background:rgba(95,242,208,.14);border-color:var(--mint);color:var(--mint)}
 .tgrid button:active{transform:scale(.94)}
+.langs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.langs button{min-height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font-weight:900;font-size:15px;cursor:pointer;padding:0 4px}
+.langs button[aria-pressed="true"]{background:rgba(95,242,208,.14);border-color:var(--mint);color:var(--mint)}
 .who{align-self:center;border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:8px 16px;min-height:44px;font-weight:700;font-size:14px;color:var(--ice);display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 .who-list{display:grid;gap:8px}
 .who-list button{min-height:48px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--paper);font-weight:900;font-size:17px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:0 16px}
@@ -766,7 +770,7 @@ html,body{overscroll-behavior:none}
       <p data-t="who.p"></p>
       <div class="who-list" id="who-list"></div>
       <small class="who-hint" id="who-hint"></small>
-      <input class="name-in" id="who-in" type="text" maxlength="6" autocomplete="off" autocapitalize="off" enterkeyhint="done" data-tp="who.ph" data-ta="who.inAria">
+      <input class="name-in" id="who-in" type="text" maxlength="10" autocomplete="off" autocapitalize="off" enterkeyhint="done" data-tp="who.ph" data-ta="who.inAria">
       <div class="name-sug" id="who-sug"></div>
       <div class="btn-col">
         <button class="btn" type="button" id="who-add" data-t="who.add"></button>
@@ -781,7 +785,7 @@ html,body{overscroll-behavior:none}
     <div class="card">
       <h3 data-t="name.title"></h3>
       <div class="name-egg" id="name-egg"></div>
-      <input class="name-in" id="name-in" type="text" maxlength="6" autocomplete="off" data-ta="name.aria">
+      <input class="name-in" id="name-in" type="text" maxlength="10" autocomplete="off" data-ta="name.aria">
       <div class="name-sug" id="name-sug"></div>
       <div class="btn-col">
         <button class="btn" type="button" id="name-ok" data-t="name.ok"></button>
@@ -822,6 +826,7 @@ html,body{overscroll-behavior:none}
     <div class="card">
       <h3 id="set-title"></h3>
       <div class="setlist">
+        <div class="setrow tables"><div><b data-t="set.lang"></b></div><div class="langs" id="set-lang" role="group" data-ta="set.lang"></div></div>
         <div class="setrow"><div><b data-t="set.music"></b><small data-t="set.musicD"></small></div><button class="sw" data-set="music" type="button" aria-pressed="true" data-ta="set.music"><i></i></button></div>
         <div class="setrow"><div><b data-t="set.sound"></b><small data-t="set.soundD"></small></div><button class="sw" data-set="sound" type="button" aria-pressed="true" data-ta="set.sound"><i></i></button></div>
         <div class="setrow"><div><b data-t="set.mix"></b><small data-t="set.mixD"></small></div><button class="sw" data-set="mix" type="button" aria-pressed="false" data-ta="set.mix"><i></i></button></div>
@@ -891,10 +896,11 @@ const now = () => performance.now();
 /* ================= 介面文字 ================= */
 // 所有介面文字都在 STR[語言][key]，用 tx(key, { 參數 }) 取：字串裡的 {n} 換成參數；值也可以是函式（英文複數之類）或陣列（建議名字）。
 // HTML 用 data-t（textContent）、data-th（innerHTML，含 <b>）、data-ta（aria-label）、data-tp（placeholder）標 key，applyStr() 填進去。
-// 新增文字：先加到 'zh-Hant'；其他語言缺的 key 會退回中文。改了文字要重跑 tools/make-fonts.py。
+// 新增文字：先加到 'zh-Hant'，再補 en、ja（缺的 key 會退回中文）。改了文字要重跑 tools/make-fonts.py。
+// 語言存在 DB.set.lang（每個人各自的設定，跟音樂一樣）；空字串＝跟著裝置語言（langAuto()）。
 const STR = {
   'zh-Hant': {
-    htmlLang: 'zh-Hant-TW', title: '九九流星隊',
+    htmlLang: 'zh-Hant-TW', title: '九九流星隊', langName: '中文', 'set.lang': '語言・Language',
     sep: '、', comma: '，', period: '。', dot: '・', plus: '＋',
     sec: '{s} 秒', secUnit: '秒', back: '‹ 主選單', home: '回主選單', homeShort: '主選單', close: '關閉', cancel: '取消',
     again: '再玩一次', restart: '重新開始', pause: '暫停', ready: '準備好了嗎？', go: '開始！', end: '結束！', del: '刪除', more: '再練一下',
@@ -1025,8 +1031,253 @@ const STR = {
     'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li>',
     'help.tables': '<li>在「設定」裡點數字，<b>亮的才會出</b>。平常 1 到 9 都亮，就是九九乘法。</li><li>還在學的時候，可以只留學過的，例如只亮 2 和 5。</li><li>想挑戰就把 10、11、12 也點亮，答案最大到 144。</li><li>所有遊戲和星圖都會跟著改。每一種乘法表的最快紀錄會<b>另外記一份</b>。</li>',
   },
+  // 英文：給美國／國際學校的小二、小三。複數用函式；標點自己帶空白
+  en: {
+    htmlLang: 'en', title: '9×9 Meteor Squad', langName: 'English', 'set.lang': 'Language',
+    sep: ', ', comma: '. ', period: '. ', dot: ' · ', plus: ' + ',
+    sec: '{s}s', secUnit: 'sec', back: '‹ Menu', home: 'Back to menu', homeShort: 'Menu', close: 'Close', cancel: 'Cancel',
+    again: 'Play again', restart: 'Restart', pause: 'Pause', ready: 'Ready?', go: 'Go!', end: 'Done!', del: 'Delete', more: 'Keep practicing',
+    reveal: 'The answer is {a}. Type it in!', timesAria: '{a} times {b}',
+    'brand.mark': '9×9', 'brand.sub': 'Meteors', 'brand.note': 'Zap meteors · light up stars',
+    'menu.modes': 'Games', 'menu.map': 'Star Map', 'menu.wrong': 'Mistakes', 'menu.pet': 'Pet', 'menu.quest': 'Missions', 'menu.help': 'How to Play', 'menu.set': 'Settings',
+    'meteor.name': 'Meteor Defense', 'meteor.desc': 'Math meteors are falling on the town. Answer right to zap them with your laser.',
+    'ghost.name': 'Ghost Race', 'ghost.desc': '20 questions against the clock. Beat your own best time!',
+    'versus.name': 'Tug of War', 'versus.desc': 'Put the tablet between you and race a grown-up to answer first. Or play the robot on your own.',
+    'cmp.name': 'Biggest? Smallest?', 'cmp.desc': 'Three problems. Tap the one with the biggest (or smallest) answer. They\'re close, so work them out!',
+    'bomb.name': 'Bomb Squad', 'bomb.desc': 'The bomb names a times table. Tap all its answers before the fuse burns out. Tap a wrong one and BOOM!',
+    'best.meteor': 'Best {n}', 'best.sudden': 'One-hit {n}', 'best.ghost': 'Best {s}s', 'best.cmp': 'Best {s}s', 'best.bomb': 'Best {s}s',
+    'range.to': '{a}–{b}', 'note.only': 'Only the {t} times tables', 'note.plus': 'Plus the {t} times tables', 'map.only': 'Practicing only the {t} times tables', 'map.plus': 'Also practicing the {t} times tables',
+    'set.tableAria': '{n} times table', 'set.d.std': '1 to 9 are on: the classic times tables, {c} problems', 'set.d.plus': 'Classic tables plus {t}, up to {m} × {m}, {c} problems',
+    'set.d.only': 'Only the {t} tables, {c} problems', 'set.d.onlyMax': 'Only the {t} tables, up to {m} × {m}, {c} problems', 'set.atLeast': 'Keep at least one table on',
+    'seq.label': 'Count by {n}s',
+    'm.hearts': 'Hearts', 'm.heartsN': v => `${v.n} heart${v.n === 1 ? '' : 's'}`, 'm.heartsS': v => `${v.n} heart${v.n === 1 ? '' : 's'}, combo shield on`, 'm.inv': 'Invincible',
+    'm.fireAria': 'Fire missile', 'm.fireN': v => `${v.n} missile${v.n === 1 ? '' : 's'}, tap to fire`, 'm.fire': 'Fire',
+    'm.wave': 'Wave {n}', 'm.waveBoss': 'Wave {n} · Boss', 'm.combo': 'combo', 'm.over': 'The town lights went out…', 'm.wait': 'Meteors incoming…',
+    'm.firstTip': 'Type the answer to zap it!', 'm.perfect': 'Perfect wave! +50', 'm.boss': 'Mistake Boss is here!', 'm.haveMissile': 'Missiles! Tap "Fire"',
+    'm.missileHit': 'Missile hit -1', 'm.lastHp': 'The last hit is up to you!', 'm.invHit': 'Invincible!', 'm.mult': '×{m} points!', 'm.dust': 'Stardust +20', 'm.chest': 'Treasure!',
+    'm.shieldSave': 'Shield saved your combo!', 'm.freeze': 'Time freeze!', 'm.nova': 'Supernova!',
+    'tier.nova': 'Supernova!', 'tier.heart': 'Extra heart!', 'tier.inv20': 'Invincible 20s!', 'tier.rare': 'Rare chest!',
+    'drop.heart': 'Heart +1', 'drop.heartFull': 'Hearts full +100', 'drop.double': 'Double points!', 'drop.missile': 'Missile +1', 'drop.missileFull': 'Missiles full +50',
+    'drop.shield': 'Combo shield!', 'drop.shieldFull': 'Shielded +50', 'drop.inv': 'Invincible {s}s!',
+    'combo.1': '{n} combo!', 'combo.2': '{n} combo! Awesome', 'combo.3': '{n} combo! Unstoppable', 'combo.4': '{n} combo! Legendary!',
+    'm.endSudden': 'One hit, game over!', 'm.end': 'The town couldn\'t hold on!', 'm.wlabel': 'Missed or wrong this time. Take another look',
+    'mode.std': 'Standard', 'mode.stdD': '3 hearts, all chests', 'mode.sd': 'One Hit', 'mode.sdD': 'Only 1 heart, no heart drops', 'mode.best': 'Best {n}',
+    'p.title': 'Paused', 'p.resume': 'Resume',
+    'r.score': 'points', 'r.new': 'New record!', 'r.bestPts': 'Best: {n} points', 'r.wave': 'Wave', 'r.combo': 'Best combo', 'r.acc': 'Correct', 'r.avg': 'Per question', 'r.best': 'Best', 'r.total': 'Total time',
+    'r.wlabel': 'Wrong this time. Take another look',
+    'g.you': 'You', 'g.newbie': 'Rookie ghost', 'g.best': 'Fastest you', 'g.target': 'Goal: finish in {s}s', 'g.targetSlow': 'Goal: finish in {s}s (ghost slowed down a bit)',
+    'g.first': 'First race: beat the rookie ghost (3.6s per question)', 'g.prog': 'Question {i} / {n}', 'g.ghostDone': 'The ghost finished. Go go go!',
+    'g.n.firstWin': 'You beat the rookie ghost! This run is your next ghost', 'g.n.first': 'Time saved. Next time, race yourself', 'g.n.best': 'New record! {s}s faster than your best',
+    'g.n.slow': 'You passed the slowed-down ghost! {s}s off your best', 'g.n.behind': '{s}s off your best. Try again!',
+    'g.t.win': 'You beat the ghost!', 'g.t.caught': 'You caught the ghost!', 'g.t.lose': 'The ghost got there first…',
+    'v.challenger': 'Challenger', 'v.cpu': 'Robot', 'v.captain': 'Captain', 'v.thinking': 'Thinking…', 'v.pauseAria': 'Pause match', 'v.again': 'Rematch',
+    'v.setup1': 'Lay the tablet flat between two players. Each right answer pulls the star one step your way. Pull it all the way to win. A wrong answer freezes you for 1 second.',
+    'v.setup2': 'The Captain (bottom side) gets answers saved to the Star Map.',
+    'v.oppAria': 'Opponent', 'v.opp.cpu': 'vs Robot (about as fast as you)', 'v.opp.easy': 'vs Person, same kind of problems', 'v.opp.hard': 'vs Grown-up, harder (2-digit × 1-digit)', 'v.start': 'Start',
+    'v.paused': 'Match paused', 'v.resume': 'Resume', 'v.ready': 'I\'m ready!', 'v.oops': 'Oops, wrong!', 'v.got': 'Got it!', 'v.pull': 'My pull!',
+    'v.slip2': 'Slippery rope! 2 steps per pull', 'v.slip3': 'Slippery rope! 3 steps per pull', 'v.cpuWin': 'Robot wins', 'v.win': 'You win!', 'v.lose': 'Pull it back next time!',
+    'v.cpuHappy': 'Phew! Again?', 'v.cpuSad': 'You\'re great! One more?',
+    'c.big': 'Which is biggest?', 'c.small': 'Which is smallest?', 'c.streak': '{n} in a row! The numbers get closer', 'c.prog': '{i} / {n} · {ok} right',
+    'c.wantBig': 'Biggest is {eq}. Tap it to go on', 'c.wantSmall': 'Smallest is {eq}. Tap it to go on',
+    'c.n.close': 'So close! Get all 10 right to set a time record', 'c.n.more': 'The ones you missed will come up more. Keep practicing!', 'c.n.first': 'All 10 right! This is your first record',
+    'c.n.best': 'New record! {s} faster', 'c.n.same': 'All right! Same as your record', 'c.n.behind': 'All right! {s} off your record. Again!',
+    'c.t.perfect': 'Sharp eyes!', 'c.t.good': 'Nice work!', 'c.l.perfect': 'sec · all 10 right', 'c.l.ok': 'right out of {n}', 'c.r.best': 'Best time',
+    'b.next': 'Next bomb', 'b.result': 'See results', 'b.prog': 'Bomb {i} / {n}', 'b.task': 'Tap every answer in the <b>{n}</b> times table<small>{n} × 1 up to {n} × {c}</small>',
+    'b.found': 'Found <b>{k}</b> / {n}', 'b.near': '{v} isn\'t in the {n} times table. {n} × {k} = {m}, off by {d}', 'b.notIs': '{v} isn\'t in the {n} times table. It\'s {a} × {b}', 'b.not': '{v} isn\'t in the {n} times table',
+    'b.boom': 'BOOM! It blew up', 'b.ok': 'Defused!', 'b.fuse': 'The fuse burned out. Still hidden: {list}',
+    'b.n.close': 'One short! Defuse all 5 to race the clock', 'b.n.more': 'The ones that blew up will come up more', 'b.n.first': 'All 5 defused! This is your record',
+    'b.n.best': 'New record! {s} faster', 'b.n.same': 'All defused! Same as your record', 'b.n.behind': 'All defused! {s} off your record. Again!',
+    'b.t.all': 'Bomb expert!', 'b.t.close': 'Almost!', 'b.l.all': 'sec · all 5 defused', 'b.l.some': 'defused out of {n}', 'b.r.done': 'Defused', 'b.r.best': 'Best time',
+    'kind.cute': 'Fuzzy', 'kind.cool': 'Draki', 'kind.funny': 'Croaky', 'kind.legend': 'Nova',
+    'line.cute': 'Cute', 'line.cool': 'Cool', 'line.funny': 'Funny', 'line.legend': 'Legend',
+    'stage.0': 'Egg', 'stage.1': 'Baby', 'stage.2': 'Kid', 'stage.3': 'Grown-up', 'stage.4': 'Ultimate',
+    'home.cute': 'the mountains', 'home.cool': 'the sea', 'home.funny': 'the jungle', 'home.legend': 'the stars',
+    'slot.head': 'Head', 'slot.face': 'Face', 'slot.neck': 'Neck', 'slot.side': 'Side', 'slot.back': 'Back',
+    'gear.bow': 'Bow', 'gear.scarf': 'Scarf', 'gear.glasses': 'Sunglasses', 'gear.balloon': 'Balloon', 'gear.cap': 'Cap', 'gear.specs': 'Round glasses',
+    'gear.bowtie': 'Bow tie', 'gear.star': 'Star clip', 'gear.wizard': 'Wizard hat', 'gear.halo': 'Rainbow halo', 'gear.wings': 'Galaxy wings', 'gear.bubble': 'Space bubble',
+    'names.cute': ['Fuzzy', 'Pudding', 'Mallow', 'Pinky'], 'names.cool': ['Draki', 'Bolt', 'Blue', 'Steel'], 'names.funny': ['Croaky', 'Pip', 'Gulp', 'Bean'], 'names.legend': ['Nova', 'Blaze', 'Comet', 'Twinkle'],
+    'pet.intro': 'Right answers drop <b>stardust</b>. Feed it to your pet and watch it grow.', 'pet.feed': 'Feed stardust ×{n}', 'pet.feedLack': 'Feed stardust ×{n} (need {d} more)',
+    'pet.byeArm': 'Tap again to say goodbye to {name}', 'pet.bye': 'Let {name} go home to {home}', 'pet.byeToast': '{name} went home to {home}. Thanks for taking such good care of them!',
+    'pet.grow': '{name} grew! Now: {stage}', 'pet.hello': '{name} is here! Answer questions to feed it',
+    'pet.legendAria': 'Legendary egg, still locked', 'pet.unknown': '???', 'pet.needBadges': 'Badges {n}/{m}', 'pet.needBye': 'Send a pet home', 'pet.canPick': 'Ready to pick!', 'pet.soon': 'Coming soon',
+    'pet.alumni': 'Back home: ', 'pet.alum': '<b>{name}</b> ({home})',
+    'gear.title': 'Outfits (unlock with badges, one per spot)', 'gear.badges': 'Badges ×{n}', 'gear.mysteryAria': 'Mystery item, badges ×{n}', 'gear.on': 'Wearing', 'gear.q': '?',
+    'name.title': 'Name your pet', 'name.aria': 'Pet name', 'name.ok': 'That\'s the name!', 'name.back': 'Pick another egg',
+    'st.new': 'Not yet', 'st.learn': 'Learning', 'st.weak': 'Tricky', 'st.star': 'Star!', 'map.reset': 'Erase all records', 'map.cleared': 'Records erased.',
+    'map.resetWhy': 'This erases all records (star map, pet, stardust and badges). A grown-up needs to answer this first.',
+    'map.today': 'Today: <b>{a}</b> right', 'map.todayW': 'Today: <b>{a}</b> right, <b>{w}</b> wrong', 'map.avg': 'About <b>{s}</b>s per question lately', 'map.days': 'Played <b>{n}</b> of the last 7 days. ',
+    'map.more': v => `${v.n} more star${v.n === 1 ? '' : 's'}`, 'map.less': v => `${v.n} fewer star${v.n === 1 ? '' : 's'}`, 'map.faster': '{s}s faster per question', 'map.slower': '{s}s slower per question', 'map.vs': 'Since {n} days ago: {list}. ',
+    'map.none': 'No typed answers yet. Type a problem right 3 or more times, fast and steady, to light it up as a star.',
+    'map.weak': 'Most missed: {list}.<br>These come up more often in the games. Once you know them, the red squares turn back.',
+    'map.fine': v => `You've met <b>${v.n}</b> problem${v.n === 1 ? '' : 's'}, and none are tricky right now. Tap any square for details.`,
+    'map.cellNew': '<b>{eq}</b> · Not met yet.', 'map.cell': '<b>{eq}</b> · {st}<br>Answered {n}× · lately about {t} · wrong {w}×',
+    'q.answers': 'Get {n} right (any game)', 'q.combo': 'Meteor Defense: {n} combo', 'q.wave': 'Meteor Defense: reach wave {n}', 'q.boss': 'Beat 1 Mistake Boss', 'q.chest': 'Open {n} chests',
+    'q.ghost': 'Finish 1 Ghost Race', 'q.ghostwin': 'Beat the ghost in Ghost Race', 'q.cmp': 'Play 1 round of Biggest? Smallest?', 'q.cmpperfect': 'Biggest? Smallest?: all 10 right',
+    'q.bomb': 'Defuse {n} bombs', 'q.bomball': 'Bomb Squad: defuse all 5', 'q.versus': 'Play 1 Tug of War', 'q.stars': 'Light up {n} new stars',
+    'q.done': 'Done', 'q.allDone': 'All done today! See you tomorrow', 'q.meta': 'Badges <em>×{b}</em>', 'q.metaStreak': 'Badges <em>×{b}</em> · <em>{s}</em> days in a row',
+    'q.toast': 'Mission done: {t}  Stardust +10', 'q.gear': 'Your pet can wear the {g} now! Visit the pet page', 'q.gearHidden': 'A mystery item appeared: {g}! Visit the pet page',
+    'q.all': 'All of today\'s missions done! Badge +1', 'q.allStreak': 'All of today\'s missions done! Badge +1, {s} days in a row',
+    'who.switch': 'Switch player', 'who.title': 'Who\'s playing?', 'who.p': 'Everyone gets their own star map, records and pet.', 'who.ph': 'Name (up to 10 letters)', 'who.inAria': 'Name',
+    'who.sug': ['Big Bro', 'Big Sis', 'Little Bro', 'Little Sis'], 'who.add': 'Add a player', 'who.rename': 'Rename this player', 'who.renameFirst': 'That\'s my name',
+    'who.del': 'Erase {name}\'s records (ask a grown-up)', 'who.noName': 'No name', 'who.tap': 'Tap to add your name', 'who.me': 'That\'s you', 'who.mine': 'My turn',
+    'who.hintFirst': 'Type your name, then tap "That\'s my name".', 'who.full': 'Up to 4 players.', 'who.fullT': 'Up to 4 players', 'who.fullRename': 'Up to 4 players. To rename, use the button below',
+    'who.turn': '{name}, it\'s your turn!', 'who.need': 'Type a name first', 'who.taken': 'That name is taken', 'who.welcome': 'Welcome, {name}!', 'who.hi': 'Hi, {name}!',
+    'who.cleared': '{name}\'s records are erased', 'who.delWhy': 'This deletes all of {name}\'s records. A grown-up needs to answer this first.',
+    'w.p': 'These are the problems you\'ve missed most lately. They come up more often in the games. Once you know one, tap "Clear" and it goes back to normal.', 'w.clearAll': 'Clear all', 'w.arm': 'Tap again to clear all', 'w.clear': 'Clear',
+    'w.meta': 'Wrong {w}× · answered {n}×', 'w.metaSoft': 'Missed in Bomb Squad or Biggest · answered {n}×', 'w.metaSoft0': 'Missed in Bomb Squad or Biggest, not typed yet', 'w.empty': 'Nothing tricky right now. Amazing!',
+    'set.title': 'Settings', 'set.titleWho': 'Settings ({name})', 'set.music': 'Music', 'set.musicD': 'Background music', 'set.sound': 'Sound', 'set.soundD': 'Keys, hits and explosions',
+    'set.mix': 'Mix in + and −', 'set.mixD': 'Meteor Defense, Ghost Race and Tug of War sometimes ask adding and subtracting within 10. Look carefully: + or ×?', 'set.tables': 'Which times tables',
+    'set.seq': 'Pattern hints', 'set.seqD': 'Number patterns say which table they count by. Turn off to figure it out yourself (harder)',
+    author: '指數三寶飯', 'legal.id': ' (ianyclin) ', 'legal.rights': 'All rights reserved.',
+    'about.title': 'About <span class="brand-t">9×9 Meteor Squad</span>', 'about.what': 'What is this?', 'about.parents': 'For parents', 'about.made': 'Credits',
+    'about.whatL': '<li>A times tables game for kids (around 2nd–3rd grade). The goal isn\'t learning the facts for the first time. It takes "I know them but slip sometimes" all the way to <b>fast and never wrong</b>.</li><li>Missed facts quietly come up more often, while your child just feels like they\'re playing. The Star Map shows how well each fact is known.</li>',
+    'about.parentsL': '<li><b>No ads, no tracking, no data collected.</b> All records stay in this device\'s browser.</li><li>Each player\'s records are kept separately ("Who\'s playing" on the menu). Records don\'t move to other devices, and clearing browser data erases them. To start over, use "Erase all records" on the Star Map page (a grown-up solves a problem first).</li>',
+    'about.author': 'Made by <a href="#" class="about-fb">指數三寶飯</a> (a dad of three).',
+    'about.credits': 'Pet and outfit art is AI-generated. Fonts are Chiron GoRound TC and Lilita One (SIL Open Font License), bundled with the game, so nothing loads from outside. Music and sound effects are synthesized live in code.',
+    'about.ver': 'Version 1.1. © 2026 指數三寶飯. All rights reserved.', 'about.env': '  Screen {w}×{h}, canvas {cw}×{ch} @{d}',
+    'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.no': 'Not quite. Try again',
+    rotate: 'Please turn your phone upright',
+    'help.games': 'Five games', 'help.other': 'More', 'help.chestT': 'Treasure meteors', 'help.comboT': 'Combos', 'help.whoT': 'Who\'s playing', 'help.questT': 'Daily missions',
+    'help.meteor': '<li>Each meteor has a math problem. Type the answer and the cannon zaps it with a laser. The cannon keeps aiming at <b>the same meteor</b> until it\'s gone. It only turns to another one that\'s about to hit the ground, and then the problem below gives a little hop.</li><li>If you answer wrong, the meteor shows the answer. <b>Type it in</b> to knock it down.</li><li>Sometimes a meteor says "Count by 7s" with numbers like "7, 14, ?, 28". Just <b>type the missing number</b>. You\'ll see these in Ghost Race and Tug of War too.</li><li>A meteor that hits the town <b>costs 1 heart</b>. A whole wave with no misses: +50 points.</li><li>Every 5 waves the <b>Mistake Boss</b> shows up with problems you often miss or don\'t know well yet. Only answers <b>right on the first try</b> count as hits. It takes 6 or more hits, and more in later waves. No small meteors come with the boss, so just focus on it. Beat it for +200 points and a <b>chest every time</b>.</li><li>If the boss hits the town, that\'s also <b>1 heart</b>, and the next wave starts.</li><li>Hearts only come from chests. You can have up to 3.</li><li><b>One Hit</b>: only 1 heart, with its own high score.</li>',
+    'help.chest': '<li>From wave 2, meteors that ask backwards, like <b>? × 7 = 56</b>, carry a chest. Knock one down <b>right on the first try</b> and it drops something.</li><li>There are three kinds of chests: <b>silver</b> (common), <b>gold</b> (not so common) and <b>rainbow</b> (rare). Rarer chests open with a bigger party.</li><li>Silver: +30 points, time freeze, <b>combo shield</b>. Gold: double points for 10 seconds, invincible for 10 seconds, <b>homing missile</b>.</li><li>Combo shield: your combo number (top right) sits in a shiny bubble. If you answer wrong or a meteor hits the town, it protects you once: <b>your combo stays</b> and the bubble pops. Getting another while you have one gives +50 points.</li><li>You can store up to 3 homing missiles (more give +50 points). The top left shows how many you have. When the boss appears, a flashing <b>"Fire" button</b> pops up above the keypad. Each tap fires one missile and takes 1 hit off the boss, but the last hit is up to you.</li><li>Rainbow: <b>Supernova</b> clears all the small falling meteors (except the one you\'re answering and the boss), <b>invincible for 20 seconds</b>, or <b>an extra heart</b> (+100 points if you already have 3 or are playing One Hit).</li>',
+    'help.combo': '<li>Each answer is 10 points, +5 if you answer within 2.5 seconds. Every 5 in a row adds 1 to your multiplier, up to ×5. Retyping after a mistake gives only 3 points and doesn\'t count for your combo.</li><li>Combos of 10, 30, 50 and 100 get a celebration. A mistake or a meteor hitting the ground resets your combo.</li>',
+    'help.ghost': '<li>20 questions against the clock. The other lane is <b>the fastest you</b> (your best run). Pass it to set a new record. The first time, you race the <b>rookie ghost</b>.</li><li>If you lose, the ghost slows down a little (up to three times). Beat it, and it slowly speeds back up to your best.</li>',
+    'help.versus': '<li>Put the tablet between you and answer face to face. Each right answer pulls the star one step toward you. Pull it all the way to win. A wrong answer freezes you for 1 second.</li><li>If nobody wins for a long time, <b>the rope gets slippery</b>: after 45 seconds each pull moves 2 steps, after 90 seconds 3 steps.</li><li>Only the bottom player (the Captain) gets answers saved to the Star Map and Mistakes.</li><li>Nobody to play with? Pick the <b>Robot</b>. It answers about as fast as you usually do. It slows down when you\'re behind, speeds up when you\'re ahead, and makes mistakes sometimes too.</li>',
+    'help.cmp': '<li>You get three problems. If it asks for the <b>biggest</b>, tap the one with the biggest answer. If it asks for the <b>smallest</b>, tap the smallest. Tapping doesn\'t light up stars (only typed answers do).</li><li>The answers are close, so work them out before you tap. After 3 right in a row, they get even closer.</li><li>If you tap the wrong one, all three answers show. Tap <b>the right one</b> to go on. Both the right problem and the one you tapped will come up more often, and the one you tapped comes back next time you play Meteor Defense or Ghost Race.</li><li>A round is 10 questions. Only <b>all 10 right</b> counts for a best time. One mistake and that round isn\'t timed.</li>',
+    'help.bomb': '<li>If the bomb says <b>7</b>, tap the answers in the 7 times table: 7, 14, 21… Not all of them are on the board, so tap the ones you find. Below, it says "Found 0 / 5". Tapping doesn\'t light up stars (only typed answers do).</li><li>Tap a number that doesn\'t belong and the bomb <b>explodes</b>. It also explodes when the fuse burns out. Watch out for look-alikes like 27 and 57! Numbers you tapped wrong or didn\'t find come up a bit more, and come back next time you play Meteor Defense or Ghost Race.</li><li>A round is 5 bombs. Only <b>all 5 defused</b> counts for a best time.</li>',
+    'help.map': '<li>Type a problem right 3 or more times (×1 problems just once), fast and steady, and it <b>lights up as a star</b>. Tap any square to see its record.</li><li>Flashing red squares are <b>tricky</b> problems. They secretly come up more often in the games until you\'ve got them.</li>',
+    'help.wrong': '<li>Problems you got wrong are listed here, most missed first.</li><li>Once you know one, it disappears by itself. You can also tap "Clear" to reset it.</li>',
+    'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, scarf, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
+    'help.quest': '<li>There are <b>3 small missions</b> every day. They check off by themselves. Finish all three for a <b>badge</b>.</li><li>Finish several days in a row and you\'ll see your streak. New missions come tomorrow.</li>',
+    'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li>',
+    'help.tables': '<li>In Settings, tap the numbers. <b>Only lit tables are asked.</b> Normally 1 to 9 are lit: the classic times tables.</li><li>While you\'re still learning, keep just the ones you know, like only 2 and 5.</li><li>For a challenge, light up 10, 11 and 12 too. Answers go up to 144.</li><li>All the games and the Star Map follow along. Each set of tables keeps <b>its own best times</b>.</li>',
+  },
+  // 日本語：小学 3 年生向け。漢字は 3 年生までに習う字を中心に、むずかしい言葉はひらがな・カタカナ（おうちの方向けの文は普通の漢字）
+  ja: {
+    htmlLang: 'ja', title: '九九流星隊', langName: '日本語', 'set.lang': '言語・Language',
+    sep: '、', comma: '、', period: '。', dot: '・', plus: '＋',
+    sec: '{s}秒', secUnit: '秒', back: '‹ メニュー', home: 'メニューにもどる', homeShort: 'メニュー', close: 'とじる', cancel: 'やめる',
+    again: 'もう一回', restart: 'さいしょから', pause: 'ポーズ', ready: 'じゅんびはいい？', go: 'スタート！', end: 'おわり！', del: 'けす', more: 'もうちょっと練習',
+    reveal: '答えは {a}。そのまま打ってね', timesAria: '{a} かける {b}',
+    'brand.mark': '九九', 'brand.sub': '流星隊', 'brand.note': '流星をうって・星をともそう',
+    'menu.modes': 'ゲーム', 'menu.map': '星マップ', 'menu.wrong': 'まちがい帳', 'menu.pet': 'ペット', 'menu.quest': 'ミッション', 'menu.help': 'あそびかた', 'menu.set': 'せってい',
+    'meteor.name': '流星ディフェンス', 'meteor.desc': '計算の流星が町にふってくる。正しく答えると、レーザーでうちおとすよ。',
+    'ghost.name': 'ゴーストレース', 'ghost.desc': '20問のタイムレース。「前回の自分」をおいこそう。',
+    'versus.name': 'つなひきバトル', 'versus.desc': 'タブレットを間において、むかい合って早く答えよう。おうちの人と勝負！ひとりならロボットと対戦できるよ。',
+    'cmp.name': 'どれが大きい？', 'cmp.desc': '3つの式から、答えがいちばん大きい（小さい）ものをタップ。数が近いから、ちゃんと計算してね。',
+    'bomb.name': 'ばくだんかいじょ', 'bomb.desc': 'ばくだんに書いてある数のだんの答えを、どうか線がもえつきる前にぜんぶタップ。ちがう数をタップするとばくはつ！',
+    'best.meteor': 'ハイスコア {n}', 'best.sudden': '一発 {n}', 'best.ghost': 'ベスト {s}秒', 'best.cmp': 'ベスト {s}秒', 'best.bomb': 'ベスト {s}秒',
+    'range.to': '{a}〜{b}', 'note.only': '{t}のだんだけ練習', 'note.plus': '{t}のだんもプラス', 'map.only': 'いまは{t}のだんだけ練習中', 'map.plus': 'いまは{t}のだんもプラスして練習中',
+    'set.tableAria': '{n}のだん', 'set.d.std': '1〜9がぜんぶオン：ふつうの九九、{c}問', 'set.d.plus': '九九に{t}のだんをプラス、いちばん大きいのは {m} × {m}、{c}問',
+    'set.d.only': '{t}のだんだけ、{c}問', 'set.d.onlyMax': '{t}のだんだけ、いちばん大きいのは {m} × {m}、{c}問', 'set.atLeast': '1つはのこしてね',
+    'seq.label': '{n}のだん',
+    'm.hearts': 'ハート', 'm.heartsN': 'ハート {n}', 'm.heartsS': 'ハート {n}、コンボシールドあり', 'm.inv': 'むてき中', 'm.fireAria': 'ミサイルをうつ', 'm.fireN': 'ミサイル {n}こ、タップでうつ', 'm.fire': 'はっしゃ',
+    'm.wave': 'ウェーブ{n}', 'm.waveBoss': 'ウェーブ{n}・ボス', 'm.combo': 'コンボ', 'm.over': '町の明かりが消えた…', 'm.wait': '流星が近づいてくる…',
+    'm.firstTip': '答えを打ってうちおとそう', 'm.perfect': 'パーフェクト！+50', 'm.boss': 'まちがいボスが来た！', 'm.haveMissile': '「はっしゃ」をおそう！',
+    'm.missileHit': 'ミサイル命中 -1', 'm.lastHp': 'さいごの1回はきみの番！', 'm.invHit': 'むてき！', 'm.mult': '×{m} ばい！', 'm.dust': '星くず +20', 'm.chest': 'たからばこ！',
+    'm.shieldSave': 'シールドでセーフ！', 'm.freeze': '時間ストップ！', 'm.nova': 'スーパーノヴァ',
+    'tier.nova': 'スーパーノヴァ！', 'tier.heart': 'ハート +1！', 'tier.inv20': 'むてき 20秒！', 'tier.rare': 'レアたからばこ！',
+    'drop.heart': 'ハート +1', 'drop.heartFull': 'ハートまんたん +100', 'drop.double': '点数2ばい！', 'drop.missile': 'ミサイル +1', 'drop.missileFull': 'ミサイルまんたん +50',
+    'drop.shield': 'コンボシールド！', 'drop.shieldFull': 'シールドあり +50', 'drop.inv': 'むてき {s}秒！',
+    'combo.1': '{n}コンボ！', 'combo.2': '{n}コンボ！すごい', 'combo.3': '{n}コンボ！止まらない', 'combo.4': '{n}コンボ！でんせつ！',
+    'm.endSudden': '一発アウト！', 'm.end': '町がもちこたえられなかった！', 'm.wlabel': 'まちがえた問題・うちのがした問題を、もう一度見てみよう',
+    'mode.std': 'ふつう', 'mode.stdD': 'ハート3つ、たからばこぜんぶ', 'mode.sd': '一発アウト', 'mode.sdD': 'ハートは1つだけ、ハートは出ない', 'mode.best': 'ハイスコア {n}',
+    'p.title': 'ポーズ中', 'p.resume': 'つづける',
+    'r.score': '点', 'r.new': '新記ろく！', 'r.bestPts': 'ハイスコア {n}点', 'r.wave': 'ウェーブ', 'r.combo': '最高コンボ', 'r.acc': '正かいりつ', 'r.avg': '1問あたり', 'r.best': 'ベスト', 'r.total': '合計時間',
+    'r.wlabel': 'まちがえた問題を、もう一度見てみよう',
+    'g.you': 'きみ', 'g.newbie': 'しょしんしゃゴースト', 'g.best': 'いちばん速いきみ', 'g.target': 'めあて：{s}秒でゴール', 'g.targetSlow': 'めあて：{s}秒でゴール（ゴーストを少しおそくしたよ）',
+    'g.first': 'はじめて：1問3.6秒のしょしんしゃゴーストに勝とう', 'g.prog': '{i} / {n}問', 'g.ghostDone': 'ゴーストはもうゴールしたよ、いそげ！',
+    'g.n.firstWin': 'しょしんしゃゴーストに勝った！このタイムが次のゴーストになるよ', 'g.n.first': 'タイムを記ろくしたよ。次は自分と勝負', 'g.n.best': '新記ろく！これまでより {s}秒速い',
+    'g.n.slow': 'おそくしたゴーストをおいこした！ベストまであと {s}秒', 'g.n.behind': 'ベストまであと {s}秒、もう一回！',
+    'g.t.win': 'ゴーストをおいこした！', 'g.t.caught': 'ゴーストにおいついた！', 'g.t.lose': 'ゴーストが先にゴール…',
+    'v.challenger': 'チャレンジャー', 'v.cpu': 'ロボット', 'v.captain': 'たいちょう', 'v.thinking': '計算中…', 'v.pauseAria': '対戦をとめる', 'v.again': 'もう一回',
+    'v.setup1': 'タブレットを2人の間にたいらにおいてね。1問正かいするごとに、星を自分の方へ1マス引っぱるよ。さいごまで引っぱった人の勝ち。まちがえると1秒とまるよ。',
+    'v.setup2': '下の「たいちょう」の答えは、星マップに記ろくされるよ。',
+    'v.oppAria': 'あいて', 'v.opp.cpu': 'あいて：ロボット（きみと同じくらいの速さ）', 'v.opp.easy': 'あいて：人、同じくらいの問題', 'v.opp.hard': 'あいて：大人はむずかしく（2けた × 1けた）', 'v.start': '対戦スタート',
+    'v.paused': '対戦ストップ', 'v.resume': '対戦をつづける', 'v.ready': 'じゅんびOK！', 'v.oops': 'あっ、まちがえた！', 'v.got': 'できた！', 'v.pull': 'ひっぱるぞ！',
+    'v.slip2': 'つながすべる！1回で2マス', 'v.slip3': 'もっとすべる！1回で3マス', 'v.cpuWin': 'ロボットの勝ち', 'v.win': '勝ち！', 'v.lose': '次は引っぱりかえそう！',
+    'v.cpuHappy': 'あぶなかった！もう一回？', 'v.cpuSad': 'きみ、すごいね。もう一回？',
+    'c.big': 'いちばん大きいのは？', 'c.small': 'いちばん小さいのは？', 'c.streak': '{n}問れんぞく正かい！数が近くなったよ', 'c.prog': '{i} / {n}問・正かい {ok}',
+    'c.wantBig': 'いちばん大きいのは {eq}。タップしてつづけよう', 'c.wantSmall': 'いちばん小さいのは {eq}。タップしてつづけよう',
+    'c.n.close': 'おしい！10問ぜんぶ正かいでタイムが記ろくされるよ', 'c.n.more': 'まちがえた問題は、これから多めに出るよ。練習すればできるようになる', 'c.n.first': '10問ぜんぶ正かい！このタイムがはじめての記ろく',
+    'c.n.best': '新記ろく！前より {s} 速い', 'c.n.same': 'ぜんぶ正かい！記ろくと同じ速さ', 'c.n.behind': 'ぜんぶ正かい！記ろくまであと {s}、もう一回！',
+    'c.t.perfect': 'するどい目！', 'c.t.good': 'いいかんじ！', 'c.l.perfect': '秒・10問ぜんぶ正かい', 'c.l.ok': '正かい / {n}問', 'c.r.best': 'ベスト',
+    'b.next': '次のばくだん', 'b.result': 'けっかを見る', 'b.prog': '{i} / {n}こ目', 'b.task': '<b>{n}</b>のだんの答えをぜんぶタップ<small>{n} × 1 から {n} × {c} の答え</small>',
+    'b.found': 'みつけた <b>{k}</b> / {n}', 'b.near': '{v} は{n}のだんの答えじゃないよ。{n} × {k} = {m}、{d}ちがう', 'b.notIs': '{v} は{n}のだんの答えじゃないよ。{a} × {b} の答えだよ', 'b.not': '{v} は{n}のだんの答えじゃないよ',
+    'b.boom': 'ドカーン！ばくはつした', 'b.ok': 'かいじょできた！', 'b.fuse': 'どうか線がもえつきた。まだ見つけていない数：{list}',
+    'b.n.close': 'あと1こでぜんぶかいじょ！5こぜんぶでタイム勝負', 'b.n.more': 'ばくはつした問題は、これから多めに出るよ', 'b.n.first': '5こぜんぶかいじょ！このタイムが記ろくだよ',
+    'b.n.best': '新記ろく！前より {s} 速い', 'b.n.same': 'ぜんぶかいじょ！記ろくと同じ速さ', 'b.n.behind': 'ぜんぶかいじょ！記ろくまであと {s}、もう一回！',
+    'b.t.all': 'ばくだんのプロ！', 'b.t.close': 'おしい！', 'b.l.all': '秒・5こぜんぶかいじょ', 'b.l.some': 'かいじょ / {n}こ', 'b.r.done': 'かいじょ', 'b.r.best': 'ベスト',
+    'kind.cute': 'モフモフ', 'kind.cool': 'リュウ', 'kind.funny': 'ケロケロ', 'kind.legend': 'ホシギツネ',
+    'line.cute': 'かわいい', 'line.cool': 'かっこいい', 'line.funny': 'おもしろい', 'line.legend': 'でんせつ',
+    'stage.0': 'たまご', 'stage.1': 'あかちゃん', 'stage.2': 'こども', 'stage.3': 'おとな', 'stage.4': 'きゅうきょく',
+    'home.cute': '山', 'home.cool': '海', 'home.funny': 'ジャングル', 'home.legend': '星空',
+    'slot.head': '頭', 'slot.face': '顔', 'slot.neck': '首', 'slot.side': 'よこ', 'slot.back': 'せなか',
+    'gear.bow': 'リボン', 'gear.scarf': 'マフラー', 'gear.glasses': 'サングラス', 'gear.balloon': 'ふうせん', 'gear.cap': 'キャップ', 'gear.specs': 'まるメガネ',
+    'gear.bowtie': 'ちょうネクタイ', 'gear.star': '星のヘアピン', 'gear.wizard': 'まほうのぼうし', 'gear.halo': 'にじのわっか', 'gear.wings': '星のつばさ', 'gear.bubble': 'うちゅうバブル',
+    'names.cute': ['モフモフ', 'プリン', 'マシュマロ', 'ピンキー'], 'names.cool': ['リュウ', 'イナズマ', 'アオ', 'ハガネ'], 'names.funny': ['ケロケロ', 'ピピ', 'パクパク', 'マメ'], 'names.legend': ['ホシギツネ', 'ホムラ', 'コメット', 'キララ'],
+    'pet.intro': '問題に正かいすると<b>星くず</b>がもらえるよ。星くずをペットにあげると、少しずつ大きくなるよ。', 'pet.feed': '星くずをあげる ×{n}', 'pet.feedLack': '星くずをあげる ×{n}（あと {d}）',
+    'pet.byeArm': 'もう一回おすと、{name}とおわかれ', 'pet.bye': '{name}を{home}にかえす', 'pet.byeToast': '{name}は{home}に帰っていったよ。大きく育ててくれてありがとう！',
+    'pet.grow': '{name}が大きくなった！{stage}になったよ', 'pet.hello': '{name}が来たよ！正かいすると星くずをあげられるよ',
+    'pet.legendAria': 'でんせつのたまご、まだえらべない', 'pet.unknown': '？？？', 'pet.needBadges': 'バッジ {n}/{m}', 'pet.needBye': '1ぴき家にかえす', 'pet.canPick': 'えらべるよ', 'pet.soon': 'もうすぐ',
+    'pet.alumni': '家に帰ったなかま：', 'pet.alum': '<b>{name}</b>（{home}）',
+    'gear.title': 'きせかえ（バッジが集まるとつけられる、1か所に1つずつ）', 'gear.badges': 'バッジ ×{n}', 'gear.mysteryAria': 'なぞのアイテム、バッジ ×{n}', 'gear.on': 'つけてる', 'gear.q': '？',
+    'name.title': '名前をつけてね', 'name.aria': 'ペットの名前', 'name.ok': 'この名前にする', 'name.back': 'ほかのたまごにする',
+    'st.new': 'まだ', 'st.learn': 'れんしゅう中', 'st.weak': 'にがて', 'st.star': '星になった', 'map.reset': '記ろくをぜんぶけす', 'map.cleared': '記ろくをけしたよ。',
+    'map.resetWhy': 'すべての記録（星マップ・ペット・星くず・バッジ）を消去します。大人の方がこの問題に答えてください。',
+    'map.today': '今日の正かい <b>{a}</b>問', 'map.todayW': '今日の正かい <b>{a}</b>問・まちがい <b>{w}</b>問', 'map.avg': 'さいきんは1問 <b>{s}</b>秒くらい', 'map.days': 'さいきん7日のうち <b>{n}</b>日あそんだよ。',
+    'map.more': '星が{n}こふえた', 'map.less': '星が{n}こへった', 'map.faster': '1問{s}秒速くなった', 'map.slower': '1問{s}秒おそくなった', 'map.vs': '{n}日前とくらべると：{list}。',
+    'map.none': 'まだ答えを打った記ろくがないよ。1つの問題を3回以上、速く正しく答えると星になるよ。',
+    'map.weak': 'いちばんまちがえる問題：{list}。<br>この問題はゲームで多めに出るよ。できるようになると、赤いマスは元にもどるよ。',
+    'map.fine': 'もう <b>{n}</b>問に出会ったよ。いまは、とくににがてな問題はないよ。マスをタップするとくわしく見られるよ。',
+    'map.cellNew': '<b>{eq}</b>　まだ出会っていない問題。', 'map.cell': '<b>{eq}</b>　{st}<br>答えた回数 {n}・さいきん {t}くらい・まちがい {w}回',
+    'q.answers': '{n}問正かいする（どのゲームでもOK）', 'q.combo': '流星ディフェンスで{n}コンボ', 'q.wave': '流星ディフェンスでウェーブ{n}まで行く', 'q.boss': 'まちがいボスを1回たおす', 'q.chest': 'たからばこを{n}こあける',
+    'q.ghost': 'ゴーストレースを1回走る', 'q.ghostwin': 'ゴーストレースでゴーストに勝つ', 'q.cmp': '「どれが大きい？」を1回あそぶ', 'q.cmpperfect': '「どれが大きい？」で10問ぜんぶ正かい',
+    'q.bomb': 'ばくだんを{n}こかいじょ', 'q.bomball': 'ばくだんを5こぜんぶかいじょ', 'q.versus': 'つなひきバトルを1回あそぶ', 'q.stars': '新しい星を{n}こともす',
+    'q.done': 'クリア', 'q.allDone': '今日はぜんぶクリア！また明日ね', 'q.meta': 'バッジ <em>×{b}</em>', 'q.metaStreak': 'バッジ <em>×{b}</em>・<em>{s}</em>日れんぞく',
+    'q.toast': 'ミッションクリア：{t}　星くず +10', 'q.gear': 'ペットが{g}をつけられるようになったよ！ペットのページへ', 'q.gearHidden': 'なぞのアイテムが出てきた：{g}！ペットのページを見てみよう',
+    'q.all': '今日のミッションぜんぶクリア！バッジ +1', 'q.allStreak': '今日のミッションぜんぶクリア！バッジ +1、{s}日れんぞく',
+    'who.switch': '人をかえる', 'who.title': 'だれがあそぶ？', 'who.p': 'ひとりひとりに、星マップ・記ろく・ペットがあるよ。', 'who.ph': '名前（6文字まで）', 'who.inAria': '名前',
+    'who.sug': ['おにいちゃん', 'おねえちゃん', 'おとうと', 'いもうと'], 'who.add': '人をふやす', 'who.rename': 'いまの人の名前をかえる', 'who.renameFirst': 'この名前にする',
+    'who.del': '「{name}」の記ろくをけす（大人の人にきいてね）', 'who.noName': '名前なし', 'who.tap': 'タップして名前をつけよう', 'who.me': 'いまはきみ', 'who.mine': 'こうたい',
+    'who.hintFirst': '名前を打って、「この名前にする」をおしてね。', 'who.full': '4人まで。', 'who.fullT': '4人までだよ', 'who.fullRename': '4人までだよ。名前をかえるときは下のボタン',
+    'who.turn': '{name}、きみの番だよ！', 'who.need': '先に名前を打ってね', 'who.taken': 'その名前はもうあるよ', 'who.welcome': '{name}、ようこそ！', 'who.hi': '{name}、こんにちは！',
+    'who.cleared': '{name}の記ろくをけしたよ', 'who.delWhy': '「{name}」の記録をすべて消去します。大人の方がこの問題に答えてください。',
+    'w.p': 'さいきんよくまちがえる問題だよ。ゲームで多めに出るよ。おぼえたら「けす」をおすと、ふつうにもどるよ。', 'w.clearAll': 'ぜんぶけす', 'w.arm': 'もう一回おすと、ぜんぶけすよ', 'w.clear': 'けす',
+    'w.meta': 'まちがい {w}回・答えた {n}回', 'w.metaSoft': 'ばくだんか「どれが大きい？」でまちがえた・答えた {n}回', 'w.metaSoft0': 'ばくだんか「どれが大きい？」でまちがえた、まだ答えを打っていない', 'w.empty': 'いまはにがてな問題がないよ。すごい！',
+    'set.title': 'せってい', 'set.titleWho': 'せってい（{name}）', 'set.music': '音楽', 'set.musicD': 'BGM', 'set.sound': 'こうか音', 'set.soundD': 'ボタン・命中・ばくはつの音',
+    'set.mix': '10までのたし算・ひき算もまぜる', 'set.mixD': '流星ディフェンス・ゴーストレース・つなひきで、ときどきたし算とひき算が出るよ。+ か × か、よく見てね', 'set.tables': '練習するだん',
+    'set.seq': '数のならびのヒント', 'set.seqD': '数のならびの問題に、何のだんかを出すよ。オフにすると自分で見つけるから、むずかしくなる',
+    author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': 'All rights reserved.',
+    'about.title': '<span class="brand-t">九九流星隊</span>について', 'about.what': 'これは何？', 'about.parents': 'おうちの方へ', 'about.made': '制作',
+    'about.whatL': '<li>小学生（2〜3年生くらい）が九九を練習するゲームです。目標は「覚える」ことではなく、「わかっているのに時々まちがえる」を<b>速く、まちがえずに</b>答えられるまで練習することです。</li><li>まちがえた問題はこっそり多めに出題されますが、子どもは遊んでいるだけに感じます。星マップで、一問ずつの習熟度が見られます。</li>',
+    'about.parentsL': '<li><b>広告なし・追跡なし・データ収集なし</b>。記録はすべて、この端末のブラウザの中だけに保存されます。</li><li>記録は人ごとに分けて保存されます（メニューの「だれがあそぶ？」）。端末を変えたりブラウザのデータを消したりすると、記録は引き継がれません。最初からやり直すときは、星マップの「記ろくをぜんぶけす」から（大人が一問解く必要があります）。</li>',
+    'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（3人の子のパパです）。',
+    'about.credits': 'ペットときせかえのイラストはAIで生成しています。フォントは Chiron GoRound TC と Lilita One（SIL Open Font License）で、ゲームといっしょに配布しているため外部には接続しません。音楽と効果音はプログラムでリアルタイムに合成しています。',
+    'about.ver': 'バージョン 1.1。© 2026 指數三寶飯 All rights reserved.', 'about.env': '　画面 {w}×{h}、キャンバス {cw}×{ch} @{d}',
+    'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.no': 'ちがいます。もう一度どうぞ',
+    rotate: 'スマホをたてにしてね',
+    'help.games': '5つのゲーム', 'help.other': 'そのほか', 'help.chestT': 'たからばこ流星', 'help.comboT': 'コンボ', 'help.whoT': 'だれがあそぶ？', 'help.questT': '毎日のミッション',
+    'help.meteor': '<li>流星には計算の問題がのっているよ。答えを打つと、ほう台がレーザーでうちおとすよ。ほう台は<b>同じ流星</b>をずっとねらっていて、ほかの流星が地面にぶつかりそうなときだけ、そっちをねらうよ。そのとき下の問題がピョンとはねるよ。</li><li>まちがえると流星に答えが出るよ。<b>そのまま打てば</b>うちおとせるよ。</li><li>流星に「7のだん」と「7、14、?、28」のような数がならぶことがあるよ。<b>？の数</b>を打てばOK。ゴーストレースとつなひきでも出るよ。</li><li>流星が町に落ちると<b>ハートが1つへる</b>よ。1ウェーブのあいだミスなしなら +50点。</li><li>5ウェーブごとに<b>まちがいボス</b>が出るよ。きみがよくまちがえる問題や、まだなれていない問題を出してくるよ。<b>1回で正かい</b>しないとダメージにならないよ。6回以上当てるとたおせて、ウェーブが進むほどライフがふえるよ。ボスのときは小さい流星は来ないから、ボスに集中しよう。たおすと +200点、<b>かならずたからばこ</b>が出るよ。</li><li>ボスが町に落ちても<b>ハートが1つへって</b>、次のウェーブが始まるよ。</li><li>ハートがふえるのはたからばこだけ。ハートは3つまで。</li><li><b>一発アウト</b>：ハートは1つだけ。ハイスコアはべつに記ろくされるよ。</li>',
+    'help.chest': '<li>ウェーブ2から、<b>? × 7 = 56</b> みたいに反対から聞く流星が、たからばこを持っているよ。<b>1回で正かい</b>してうちおとすと、アイテムが出るよ。</li><li>たからばこは3しゅるい：<b>銀</b>はよく出る、<b>金</b>はときどき、<b>にじ色</b>はレア。レアほどにぎやかにひらくよ。</li><li>銀：+30点、時間ストップ、<b>コンボシールド</b>。金：点数2ばい10秒、むてき10秒、<b>ホーミングミサイル</b>。</li><li>コンボシールド：右上のコンボの数字が、キラキラのあわにつつまれるよ。まちがえたり流星が町に落ちたりしたとき1回だけ守ってくれて、<b>コンボが0にならない</b>よ。そのときあわはわれるよ。もうあわがあるときにまたもらうと +50点。</li><li>ホーミングミサイルは3こまでためられるよ（いっぱいのときは +50点）。左上にいくつあるか出るよ。ボスが出ると、キーボードの上にピカピカの<b>「はっしゃ」ボタン</b>が出るよ。1回おすと1ぱつ、ボスのライフを1へらすよ。でもさいごの1回は自分で当ててね。</li><li>にじ色：<b>スーパーノヴァ</b>で落ちてくる小さい流星をぜんぶけす（いま答えている流星とボスはのこる）、<b>むてき20秒</b>、<b>ハート+1</b>（ハートが3つあるときや一発アウトのときは +100点）。</li>',
+    'help.combo': '<li>1問10点、2.5秒までに答えると +5点。5問れんぞく正かいするごとに、点数のばいりつが1つ上がって、いちばん上は5ばい。まちがえたあとに打ち直すと3点だけで、コンボにもならないよ。</li><li>コンボ10・30・50・100で、おいわいのアニメがあるよ。まちがえたり流星が落ちたりすると、コンボは0にもどるよ。</li>',
+    'help.ghost': '<li>20問のタイムレース。となりのコースは<b>いちばん速いきみ</b>（きみのベスト）。おいこせば新記ろく！はじめては<b>しょしんしゃゴースト</b>と走るよ。</li><li>負けるとゴーストが少しおそくなるよ（3回まで）。勝つと、少しずつベストのきみにもどるよ。</li>',
+    'help.versus': '<li>タブレットを間において、むかい合って早く答えよう。正かいすると星を1マス引っぱれるよ。さいごまで引っぱったら勝ち。まちがえると1秒とまるよ。</li><li>長いあいだ勝負がつかないと、<b>つながすべりやすくなる</b>よ：45秒たつと1回で2マス、90秒たつと3マス。</li><li>下の「たいちょう」の答えだけが、星マップとまちがい帳に記ろくされるよ。</li><li>いっしょにあそぶ人がいない？<b>ロボット</b>をえらぼう。きみのいつもの速さと同じくらいで答えるよ。きみが負けているとゆっくり、勝っていると速くなって、ときどきまちがえるよ。</li>',
+    'help.cmp': '<li>3つの式が出るよ。<b>いちばん大きい</b>と聞かれたら答えがいちばん大きいものを、<b>いちばん小さい</b>と聞かれたらいちばん小さいものをタップ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>3つの答えはとても近いから、計算してからタップしよう。3問れんぞく正かいすると、もっと近くなるよ。</li><li>まちがえると3つの答えが出るよ。<b>正しいもの</b>をタップすると次に進むよ。まちがえたときは、正しい問題とタップした問題がこれから多めに出て、タップした問題は、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回10問。<b>10問ぜんぶ正かい</b>のときだけタイムをくらべるよ。1問でもまちがえたら、その回はタイムなし。</li>',
+    'help.bomb': '<li>ばくだんに「<b>7</b>」と書いてあったら、7のだんの答え（7、14、21…）をタップしよう。ぜんぶあるとはかぎらないから、あるものだけタップ。下に「みつけた 0 / 5」と出るよ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>ちがう数をタップすると<b>ばくはつ</b>！どうか線がもえつきても、ばくはつするよ。27や57みたいな、にている数に気をつけて！まちがえた数や見つけられなかった数は少し多めに出て、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回に5こ。<b>5こぜんぶかいじょ</b>したときだけタイムをくらべるよ。</li>',
+    'help.map': '<li>1つの問題を3回以上<b>打って正かい</b>（×1の問題は1回でOK）して、速くてまちがえないと、<b>星になって光る</b>よ。マスをタップすると、その問題の記ろくが見られるよ。</li><li>赤くピカピカしているのは<b>にがて</b>な問題。できるようになるまで、ゲームでこっそり多めに出るよ。</li>',
+    'help.wrong': '<li>まちがえた問題がここにならぶよ。いちばんまちがえた問題が上。</li><li>できるようになると、かってにきえるよ。「けす」をおしてリセットもできるよ。</li>',
+    'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおそう。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、マフラー、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
+    'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
+    'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li>',
+    'help.tables': '<li>「せってい」で数字をタップ。<b>光っているだんだけ</b>出るよ。ふだんは1〜9がぜんぶ光っていて、ふつうの九九だよ。</li><li>まだ習っているとちゅうなら、習ったところだけのこそう。たとえば2と5だけ。</li><li>チャレンジしたいなら、10・11・12も光らせよう。答えは144まで。</li><li>すべてのゲームと星マップが、それに合わせてかわるよ。だんの組み合わせごとに、ベスト記ろくは<b>べつべつ</b>に記ろくされるよ。</li>',
+  },
 };
+const LANGS = ['zh-Hant', 'en', 'ja'];
+// 裝置語言：zh 開頭（含簡中裝置）→ 繁中，ja → 日文，其他一律英文
+const langAuto = () => { for (const l of (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''])) { const x = String(l).toLowerCase(); if (x.startsWith('zh')) return 'zh-Hant'; if (x.startsWith('ja')) return 'ja'; if (x.startsWith('en')) return 'en'; } return 'en'; };
 let LANG = 'zh-Hant';
+const nameMax = () => LANG === 'en' ? 10 : 6;   // 英文名字比較長；存檔一律最多 10 個字
 function tx(key, v) {
   let s = STR[LANG][key];
   if (s === undefined) s = STR['zh-Hant'][key];
@@ -1040,8 +1291,10 @@ function applyStr() {
   $$('[data-th]').forEach(e => { e.innerHTML = tx(e.dataset.th); });
   $$('[data-ta]').forEach(e => e.setAttribute('aria-label', tx(e.dataset.ta)));
   $$('[data-tp]').forEach(e => e.setAttribute('placeholder', tx(e.dataset.tp)));
+  $$('.name-in').forEach(e => { e.maxLength = nameMax(); });
 }
-applyStr();
+// 依目前的人的設定（沒設就看裝置）換語言；載入、換人、在設定頁切換時呼叫
+function setLang() { LANG = LANGS.includes(DB.set.lang) ? DB.set.lang : langAuto(); applyStr(); }
 
 /* ================= 存檔 ================= */
 // 多人：WHO = { cur, list:[{id, name}] } 存在 PKEY；每個人一把存檔 key（第一個人 id 是空字串，沿用舊 key，舊存檔自動變成第一個人）
@@ -1050,7 +1303,7 @@ const PKEY = 'jiujiu-meteor-who', WHO_MAX = 4;
 let WHO = { cur: '', list: [{ id: '', name: '' }] };
 try {
   const w = JSON.parse(localStorage.getItem(PKEY));
-  if (w && Array.isArray(w.list) && w.list.length) WHO = { cur: typeof w.cur === 'string' ? w.cur : '', list: w.list.filter(x => x && typeof x.id === 'string').map(x => ({ id: x.id, name: String(x.name || '').slice(0, 6) })).slice(0, WHO_MAX), asked: !!w.asked };
+  if (w && Array.isArray(w.list) && w.list.length) WHO = { cur: typeof w.cur === 'string' ? w.cur : '', list: w.list.filter(x => x && typeof x.id === 'string').map(x => ({ id: x.id, name: String(x.name || '').slice(0, 10) })).slice(0, WHO_MAX), asked: !!w.asked };
 } catch (e) {}
 WHO.list = WHO.list.filter((x, i, a) => a.findIndex(y => y.id === x.id) === i);
 if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
@@ -1061,7 +1314,7 @@ const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
 KEY = keyFor(WHO.cur);
 const BEST0 = () => ({ meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null, ghostLoss: 0 });
 let recent = [], retest = [], draws = 0, lastRetest = -9, retestPick = '';   // retest：答錯的題 6～12 題後一定再考一次（延遲重測比立刻照抄有效）；兩次重測至少隔 2 題；存檔存 key（DB.retest），關掉再開也會考
-const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice() },
+const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice(), lang: '' },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0, ans: 0, wrong: 0, log: {} },
   pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [] } });
 // 最佳紀錄依乘法表範圍分開存（bests[rangeKey]），DB.best 永遠指向目前範圍那一份；getter 不可列舉所以不會存進 JSON
@@ -1086,7 +1339,7 @@ function cleanFacts(fc) {
 function cleanRest(D) {
   Object.keys(D.bests).forEach(k => { const b = D.bests[k]; if (!/^(std|\d+(,\d+)*)$/.test(k) || !b || typeof b !== 'object') { delete D.bests[k]; return; } b.meteor = clamp(num(b.meteor), 0, 1e7); b.sudden = clamp(num(b.sudden), 0, 1e7); b.cmpT = num(b.cmpT, 0) > 0 ? Math.min(num(b.cmpT), 36e5) : null; b.ghostLoss = clamp(Math.round(num(b.ghostLoss)), 0, 99); b.bomb = num(b.bomb, 0) > 0 ? Math.min(num(b.bomb), 36e5) : null; if (!(Array.isArray(b.ghost) && b.ghost.length === 20 && b.ghost.every(v => typeof v === 'number' && Number.isFinite(v)))) b.ghost = null; });
   ['mix', 'sound', 'music', 'sudden', 'seqLabel'].forEach(k => { D.set[k] = D.set[k] === true || D.set[k] === 'true' || D.set[k] === 1; });   // 字串 'false' 不能當 true
-  const P = D.pet; P.dust = Math.max(0, Math.round(num(P.dust))); P.fed = Math.max(0, Math.round(num(P.fed))); P.name = String(P.name || '').slice(0, 6); if (typeof P.kind !== 'string') P.kind = '';
+  const P = D.pet; P.dust = Math.max(0, Math.round(num(P.dust))); P.fed = Math.max(0, Math.round(num(P.fed))); P.name = String(P.name || '').slice(0, 10); if (!LANGS.includes(D.set.lang)) D.set.lang = ''; if (typeof P.kind !== 'string') P.kind = '';
   P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string');
   const Y = D.daily; Y.badges = Math.max(0, Math.round(num(Y.badges))); Y.streak = Math.max(0, Math.round(num(Y.streak))); Y.ans = Math.max(0, Math.round(num(Y.ans))); Y.starBase = Math.round(num(Y.starBase));
   const log = {}; if (Y.log && typeof Y.log === 'object' && !Array.isArray(Y.log)) Object.keys(Y.log).forEach(d => { const v = Y.log[d]; if (/^\d{4}-\d{2}-\d{2}$/.test(d) && v && typeof v === 'object') log[d] = { s: num(v.s), t: num(v.t), r: typeof v.r === 'string' ? v.r : 'std', a: num(v.a) }; }); Y.log = log;
@@ -1114,7 +1367,7 @@ function loadDB() {
     }
   } catch (e) { DB = fresh(); }
 }
-loadDB();
+loadDB(); setLang();
 function save() {
   Object.keys(DB.bests).forEach(k => { if (JSON.stringify(DB.bests[k]) === JSON.stringify(BEST0())) delete DB.bests[k]; });   // 沒紀錄的範圍不存
   DB.retest = retest.map(r => r.k);
@@ -2672,7 +2925,7 @@ $('#pet-cards').addEventListener('click', e => { const b = e.target.closest('.pe
 $('#name-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) $('#name-in').value = b.dataset.n; });
 $('#name-back').addEventListener('click', () => { $('#o-name').hidden = true; });
 $('#name-ok').addEventListener('click', () => {
-  const v = $('#name-in').value.trim().slice(0, 6) || NAME_SUG(nameKind)[0];
+  const v = $('#name-in').value.trim().slice(0, nameMax()) || NAME_SUG(nameKind)[0];
   DB.pet.kind = nameKind; DB.pet.name = v; save();
   $('#o-name').hidden = true; $('#name-in').blur(); renderPet(); SFX.fan(); toast(tx('pet.hello', { name: v }));
 });
@@ -2790,7 +3043,7 @@ function renderWho() {
 }
 function switchWho(id) {
   if (mode !== 'menu' || !WHO.list.some(x => x.id === id)) return;
-  save(); WHO.cur = id; saveWho(); KEY = keyFor(id); loadDB(); rebuildPool(); ensureDaily(); refreshMenu(); renderWho();
+  save(); WHO.cur = id; saveWho(); KEY = keyFor(id); loadDB(); setLang(); rebuildPool(); ensureDaily(); refreshMenu(); renderWho();
   DB.set.music ? musStart() : musStop();
 }
 const whoTaken = name => WHO.list.some(x => x.name === name);
@@ -2804,15 +3057,17 @@ if (!WHO.asked && WHO.list.length === 1 && !WHO.list[0].name && !Object.keys(DB.
 $('#who-close').addEventListener('click', () => { $('#o-who').hidden = true; $('#who-in').blur(); });
 $('#who-list').addEventListener('click', e => { const b = e.target.closest('[data-who]'); if (!b) return; switchWho(b.dataset.who); $('#o-who').hidden = true; SFX.ding(); toast(tx('who.turn', { name: whoLabel(whoCur()) })); });
 $('#who-add').addEventListener('click', () => {
-  const name = $('#who-in').value.trim().slice(0, 6); if (!name) { $('#who-in').focus(); toast(tx('who.need')); return; }
+  const name = $('#who-in').value.trim().slice(0, nameMax()); if (!name) { $('#who-in').focus(); toast(tx('who.need')); return; }
   if (!whoCur().name) { $('#who-rename').click(); return; }
   if (WHO.list.length >= WHO_MAX) { toast(tx('who.fullT')); return; }
   if (whoTaken(name)) { toast(tx('who.taken')); return; }
-  const id = 'p' + Date.now().toString(36);
-  WHO.list.push({ id, name }); saveWho(); switchWho(id); $('#who-in').value = ''; $('#o-who').hidden = true; SFX.fan(); toast(tx('who.welcome', { name }));
+  const id = 'p' + Date.now().toString(36), lang = DB.set.lang;
+  WHO.list.push({ id, name }); saveWho(); switchWho(id);
+  if (lang && !DB.set.lang) { DB.set.lang = lang; save(); setLang(); refreshMenu(); }   // 新的人沿用剛剛的語言
+  $('#who-in').value = ''; $('#o-who').hidden = true; SFX.fan(); toast(tx('who.welcome', { name }));
 });
 $('#who-rename').addEventListener('click', () => {
-  const name = $('#who-in').value.trim().slice(0, 6); if (!name) { $('#who-in').focus(); toast(tx('who.need')); return; }
+  const name = $('#who-in').value.trim().slice(0, nameMax()); if (!name) { $('#who-in').focus(); toast(tx('who.need')); return; }
   if (whoTaken(name) && whoCur().name !== name) { toast(tx('who.taken')); return; }
   const first = !whoCur().name;
   whoCur().name = name; saveWho(); renderWho(); refreshMenu(); $('#who-in').value = ''; $('#who-in').blur(); SFX.ding(); toast(tx('who.hi', { name }));
@@ -2824,7 +3079,7 @@ $('#who-del').addEventListener('click', () => {
     try { localStorage.removeItem(keyFor(me.id)); } catch (e) {}
     WHO.list = WHO.list.filter(x => x.id !== me.id);
     if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
-    const next = WHO.list[0].id; WHO.cur = next; saveWho(); KEY = keyFor(next); loadDB(); rebuildPool(); ensureDaily(); refreshMenu(); renderWho(); DB.set.music ? musStart() : musStop();
+    const next = WHO.list[0].id; WHO.cur = next; saveWho(); KEY = keyFor(next); loadDB(); setLang(); rebuildPool(); ensureDaily(); refreshMenu(); renderWho(); DB.set.music ? musStart() : musStop();
     toast(tx('who.cleared', { name: whoLabel(me) }));
   }, tx('who.delWhy', { name: whoLabel(me) }));
 });
@@ -2968,7 +3223,7 @@ function refreshMenu() {
   $('#b-wrong').textContent = wrongList().length;
   $('#b-pet').textContent = DB.pet.dust;
   $$('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!!DB.set[b.dataset.set])));
-  renderTables();
+  renderTables(); renderLangs();
   $('#brand-note').textContent = isStdRange() ? tx('brand.note') : rangeText('note');
   $('#brand-note').classList.toggle('on', !isStdRange());
   $('#set-title').textContent = whoCur().name ? tx('set.titleWho', { name: whoCur().name }) : tx('set.title');   // 連續幫幾個孩子設定時知道現在是誰的
@@ -2994,7 +3249,7 @@ function makePad(el, fn) {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'key' + (k === '0' ? ' wide' : '') + (k === 'back' ? ' back' : '');
     b.textContent = k === 'back' ? '⌫' : k;
-    if (k === 'back') b.setAttribute('aria-label', tx('del'));
+    if (k === 'back') { b.dataset.ta = 'del'; b.setAttribute('aria-label', tx('del')); }
     const press = e => { e.preventDefault(); b.classList.add('hit'); setTimeout(() => b.classList.remove('hit'), 90); fn(k); };
     b.addEventListener('pointerdown', press);
     b.addEventListener('click', e => { if (kbClick(e)) press(e); });
@@ -3077,13 +3332,23 @@ function fmtTables(t = tables()) {
 }
 function renderTables() {
   const box = $('#set-tables');
-  if (!box.children.length) for (let n = 1; n <= T_MAX; n++) { const b = document.createElement('button'); b.type = 'button'; b.dataset.t = n; b.textContent = n; b.className = n > 9 ? 'ext' : ''; b.setAttribute('aria-label', tx('set.tableAria', { n })); box.appendChild(b); }
-  $$('#set-tables button').forEach(b => b.setAttribute('aria-pressed', String(tables().includes(+b.dataset.t))));
+  if (!box.children.length) for (let n = 1; n <= T_MAX; n++) { const b = document.createElement('button'); b.type = 'button'; b.dataset.t = n; b.textContent = n; b.className = n > 9 ? 'ext' : ''; box.appendChild(b); }
+  $$('#set-tables button').forEach(b => { b.setAttribute('aria-pressed', String(tables().includes(+b.dataset.t))); b.setAttribute('aria-label', tx('set.tableAria', { n: +b.dataset.t })); });
   const c = MUL.length;
   $('#set-t-d').textContent = isStdRange() ? tx('set.d.std', { c })
     : superStd() ? tx('set.d.plus', { t: fmtTables(tables().filter(n => n > 9)), m: cols(), c })
     : tx(cols() > 9 ? 'set.d.onlyMax' : 'set.d.only', { t: fmtTables(), m: cols(), c });
 }
+// 語言按鈕用各自的語言寫（中文／English／日本語），看不懂目前語言也找得到
+function renderLangs() {
+  const box = $('#set-lang');
+  if (!box.children.length) LANGS.forEach(l => { const b = document.createElement('button'); b.type = 'button'; b.dataset.lang = l; b.lang = STR[l].htmlLang; b.textContent = STR[l].langName; box.appendChild(b); });
+  $$('#set-lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+}
+$('#set-lang').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || b.dataset.lang === LANG) return;
+  DB.set.lang = b.dataset.lang; save(); setLang(); refreshMenu(); SFX.ding();
+});
 $('#set-tables').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   const n = +b.dataset.t, t = tables().slice();
