@@ -18,6 +18,10 @@
 @font-face{font-family:'Chiron GoRound TC';font-weight:700;font-display:swap;src:url(assets/fonts/chiron-700.woff2) format('woff2')}
 @font-face{font-family:'Chiron GoRound TC';font-weight:900;font-display:swap;src:url(assets/fonts/chiron-900.woff2) format('woff2')}
 @font-face{font-family:'Lilita One';font-weight:400;font-display:swap;src:url(assets/fonts/lilita.woff2) format('woff2')}
+/* 日文介面用 Zen Maru Gothic（日本字形）；只有 :lang(ja) 的元素用到，中文、英文不會下載 */
+@font-face{font-family:'Zen Maru Gothic';font-weight:400;font-display:swap;src:url(assets/fonts/zenmaru-400.woff2) format('woff2')}
+@font-face{font-family:'Zen Maru Gothic';font-weight:700;font-display:swap;src:url(assets/fonts/zenmaru-700.woff2) format('woff2')}
+@font-face{font-family:'Zen Maru Gothic';font-weight:900;font-display:swap;src:url(assets/fonts/zenmaru-900.woff2) format('woff2')}
 [hidden]{display:none!important}
 :root{--sat:env(safe-area-inset-top,0px);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 img{max-width:100%}
@@ -32,6 +36,7 @@ img{max-width:100%}
   --f-zh:'Chiron GoRound TC','Noto Sans TC','PingFang TC','Microsoft JhengHei',system-ui,sans-serif;
   color-scheme:dark;
 }
+:lang(ja){--f-num:'Lilita One','Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',system-ui,sans-serif;--f-zh:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP','Chiron GoRound TC',system-ui,sans-serif}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--f-zh);overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
@@ -72,10 +77,10 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .mode svg{grid-row:span 2;width:62px;height:62px}
 .m-t{font-weight:900;font-size:20px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .m-t em{font-style:normal;font-family:var(--f-num);font-size:14px;color:var(--sun);font-weight:400;text-align:right;max-width:50%;line-height:1.2}
-.m-t>span:first-child,.m-t{white-space:nowrap} .m-t em{white-space:normal}
+.m-t>span:first-child,.m-t{white-space:nowrap} .m-t em{white-space:normal} .m-t em .nw{white-space:nowrap}
 .m-d{color:var(--muted);font-size:14px;line-height:1.45}
 .menu-foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:470px;width:100%}
-#s-menu .menu-foot{display:grid;grid-template-columns:repeat(3,1fr)}
+#s-menu .menu-foot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}   /* 三欄等寬，每種語言位置都一樣 */
 #go-who{align-self:flex-start}   /* 靠左，右邊那一段留給走來走去的寵物（placeMenuPet 算走道） */
 /* 加入主畫面後沒有網址列，但狀態列與 Home 橫條會吃掉約 80px：矮螢幕把主選單壓緊，六顆按鈕要一眼看到 */
 .menu-in{padding-block:12px 14px}   /* 安全區由 :root 的 padding 處理，這裡不再加 */
@@ -197,10 +202,11 @@ html,body{overscroll-behavior:none}
 
 /* ---------- 幽靈競速 ---------- */
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-block:10px 4px}
+.topbar .link-btn,.topbar .timer{flex:none;white-space:nowrap} .topbar .prog{min-width:0;text-align:center;letter-spacing:.04em}   /* 窄螢幕：返回鈕和計時不折行，中間的進度讓它縮 */
 .timer{font-family:var(--f-num);font-size:30px;font-variant-numeric:tabular-nums;padding:2px 12px;border-radius:999px;background:rgba(8,17,31,.62);text-shadow:0 2px 6px rgba(0,0,0,.6)}
 .timer small{font-family:var(--f-zh);font-size:13px;color:var(--muted);margin-left:6px;font-weight:700}
 .track{position:relative;padding:12px 14px 10px;border-radius:20px;background:var(--panel);border:1px solid var(--line);display:grid;gap:6px;width:100%;max-width:560px;margin-inline:auto}
-.lane-row{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:8px}
+.lane-row{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:14px}
 .lane-label{font-size:12px;color:var(--muted);font-weight:700}
 .lane{position:relative;height:34px;margin-right:22px}
 .lane::before{content:'';position:absolute;left:0;right:-22px;top:50%;border-top:2px dashed var(--line)}
@@ -344,6 +350,7 @@ html,body{overscroll-behavior:none}
 /* ---------- 寵物 ---------- */
 .pet-intro{margin:0;color:var(--muted);font-size:15px;line-height:1.6;text-align:center;max-width:470px}
 .pet-intro b{color:var(--sun)}
+.pet-pick{width:100%;max-width:400px}
 .pet-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:400px}
 .pet-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 5px 0 var(--keyEdge);cursor:pointer;color:var(--paper)}
 .pet-card:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
@@ -368,7 +375,7 @@ html,body{overscroll-behavior:none}
 .pet-tip{font-size:13px;color:var(--muted);text-align:center;line-height:1.5}
 #pet-feed:disabled{opacity:.45;box-shadow:none;transform:none}
 .gear{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;max-width:470px;margin-top:4px}
-.gear button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:78px;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
+.gear button{display:flex;flex-direction:column;align-items:center;gap:3px;width:86px;text-align:center;line-height:1.25;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
 .gear button img{height:32px;width:auto;max-width:52px}
 .gear button small{font-size:11px;color:var(--muted);font-weight:700}
 .gear button.mystery{border-style:dashed;border-color:rgba(159,220,255,.45);background:rgba(159,220,255,.05);color:var(--muted)}
@@ -419,7 +426,7 @@ html,body{overscroll-behavior:none}
 .tgrid button.ext[aria-pressed="true"]{background:rgba(95,242,208,.14);border-color:var(--mint);color:var(--mint)}
 .tgrid button:active{transform:scale(.94)}
 .langs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.langs button{min-height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font-weight:900;font-size:15px;cursor:pointer;padding:0 4px}
+.langs button{font-family:var(--f-zh);min-height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font-weight:900;font-size:15px;cursor:pointer;padding:0 4px}
 .langs button[aria-pressed="true"]{background:rgba(95,242,208,.14);border-color:var(--mint);color:var(--mint)}
 .who{align-self:center;border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:8px 16px;min-height:44px;font-weight:700;font-size:14px;color:var(--ice);display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 .who-list{display:grid;gap:8px}
@@ -453,6 +460,18 @@ html,body{overscroll-behavior:none}
 .count span{font-family:var(--f-num);font-size:clamp(90px,30vw,160px);color:var(--sun);text-shadow:0 8px 0 #a87a00;animation:cnt .7s ease forwards}
 .count span.go{font-family:var(--f-zh);font-weight:900;font-size:clamp(56px,16vw,96px)}
 @keyframes cnt{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(.85);opacity:0}}
+.card h3,.btn,.link-btn,.danger,.opt button,.q-row span,.wmeta,.pet-intro,.gear-t,.gear button,.who-hint,.hint,.bm-why,.bm-task,.cmp-ask,.res-note,.lane-label,.m-d,.alum-t{text-wrap:balance}
+.rules li,.info,.setrow small,.card p{text-wrap:pretty}
+.rules li{overflow-wrap:anywhere}
+:lang(ja) .m-t{font-size:18px} :lang(ja) .m-t em{font-size:13px}   /* 日文模式名比較長（流星ディフェンス），小一號才放得下名字加最高分 */
+:lang(ja) body{line-height:1.35}   /* Zen Maru Gothic 預設行高 1.45、Chiron 1.35：統一成 1.35，日文版面的高度才跟中文一樣 */
+.half.done .who{visibility:hidden}   /* 結束時大字不要壓在「小隊長」上 */
+.m-t{flex-wrap:wrap;column-gap:8px} .m-t em{margin-left:auto}   /* 很窄的螢幕（320px）名字加最高分放不下時，最高分換到下一行，卡片不會被撐出螢幕 */
+.brand-mark{white-space:nowrap} .pick b{white-space:nowrap}
+.card>*{flex-shrink:0}   /* 卡片比螢幕高時要捲動，不能把結果卡的說明擠扁、疊到下面的數字 */
+@media (max-width:380px){.tgrid{gap:4px}.tgrid button{aspect-ratio:auto;height:44px}}   /* 窄螢幕 6 格放不下 44px 正方形：寬度讓它縮，高度維持 44 */
+@media (max-height:700px){.half.bot .who,#s-versus:not(.cpu) .half.top .who{display:none}}   /* 矮螢幕拔河：「小隊長」名牌會壓到中間的繩子 */
+@media (max-height:600px){.bm-task small{display:none}}   /* 很矮的螢幕炸彈的說明小字省掉，「下一顆」才不會掉出畫面 */
 @media (prefers-reduced-motion:reduce){*,::before,::after{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important}.count span{animation:none;opacity:1}.banner.on{animation:none}}
 </style>
 </head>
@@ -889,8 +908,13 @@ const T_MAX = 12, STD_TABLES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const rnd = (a, b) => a + Math.random() * (b - a);
 const ri = (a, b) => Math.floor(rnd(a, b + 1));
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const NUMF = "'Lilita One','Chiron GoRound TC','PingFang TC','Microsoft JhengHei',sans-serif";
-const ZHF = "'Chiron GoRound TC','Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif";
+// 畫布字型：日文介面換成 Zen Maru Gothic（setLang() 會呼叫 canvasFonts()）
+let NUMF = '', ZHF = '';
+function canvasFonts() {
+  const ja = LANG === 'ja';
+  NUMF = ja ? "'Lilita One','Zen Maru Gothic','Hiragino Maru Gothic ProN','Noto Sans JP',sans-serif" : "'Lilita One','Chiron GoRound TC','PingFang TC','Microsoft JhengHei',sans-serif";
+  ZHF = ja ? "'Zen Maru Gothic','Hiragino Maru Gothic ProN','Noto Sans JP',sans-serif" : "'Chiron GoRound TC','Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif";
+}
 const now = () => performance.now();
 
 /* ================= 介面文字 ================= */
@@ -912,7 +936,7 @@ const STR = {
     'versus.name': '雙人拔河', 'versus.desc': '面對面搶答，跟大人比，也能跟機器人比。',
     'cmp.name': '哪個大？哪個小？', 'cmp.desc': '三個算式，點出答案最大（或最小）的那個。',
     'bomb.name': '炸彈拆除', 'bomb.desc': '引線燒完前，點掉炸彈上那個數的倍數！',
-    'best.meteor': '最高 {n} 分', 'best.sudden': '即死 {n} 分', 'best.ghost': '最佳 {s} 秒', 'best.cmp': '全對最快 {s} 秒', 'best.bomb': '全拆最快 {s} 秒',
+    'best.meteor': '最高 {n} 分', 'best.sudden': '即死 {n} 分', 'best.ghost': '最佳 {s} 秒', 'best.cmp': '最快 {s} 秒', 'best.bomb': '最快 {s} 秒',
     // 乘法表範圍
     'range.to': '{a} 到 {b}', 'note.only': '只練 {t} 的乘法表', 'note.plus': '加上 {t} 的乘法表', 'map.only': '目前只練 {t} 的乘法表', 'map.plus': '目前加上 {t} 的乘法表',
     'set.tableAria': '{n} 的乘法表', 'set.d.std': '1 到 9 都亮，就是九九乘法，{c} 題', 'set.d.plus': '九九再加上 {t} 的乘法表，最大到 {m} × {m}，{c} 題',
@@ -1011,7 +1035,7 @@ const STR = {
     'about.whatL': '<li>給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，是把「都會但偶爾背錯」練到<b>又快又不會錯</b>。</li><li>答錯的題目會偷偷更常出現，孩子只覺得在玩。星圖看得到每一題熟不熟。</li>',
     'about.parentsL': '<li><b>沒有廣告、沒有追蹤、不收集任何資料</b>。所有紀錄只存在這台裝置的瀏覽器裡。</li><li>每個人的紀錄分開存（主選單「誰在玩」）。換裝置或清除瀏覽器資料，紀錄不會跟著走。想重來可以在星圖頁「清除所有紀錄」（要大人解一題）。</li>',
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（就是一個三寶爸）。',
-    'about.credits': '寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。',
+    'about.credits': '寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC、Zen Maru Gothic 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。',
     'about.ver': '版本 1.1。© 2026 指數三寶飯 保留所有權利。', 'about.env': '　畫面 {w}×{h}，畫布 {cw}×{ch} @{d}',
     'gate.title': '請大人來一下', 'gate.why': '要打開外面的網頁，請大人先回答這一題。', 'gate.go': '前往', 'gate.ok': '答對了！', 'gate.no': '不對喔，再試一次',
     rotate: '請把手機轉直',
@@ -1065,7 +1089,7 @@ const STR = {
     'p.title': 'Paused', 'p.resume': 'Resume',
     'r.score': 'points', 'r.new': 'New record!', 'r.bestPts': 'Best: {n} points', 'r.wave': 'Wave', 'r.combo': 'Best combo', 'r.acc': 'Correct', 'r.avg': 'Per question', 'r.best': 'Best', 'r.total': 'Total time',
     'r.wlabel': 'Wrong this time. Take another look',
-    'g.you': 'You', 'g.newbie': 'Rookie ghost', 'g.best': 'Fastest you', 'g.target': 'Goal: finish in {s}s', 'g.targetSlow': 'Goal: finish in {s}s (ghost slowed down a bit)',
+    'g.you': 'You', 'g.newbie': 'Rookie', 'g.best': 'Best you', 'g.target': 'Goal: finish in {s}s', 'g.targetSlow': 'Goal: finish in {s}s (ghost slowed down a bit)',
     'g.first': 'First race: beat the rookie ghost (3.6s per question)', 'g.prog': 'Question {i} / {n}', 'g.ghostDone': 'The ghost finished. Go go go!',
     'g.n.firstWin': 'You beat the rookie ghost! This run is your next ghost', 'g.n.first': 'Time saved. Next time, race yourself', 'g.n.best': 'New record! {s}s faster than your best',
     'g.n.slow': 'You passed the slowed-down ghost! {s}s off your best', 'g.n.behind': '{s}s off your best. Try again!',
@@ -1073,7 +1097,7 @@ const STR = {
     'v.challenger': 'Challenger', 'v.cpu': 'Robot', 'v.captain': 'Captain', 'v.thinking': 'Thinking…', 'v.pauseAria': 'Pause match', 'v.again': 'Rematch',
     'v.setup1': 'Lay the tablet flat between two players. Each right answer pulls the star one step your way. Pull it all the way to win. A wrong answer freezes you for 1 second.',
     'v.setup2': 'The Captain (bottom side) gets answers saved to the Star Map.',
-    'v.oppAria': 'Opponent', 'v.opp.cpu': 'vs Robot (about as fast as you)', 'v.opp.easy': 'vs Person, same kind of problems', 'v.opp.hard': 'vs Grown-up, harder (2-digit × 1-digit)', 'v.start': 'Start',
+    'v.oppAria': 'Opponent', 'v.opp.cpu': 'Robot (about as fast as you)', 'v.opp.easy': 'Person (same kind of problems)', 'v.opp.hard': 'Grown-up (2-digit × 1-digit)', 'v.start': 'Start',
     'v.paused': 'Match paused', 'v.resume': 'Resume', 'v.ready': 'I\'m ready!', 'v.oops': 'Oops, wrong!', 'v.got': 'Got it!', 'v.pull': 'My pull!',
     'v.slip2': 'Slippery rope! 2 steps per pull', 'v.slip3': 'Slippery rope! 3 steps per pull', 'v.cpuWin': 'Robot wins', 'v.win': 'You win!', 'v.lose': 'Pull it back next time!',
     'v.cpuHappy': 'Phew! Again?', 'v.cpuSad': 'You\'re great! One more?',
@@ -1082,7 +1106,7 @@ const STR = {
     'c.n.close': 'So close! Get all 10 right to set a time record', 'c.n.more': 'The ones you missed will come up more. Keep practicing!', 'c.n.first': 'All 10 right! This is your first record',
     'c.n.best': 'New record! {s} faster', 'c.n.same': 'All right! Same as your record', 'c.n.behind': 'All right! {s} off your record. Again!',
     'c.t.perfect': 'Sharp eyes!', 'c.t.good': 'Nice work!', 'c.l.perfect': 'sec · all 10 right', 'c.l.ok': 'right out of {n}', 'c.r.best': 'Best time',
-    'b.next': 'Next bomb', 'b.result': 'See results', 'b.prog': 'Bomb {i} / {n}', 'b.task': 'Tap every answer in the <b>{n}</b> times table<small>{n} × 1 up to {n} × {c}</small>',
+    'b.next': 'Next bomb', 'b.result': 'See results', 'b.prog': 'Bomb {i} / {n}', 'b.task': 'Tap <b>{n}</b>× answers<small>{n} × 1 up to {n} × {c}</small>',
     'b.found': 'Found <b>{k}</b> / {n}', 'b.near': '{v} isn\'t in the {n} times table. {n} × {k} = {m}, off by {d}', 'b.notIs': '{v} isn\'t in the {n} times table. It\'s {a} × {b}', 'b.not': '{v} isn\'t in the {n} times table',
     'b.boom': 'BOOM! It blew up', 'b.ok': 'Defused!', 'b.fuse': 'The fuse burned out. Still hidden: {list}',
     'b.n.close': 'One short! Defuse all 5 to race the clock', 'b.n.more': 'The ones that blew up will come up more', 'b.n.first': 'All 5 defused! This is your record',
@@ -1117,7 +1141,7 @@ const STR = {
     'q.done': 'Done', 'q.allDone': 'All done today! See you tomorrow', 'q.meta': 'Badges <em>×{b}</em>', 'q.metaStreak': 'Badges <em>×{b}</em> · <em>{s}</em> days in a row',
     'q.toast': 'Mission done: {t}  Stardust +10', 'q.gear': 'Your pet can wear the {g} now! Visit the pet page', 'q.gearHidden': 'A mystery item appeared: {g}! Visit the pet page',
     'q.all': 'All of today\'s missions done! Badge +1', 'q.allStreak': 'All of today\'s missions done! Badge +1, {s} days in a row',
-    'who.switch': 'Switch player', 'who.title': 'Who\'s playing?', 'who.p': 'Everyone gets their own star map, records and pet.', 'who.ph': 'Name (up to 10 letters)', 'who.inAria': 'Name',
+    'who.switch': 'Switch player', 'who.title': 'Who\'s playing?', 'who.p': 'Everyone gets their own star map, records and pet.', 'who.ph': 'Name (max 10)', 'who.inAria': 'Name',
     'who.sug': ['Big Bro', 'Big Sis', 'Little Bro', 'Little Sis'], 'who.add': 'Add a player', 'who.rename': 'Rename this player', 'who.renameFirst': 'That\'s my name',
     'who.del': 'Erase {name}\'s records (ask a grown-up)', 'who.noName': 'No name', 'who.tap': 'Tap to add your name', 'who.me': 'That\'s you', 'who.mine': 'My turn',
     'who.hintFirst': 'Type your name, then tap "That\'s my name".', 'who.full': 'Up to 4 players.', 'who.fullT': 'Up to 4 players', 'who.fullRename': 'Up to 4 players. To rename, use the button below',
@@ -1133,7 +1157,7 @@ const STR = {
     'about.whatL': '<li>A times tables game for kids (around 2nd–3rd grade). The goal isn\'t learning the facts for the first time. It takes "I know them but slip sometimes" all the way to <b>fast and never wrong</b>.</li><li>Missed facts quietly come up more often, while your child just feels like they\'re playing. The Star Map shows how well each fact is known.</li>',
     'about.parentsL': '<li><b>No ads, no tracking, no data collected.</b> All records stay in this device\'s browser.</li><li>Each player\'s records are kept separately ("Who\'s playing" on the menu). Records don\'t move to other devices, and clearing browser data erases them. To start over, use "Erase all records" on the Star Map page (a grown-up solves a problem first).</li>',
     'about.author': 'Made by <a href="#" class="about-fb">指數三寶飯</a> (a dad of three).',
-    'about.credits': 'Pet and outfit art is AI-generated. Fonts are Chiron GoRound TC and Lilita One (SIL Open Font License), bundled with the game, so nothing loads from outside. Music and sound effects are synthesized live in code.',
+    'about.credits': 'Pet and outfit art is AI-generated. Fonts are Chiron GoRound TC, Zen Maru Gothic and Lilita One (SIL Open Font License), bundled with the game, so nothing loads from outside. Music and sound effects are synthesized live in code.',
     'about.ver': 'Version 1.1. © 2026 指數三寶飯. All rights reserved.', 'about.env': '  Screen {w}×{h}, canvas {cw}×{ch} @{d}',
     'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.no': 'Not quite. Try again',
     rotate: 'Please turn your phone upright',
@@ -1152,7 +1176,7 @@ const STR = {
     'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li>',
     'help.tables': '<li>In Settings, tap the numbers. <b>Only lit tables are asked.</b> Normally 1 to 9 are lit: the classic times tables.</li><li>While you\'re still learning, keep just the ones you know, like only 2 and 5.</li><li>For a challenge, light up 10, 11 and 12 too. Answers go up to 144.</li><li>All the games and the Star Map follow along. Each set of tables keeps <b>its own best times</b>.</li>',
   },
-  // 日本語：小学 3 年生向け。漢字は 3 年生までに習う字を中心に、むずかしい言葉はひらがな・カタカナ（おうちの方向けの文は普通の漢字）
+  // 日本語：tools/make-fonts.py 靠「  ja: {」到下一個「  },」找這段，切 Zen Maru Gothic 的字。小学 3 年生向け。漢字は 3 年生までに習う字を中心に、むずかしい言葉はひらがな・カタカナ（おうちの方向けの文は普通の漢字）
   ja: {
     htmlLang: 'ja', title: '九九流星隊', langName: '日本語', 'set.lang': '言語・Language',
     sep: '、', comma: '、', period: '。', dot: '・', plus: '＋',
@@ -1166,7 +1190,7 @@ const STR = {
     'versus.name': 'つなひきバトル', 'versus.desc': 'むかい合って早く答えよう。ロボットとも勝負できるよ。',
     'cmp.name': 'どれが大きい？', 'cmp.desc': '答えがいちばん大きい（小さい）式をタップ。',
     'bomb.name': 'ばくだんかいじょ', 'bomb.desc': 'ばくはつする前に、そのだんの答えをぜんぶタップ！',
-    'best.meteor': 'ハイスコア {n}', 'best.sudden': '一発 {n}', 'best.ghost': 'ベスト {s}秒', 'best.cmp': 'ベスト {s}秒', 'best.bomb': 'ベスト {s}秒',
+    'best.meteor': 'ベスト {n}', 'best.sudden': '一発 {n}', 'best.ghost': 'ベスト {s}秒', 'best.cmp': 'ベスト {s}秒', 'best.bomb': 'ベスト {s}秒',
     'range.to': '{a}〜{b}', 'note.only': '{t}のだんだけ練習', 'note.plus': '{t}のだんもプラス', 'map.only': 'いまは{t}のだんだけ練習中', 'map.plus': 'いまは{t}のだんもプラスして練習中',
     'set.tableAria': '{n}のだん', 'set.d.std': '1〜9がぜんぶオン：ふつうの九九、{c}問', 'set.d.plus': '九九に{t}のだんをプラス、いちばん大きいのは {m} × {m}、{c}問',
     'set.d.only': '{t}のだんだけ、{c}問', 'set.d.onlyMax': '{t}のだんだけ、いちばん大きいのは {m} × {m}、{c}問', 'set.atLeast': '1つはのこしてね',
@@ -1185,24 +1209,24 @@ const STR = {
     'p.title': 'ポーズ中', 'p.resume': 'つづける',
     'r.score': '点', 'r.new': '新記ろく！', 'r.bestPts': 'ハイスコア {n}点', 'r.wave': 'ウェーブ', 'r.combo': '最高コンボ', 'r.acc': '正かいりつ', 'r.avg': '1問あたり', 'r.best': 'ベスト', 'r.total': '合計時間',
     'r.wlabel': 'まちがえた問題を、もう一度見てみよう',
-    'g.you': 'きみ', 'g.newbie': 'しょしんしゃゴースト', 'g.best': 'いちばん速いきみ', 'g.target': 'めあて：{s}秒でゴール', 'g.targetSlow': 'めあて：{s}秒でゴール（ゴーストを少しおそくしたよ）',
-    'g.first': 'はじめて：1問3.6秒のしょしんしゃゴーストに勝とう', 'g.prog': '{i} / {n}問', 'g.ghostDone': 'ゴーストはもうゴールしたよ、いそげ！',
-    'g.n.firstWin': 'しょしんしゃゴーストに勝った！このタイムが次のゴーストになるよ', 'g.n.first': 'タイムを記ろくしたよ。次は自分と勝負', 'g.n.best': '新記ろく！これまでより {s}秒速い',
+    'g.you': 'きみ', 'g.newbie': 'ルーキー', 'g.best': 'ベスト', 'g.target': 'めあて：{s}秒でゴール', 'g.targetSlow': 'めあて：{s}秒でゴール（ゴーストを少しおそくしたよ）',
+    'g.first': 'はじめて：1問3.6秒のルーキーゴーストに勝とう', 'g.prog': '{i} / {n}問', 'g.ghostDone': 'ゴーストはもうゴールしたよ、いそげ！',
+    'g.n.firstWin': 'ルーキーゴーストに勝った！このタイムが次のゴーストになるよ', 'g.n.first': 'タイムを記ろくしたよ。次は自分と勝負', 'g.n.best': '新記ろく！これまでより {s}秒速い',
     'g.n.slow': 'おそくしたゴーストをおいこした！ベストまであと {s}秒', 'g.n.behind': 'ベストまであと {s}秒、もう一回！',
     'g.t.win': 'ゴーストをおいこした！', 'g.t.caught': 'ゴーストにおいついた！', 'g.t.lose': 'ゴーストが先にゴール…',
     'v.challenger': 'チャレンジャー', 'v.cpu': 'ロボット', 'v.captain': 'たいちょう', 'v.thinking': '計算中…', 'v.pauseAria': '対戦をとめる', 'v.again': 'もう一回',
     'v.setup1': 'タブレットを2人の間にたいらにおいてね。1問正かいするごとに、星を自分の方へ1マス引っぱるよ。さいごまで引っぱった人の勝ち。まちがえると1秒とまるよ。',
     'v.setup2': '下の「たいちょう」の答えは、星マップに記ろくされるよ。',
-    'v.oppAria': 'あいて', 'v.opp.cpu': 'あいて：ロボット（きみと同じくらいの速さ）', 'v.opp.easy': 'あいて：人、同じくらいの問題', 'v.opp.hard': 'あいて：大人はむずかしく（2けた × 1けた）', 'v.start': '対戦スタート',
+    'v.oppAria': 'あいて', 'v.opp.cpu': 'ロボット（きみと同じくらい速い）', 'v.opp.easy': '人（同じくらいの問題）', 'v.opp.hard': '大人（2けた × 1けた）', 'v.start': '対戦スタート',
     'v.paused': '対戦ストップ', 'v.resume': '対戦をつづける', 'v.ready': 'じゅんびOK！', 'v.oops': 'あっ、まちがえた！', 'v.got': 'できた！', 'v.pull': 'ひっぱるぞ！',
     'v.slip2': 'つながすべる！1回で2マス', 'v.slip3': 'もっとすべる！1回で3マス', 'v.cpuWin': 'ロボットの勝ち', 'v.win': '勝ち！', 'v.lose': '次は引っぱりかえそう！',
     'v.cpuHappy': 'あぶなかった！もう一回？', 'v.cpuSad': 'きみ、すごいね。もう一回？',
-    'c.big': 'いちばん大きいのは？', 'c.small': 'いちばん小さいのは？', 'c.streak': '{n}問れんぞく正かい！数が近くなったよ', 'c.prog': '{i} / {n}問・正かい {ok}',
+    'c.big': 'いちばん大きい？', 'c.small': 'いちばん小さい？', 'c.streak': '{n}問れんぞく正かい！数が近くなったよ', 'c.prog': '{i} / {n}問・正かい {ok}',
     'c.wantBig': 'いちばん大きいのは {eq}。タップしてつづけよう', 'c.wantSmall': 'いちばん小さいのは {eq}。タップしてつづけよう',
     'c.n.close': 'おしい！10問ぜんぶ正かいでタイムが記ろくされるよ', 'c.n.more': 'まちがえた問題は、これから多めに出るよ。練習すればできるようになる', 'c.n.first': '10問ぜんぶ正かい！このタイムがはじめての記ろく',
     'c.n.best': '新記ろく！前より {s} 速い', 'c.n.same': 'ぜんぶ正かい！記ろくと同じ速さ', 'c.n.behind': 'ぜんぶ正かい！記ろくまであと {s}、もう一回！',
     'c.t.perfect': 'するどい目！', 'c.t.good': 'いいかんじ！', 'c.l.perfect': '秒・10問ぜんぶ正かい', 'c.l.ok': '正かい / {n}問', 'c.r.best': 'ベスト',
-    'b.next': '次のばくだん', 'b.result': 'けっかを見る', 'b.prog': '{i} / {n}こ目', 'b.task': '<b>{n}</b>のだんの答えをぜんぶタップ<small>{n} × 1 から {n} × {c} の答え</small>',
+    'b.next': '次のばくだん', 'b.result': 'けっかを見る', 'b.prog': '{i} / {n}こ目', 'b.task': '<b>{n}</b>のだんをタップ<small>{n} × 1 から {n} × {c} の答え</small>',
     'b.found': 'みつけた <b>{k}</b> / {n}', 'b.near': '{v} は{n}のだんの答えじゃないよ。{n} × {k} = {m}、{d}ちがう', 'b.notIs': '{v} は{n}のだんの答えじゃないよ。{a} × {b} の答えだよ', 'b.not': '{v} は{n}のだんの答えじゃないよ',
     'b.boom': 'ドカーン！ばくはつした', 'b.ok': 'かいじょできた！', 'b.fuse': 'どうか線がもえつきた。まだ見つけていない数：{list}',
     'b.n.close': 'あと1こでぜんぶかいじょ！5こぜんぶでタイム勝負', 'b.n.more': 'ばくはつした問題は、これから多めに出るよ', 'b.n.first': '5こぜんぶかいじょ！このタイムが記ろくだよ',
@@ -1223,7 +1247,7 @@ const STR = {
     'pet.alumni': '家に帰ったなかま：', 'pet.alum': '<b>{name}</b>（{home}）',
     'gear.title': 'きせかえ（バッジが集まるとつけられる、1か所に1つずつ）', 'gear.badges': 'バッジ ×{n}', 'gear.mysteryAria': 'なぞのアイテム、バッジ ×{n}', 'gear.on': 'つけてる', 'gear.q': '？',
     'name.title': '名前をつけてね', 'name.aria': 'ペットの名前', 'name.ok': 'この名前にする', 'name.back': 'ほかのたまごにする',
-    'st.new': 'まだ', 'st.learn': 'れんしゅう中', 'st.weak': 'にがて', 'st.star': '星になった', 'map.reset': '記ろくをぜんぶけす', 'map.cleared': '記ろくをけしたよ。',
+    'st.new': 'まだ', 'st.learn': 'れんしゅう', 'st.weak': 'にがて', 'st.star': '星', 'map.reset': '記ろくをぜんぶけす', 'map.cleared': '記ろくをけしたよ。',
     'map.resetWhy': 'すべての記録（星マップ・ペット・星くず・バッジ）を消去します。大人の方がこの問題に答えてください。',
     'map.today': '今日の正かい <b>{a}</b>問', 'map.todayW': '今日の正かい <b>{a}</b>問・まちがい <b>{w}</b>問', 'map.avg': 'さいきんは1問 <b>{s}</b>秒くらい', 'map.days': 'さいきん7日のうち <b>{n}</b>日あそんだよ。',
     'map.more': '星が{n}こふえた', 'map.less': '星が{n}こへった', 'map.faster': '1問{s}秒速くなった', 'map.slower': '1問{s}秒おそくなった', 'map.vs': '{n}日前とくらべると：{list}。',
@@ -1253,7 +1277,7 @@ const STR = {
     'about.whatL': '<li>小学生（2〜3年生くらい）が九九を練習するゲームです。目標は「覚える」ことではなく、「わかっているのに時々まちがえる」を<b>速く、まちがえずに</b>答えられるまで練習することです。</li><li>まちがえた問題はこっそり多めに出題されますが、子どもは遊んでいるだけに感じます。星マップで、一問ずつの習熟度が見られます。</li>',
     'about.parentsL': '<li><b>広告なし・追跡なし・データ収集なし</b>。記録はすべて、この端末のブラウザの中だけに保存されます。</li><li>記録は人ごとに分けて保存されます（メニューの「だれがあそぶ？」）。端末を変えたりブラウザのデータを消したりすると、記録は引き継がれません。最初からやり直すときは、星マップの「記ろくをぜんぶけす」から（大人が一問解く必要があります）。</li>',
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（3人の子のパパです）。',
-    'about.credits': 'ペットときせかえのイラストはAIで生成しています。フォントは Chiron GoRound TC と Lilita One（SIL Open Font License）で、ゲームといっしょに配布しているため外部には接続しません。音楽と効果音はプログラムでリアルタイムに合成しています。',
+    'about.credits': 'ペットときせかえのイラストはAIで生成しています。フォントは Zen Maru Gothic、Chiron GoRound TC、Lilita One（SIL Open Font License）で、ゲームといっしょに配布しているため外部には接続しません。音楽と効果音はプログラムでリアルタイムに合成しています。',
     'about.ver': 'バージョン 1.1。© 2026 指數三寶飯 All rights reserved.', 'about.env': '　画面 {w}×{h}、キャンバス {cw}×{ch} @{d}',
     'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.no': 'ちがいます。もう一度どうぞ',
     rotate: 'スマホをたてにしてね',
@@ -1261,7 +1285,7 @@ const STR = {
     'help.meteor': '<li>流星には計算の問題がのっているよ。答えを打つと、ほう台がレーザーでうちおとすよ。ほう台は<b>同じ流星</b>をずっとねらっていて、ほかの流星が地面にぶつかりそうなときだけ、そっちをねらうよ。そのとき下の問題がピョンとはねるよ。</li><li>まちがえると流星に答えが出るよ。<b>そのまま打てば</b>うちおとせるよ。</li><li>流星に「7のだん」と「7、14、?、28」のような数がならぶことがあるよ。<b>？の数</b>を打てばOK。ゴーストレースとつなひきでも出るよ。</li><li>流星が町に落ちると<b>ハートが1つへる</b>よ。1ウェーブのあいだミスなしなら +50点。</li><li>5ウェーブごとに<b>まちがいボス</b>が出るよ。きみがよくまちがえる問題や、まだなれていない問題を出してくるよ。<b>1回で正かい</b>しないとダメージにならないよ。6回以上当てるとたおせて、ウェーブが進むほどライフがふえるよ。ボスのときは小さい流星は来ないから、ボスに集中しよう。たおすと +200点、<b>かならずたからばこ</b>が出るよ。</li><li>ボスが町に落ちても<b>ハートが1つへって</b>、次のウェーブが始まるよ。</li><li>ハートがふえるのはたからばこだけ。ハートは3つまで。</li><li><b>一発アウト</b>：ハートは1つだけ。ハイスコアはべつに記ろくされるよ。</li>',
     'help.chest': '<li>ウェーブ2から、<b>? × 7 = 56</b> みたいに反対から聞く流星が、たからばこを持っているよ。<b>1回で正かい</b>してうちおとすと、アイテムが出るよ。</li><li>たからばこは3しゅるい：<b>銀</b>はよく出る、<b>金</b>はときどき、<b>にじ色</b>はレア。レアほどにぎやかにひらくよ。</li><li>銀：+30点、時間ストップ、<b>コンボシールド</b>。金：点数2ばい10秒、むてき10秒、<b>ホーミングミサイル</b>。</li><li>コンボシールド：右上のコンボの数字が、キラキラのあわにつつまれるよ。まちがえたり流星が町に落ちたりしたとき1回だけ守ってくれて、<b>コンボが0にならない</b>よ。そのときあわはわれるよ。もうあわがあるときにまたもらうと +50点。</li><li>ホーミングミサイルは3こまでためられるよ（いっぱいのときは +50点）。左上にいくつあるか出るよ。ボスが出ると、キーボードの上にピカピカの<b>「はっしゃ」ボタン</b>が出るよ。1回おすと1ぱつ、ボスのライフを1へらすよ。でもさいごの1回は自分で当ててね。</li><li>にじ色：<b>スーパーノヴァ</b>で落ちてくる小さい流星をぜんぶけす（いま答えている流星とボスはのこる）、<b>むてき20秒</b>、<b>ハート+1</b>（ハートが3つあるときや一発アウトのときは +100点）。</li>',
     'help.combo': '<li>1問10点、2.5秒までに答えると +5点。5問れんぞく正かいするごとに、点数のばいりつが1つ上がって、いちばん上は5ばい。まちがえたあとに打ち直すと3点だけで、コンボにもならないよ。</li><li>コンボ10・30・50・100で、おいわいのアニメがあるよ。まちがえたり流星が落ちたりすると、コンボは0にもどるよ。</li>',
-    'help.ghost': '<li>20問のタイムレース。となりのコースは<b>いちばん速いきみ</b>（きみのベスト）。おいこせば新記ろく！はじめては<b>しょしんしゃゴースト</b>と走るよ。</li><li>負けるとゴーストが少しおそくなるよ（3回まで）。勝つと、少しずつベストのきみにもどるよ。</li>',
+    'help.ghost': '<li>20問のタイムレース。となりのコースは<b>いちばん速いきみ</b>（きみのベスト）。おいこせば新記ろく！はじめては<b>ルーキーゴースト</b>と走るよ。</li><li>負けるとゴーストが少しおそくなるよ（3回まで）。勝つと、少しずつベストのきみにもどるよ。</li>',
     'help.versus': '<li>タブレットを間において、むかい合って早く答えよう。正かいすると星を1マス引っぱれるよ。さいごまで引っぱったら勝ち。まちがえると1秒とまるよ。</li><li>長いあいだ勝負がつかないと、<b>つながすべりやすくなる</b>よ：45秒たつと1回で2マス、90秒たつと3マス。</li><li>下の「たいちょう」の答えだけが、星マップとまちがい帳に記ろくされるよ。</li><li>いっしょにあそぶ人がいない？<b>ロボット</b>をえらぼう。きみのいつもの速さと同じくらいで答えるよ。きみが負けているとゆっくり、勝っていると速くなって、ときどきまちがえるよ。</li>',
     'help.cmp': '<li>3つの式が出るよ。<b>いちばん大きい</b>と聞かれたら答えがいちばん大きいものを、<b>いちばん小さい</b>と聞かれたらいちばん小さいものをタップ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>3つの答えはとても近いから、計算してからタップしよう。3問れんぞく正かいすると、もっと近くなるよ。</li><li>まちがえると3つの答えが出るよ。<b>正しいもの</b>をタップすると次に進むよ。まちがえたときは、正しい問題とタップした問題がこれから多めに出て、タップした問題は、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回10問。<b>10問ぜんぶ正かい</b>のときだけタイムをくらべるよ。1問でもまちがえたら、その回はタイムなし。</li>',
     'help.bomb': '<li>ばくだんに「<b>7</b>」と書いてあったら、7のだんの答え（7、14、21…）をタップしよう。ぜんぶあるとはかぎらないから、あるものだけタップ。下に「みつけた 0 / 5」と出るよ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>ちがう数をタップすると<b>ばくはつ</b>！どうか線がもえつきても、ばくはつするよ。27や57みたいな、にている数に気をつけて！まちがえた数や見つけられなかった数は少し多めに出て、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回に5こ。<b>5こぜんぶかいじょ</b>したときだけタイムをくらべるよ。</li>',
@@ -1294,7 +1318,7 @@ function applyStr() {
   $$('.name-in').forEach(e => { e.maxLength = nameMax(); });
 }
 // 依目前的人的設定（沒設就看裝置）換語言；載入、換人、在設定頁切換時呼叫
-function setLang() { LANG = LANGS.includes(DB.set.lang) ? DB.set.lang : langAuto(); applyStr(); }
+function setLang() { LANG = LANGS.includes(DB.set.lang) ? DB.set.lang : langAuto(); canvasFonts(); applyStr(); }
 
 /* ================= 存檔 ================= */
 // 多人：WHO = { cur, list:[{id, name}] } 存在 PKEY；每個人一把存檔 key（第一個人 id 是空字串，沿用舊 key，舊存檔自動變成第一個人）
@@ -2378,7 +2402,7 @@ function openVersus() {
   show('versus');
   V = null;
   $('#v-setup').hidden = false;
-  vEl.forEach(e => { e.querySelector('[data-q]').innerHTML = ''; e.querySelector('[data-hint]').textContent = ''; e.querySelector('[data-res]').hidden = true; e.classList.remove('locked'); });
+  vEl.forEach(e => { e.classList.remove('done'); e.querySelector('[data-q]').innerHTML = ''; e.querySelector('[data-hint]').textContent = ''; e.querySelector('[data-res]').hidden = true; e.classList.remove('locked'); });
   $('#v-knot').style.left = '50%'; $('#v-rope').classList.remove('f2', 'f3'); $('#v-btns').hidden = true; $('#v-rope').hidden = false; $$('.end').forEach(e => e.hidden = false); $('#v-quit').hidden = false;
 }
 function startVersus() {
@@ -2392,7 +2416,7 @@ function startVersus() {
   countdown(() => { V.started = true; V.t0 = now(); newVQ(0); newVQ(1); });
 }
 function openVersusReset() {
-  vEl.forEach(e => { e.querySelector('[data-res]').hidden = true; e.classList.remove('locked'); e.querySelector('[data-q]').innerHTML = ''; e.querySelector('[data-hint]').textContent = ''; });
+  vEl.forEach(e => { e.classList.remove('done'); e.querySelector('[data-res]').hidden = true; e.classList.remove('locked'); e.querySelector('[data-q]').innerHTML = ''; e.querySelector('[data-hint]').textContent = ''; });
   $('#v-knot').style.left = '50%'; $('#v-rope').classList.remove('f2', 'f3'); $('#v-btns').hidden = true; $('#v-rope').hidden = false; $$('.end').forEach(e => e.hidden = false); $('#v-quit').hidden = false;
 }
 function vPause(on) {
@@ -2482,6 +2506,7 @@ function vKey(i, d) {
 }
 function endVersus(w) {
   V.over = true; V.w = w; musTrack('menu'); quest('versus');
+  vEl.forEach(e => e.classList.add('done'));
   vEl.forEach((e, i) => { const r = e.querySelector('[data-res]'); r.hidden = false; r.className = 'vres ' + (i === w && !(V.cpu && i === 1) ? 'win' : 'lose'); r.textContent = tx(i === w ? (V.cpu && i === 1 ? 'v.cpuWin' : 'v.win') : 'v.lose'); e.classList.add('locked'); });
   if (V.cpu) {   // 機器人贏了跳一跳、輸了垂頭，嘴巴跟著變
     const f = $('.cpu-face'); f.classList.remove('thinking', 'oops'); void f.offsetWidth; f.classList.add(w === 1 ? 'happy' : 'sad');
@@ -3215,10 +3240,11 @@ function show(name) {
   measure();
 }
 function refreshMenu() {
-  $('#b-meteor').textContent = [DB.best.meteor ? tx('best.meteor', { n: DB.best.meteor }) : '', DB.best.sudden ? tx('best.sudden', { n: DB.best.sudden }) : ''].filter(Boolean).join(tx('dot'));
-  $('#b-ghost').textContent = DB.best.ghost && DB.best.ghost.length === 20 ? tx('best.ghost', { s: (DB.best.ghost[19] / 1000).toFixed(1) }) : '';
-  $('#b-cmp').textContent = DB.best.cmpT !== null ? tx('best.cmp', { s: (DB.best.cmpT / 1000).toFixed(1) }) : '';
-  $('#b-bomb').textContent = DB.best.bomb !== null ? tx('best.bomb', { s: (DB.best.bomb / 1000).toFixed(1) }) : '';
+  const nw = a => a.filter(Boolean).map(t => `<span class="nw">${t}</span>`).join(tx('dot'));   // 每一項自己不斷行（「秒」不會掉到下一行），要折只在項目之間折
+  $('#b-meteor').innerHTML = nw([DB.best.meteor ? tx('best.meteor', { n: DB.best.meteor }) : '', DB.best.sudden ? tx('best.sudden', { n: DB.best.sudden }) : '']);
+  $('#b-ghost').innerHTML = nw([DB.best.ghost && DB.best.ghost.length === 20 ? tx('best.ghost', { s: (DB.best.ghost[19] / 1000).toFixed(1) }) : '']);
+  $('#b-cmp').innerHTML = nw([DB.best.cmpT !== null ? tx('best.cmp', { s: (DB.best.cmpT / 1000).toFixed(1) }) : '']);
+  $('#b-bomb').innerHTML = nw([DB.best.bomb !== null ? tx('best.bomb', { s: (DB.best.bomb / 1000).toFixed(1) }) : '']);
   $('#b-stars').textContent = `${starCount()}/${MUL.length}`;
   $('#b-wrong').textContent = wrongList().length;
   $('#b-pet').textContent = DB.pet.dust;

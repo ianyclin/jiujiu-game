@@ -8,8 +8,8 @@
 - 部署：GitHub Pages（main 分支根目錄）。安全區只在 `:root` 的 `padding-top/bottom: env(safe-area-inset-*)` 處理一次，畫面內的元素不要再加 `env()`（iOS 加入主畫面會算兩次，主選單反而要捲）；`.toast` 是 `position:fixed` 所以自己有 `env()`，拔河時加 `.mid` 放中線偏上 60px（`show()` 切畫面時重設），不蓋機器人的臉也不蓋結束的兩顆鈕；剛輸給機器人時任務全完成只 toast 不放彩帶。**加入主畫面**：`manifest.json`（standalone、portrait）＋ `apple-touch-icon`，圖示在 `assets/icon/`（1024／512／192／180／maskable）：來源是 ChatGPT 生成的插畫（夜空、流星、月亮、黃色「九九」，跟寵物圖一樣是 AI 生成），用 `tools/make-icon.py <來源 PNG>` 切各尺寸（maskable 縮到 78% 放漸層底，Android 圓形遮罩才不會切到字）。
 - 所有紀錄存 `localStorage`，只在該瀏覽器。**多人**：`jiujiu-meteor-who` 存 `WHO = { cur, list:[{id, name}] }`（最多 `WHO_MAX` 4 人）；每個人一把存檔 key（`keyFor(id)`：第一個人 id 是空字串、沿用舊 key `jiujiu-meteor-v1`，其他是 `jiujiu-meteor-v1:<id>`），`loadDB()` 依 `KEY` 載入、`switchWho(id)` 切換（save → 換 KEY → loadDB → setLang → rebuildPool → ensureDaily → refreshMenu）。主選單最上面的 `#go-who` 小鈕開 `#o-who`（切換、新增、改名；清掉紀錄走家長關卡）。目前的人還沒有名字時只給「我就叫這個名字」（改名）與哥哥／姊姊／弟弟／妹妹建議，不給新增，紀錄才不會留在「沒有名字」那裡；全新安裝第一次進主選單 0.7 秒後自動打開取名（真的開了才記 `WHO.asked`；有別的 overlay 開著就不開）；還沒取名時不顯示清掉鈕與名單；設定頁標題顯示「設定（名字）」；同名擋掉；4 人滿了提示。只能在主選單切人（`switchWho` 檢查 `mode`），切完音樂跟著新的人的設定。名字輸入 `#who-in` 會叫出系統鍵盤（跟寵物取名一樣）；名字中日 6 字、英文 10 字內（`nameMax()`）。
 - 音樂與音效全部用 Web Audio 即時合成，沒有任何音檔，無版權問題。
-- 字型：Lilita One（數字）、Chiron GoRound TC（中文），OFL 授權，用 `tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切成只含遊戲用到的字（約 970 字、三個粗細共 700 KB woff2）放在 `assets/fonts/`，`@font-face` + `font-display:swap`，都有系統字型 fallback。**改了介面文字要重跑切字腳本**，不然新字會用系統字型顯示（孩子打的名字本來就會 fallback）。
-- 著作權聲明放在設定頁最下面（`.legal`，小字不顯眼）：© 指數三寶飯（ianyclin）；字型授權寫在關於頁。版本號目前 1.1。「指數三寶飯」是連結，走**家長關卡** `#o-gate`（`openGate(url)`：兩位數 × 一位數，答對才 `window.open`），`FB_URL` 是粉專正式網址 `facebook.com/profile.php?id=100084000897269`（不帶 `mibextid` 追蹤參數）。寵物插畫是 AI 生成，著作權保護在多數地區不明確，商業化前要考慮請人重繪或至少留存生成紀錄。
+- 字型：Lilita One（數字）、Chiron GoRound TC（中文、英文）、Zen Maru Gothic（日文，日本字形；Chiron 是台灣／香港字形，日文漢字有些長得不一樣），都是 OFL 授權，用 `tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切成只含遊戲用到的字放在 `assets/fonts/`，`@font-face` + `font-display:swap`，都有系統字型 fallback。切字分語言：Chiron 取 `STR` 的 `ja` 區塊以外的字，Zen Maru Gothic 取 `ja` 區塊的字加全部假名（孩子用假名打名字也好看）；腳本靠 `\n  ja: {` 到下一個 `\n  },` 找 ja 區塊。日文只在 `:lang(ja)` 換 `--f-zh`／`--f-num`，中文、英文使用者不會下載 Zen Maru Gothic；畫布字型 `NUMF`／`ZHF` 由 `canvasFonts()` 跟著語言換。**改了介面文字要重跑切字腳本**，不然新字會用系統字型顯示（孩子打的名字本來就會 fallback）。
+- 著作權聲明放在設定頁最下面（`.legal`，小字不顯眼）：© 指數三寶飯（ianyclin）；字型授權寫在關於頁（三種語言都要列三套字型），授權檔在 `assets/fonts/OFL-*.txt`。版本號目前 1.1。「指數三寶飯」是連結，走**家長關卡** `#o-gate`（`openGate(url)`：兩位數 × 一位數，答對才 `window.open`），`FB_URL` 是粉專正式網址 `facebook.com/profile.php?id=100084000897269`（不帶 `mibextid` 追蹤參數）。寵物插畫是 AI 生成，著作權保護在多數地區不明確，商業化前要考慮請人重繪或至少留存生成紀錄。
 
 ## 語言與對象
 
@@ -113,6 +113,7 @@
 - 存檔格式變動要向下相容：在載入時用 `Object.assign(fresh(), …)` 補欄位；若結構不相容才升 key 版本。
 - 新模式請沿用 `show('name')` + `#s-name` 的畫面慣例，打答案的模式作答用 `makePad()`（選擇題模式如「哪個大」可用大按鈕），紀錄一律用 `record()`，不要另開一套錯題系統。
 - 任何視覺效果都要尊重 `prefers-reduced-motion`（`RM` 旗標）：`spark()` 粒子剩四分之一、`frame()` 不畫全螢幕閃白、`shake()` 不震、`banner()` 改用計時隱藏（CSS 動畫被縮到 .01ms 時 `forwards` 會讓橫幅瞬間消失）。
+- **三種語言版面要一樣**（檢查員量過 320×568 到 1920×1080）：英日字串寫短，不要讓按鈕、標題、跑道名牌比中文多一行；主選單下排 chip 三欄等寬（`minmax(0,1fr)`）；主選單最高分每一項包 `.nw` 不斷行、`.m-t` 可換行（名字加最高分放不下時最高分換到下一行，卡片不撐出螢幕）；日文 `:lang(ja)` 行高統一 1.35（Zen Maru Gothic 預設 1.45、Chiron 1.35）、模式名 18px；短字串 `text-wrap:balance`、長段落 `pretty`，不留單一個字在下一行；`.card>*` 不縮（卡片比螢幕高時捲動，不擠扁）；`.topbar` 的返回鈕與計時不折行；矮螢幕（≤ 700px）拔河的名牌藏起來（會壓到繩子），≤ 600px 炸彈說明小字省掉；寵物配件鈕固定 86px 寬、挑蛋區固定寬度。
 - 平板（`min-width:700px` 且 `min-height:700px`）把容器放大一號：模式卡 560、鍵盤 520、卡片 480、星圖 660（12×12 的格子才 ≥ 44px）。iPad 橫向沒有「請轉直」提示，直接玩。
 - 錯題本與遊戲說明的卡片都有固定在頂端的標題列 `.card .hhead` 加 ✕（`.xbtn`），內容長要捲也關得掉。
 - 觸控目標一律 ≥ 44px（`.key`、`.chip`、`.icon-btn`、`.link-btn`、`.wx`、`.danger`、`.sw`（64×44）、`.name-sug button`、`.who`、`.tgrid button` 都有）。
