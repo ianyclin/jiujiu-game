@@ -2,3 +2,7 @@
 node_modules/
 *.log
 .claude/settings.local.json
+www/
+*.keystore
+*.jks
+keystore.properties
