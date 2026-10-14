@@ -22,7 +22,7 @@
 - **原生打包的實機確認**：Android 已建置並由 GitHub Actions 每次自動建測試 APK；還沒在真機跑過（WebView 載入、觸控、音效、安全區、外連開瀏覽器）。iOS 要在 Mac 用 Xcode 27 建置。清單在 `docs/native-build.md`。
 - **拆檔**：超過一定規模時，把 CSS / 各模式 JS 拆開（Capacitor 已改用 `tools/make-www.mjs` 原樣複製，不需要拆檔）。
 - **iPad 實機確認**（模擬已過：四種尺寸直橫向都能玩、無錯誤）：加入主畫面後的安全區與狀態列、Web Audio 第一次觸碰才發聲、Split View 窄寬度、橫向拔河真人模式邊緣按鍵是否貼到圓角。
-- **上架**：準備工作都已完成（隱私權政策、支援頁、家長關卡、Capacitor、商店文案與截圖）。剩下要你操作的步驟與價格建議在 `docs/store-checklist.md` 第六、七節：裝 APK 試玩、確認網址、母語者校對、決定價格、註冊兩家開發者帳號、Google 20 人封閉測試 14 天、Mac 上 Xcode 建 iOS、送審。
+- **上架**：準備工作都已完成（隱私權政策、支援頁、家長關卡、Capacitor、商店文案與截圖）。剩下要你操作的步驟與價格建議在 `docs/store-checklist.md` 第六、七節：裝 APK 試玩、確認網址、母語者校對、決定價格、註冊兩家開發者帳號、Google 12 人封閉測試 14 天、Mac 上 Xcode 建 iOS、送審。
 
 ## 已完成
 
