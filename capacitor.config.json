@@ -1,0 +1,28 @@
+{
+  "appId": "io.github.ianyclin.jiujiumeteor",
+  "appName": "九九流星隊",
+  "webDir": "www",
+  "backgroundColor": "#08111f",
+  "server": {
+    "hostname": "localhost",
+    "androidScheme": "https",
+    "iosScheme": "capacitor"
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#08111f"
+  },
+  "android": {
+    "backgroundColor": "#08111f",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css",
+      "style": "DARK",
+      "hidden": false,
+      "animation": "NONE",
+      "initialViewportFitValueHint": "cover"
+    }
+  }
+}

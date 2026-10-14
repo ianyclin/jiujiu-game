@@ -1,0 +1,44 @@
+{
+  "zh-Hant": {
+    "name": "九九流星隊",
+    "subtitle": "打流星練九九，錯題自動多練",
+    "promo": "打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告、不用網路、不收集任何資料。",
+    "short": "打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告，也不用網路。",
+    "keywords": "九九乘法,乘法表,背九九,小學,國小,數學,二年級,三年級,練習,遊戲,學習,教育,速算",
+    "whatsNew": "第一版：五種玩法、星圖、每日任務、養寵物。",
+    "graphic": {
+      "title": "九九流星隊",
+      "tagline": "打下流星，<br>練熟九九乘法",
+      "badge": "沒有廣告・不用網路"
+    },
+    "description": "九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。\n\n【五種玩法】\n● 流星防衛戰：算出答案就發射雷射，打下往小鎮掉的流星。每 5 波有錯題魔王，還有寶箱和追蹤飛彈。\n● 幽靈競速：20 題計時賽，追過上次的自己。\n● 雙人拔河：面對面搶答，可以跟大人比，也能跟機器人比。\n● 哪個大？哪個小？：三個算式，點出答案最大（或最小）的那個。\n● 炸彈拆除：引線燒完前，點掉炸彈上那個數的倍數。\n\n【越玩越熟】\n● 答錯的題目會悄悄更常出現，隔一陣子再考一次。孩子只覺得在玩遊戲。\n● 星圖：每一題都有一顆星，答得又快又對就亮起來，一眼看出哪裡還不熟。\n● 每日任務、徽章、養寵物：用答對的題目換星塵餵寵物（毛毛、小龍、呱呱，還有一顆傳說蛋），再換上配件。\n● 沒有「寵物餓了」，也不會倒扣，不逼孩子。\n\n【給家長】\n● 沒有廣告、沒有內購、不用登入，不收集任何個人資料。\n● 完全離線，不用網路也能玩。遊戲紀錄只存在這台裝置上，我們看不到。\n● 換新手機或平板時，大人可以在設定用「備份紀錄」把紀錄搬過去（備份檔或備份碼，存在你自己選的地方，遊戲不會上傳）。\n● 最多 4 位孩子，各有自己的紀錄。設定裡可以選要練哪幾個乘法表（1 到 12）。\n● 要連到外部網頁之前，需要大人回答一題。\n● 介面有繁體中文、English、日本語。\n\n隱私權政策：https://ianyclin.github.io/jiujiu-game/privacy/"
+  },
+  "en": {
+    "name": "9×9 Meteor Squad",
+    "subtitle": "Times tables meteor game",
+    "promo": "Shoot down meteors, light up the star map, and get your times tables fast and right. No ads, works offline, collects no data.",
+    "short": "Shoot down meteors and light up the star map. Master times tables. No ads.",
+    "keywords": "multiplication,times table,math,kids,practice,grade 2,grade 3,learn,facts,school,education,drill",
+    "whatsNew": "First release: five games, star map, daily quests and a pet to raise.",
+    "graphic": {
+      "title": "9×9 Meteor Squad",
+      "tagline": "Shoot down meteors.<br>Master your times tables.",
+      "badge": "No ads · Works offline"
+    },
+    "description": "9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just \"learning\" the facts. It's turning \"I know it, but I sometimes slip\" into fast and correct, even when it feels rushed.\n\nFIVE GAMES\n● Meteor Defense: type the answer to fire a laser and shoot down meteors falling on the little town. Every 5 waves a boss made of the facts you miss, plus treasure chests and homing missiles.\n● Ghost Race: 20 questions against the clock. Beat your own last run.\n● Tug of War: face-to-face for two players. Play a grown-up, or play the robot.\n● Bigger or Smaller: three problems. Tap the one with the biggest (or smallest) answer.\n● Bomb Defusal: before the fuse burns out, tap every multiple of the number on the bomb.\n\nTHE MORE THEY PLAY, THE BETTER THEY KNOW IT\n● Facts a child misses quietly show up more often, and come back for another try a little later. To the child, it just feels like playing.\n● Star Map: every fact has a star. It lights up when the answer is fast and right, so you can see at a glance what still needs work.\n● Daily quests, badges and a pet to raise: answers earn stardust to feed the pet (Fuzzy, Draki or Croaky, plus a legendary egg) and unlock outfits.\n● No \"your pet is hungry\" and no penalties. Nothing pressures the child.\n\nFOR PARENTS\n● No ads, no in-app purchases, no sign-in, and no personal data collected.\n● Works fully offline. Progress is saved only on this device, and we can't see it.\n● Getting a new phone or tablet? A grown-up can use \"Back up records\" in Settings to move progress over with a backup file or code. You keep it wherever you like; the game never uploads it.\n● Up to 4 kids, each with their own progress. In Settings you can pick which times tables to practice (1 to 12).\n● A grown-up has to answer a question before any link opens outside the game.\n● Available in English, Traditional Chinese and Japanese.\n\nPrivacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html"
+  },
+  "ja": {
+    "name": "九九流星隊",
+    "subtitle": "九九をゲームでれんしゅう",
+    "promo": "流星をうって、星マップをひからせよう。九九を「はやく、まちがえずに」言えるように。広告なし、オフラインOK、データは集めません。",
+    "short": "流星をうって星マップを光らせよう。九九を楽しくれんしゅう。広告なし・オフラインOK。",
+    "keywords": "九九,かけ算,算数,小学生,2年生,3年生,練習,暗記,ゲーム,学習,知育,計算",
+    "whatsNew": "はじめてのリリース：5つの遊び、星マップ、デイリーミッション、ペット育成。",
+    "graphic": {
+      "title": "九九流星隊",
+      "tagline": "流星をうって、<br>九九をマスター",
+      "badge": "広告なし・オフラインOK"
+    },
+    "description": "九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。\n\n【5つの遊び】\n● 流星ぼうえいせん：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。5ウェーブごとに、まちがえやすい問題のボスが登場。宝箱や追いかけミサイルもあります。\n● ゴーストレース：20問のタイムレース。前回の自分を追いこそう。\n● ふたりでつなひき：向かい合って早押し。大人とも、ロボットとも対戦できます。\n● どっちが大きい？小さい？：3つの式から、答えがいちばん大きい（小さい）ものを選びます。\n● ばくだんかいたい：導火線がもえきる前に、ばくだんの数の倍数をタップします。\n\n【遊ぶほど身につく】\n● まちがえた問題は、こっそりよく出るようになり、少しあとでもう一度出ます。子どもには、ただ遊んでいるように感じられます。\n● 星マップ：すべての問題に星が1つ。はやく正しく答えられると光るので、どこが苦手か一目でわかります。\n● デイリーミッション、バッジ、ペット育成：正解すると星のこなが貯まり、ペット（モフモフ、リュウ、ケロケロ、そして伝説のたまご）にあげたり、きせかえを楽しんだりできます。\n● 「おなかがすいた」も、ペナルティもありません。子どもをせかしません。\n\n【保護者の方へ】\n● 広告なし、アプリ内課金なし、ログイン不要。個人情報は一切集めません。\n● 完全オフラインで遊べます。記録はこの端末の中にだけ保存され、私たちには見えません。\n● 機種変更のときは、大人の方が設定の「きろくのバックアップ」から記録を移せます（バックアップファイルまたはコード。保存先はご自身で選び、ゲームがアップロードすることはありません）。\n● 最大4人まで、それぞれの記録を保存できます。設定で練習する段（1〜12）を選べます。\n● ゲームの外のページを開く前に、大人の方が問題に答える必要があります。\n● 画面は日本語・繁体字中国語・英語に対応しています。\n\nプライバシーポリシー：https://ianyclin.github.io/jiujiu-game/privacy/ja.html"
+  }
+}

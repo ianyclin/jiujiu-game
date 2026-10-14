@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <!-- 預設（英文）；中文、日文在 values-zh、values-ja。桌面上的名字要短（約 12 字內不被截） -->
+    <string name="app_name">9×9 Meteor</string>
+    <string name="title_activity_main">9×9 Meteor</string>
+    <string name="package_name">io.github.ianyclin.jiujiumeteor</string>
+    <string name="custom_url_scheme">io.github.ianyclin.jiujiumeteor</string>
+</resources>

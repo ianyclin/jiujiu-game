@@ -1,0 +1,3 @@
+/* 桌面上的 app 名稱，跟著系統語言 */
+"CFBundleDisplayName" = "9×9 Meteor";
+"CFBundleName" = "9×9 Meteor";

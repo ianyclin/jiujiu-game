@@ -1,0 +1,20 @@
+{
+  "name": "jiujiu-meteor",
+  "version": "1.2.0",
+  "private": true,
+  "description": "九九流星隊：原生外殼（Capacitor）。遊戲本體仍是單檔 index.html，開檔即玩；這個 package 只為了打包 iOS／Android。",
+  "scripts": {
+    "www": "node tools/make-www.mjs",
+    "sync": "npm run www && cap sync",
+    "android:apk": "npm run sync && cd android && ./gradlew assembleDebug",
+    "android:aab": "npm run sync && cd android && ./gradlew bundleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3"
+  }
+}
