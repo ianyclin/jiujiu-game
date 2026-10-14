@@ -79,7 +79,10 @@ jobs:
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
           "$AAPT2" dump badging "$APK" | grep -E "^package:|^minSdkVersion|^targetSdkVersion|^application-label:|uses-permission"
-          if "$AAPT2" dump permissions "$APK" | grep -q "android.permission.INTERNET"; then echo "::error::APK 不應該有 INTERNET 權限"; exit 1; fi
+          # 只准這幾個權限：付款（BILLING）、Google 付款程式庫帶進來的網路權限（它自己的記錄元件 datatransport；遊戲本身不連網）、androidx 給本 app 的內部權限。多出任何一個就失敗
+          EXTRA=$("$AAPT2" dump permissions "$APK" | sed -n "s/^uses-permission: name='\([^']*\)'.*/\1/p" | grep -v -x -E "com.android.vending.BILLING|android.permission.INTERNET|android.permission.ACCESS_NETWORK_STATE|io.github.ianyclin.jiujiumeteor.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" || true)
+          if [ -n "$EXTRA" ]; then echo "::error::APK 多了沒預期的權限：$EXTRA"; exit 1; fi
+          "$AAPT2" dump permissions "$APK" | grep -q "com.android.vending.BILLING" || { echo "::error::APK 沒有 BILLING 權限（購買外掛沒裝進去？）"; exit 1; }
           unzip -p "$APK" assets/public/index.html | cmp - index.html
           mv "$APK" "jiujiu-meteor-${{ github.run_number }}.apk"
 
