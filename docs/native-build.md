@@ -57,7 +57,10 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 
 `.github/workflows/android-apk.yml`：推到 `main`、開或更新 PR（改到遊戲、`assets/`、`android/`、Capacitor 設定時），或在 GitHub 的 **Actions → Android APK → Run workflow** 手動按，都會自動建一個測試 APK。
 
-- **下載**：Actions 頁面點進那次 run，最下面 **Artifacts** 的 `jiujiu-meteor-apk-<編號>`（zip，解開是 APK），保留 30 天。要登入 GitHub 才能下載。
+- **下載（最簡單）**：`main` 每次更新後，最新的測試版放在固定網址，手機點了直接下載 APK、不用登入：
+  https://github.com/ianyclin/jiujiu-game/releases/download/android-latest/jiujiu-meteor.apk
+  （GitHub 的 Releases 頁「Android 測試版（最新）」，標成 pre-release；每次換新、網址不變。**任何人都能下載這個測試版**。）
+- **下載（每一次 run、含 PR）**：Actions 頁面點進那次 run，最下面 **Artifacts** 的 `jiujiu-meteor-apk-<編號>`（zip，解開是 APK），保留 30 天，要登入 GitHub。
 - **版本號**：`versionCode` 用 run 編號（`CI_VERSION_CODE`），越新越大；`versionName` 仍是 1.2。
 - **簽名固定**：`android/app/debug.keystore` 是進版控的**測試用** debug 金鑰（密碼 `android`）。每次建的 APK 簽名相同，手機上可以**直接覆蓋安裝，紀錄保留**。這把金鑰公開無妨，Google Play 不收 debug 簽署的檔案；上架用的 upload key 是另一把，絕不進版控。
   - 2026-10-14 之前我在對話裡傳的那個 APK 是用別的金鑰簽的，換成 CI 建的版本時要先解除安裝一次（**先用設定裡的「備份紀錄」備份**）。
