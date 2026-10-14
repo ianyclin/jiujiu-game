@@ -81,6 +81,8 @@
 - **購買外掛**：`@capgo/native-purchases` 8.9.5（免費開源 MPL-2.0，StoreKit 2／Google Play Billing 9.1.0；Google 規定 2026-08-31 起新 app 與更新要用 8 以上）。原本想用的 Capawesome Purchases 要付費訂閱（Insiders），不用。外掛本身不連網、不加權限；Google 的付款程式庫會帶進 `INTERNET`／`ACCESS_NETWORK_STATE`（它自己的記錄元件 `datatransport`）。
 - **優惠碼**：只用商店自己的（Apple Offer Codes、Google 促銷代碼），不自己做序號（Apple 3.1.1 禁止自己的解鎖機制）。
 - **Apple 家人共享**：打開（`unlock_all` 建立時就開；開了不能關）。
+- **商店名稱**（2026-10-14）：繁中「九九流星隊：九九乘法表練習」、英「9×9 Meteor Squad: Times Tables」、日「九九流星隊：九九れんしゅう」。名稱裡直接有家長會搜的詞（Google Play 沒有關鍵字欄，名稱份量最重）；手機桌面仍是短名。Apple 2.3.7：名稱 30 字內、關鍵字要真的描述 app，不塞商標、熱門 app 名或價格。
+- **不做簡體中文版、App Store 排除中國大陸**：中國規定有內購的遊戲要有遊戲版號（ISBN，審批數月到一年以上），Apple 2020 年起要求；Google Play 在中國大陸沒有開放。簡體中文的裝置一樣顯示繁體中文（iOS 已宣告 `zh-Hans`，桌面名稱與遊戲語言才不會掉到英文）。
 - **解鎖提醒**：只在流星防衛戰玩完第 3、第 10 局回到主選單時各一次，內容只介紹「還有哪些遊戲可以免費試玩」，不提購買、不說「支持作者」（那句放在家長關卡後面的購買頁）。不做「寵物長大要解鎖」的提醒（Apple 1.3：購買機會要在家長關卡後面；Google Families：過度積極的商業手法會被下架）。
 
 

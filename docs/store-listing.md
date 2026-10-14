@@ -11,11 +11,11 @@
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 5／30 | 九九流星隊 |
-| 副標題（Apple Subtitle） | 13／30 | 打流星練九九，錯題自動多練 |
+| 名稱（Apple Name／Google 標題） | 13／30 | 九九流星隊：九九乘法表練習 |
+| 副標題（Apple Subtitle） | 15／30 | 打流星、點亮星圖，錯題自動多練 |
 | 宣傳文字（Apple Promotional Text） | 42／170 | 打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告、不用網路、不收集任何資料。 |
 | 簡短說明（Google Short description） | 35／80 | 打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告，也不用網路。 |
-| 關鍵字（Apple Keywords） | 44／100 | 九九乘法,乘法表,背九九,小學,國小,數學,二年級,三年級,練習,遊戲,學習,教育,速算 |
+| 關鍵字（Apple Keywords） | 49／100 | 九九乘法,乘法表,背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,遊戲 |
 | 新功能（What's New） | 53／4000 | 1.3：熟練度改看「想出答案要多久」，手慢的孩子也公平；流星防衛戰免費，另外四種玩法可試玩後一次購買解鎖。 |
 
 **完整說明**（807／4000）
@@ -53,11 +53,11 @@
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 16／30 | 9×9 Meteor Squad |
-| 副標題（Apple Subtitle） | 24／30 | Times tables meteor game |
+| 名稱（Apple Name／Google 標題） | 30／30 | 9×9 Meteor Squad: Times Tables |
+| 副標題（Apple Subtitle） | 30／30 | Zap meteors, master every fact |
 | 宣傳文字（Apple Promotional Text） | 125／170 | Shoot down meteors, light up the star map, and get your times tables fast and right. No ads, plays offline, collects no data. |
 | 簡短說明（Google Short description） | 74／80 | Shoot down meteors and light up the star map. Master times tables. No ads. |
-| 關鍵字（Apple Keywords） | 96／100 | multiplication,times table,math,kids,practice,grade 2,grade 3,learn,facts,school,education,drill |
+| 關鍵字（Apple Keywords） | 98／100 | multiplication,multiply,math,kids,practice,grade 2,grade 3,learn,facts,school,education,drill,game |
 | 新功能（What's New） | 195／4000 | 1.3: Fluency now measures how long it takes to think of the answer, so slower typists aren't held back. Meteor Defense is free; the other four games can be tried, then unlocked with one purchase. |
 
 **完整說明**（2431／4000）
@@ -95,11 +95,11 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 5／30 | 九九流星隊 |
-| 副標題（Apple Subtitle） | 12／30 | 九九をゲームでれんしゅう |
+| 名稱（Apple Name／Google 標題） | 13／30 | 九九流星隊：九九れんしゅう |
+| 副標題（Apple Subtitle） | 14／30 | まちがえた問題をゲームで復習 |
 | 宣傳文字（Apple Promotional Text） | 64／170 | 流星をうって、星マップをひからせよう。九九を「はやく、まちがえずに」言えるように。広告なし、オフラインOK、データは集めません。 |
 | 簡短說明（Google Short description） | 42／80 | 流星をうって星マップを光らせよう。九九を楽しくれんしゅう。広告なし・オフラインOK。 |
-| 關鍵字（Apple Keywords） | 40／100 | 九九,かけ算,算数,小学生,2年生,3年生,練習,暗記,ゲーム,学習,知育,計算 |
+| 關鍵字（Apple Keywords） | 41／100 | かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,ゲーム,学習,知育,計算 |
 | 新功能（What's New） | 73／4000 | 1.3：じゅくれん度を「答えを思いつくまでの時間」で見るようにしました。流星ディフェンスは無料、ほかの4つはお試しのあと1回の購入で解除できます。 |
 
 **完整說明**（1212／4000）

@@ -25,7 +25,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 
 | 項目 | 做法 |
 |---|---|
-| App 名稱 | 桌面名稱短：英文「9×9 Meteor」、中日「九九流星隊」。iOS 用 `en／zh-Hant／ja.lproj/InfoPlist.strings`（已加進 pbxproj 的 `PBXVariantGroup` 與 `knownRegions`），Android 用 `values`（英文預設）、`values-zh`、`values-ja`。商店上的長名稱另外設（步驟 4） |
+| App 名稱 | 桌面名稱短：英文「9×9 Meteor」、中日「九九流星隊」。iOS 用 `en／zh-Hant／zh-Hans／ja.lproj/InfoPlist.strings`（已加進 pbxproj 的 `PBXVariantGroup`、`knownRegions` 與 Info.plist 的 `CFBundleLocalizations`；`zh-Hans` 也是「九九流星隊」：iOS 只會用 app 宣告過的語言，沒宣告簡體的話，簡體中文的 iPhone 桌面名稱會變英文，WKWebView 回報的語言也可能跟著變成英文，遊戲就不會顯示繁中。沒有在 iPhone 實測），Android 用 `values`（英文預設）、`values-zh`、`values-ja`。商店上的長名稱另外設（步驟 4） |
 | 圖示 | `tools/make-app-icons.py` 從 `assets/icon/icon-1024.png` 產生：iOS 1024（不透明 RGB，App Store 不接受透明）；Android legacy 方形／圓形與 adaptive 前景（art 縮到 66%，可見範圍是中間 72/108）＋背景（夜空模糊） |
 | 啟動畫面 | 夜空底色 `#08111f` ＋圖示置中，iOS storyboard 與 Android `Theme.SplashScreen` 都是，不閃白 |
 | 方向 | **iPhone 只有直向**（`UISupportedInterfaceOrientations`）；**iPad 四個方向都支援**、不加 `UIRequiresFullScreen`：iPadOS 26 起這個鍵已過時、未來會被忽略，Apple 要求 iPad app 支援所有方向與可調整大小的視窗（TN3192）。遊戲本來就有 iPad 橫向版面（CLAUDE.md 的平板規則）。Android：`screenOrientation="portrait"`，但 Android 16（targetSdk 36）在平板、折疊機展開時會忽略，同樣靠遊戲本身的橫向版面。**實機請看**：iPad 台前調度把視窗縮得很小時，遊戲是否誤出「請把手機轉直」提示（`.rotate` 只在觸控裝置、橫向、高度 < 500px 出現） |
