@@ -15,7 +15,7 @@ python3 tools/make-app-icons.py    # 只有換了 icon-1024.png 才需要重跑
 # Android（需要 JDK 21、Android SDK 36）
 npm run android:apk                # android/app/build/outputs/apk/debug/app-debug.apk
 npm run android:aab                # 上架用 AAB（要先設簽署，見下）
-# iOS（需要 Mac + Xcode 26 以上）
+# iOS（需要 Mac + Xcode 27；Xcode 26 到 2027 年 4 月前仍可上傳）
 npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 ```
 
@@ -44,6 +44,14 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 - iOS WKWebView 的資料在 `Library/WebKit`。「7 天不使用就清除」的 ITP 規則針對 Safari 瀏覽，不含 app 內的 WKWebView；但 Capacitor 官方文件仍提醒：系統在儲存空間吃緊時**理論上**可以清掉 WebView 儲存。
 - **我刻意沒有加「鏡像到原生儲存」**（Capacitor Preferences 外掛，`save()` 同步寫一份、WebView 資料被清空時還原）。原因：(1) 沒有 Mac／實機，這個還原流程（偵測空資料 → 非同步取回 → 重載）無法在這裡測，在兒童 app 上放沒測過的資料還原有「蓋掉資料」的風險；(2) 要多一個外掛與 Privacy Manifest 的 UserDefaults 宣告；(3) 實務上很少發生。**建議**：先用 TestFlight／Play 內部測試觀察；若真有人回報紀錄不見，再做。需要時我可以做，要你決定。
 - 紀錄匯出／匯入（家長關卡後手動備份）是另一個選項，同樣留待之後決定。
+
+## iOS 27（2026 年 9 月推出）
+
+- **建置工具**：2027 年 4 月起上傳 App Store 必須用 iOS 27 SDK（Xcode 27）；在那之前 Xcode 26 仍可上傳。**建議直接用 Xcode 27**。
+- **UIScene**：iOS 27 SDK 要求 app 採用 scene。本專案用 Capacitor 8.5.3 產生，已經有 `SceneDelegate.swift` 與 `Info.plist` 的 `UIApplicationSceneManifest`，不用跑 `npx cap migrate`。
+- **啟動畫面**：iOS 27 起送審必須有啟動畫面。已有（`UILaunchStoryboardName` → `LaunchScreen.storyboard`，夜空底色＋圖示）。
+- **iPad**：`UIRequiresFullScreen` 已過時，本專案沒有用，iPad 四個方向都支援。
+- 社群回報過 Capacitor 預先編好的 framework 仍以舊 SDK 建置、可能被 App Store Connect 擋（ITMS-91065），目前不確定是否已解決。若上傳時遇到，先把 `@capacitor/*` 升到當時最新的 8.5.x（或 9.x）再試，並把錯誤訊息貼給我。
 
 ## 自動建 APK（GitHub Actions）
 
