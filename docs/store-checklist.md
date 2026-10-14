@@ -80,6 +80,7 @@
 - **價格**（改定，2026-10-14）：走第六節的 **C**。App **免費下載**，流星防衛戰、星圖、寵物、每日任務免費；幽靈競速、雙人拔河、哪個大、炸彈拆除各試玩一局，之後用**一個非消耗型內購 `unlock_all`（US$2.99）**一次解鎖。整台裝置共用，不分玩家。**網頁版（GitHub Pages）全部免費**，給朋友玩。Google Play 建立應用程式時選「**免費**」。
 - **購買外掛**：`@capgo/native-purchases` 8.9.5（免費開源 MPL-2.0，StoreKit 2／Google Play Billing 9.1.0；Google 規定 2026-08-31 起新 app 與更新要用 8 以上）。原本想用的 Capawesome Purchases 要付費訂閱（Insiders），不用。外掛本身不連網、不加權限；Google 的付款程式庫會帶進 `INTERNET`／`ACCESS_NETWORK_STATE`（它自己的記錄元件 `datatransport`）。
 - **優惠碼**：只用商店自己的（Apple Offer Codes、Google 促銷代碼），不自己做序號（Apple 3.1.1 禁止自己的解鎖機制）。
+- **Apple 家人共享**：打開（`unlock_all` 建立時就開；開了不能關）。
 - **解鎖提醒**：只在流星防衛戰玩完第 3、第 10 局回到主選單時各一次，內容只介紹「還有哪些遊戲可以免費試玩」，不提購買、不說「支持作者」（那句放在家長關卡後面的購買頁）。不做「寵物長大要解鎖」的提醒（Apple 1.3：購買機會要在家長關卡後面；Google Families：過度積極的商業手法會被下架）。
 
 
@@ -145,6 +146,8 @@
 
 ## 七、直到上架還需要的步驟
 
+> 簡單版（一步一步、照做就好）：`docs/launch-easy.md`。
+
 **A. 我可以做的（都已完成）**：隱私權政策與支援頁、家長關卡、Capacitor 專案、自動建 APK、商店文案與截圖、App 內購買（試玩、鎖、購買、回復購買、優惠碼）。
 
 **B. 你要做的**
@@ -159,7 +162,7 @@
 6. **Apple App Store**：註冊 Apple Developer Program（個人、約 US$99/年）→ 在 Mac 安裝 **Xcode 27** → `npm install && npm run sync && npx cap open ios` → Signing 選你的 Team → 在 Apple Developer 註冊 Bundle ID → Product → Archive → 上傳 → **TestFlight** 自己與家人先玩 → App Store Connect 填資料（名稱、副標、說明、關鍵字、截圖、**Kids 類別與年齡層**、年齡分級問卷、App Privacy 選「不收集資料」、隱私權政策與支援網址、審核備註）→ 送審。
    - **內購設定**：先簽「**付費 App 協議**」（App Store Connect → 商務，含銀行與稅務；免費 app 有內購也要）→ App 內購買項目新增「**非消耗型**」，產品 ID `unlock_all`、價格 US$2.99、三語顯示名稱與說明、審核用截圖（購買卡那頁）。
    - **第一個非消耗型內購要跟新的 app 版本一起送審**（Apple 說明頁），送審時在版本頁把 `unlock_all` 加進去。
-   - **家人共享**：建議打開（同一家庭群組最多 6 人共用），但 **Apple 說明：打開之後就不能關**，請確定再開。沙盒（TestFlight）不支援家人共享，上架後才測得到。
+   - **家人共享**：**已決定打開**（2026-10-14；同一家庭群組最多 6 人共用）。Apple 說明：打開之後就不能關。沙盒（TestFlight）不支援家人共享，上架後才測得到。
    - **送朋友優惠碼**：App 內購買項目 → Offer Codes（非消耗型可以用）。朋友在遊戲「設定 → 家長區 → 解鎖全部遊戲 → 使用優惠碼」輸入，或在 App Store 兌換。
    - TestFlight 裡的購買走沙盒，不會扣款，可以放心試。
 7. **iPad 實機**（TestFlight）：直橫向、台前調度把視窗縮小時有沒有誤出「請轉直」、安全區。

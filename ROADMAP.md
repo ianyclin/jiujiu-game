@@ -24,7 +24,7 @@
 - **App 內購買實測**：只用假的 Capacitor 物件在瀏覽器測過流程。要在 TestFlight 沙盒與 Play 授權測試帳號真的買一次、刪 app 重裝看會不會自己解鎖、Android 兌換促銷代碼（3 天內要確認，不然 Google 會退款）、iOS 兌換 Offer Code。Google Data safety 要不要申報付款程式庫的記錄，上架前在 Play Console 確認。
 - **解鎖提醒觀察**：第 3、第 10 局各一次，看真人會不會覺得煩，或試玩率太低。
 - **iPad 實機確認**（模擬已過：四種尺寸直橫向都能玩、無錯誤）：加入主畫面後的安全區與狀態列、Web Audio 第一次觸碰才發聲、Split View 窄寬度、橫向拔河真人模式邊緣按鍵是否貼到圓角。
-- **上架**：準備工作都已完成（隱私權政策、支援頁、家長關卡、Capacitor、商店文案與截圖）。剩下要你操作的步驟在 `docs/store-checklist.md` 第七節：裝 APK 試玩、確認網址、母語者校對、兩家商店建立內購 `unlock_all`（US$2.99）與授權測試帳號、註冊兩家開發者帳號、Google 12 人封閉測試 14 天、Mac 上 Xcode 建 iOS、送審。
+- **上架**：準備工作都已完成（隱私權政策、支援頁、家長關卡、Capacitor、商店文案與截圖）。剩下要你操作的步驟在 `docs/launch-easy.md`（簡單版）與 `docs/store-checklist.md` 第七節：裝 APK 試玩、確認網址、母語者校對、兩家商店建立內購 `unlock_all`（US$2.99）與授權測試帳號、註冊兩家開發者帳號、Google 12 人封閉測試 14 天、Mac 上 Xcode 建 iOS、送審。
 
 ## 已完成
 
