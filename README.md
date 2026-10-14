@@ -7,3 +7,5 @@
 - 三種玩法：流星防衛戰、幽靈競速、雙人拔河。
 
 開發說明見 `CLAUDE.md`，待辦見 `ROADMAP.md`。
+
+Android 測試版（自動建置，手機點了直接下載）：https://github.com/ianyclin/jiujiu-game/releases/download/android-latest/jiujiu-meteor.apk

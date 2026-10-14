@@ -1,6 +1,9 @@
 # 自動建 Android 測試 APK（debug 版，只能自己安裝測試，不能上架）。
 # 什麼時候跑：推到 main、開／更新 PR（改到遊戲或 Android 相關檔案時），或在 Actions 頁面手動按「Run workflow」。
-# 成品：每次 run 的頁面最下面「Artifacts」→ jiujiu-meteor-apk-<編號>（zip，裡面是 APK），保留 30 天。
+# 成品：
+#   - 每次 run 的頁面最下面「Artifacts」→ jiujiu-meteor-apk-<編號>（zip，裡面是 APK），保留 30 天，要登入 GitHub。
+#   - main 上的版本另外放到固定的 Release「android-latest」（測試版），手機點這個網址就直接下載 APK，不用登入：
+#     https://github.com/ianyclin/jiujiu-game/releases/download/android-latest/jiujiu-meteor.apk
 name: Android APK
 
 on:
@@ -86,3 +89,40 @@ jobs:
           path: jiujiu-meteor-${{ github.run_number }}.apk
           retention-days: 30
           if-no-files-found: error
+
+  # 只有 main（推送或手動執行）才更新「最新測試版」；PR 的建置只留在 Artifacts
+  release:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: android-latest-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: jiujiu-meteor-apk-${{ github.run_number }}
+
+      - name: 更新 Release「android-latest」
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cp "jiujiu-meteor-${{ github.run_number }}.apk" jiujiu-meteor.apk
+          cat > notes.md <<NOTES
+          **九九流星隊 Android 測試版**（自動建置第 ${{ github.run_number }} 次，commit ${GITHUB_SHA::7}）
+
+          這是 debug 測試版，只給自己和測試的人安裝，不能上架。每次 main 更新都會換成最新的一版，網址不變。
+
+          **安裝**：用 Android 手機點下面的 \`jiujiu-meteor.apk\` 下載 → 打開 → 第一次會問是否允許安裝，允許 → 安裝。
+          已經裝過自動建置版的，直接安裝就會覆蓋更新，紀錄保留。
+          NOTES
+          gh release delete android-latest --yes --cleanup-tag || true
+          gh release create android-latest jiujiu-meteor.apk \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Android 測試版（最新）" \
+            --notes-file notes.md
