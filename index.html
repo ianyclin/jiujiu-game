@@ -3359,7 +3359,7 @@ makePad($('#m-pad'), meteorKey);
 makePad($('#g-pad'), ghostKey);
 makePad($('#v-bot [data-pad]'), d => vKey(0, d));
 makePad($('#v-top [data-pad]'), d => vKey(1, d));
-// 家長關卡：外部連結前要大人解一題（兩位數 × 一位數），答對才開新分頁。兒童 app 硬限制。
+// 家長關卡：外部連結前要大人解一題（混合運算，先乘後加），答對才開新分頁。兒童 app 硬限制。
 const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
 // target 是網址（答對後出現「前往」鈕，用 click 開才不會被 iOS 擋）或函式（答對直接執行，例如清除紀錄）
