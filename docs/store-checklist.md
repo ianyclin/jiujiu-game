@@ -16,7 +16,7 @@
 | 年齡區間 | 選 Kids 類別時要選年齡層：5 歲以下、6–8、9–11 | Target audience 要勾年齡層（5 以下、6–8、9–12…） | M | ❓ 建議 **6–8 ＋ 9–11**（小二到小五）；勾 5 歲以下會讓審核更嚴，不建議 |
 | 年齡分級問卷 | App Store Connect 問卷，Apple 依答案算（現行 4+／9+／13+／16+／18+；2026 年 9 月起多一題「是否有使用者產生內容的動態消息」） | IARC 問卷（Play Console 內） | S / M | ✅ 全部會答「無」，預期 Apple 4+、IARC 全年齡。要到後台實際填才確定 |
 | 隱私揭露表 | App Privacy「營養標籤」：選 **Data Not Collected** | Data safety：選「不收集、不分享」 | M | ✅ 事實就是如此，但要跟隱私權政策一字不差地一致 |
-| 目標 API／SDK 版本 | 要用 Xcode 26 以上、iOS 26 SDK 建置（2026-04-28 起上傳必須） | 新 app 與更新要 target **API 36（Android 16）**（2026-08-31 起；可申請延到 2026-11-01） | S | ✅ Capacitor 8 預設就是（步驟 3 用 8） |
+| 目標 API／SDK 版本 | 現在可用 Xcode 26；**2027 年 4 月起上傳必須用 Xcode 27（iOS 27 SDK）**，iOS 27 另要求 UIScene 與啟動畫面（專案都已具備） | 新 app 與更新要 target **API 36（Android 16）**（2026-08-31 起；可申請延到 2026-11-01） | S | ✅ Capacitor 8 預設就是（步驟 3 用 8） |
 | 上傳格式 | Xcode Archive | **AAB**（不是 APK），使用 Play App Signing | M | ⚠️ 步驟 3 會建出 APK 驗證，並一併備好 AAB 的指令 |
 | 開發者帳號 | Apple Developer Program（約 US$99/年） | Play Console（約 US$25 一次性） | ROADMAP | ❓ 要你註冊，我無法代辦 |
 | 新個人帳號的上架門檻 | — | **新建的個人帳號要先跑封閉測試：至少 20 位測試者、連續 14 天，才能申請正式版**（組織帳號不在此限） | S | ❓ 見第四節決策 2 |
@@ -131,7 +131,7 @@
 3. **請母語者看英日文**：隱私權政策、支援頁、商店文案（`store/listing.json`）、遊戲介面。
 4. **決定價格**（見第六節）。
 5. **Google Play**：註冊開發者帳號（個人、約 US$25、身分驗證）→ 建立應用程式（套件名稱 `io.github.ianyclin.jiujiumeteor`）→ 產生 **upload key**（金鑰檔與密碼自己保管，不要進 repo）→ 建簽署的 AAB（`android/` 用 Android Studio 的 Build → Generate Signed Bundle，或把 key 告訴我怎麼放在本機、我補 `signingConfigs`）→ 上傳到**封閉測試**、找 **20 位測試者連續 14 天** → 填商店資料（`docs/store-listing.md`：文案、截圖、主圖、圖示 `assets/icon/icon-512.png`、類別、目標年齡、內容分級問卷、Data safety、隱私權政策網址）→ 申請正式版。
-6. **Apple App Store**：註冊 Apple Developer Program（個人、約 US$99/年）→ 在 Mac 安裝 Xcode 26 以上 → `npm install && npm run sync && npx cap open ios` → Signing 選你的 Team → 在 Apple Developer 註冊 Bundle ID → Product → Archive → 上傳 → **TestFlight** 自己與家人先玩 → App Store Connect 填資料（名稱、副標、說明、關鍵字、截圖、**Kids 類別與年齡層**、年齡分級問卷、App Privacy 選「不收集資料」、隱私權政策與支援網址、審核備註）→ 送審。
+6. **Apple App Store**：註冊 Apple Developer Program（個人、約 US$99/年）→ 在 Mac 安裝 **Xcode 27** → `npm install && npm run sync && npx cap open ios` → Signing 選你的 Team → 在 Apple Developer 註冊 Bundle ID → Product → Archive → 上傳 → **TestFlight** 自己與家人先玩 → App Store Connect 填資料（名稱、副標、說明、關鍵字、截圖、**Kids 類別與年齡層**、年齡分級問卷、App Privacy 選「不收集資料」、隱私權政策與支援網址、審核備註）→ 送審。
 7. **iPad 實機**（TestFlight）：直橫向、台前調度把視窗縮小時有沒有誤出「請轉直」、安全區。
 
 **C. 送審後**
