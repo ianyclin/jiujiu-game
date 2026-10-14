@@ -145,7 +145,8 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 |---|---|---|
 | Apple App Privacy | **Data Not Collected**（不收集資料）；不追蹤 | 沒有 SDK、沒有網路請求；`PrivacyInfo.xcprivacy` 一致 |
 | Apple Privacy Policy URL | `https://ianyclin.github.io/jiujiu-game/privacy/`（各語言版可填 `…/privacy/en.html`、`…/privacy/ja.html`） | merge 後要先在瀏覽器確認打得開 |
-| Apple Support URL | 需要你決定（粉專可，或另放頁面） | 見 `docs/store-checklist.md` |
+| Apple Support URL | `https://ianyclin.github.io/jiujiu-game/support/`（三語支援頁，內含聯絡 email 與常見問題；在 #48 的分支） | merge 後先在瀏覽器確認打得開 |
+| 聯絡 email（Apple／Google 開發者資料） | `gigigagagogogege@gmail.com` | 會公開顯示 |
 | Google Data safety | 「此應用程式不會收集或分享任何使用者資料」。因為沒有收集，傳輸加密與刪除要求兩欄不適用 | Android 已拿掉 `INTERNET` 權限 |
 | Google 廣告 ID 宣告 | 不使用 | — |
 | Google「目標對象與內容」 | 勾選兒童年齡層；回答「含有廣告：否」 | — |
