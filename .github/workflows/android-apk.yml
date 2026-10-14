@@ -1,0 +1,88 @@
+# 自動建 Android 測試 APK（debug 版，只能自己安裝測試，不能上架）。
+# 什麼時候跑：推到 main、開／更新 PR（改到遊戲或 Android 相關檔案時），或在 Actions 頁面手動按「Run workflow」。
+# 成品：每次 run 的頁面最下面「Artifacts」→ jiujiu-meteor-apk-<編號>（zip，裡面是 APK），保留 30 天。
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'manifest.json'
+      - 'assets/**'
+      - 'android/**'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tools/make-www.mjs'
+      - '.github/workflows/android-apk.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'manifest.json'
+      - 'assets/**'
+      - 'android/**'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tools/make-www.mjs'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # GitHub 的 Ubuntu runner 已經裝好 Android SDK（ANDROID_HOME）；缺的版本 Gradle 會自己補
+
+      - name: 安裝 Capacitor
+        run: npm ci
+
+      - name: 遊戲檔複製進 Android 專案
+        run: |
+          node tools/make-www.mjs
+          npx cap sync android
+
+      - name: 建 debug APK
+        working-directory: android
+        env:
+          CI_VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: 檢查 APK（套件名、版本、權限）
+        run: |
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
+          "$AAPT2" dump badging "$APK" | grep -E "^package:|^minSdkVersion|^targetSdkVersion|^application-label:|uses-permission"
+          if "$AAPT2" dump permissions "$APK" | grep -q "android.permission.INTERNET"; then echo "::error::APK 不應該有 INTERNET 權限"; exit 1; fi
+          unzip -p "$APK" assets/public/index.html | cmp - index.html
+          mv "$APK" "jiujiu-meteor-${{ github.run_number }}.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jiujiu-meteor-apk-${{ github.run_number }}
+          path: jiujiu-meteor-${{ github.run_number }}.apk
+          retention-days: 30
+          if-no-files-found: error

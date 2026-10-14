@@ -45,6 +45,17 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 - **我刻意沒有加「鏡像到原生儲存」**（Capacitor Preferences 外掛，`save()` 同步寫一份、WebView 資料被清空時還原）。原因：(1) 沒有 Mac／實機，這個還原流程（偵測空資料 → 非同步取回 → 重載）無法在這裡測，在兒童 app 上放沒測過的資料還原有「蓋掉資料」的風險；(2) 要多一個外掛與 Privacy Manifest 的 UserDefaults 宣告；(3) 實務上很少發生。**建議**：先用 TestFlight／Play 內部測試觀察；若真有人回報紀錄不見，再做。需要時我可以做，要你決定。
 - 紀錄匯出／匯入（家長關卡後手動備份）是另一個選項，同樣留待之後決定。
 
+## 自動建 APK（GitHub Actions）
+
+`.github/workflows/android-apk.yml`：推到 `main`、開或更新 PR（改到遊戲、`assets/`、`android/`、Capacitor 設定時），或在 GitHub 的 **Actions → Android APK → Run workflow** 手動按，都會自動建一個測試 APK。
+
+- **下載**：Actions 頁面點進那次 run，最下面 **Artifacts** 的 `jiujiu-meteor-apk-<編號>`（zip，解開是 APK），保留 30 天。要登入 GitHub 才能下載。
+- **版本號**：`versionCode` 用 run 編號（`CI_VERSION_CODE`），越新越大；`versionName` 仍是 1.2。
+- **簽名固定**：`android/app/debug.keystore` 是進版控的**測試用** debug 金鑰（密碼 `android`）。每次建的 APK 簽名相同，手機上可以**直接覆蓋安裝，紀錄保留**。這把金鑰公開無妨，Google Play 不收 debug 簽署的檔案；上架用的 upload key 是另一把，絕不進版控。
+  - 2026-10-14 之前我在對話裡傳的那個 APK 是用別的金鑰簽的，換成 CI 建的版本時要先解除安裝一次（**先用設定裡的「備份紀錄」備份**）。
+- **建置後自動檢查**：套件名稱、版本、沒有 `INTERNET` 權限、APK 裡的 `index.html` 與 repo 逐位元相同；任何一項不對就失敗。
+- 這是 debug 版：只給自己和測試者安裝。上架用的 AAB 要用你的 upload key 簽，見下節。
+
 ## 簽署與上架
 
 - **iOS**：專案沒設 Team（`DEVELOPMENT_TEAM`），在 Xcode 的 Signing & Capabilities 選你的開發者帳號。Bundle ID 要先在 Apple Developer 後台註冊。第一次 Archive 前用 Xcode 26 開專案，確認 SPM（`CapApp-SPM`）解析成功。
