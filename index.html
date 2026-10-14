@@ -1060,12 +1060,12 @@ const STR = {
     // 星圖
     'st.new': '還沒遇過', 'st.learn': '熟悉中', 'st.weak': '容易錯', 'st.star': '已點亮', 'map.reset': '清除所有紀錄', 'map.cleared': '紀錄已清除。',
     'map.resetWhy': '要清除所有紀錄（星圖、寵物、星塵和徽章都會清掉），請大人先回答這一題。',
-    'map.today': '今天答對 <b>{a}</b> 題', 'map.todayW': '今天答對 <b>{a}</b> 題、錯 <b>{w}</b> 題', 'map.avg': '最近每題大約 <b>{s}</b> 秒', 'map.days': '最近 7 天玩了 <b>{n}</b> 天。',
+    'map.today': '今天答對 <b>{a}</b> 題', 'map.todayW': '今天答對 <b>{a}</b> 題、錯 <b>{w}</b> 題', 'map.avg': '最近每題大約 <b>{s}</b> 秒想出答案', 'map.days': '最近 7 天玩了 <b>{n}</b> 天。',
     'map.more': '多亮 {n} 顆星', 'map.less': '少 {n} 顆星', 'map.faster': '每題快 {s} 秒', 'map.slower': '每題慢 {s} 秒', 'map.vs': '比 {n} 天前：{list}。',
     'map.none': '還沒有打答案的紀錄。每一題打對 3 次以上、又快又穩，就會點亮成一顆星。',
     'map.weak': '最常出錯：{list}。<br>這些題目在遊戲裡會比較常出現，練熟了紅格會自己變回來。',
     'map.fine': '已經遇過 <b>{n}</b> 題，目前沒有特別容易錯的題目。點任一格可以看細節。',
-    'map.cellNew': '<b>{eq}</b>　還沒遇過這題。', 'map.cell': '<b>{eq}</b>　{st}<br>答過 {n} 次・最近約 {t}・答錯過 {w} 次',
+    'map.cellNew': '<b>{eq}</b>　還沒遇過這題。', 'map.cell': '<b>{eq}</b>　{st}<br>答過 {n} 次・最近約 {t} 想出答案・答錯過 {w} 次',
     // 每日任務
     'q.answers': '答對 {n} 題（哪個遊戲都算）', 'q.combo': '流星防衛戰連擊 {n}', 'q.wave': '流星防衛戰打到第 {n} 波', 'q.boss': '打倒 1 隻錯題魔王', 'q.chest': '開 {n} 個寶箱',
     'q.ghost': '幽靈競速跑完 1 次', 'q.ghostwin': '幽靈競速追過幽靈', 'q.cmp': '哪個大？哪個小？玩 1 局', 'q.cmpperfect': '哪個大？哪個小？10 題全對',
@@ -1196,12 +1196,12 @@ const STR = {
     'name.title': 'Name your pet', 'name.aria': 'Pet name', 'name.ok': 'That\'s the name!', 'name.back': 'Pick another egg',
     'st.new': 'Not yet', 'st.learn': 'Learning', 'st.weak': 'Tricky', 'st.star': 'Star!', 'map.reset': 'Erase all records', 'map.cleared': 'Records erased.',
     'map.resetWhy': 'This erases all records (star map, pet, stardust and badges). A grown-up needs to answer this first.',
-    'map.today': 'Today: <b>{a}</b> right', 'map.todayW': 'Today: <b>{a}</b> right, <b>{w}</b> wrong', 'map.avg': 'About <b>{s}</b>s per question lately', 'map.days': 'Played <b>{n}</b> of the last 7 days. ',
+    'map.today': 'Today: <b>{a}</b> right', 'map.todayW': 'Today: <b>{a}</b> right, <b>{w}</b> wrong', 'map.avg': 'About <b>{s}</b>s to think of each answer lately', 'map.days': 'Played <b>{n}</b> of the last 7 days. ',
     'map.more': v => `${v.n} more star${v.n === 1 ? '' : 's'}`, 'map.less': v => `${v.n} fewer star${v.n === 1 ? '' : 's'}`, 'map.faster': '{s}s faster per question', 'map.slower': '{s}s slower per question', 'map.vs': 'Since {n} days ago: {list}. ',
     'map.none': 'No typed answers yet. Type a problem right 3 or more times, fast and steady, to light it up as a star.',
     'map.weak': 'Most missed: {list}.<br>These come up more often in the games. Once you know them, the red squares turn back.',
     'map.fine': v => `You've met <b>${v.n}</b> problem${v.n === 1 ? '' : 's'}, and none are tricky right now. Tap any square for details.`,
-    'map.cellNew': '<b>{eq}</b> · Not met yet.', 'map.cell': '<b>{eq}</b> · {st}<br>Answered {n}× · lately about {t} · wrong {w}×',
+    'map.cellNew': '<b>{eq}</b> · Not met yet.', 'map.cell': '<b>{eq}</b> · {st}<br>Answered {n}× · thinks it in about {t} · wrong {w}×',
     'q.answers': 'Get {n} right (any game)', 'q.combo': 'Meteor Defense: {n} combo', 'q.wave': 'Meteor Defense: reach wave {n}', 'q.boss': 'Beat 1 Mistake Boss', 'q.chest': 'Open {n} chests',
     'q.ghost': 'Finish 1 Ghost Race', 'q.ghostwin': 'Beat the ghost in Ghost Race', 'q.cmp': 'Play 1 round of Biggest? Smallest?', 'q.cmpperfect': 'Biggest? Smallest?: all 10 right',
     'q.bomb': 'Defuse {n} bombs', 'q.bomball': 'Bomb Squad: defuse all 5', 'q.versus': 'Play 1 Tug of War', 'q.stars': 'Light up {n} new stars',
@@ -1326,12 +1326,12 @@ const STR = {
     'name.title': '名前をつけてね', 'name.aria': 'ペットの名前', 'name.ok': 'この名前にする', 'name.back': 'ほかのたまごにする',
     'st.new': 'まだ', 'st.learn': 'れんしゅう', 'st.weak': 'にがて', 'st.star': '星', 'map.reset': '記ろくをぜんぶけす', 'map.cleared': '記ろくをけしたよ。',
     'map.resetWhy': 'すべての記録（星マップ・ペット・星くず・バッジ）を消去します。大人の方がこの問題に答えてください。',
-    'map.today': '今日の正かい <b>{a}</b>問', 'map.todayW': '今日の正かい <b>{a}</b>問・まちがい <b>{w}</b>問', 'map.avg': 'さいきんは1問 <b>{s}</b>秒くらい', 'map.days': 'さいきん7日のうち <b>{n}</b>日あそんだよ。',
+    'map.today': '今日の正かい <b>{a}</b>問', 'map.todayW': '今日の正かい <b>{a}</b>問・まちがい <b>{w}</b>問', 'map.avg': 'さいきんは1問 <b>{s}</b>秒くらいで答えが出るよ', 'map.days': 'さいきん7日のうち <b>{n}</b>日あそんだよ。',
     'map.more': '星が{n}こふえた', 'map.less': '星が{n}こへった', 'map.faster': '1問{s}秒速くなった', 'map.slower': '1問{s}秒おそくなった', 'map.vs': '{n}日前とくらべると：{list}。',
     'map.none': 'まだ答えを打った記ろくがないよ。1つの問題を3回以上、速く正しく答えると星になるよ。',
     'map.weak': 'いちばんまちがえる問題：{list}。<br>この問題はゲームで多めに出るよ。できるようになると、赤いマスは元にもどるよ。',
     'map.fine': 'もう <b>{n}</b>問に出会ったよ。いまは、とくににがてな問題はないよ。マスをタップするとくわしく見られるよ。',
-    'map.cellNew': '<b>{eq}</b>　まだ出会っていない問題。', 'map.cell': '<b>{eq}</b>　{st}<br>答えた回数 {n}・さいきん {t}くらい・まちがい {w}回',
+    'map.cellNew': '<b>{eq}</b>　まだ出会っていない問題。', 'map.cell': '<b>{eq}</b>　{st}<br>答えた回数 {n}・さいきん {t}くらいで答えが出る・まちがい {w}回',
     'q.answers': '{n}問正かいする（どのゲームでもOK）', 'q.combo': '流星ディフェンスで{n}コンボ', 'q.wave': '流星ディフェンスでウェーブ{n}まで行く', 'q.boss': 'まちがいボスを1回たおす', 'q.chest': 'たからばこを{n}こあける',
     'q.ghost': 'ゴーストレースを1回走る', 'q.ghostwin': 'ゴーストレースでゴーストに勝つ', 'q.cmp': '「どれが大きい？」を1回あそぶ', 'q.cmpperfect': '「どれが大きい？」で10問ぜんぶ正かい',
     'q.bomb': 'ばくだんを{n}こかいじょ', 'q.bomball': 'ばくだんを5こぜんぶかいじょ', 'q.versus': 'つなひきバトルを1回あそぶ', 'q.stars': '新しい星を{n}こともす',
@@ -1423,9 +1423,10 @@ const keyFor = id => id ? `jiujiu-meteor-v1:${id}` : 'jiujiu-meteor-v1';
 const saveWho = () => { if (bkFrozen) return; try { localStorage.setItem(PKEY, JSON.stringify(WHO)); } catch (e) {} };
 const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
 KEY = keyFor(WHO.cur);
+const TMODE = 1;   // 時間量法的版本（1：題目出現到按下第一個數字）；存檔的 tm 不同就換算舊紀錄，每日紀錄也記著，換量法後不跟舊紀錄比快慢
 const BEST0 = () => ({ meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null, ghostLoss: 0 });
 let recent = [], retest = [], draws = 0, lastRetest = -9, retestPick = '';   // retest：答錯的題 6～12 題後一定再考一次（延遲重測比立刻照抄有效）；兩次重測至少隔 2 題；存檔存 key（DB.retest），關掉再開也會考
-const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice(), lang: '' },
+const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], tm: TMODE, set: { mix: false, sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice(), lang: '' },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0, ans: 0, wrong: 0, log: {} },
   pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [], sent: 0 } });
 // 最佳紀錄依乘法表範圍分開存（bests[rangeKey]），DB.best 永遠指向目前範圍那一份；getter 不可列舉所以不會存進 JSON
@@ -1454,7 +1455,7 @@ function cleanRest(D) {
   P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string').map(r => Object.assign({ kind: r.kind, name: String(r.name || '').slice(0, 10), date: typeof r.date === 'string' ? r.date : '' }, Number.isFinite(r.fed) ? { fed: clamp(Math.round(r.fed), 0, 1e6) } : {}));
   P.sent = Math.max(Math.round(num(P.sent)), P.released.filter(r => !('fed' in r) || r.fed >= 500).length);   // 送回家（究極）過幾次：傳說蛋看這個，請夥伴回來不會又鎖回去；舊存檔用名單裡的究極補
   const Y = D.daily; Y.badges = Math.max(0, Math.round(num(Y.badges))); Y.streak = Math.max(0, Math.round(num(Y.streak))); Y.ans = Math.max(0, Math.round(num(Y.ans))); Y.starBase = Math.round(num(Y.starBase));
-  const log = {}; if (Y.log && typeof Y.log === 'object' && !Array.isArray(Y.log)) Object.keys(Y.log).forEach(d => { const v = Y.log[d]; if (/^\d{4}-\d{2}-\d{2}$/.test(d) && v && typeof v === 'object') log[d] = { s: num(v.s), t: num(v.t), r: typeof v.r === 'string' ? v.r : 'std', a: num(v.a) }; }); Y.log = log;
+  const log = {}; if (Y.log && typeof Y.log === 'object' && !Array.isArray(Y.log)) Object.keys(Y.log).forEach(d => { const v = Y.log[d]; if (/^\d{4}-\d{2}-\d{2}$/.test(d) && v && typeof v === 'object') log[d] = { s: num(v.s), t: num(v.t), r: typeof v.r === 'string' ? v.r : 'std', a: num(v.a), m: num(v.m) }; }); Y.log = log;
   Y.wrong = Math.max(0, Math.round(num(Y.wrong)));
   Y.tasks = (Array.isArray(Y.tasks) ? Y.tasks : []).filter(x => x && typeof x.id === 'string' && Number.isFinite(+x.n) && +x.n > 0).map(x => ({ id: x.id, n: Math.round(+x.n), p: Math.max(0, Math.round(num(+x.p))), done: !!x.done }));
   if (typeof Y.date !== 'string') Y.date = ''; if (typeof Y.lastDone !== 'string') Y.lastDone = '';
@@ -1473,9 +1474,13 @@ function loadDB() {
       const d = JSON.parse(raw), f = fresh();
       const bests = {}; Object.keys(d.bests || {}).forEach(k => { const b = d.bests[k]; if (k === '__proto__' || k === 'constructor' || !b || typeof b !== 'object' || Array.isArray(b)) return; bests[k] = Object.assign(BEST0(), b); });
       if (d.best) bests.std = Object.assign(BEST0(), d.best, bests.std || {});   // 舊存檔只有一份 best，歸到標準九九
-      DB = mkDB({ facts: cleanFacts(d.facts), bests, retest: Array.isArray(d.retest) ? d.retest.filter(k => typeof k === 'string').slice(0, 40) : [], set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) });
+      DB = mkDB({ facts: cleanFacts(d.facts), tm: TMODE, bests, retest: Array.isArray(d.retest) ? d.retest.filter(k => typeof k === 'string').slice(0, 40) : [], set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) });
       DB.set.tables = cleanTables(DB.set.tables);
       cleanRest(DB);
+      if (d.tm !== TMODE) Object.keys(DB.facts).forEach(k => {   // 舊存檔量到按完答案、門檻 3.6 秒（三位數 4.2 秒）：等比例換到新門檻，換版當下星星一顆都不變
+        const s = DB.facts[k], m = /^(\d+)x(\d+)$/.exec(k);
+        if (s.t) s.t = Math.max(1, Math.round(s.t * 3000 / (m && m[1] * m[2] >= 100 ? 4200 : 3600)));
+      });
     }
   } catch (e) { DB = fresh(); }
 }
@@ -1504,10 +1509,12 @@ for (let a = 2; a <= 8; a++) for (let b = 2; b <= 8; b++) if (a + b <= 10) ADDSU
 for (let a = 4; a <= 10; a++) for (let b = 2; b <= a - 2; b++) ADDSUB.push({ k: a + '-' + b, a, b, op: '−', ans: a - b });
 
 rebuildPool();
-const slowAllow = k => (FACT[k] && FACT[k].ans >= 100) ? 600 : 0;   // 三位數答案多按一鍵，速度門檻放寬
+// 熟練的時間＝從題目出現到「按下第一個數字」（想出答案的時間，不含後面的按鍵；手慢的孩子不吃虧、兩位數三位數一樣公平）。
+// 平滑平均 ≤ 3 秒才亮星（研究常用的「3 秒內想得出來」）；超過 2 秒開始多出（門檻前 1 秒）。2026-10 從「按完答案 ≤ 3.6 秒」改來（見 ROADMAP 的模擬比較）
+const FLUENT_MS = 3000, WEIGHT_MS = 2000;   // 想出答案（到第一個數字）平滑 ≤ 3 秒才亮星；2 秒起開始多出
 function weightOf(f) {
   const s = DB.facts[f.k];
-  let w = (!s || !s.n) ? 1.6 + (s ? s.err * 8 : 0) : 1 + s.err * 8 + clamp((s.t - 2600 - slowAllow(f.k)) / 2000, 0, 2);
+  let w = (!s || !s.n) ? 1.6 + (s ? s.err * 8 : 0) : 1 + s.err * 8 + clamp((s.t - WEIGHT_MS) / 2000, 0, 2);
   if (f.op === '×' && (f.a === 1 || f.b === 1)) w *= 0.25;
   return w;
 }
@@ -1573,7 +1580,7 @@ function state(k) {
   if (s.err >= 0.45 || (s.err >= 0.25 && (s.w || 0) >= 2)) return 'weak';   // 一次失手不紅；以前錯過、剛又錯才紅（0.25：錯一次再打對一次就退紅）
   const need = (FACT[k] && (FACT[k].a === 1 || FACT[k].b === 1)) ? 1 : 3;
   const errOk = s.err < 0.12 || (s.sw === 1 && s.err < 0.21);   // 只在炸彈／哪個大點錯一次的星不熄，等重測打字驗證（手滑不該讓「我明明會」的星暗掉）
-  if (s.n < need || !s.t || !errOk || s.t > 3600 + slowAllow(k)) return 'learn';   // !s.t：至少要正著打對過一次才算星
+  if (s.n < need || !s.t || !errOk || s.t > FLUENT_MS) return 'learn';   // !s.t：至少要正著打對過一次才算星
   return 'star';
 }
 const avgT = () => { const ts = MUL.map(f => DB.facts[f.k]).filter(s => s && s.t > 0).map(s => s.t); return ts.length ? Math.round(ts.reduce((a, b) => a + b, 0) / ts.length) : 0; };
@@ -2135,6 +2142,7 @@ function meteorKey(d) {
   const tg = getTarget(); if (!tg) return;
   if (!M.buf && now() - M.switchT < 250) return;   // 剛換目標，這一下八成是打給上一顆的
   if (d === 'back') { M.buf = M.buf.slice(0, -1); if (!M.buf) M.lock = null; bar(); return; }
+  if (!M.buf) tg.fk = now() - (tg.tStart || now());   // 想出答案的時間（到第一個數字）
   M.buf += d; M.lock = tg; SFX.key();
   if (M.buf.length >= String(tg.q.ans).length) {
     const v = parseInt(M.buf, 10);
@@ -2146,7 +2154,7 @@ function meteorKey(d) {
 function tipPos() { return { x: W / 2 + Math.cos(tA) * 48, y: GY - 26 + Math.sin(tA) * 48 }; }
 function hit(m) {
   const ms = now() - (m.tStart || now()), fresh = !m.revealed;
-  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, (m.q.rev || m.q.seq) ? 0 : ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
+  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, (m.q.rev || m.q.seq) ? 0 : (m.fk || ms)); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
   const mult = 1 + Math.min(4, Math.floor(M.combo / 5));
   const pts = fresh ? (10 + (ms < 2500 ? 5 : 0)) * mult * (M.dbl > 0 ? 2 : 1) : 3;
   M.score += pts;
@@ -2157,7 +2165,7 @@ function hit(m) {
     m.flash = 0; spark(m.x, m.y, 30, ['#5ff2d0', '#ffffff', '#ffd23f'], 260, 3.5, 0.7, 80); ring(m.x, m.y, m.r * 1.6, '#5ff2d0', 5);
     ftxt(m.x, m.y - m.r - 30, `+${pts}`, '#ffd23f', 26); shake(0.15, 4);
     if (m.hp <= 0) killBoss(m);
-    else { m.q = bossQ(); m.revealed = false; m.tStart = now(); m.vy *= 0.97; curT = null; }   // 魔王換題算一個段落，重新挑最低的
+    else { m.q = bossQ(); m.revealed = false; m.tStart = now(); m.fk = 0; m.vy *= 0.97; curT = null; }   // 魔王換題算一個段落，重新挑最低的
   } else {
     destroy(m, pts);
     M.kills++;
@@ -2431,11 +2439,12 @@ function gRender() {
 function ghostKey(d) {
   if (!G || !G.started || G.done || !G.q) return;
   if (d === 'back') { G.buf = G.buf.slice(0, -1); gRender(); return; }
+  if (!G.buf) G.fk = now() - G.qt;   // 想出答案的時間（到第一個數字）
   G.buf += d; SFX.key();
   if (G.buf.length >= String(G.q.ans).length) {
     const v = parseInt(G.buf, 10);
     if (v === G.q.ans) {
-      if (!G.rev) { G.ok++; record(G.q.k, true, (G.q.rev || G.q.seq) ? 0 : now() - G.qt); quest('answers'); earn(1); }
+      if (!G.rev) { G.ok++; record(G.q.k, true, (G.q.rev || G.q.seq) ? 0 : (G.fk || now() - G.qt)); quest('answers'); earn(1); }
       G.times.push(Math.round(now() - G.t0)); G.i++;
       SFX.zap(G.i);
       const c = $('#g-card'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
@@ -2518,7 +2527,7 @@ function vPause(on) {
 function cpuBase() {
   const ts = Object.values(DB.facts).map(s => s.t).filter(t => t > 0);
   const avg = ts.length >= 5 ? ts.reduce((a, b) => a + b, 0) / ts.length : 3600;
-  return clamp(avg + 600, 2200, 7000);   // 機器人略慢一點點，加上「打字」的時間
+  return clamp(avg + 1200, 2200, 7000);   // 孩子的時間只到第一個數字，機器人再加上按完答案的時間、再慢一點點
 }
 function cpuDelay() {
   const lead = -V.pos;   // 小隊長領先幾格（pos 負的是小隊長那邊）
@@ -2575,11 +2584,12 @@ function vKey(i, d) {
   const p = V.p[i];
   if (!p.q || now() < p.lock) return;
   if (d === 'back') { p.buf = p.buf.slice(0, -1); vRender(i); return; }
+  if (!p.buf) p.fk = now() - p.qt;   // 想出答案的時間（到第一個數字）
   p.buf += d; SFX.key();
   if (p.buf.length >= String(p.q.ans).length) {
     const v = parseInt(p.buf, 10);
     if (v === p.q.ans) {
-      if (i === 0 && !p.rev) { record(p.q.k, true, (p.q.rev || p.q.seq) ? 0 : now() - p.qt); quest('answers'); earn(1); }
+      if (i === 0 && !p.rev) { record(p.q.k, true, (p.q.rev || p.q.seq) ? 0 : (p.fk || now() - p.qt)); quest('answers'); earn(1); }
       vPull(i === 0 ? -1 : 1);
       const r = $('#v-knot').getBoundingClientRect();
       spark(r.left + 17, r.top + 17, 18, i === 0 ? ['#5ff2d0', '#ffffff'] : ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
@@ -3117,7 +3127,7 @@ function mapInfoDefault() {
   if (played > 1 || Object.keys(logs).length) pre += tx('map.days', { n: played });   // 第一天只有「玩了 1 天」沒意義
   const old = Object.keys(logs).filter(d => daysAgo(d) >= 7 && logs[d] && logs[d].r === rangeKey()).sort().pop();   // 最近一筆 7 天以上、同乘法表範圍的紀錄
   if (old) {
-    const L = logs[old], ds = starCount() - L.s, dt = L.t && at ? (L.t - at) / 1000 : 0, parts = [];
+    const L = logs[old], ds = starCount() - L.s, dt = L.t && at && L.m === TMODE ? (L.t - at) / 1000 : 0, parts = [];   // 舊量法（按完答案）的秒數不能拿來比
     if (ds > 0) parts.push(tx('map.more', { n: ds })); else if (ds < 0) parts.push(tx('map.less', { n: -ds }));
     if (Math.abs(dt) >= 0.1) parts.push(tx(dt > 0 ? 'map.faster' : 'map.slower', { s: Math.abs(dt).toFixed(1) }));
     if (parts.length) pre += tx('map.vs', { n: daysAgo(old), list: parts.join(tx('sep')) });
@@ -3159,7 +3169,7 @@ function ensureDaily() {
   if (!Array.isArray(D.tasks)) D.tasks = [];
   if (D.date === t && D.tasks.length === 3 && D.tasks.every(x => QBY[x.id])) return;
   if (D.date && D.date !== t && /^\d{4}-\d{2}-\d{2}$/.test(D.date)) {   // 換日：留一筆昨天的星數與平均秒數給家長看趨勢，只留 30 天
-    D.log = D.log || {}; D.log[D.date] = { s: starCount(), t: avgT(), r: rangeKey(), a: D.ans || 0 };
+    D.log = D.log || {}; D.log[D.date] = { s: starCount(), t: avgT(), r: rangeKey(), a: D.ans || 0, m: TMODE };
     Object.keys(D.log).sort().slice(0, -30).forEach(k => delete D.log[k]);
     D.ans = 0; D.wrong = 0;
   }
