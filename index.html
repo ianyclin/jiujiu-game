@@ -2847,7 +2847,11 @@ const FEED = 10;
 // ar 是圖的寬高比（切圖腳本印出來的），擺放用 place() 依頭中心 hx,hy、頭半徑 hr、圖最高點 top 算出中心與寬度。
 const GEAR = [
   { id: 'bow', at: 1, slot: 'head', ar: 1.249, place: (hx, hy, hr) => [hx - hr * 0.62, hy - hr * 0.78, hr * 0.95, -15] },
-  { id: 'scarf', at: 2, slot: 'neck', ar: 0.875, place: (hx, hy, hr) => [hx + hr * 0.1, hy + hr * 0.55 + hr * 1.35 / 0.875 * 0.3, hr * 1.35, 0] },
+  { id: 'scarf', at: 2, slot: 'neck', ar: 0.875, place: (hx, hy, hr) => {   // 尾巴垂到地面（117）以下會蓋住名字：超過就縮小（最多縮到 0.7）再上移到地面為止
+    let w = hr * 1.35, cy = hy + hr * 0.55 + w / 0.875 * 0.3; const bot = cy + w / 0.875 / 2;
+    if (bot > 117) { w *= Math.max(0.7, 1 - (bot - 117) / (w / 0.875) * 0.6); cy = Math.min(cy, 117 - w / 0.875 / 2); }
+    return [hx + hr * 0.1, cy, w, 0];
+  } },
   { id: 'glasses', at: 4, slot: 'face', ar: 2.612, place: (hx, hy, hr) => [hx, hy - hr * 0.22, hr * 1.55, 0] },
   { id: 'balloon', at: 6, slot: 'side', ar: 0.57, place: (hx, hy, hr) => [hx + hr * 1.05, hy + hr * 0.4 - hr * 0.9 / 0.57 / 2, hr * 0.9, 0] },
   { id: 'cap', at: 8, slot: 'head', ar: 1.299, place: (hx, hy, hr) => [hx, hy - hr * 0.5 - hr * 1.75 / 1.299 * 0.38, hr * 1.75, 0] },
