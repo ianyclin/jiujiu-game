@@ -50,10 +50,28 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 - **iOS**：專案沒設 Team（`DEVELOPMENT_TEAM`），在 Xcode 的 Signing & Capabilities 選你的開發者帳號。Bundle ID 要先在 Apple Developer 後台註冊。第一次 Archive 前用 Xcode 26 開專案，確認 SPM（`CapApp-SPM`）解析成功。
 - **Android**：用 Play App Signing。本機建 AAB 要有 upload key（**金鑰檔與密碼不要進版控**，`.gitignore` 已擋 `*.jks`、`*.keystore`、`keystore.properties`）。`android/app/build.gradle` 還沒設 `signingConfigs`，建 release 時再加，或用 Android Studio 的 Build → Generate Signed Bundle。
 
-## 這個 PR 沒驗證到的事（誠實清單）
+## 驗證狀況（誠實清單）
 
-1. **Android APK 沒有建出來。** 這個環境的網路政策擋掉 `dl.google.com`，Gradle 解不開 Android Gradle Plugin（`com.android.tools.build:gradle`）與 Android SDK，錯誤是 `Received status code 403`。要驗證，需在環境的網路設定允許 `dl.google.com`（以及 SDK 下載用的網域），或在你自己的電腦上跑 `npm run android:apk`。Android 這一側（manifest、資源、圖示、主題）是依 Capacitor 8 的範本修改，**資源檔語法沒有經過 aapt2 驗證**，建置時若報錯請貼給我。
-2. **iOS 完全沒建置**（沒有 Mac）。`project.pbxproj` 的修改用 `xcode` npm 套件解析確認格式正確、參照沒有斷掉，但沒有 Xcode 驗證。
-3. `window.open`（粉專與隱私權政策連結，過家長關卡後）在 Capacitor WebView 裡是否開啟系統瀏覽器，要在實機確認；Capacitor 預設會處理（iOS 交給 `UIApplication.open`、Android 用 Intent），但我沒跑過。
-4. 打包後的 `www/`（與 `index.html` 逐位元相同）用本機網頁伺服器載入：無錯誤、無 404、無外部請求。這只證明檔案齊全，不證明 WebView 行為。
-5. 安全區在實機的表現（iPhone 動態島、Android 手勢導覽列）請看一眼。
+**已驗證（2026-10-14，在 Linux 上實際建置）**
+- `gradle assembleDebug` 與 `gradle bundleRelease` 都成功：`app-debug.apk` 約 6.9 MB、`app-release.aab`（未簽署）約 5.8 MB。環境：JDK 21、Android SDK 36（platforms;android-36、build-tools;36.0.0）、Gradle 8.14.3。
+- 用 `aapt2` 檢查成品：套件 `io.github.ianyclin.jiujiumeteor`、versionName 1.2、minSdk 24、targetSdk 36；**沒有 `INTERNET` 權限**（唯一的權限是 androidx 自己定義、只給本 app 的內部權限，不是使用者要同意的）；`allowBackup=false`、`screenOrientation=portrait`；桌面名稱英文「9×9 Meteor」、`zh`／`zh-TW`／`zh-HK`／`ja` 都是「九九流星隊」；APK 內的 `assets/public/index.html` 與 repo 的 `index.html` 逐位元相同，20 張寵物圖都在。
+- 建置抓到並修掉兩個資源問題：`colors.xml` 註解裡的 `--`（XML 不允許），以及繁中地區（zh-TW、zh-HK）會落回英文名稱（加了 `values-zh-rTW`、`values-zh-rHK`）。
+
+**沒驗證到**
+1. **沒有在真的 Android 裝置或模擬器上跑過**：這個環境沒有 KVM，模擬器開不起來。所以 WebView 載入遊戲、觸控、音效、安全區（手勢導覽列、挖孔）、直向鎖定、`window.open`（粉專與隱私權政策連結，過家長關卡後是否開啟系統瀏覽器）都要在實機確認。debug APK 可直接傳到手機安裝測試。
+2. **iOS 完全沒建置**（沒有 Mac）。`project.pbxproj` 的修改只用 `xcode` npm 套件解析確認格式與參照，沒有 Xcode 驗證。
+3. 上架用的 AAB 要用你的 upload key 簽署（見上節）；這裡建的是未簽署版，debug APK 用 Android 的 debug 金鑰簽，**不能上架**，只能測試。
+4. `./gradlew`（wrapper）在這個環境下載 Gradle 時連線被重置（proxy 的問題），所以我改用系統裝好的同版本 `gradle`。你自己的電腦用 `npm run android:apk` 即可。
+
+## 在這個環境重現建置
+
+```bash
+# Android SDK（dl.google.com 要能連）
+mkdir -p /opt/android-sdk/cmdline-tools && cd /opt/android-sdk/cmdline-tools
+curl -LO https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip && unzip -q commandlinetools-*.zip && mv cmdline-tools latest
+yes | latest/bin/sdkmanager --licenses && latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+export ANDROID_HOME=/opt/android-sdk
+npm install && npm run sync && cd android && gradle assembleDebug --max-workers=2
+```
+
+Maven Central 偶爾回 429（瞬間請求太多），重跑即可。

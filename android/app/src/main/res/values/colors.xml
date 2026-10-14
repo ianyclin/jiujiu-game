@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 與 index.html 的 --ink 一致：遊戲是夜空單一主題，啟動畫面與視窗底色也用它，不會閃白 -->
+    <!-- 與 index.html 的 ink 色（#08111f）一致：遊戲是夜空單一主題，啟動畫面與視窗底色也用它，不會閃白 -->
     <color name="night">#08111F</color>
 </resources>
