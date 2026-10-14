@@ -11,7 +11,7 @@
 - **備份紀錄**（設定頁最下面「備份紀錄」，走家長關卡 → `#o-backup`）：網頁版與 App 版的 localStorage 各自分開，靠備份搬。內容 `{ app:'jiujiu-meteor', v:1, at, who, saves:{ 存檔 key: 存檔 } }`（所有人）。匯出兩種：**備份檔**（`.json`；有 `navigator.canShare` 就開分享面板，存到「檔案」、AirDrop、LINE；電腦直接下載；在 Capacitor 的 WebView 裡沒有分享時改給備份碼）、**備份碼**（`JJMS1:` + UTF-8 JSON 的 base64，複製到剪貼簿，不能複製就選起來讓大人長按複製）。匯入（`bkParse()`）兩種都吃，備份碼前後多貼了字也沒關係；先顯示「有幾個人、名字、備份日期」再按確定，**取代**這台裝置所有人（舊的人在備份裡沒有的存檔刪掉），寫完 `location.reload()`，存檔照常經過 `loadDB()` 的消毒。寫入到重新載入之間 `bkFrozen` 擋住 `save()`／`saveWho()`，記憶體裡的舊資料才不會寫回去；成功後用 sessionStorage 旗標在重新載入後 toast。
 - 音樂與音效全部用 Web Audio 即時合成，沒有任何音檔，無版權問題。
 - 字型：Lilita One（數字）、Chiron GoRound TC（中文、英文）、Zen Maru Gothic（日文，日本字形；Chiron 是台灣／香港字形，日文漢字有些長得不一樣），都是 OFL 授權，用 `tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切成只含遊戲用到的字放在 `assets/fonts/`，`@font-face` + `font-display:swap`，都有系統字型 fallback。切字分語言：Chiron 取 `STR` 的 `ja` 區塊以外的字，Zen Maru Gothic 取 `ja` 區塊的字加全部假名（孩子用假名打名字也好看）；腳本靠 `\n  ja: {` 到下一個 `\n  },` 找 ja 區塊。日文只在 `:lang(ja)` 換 `--f-zh`／`--f-num`，中文、英文使用者不會下載 Zen Maru Gothic；畫布字型 `NUMF`／`ZHF` 由 `canvasFonts()` 跟著語言換。**改了介面文字要重跑切字腳本**，不然新字會用系統字型顯示（孩子打的名字本來就會 fallback）。
-- 著作權聲明放在設定頁最下面（`.legal`，小字不顯眼）：© 指數三寶飯（ianyclin）；字型授權寫在關於頁（三種語言都要列三套字型），授權檔在 `assets/fonts/OFL-*.txt`。版本號目前 1.2（1.2：英文、日文介面，回家的寵物可以請回來）。**隱私權政策**：`privacy/index.html`（中）、`en.html`、`ja.html`，GitHub Pages 提供（`https://ianyclin.github.io/jiujiu-game/privacy/`），聯絡方式是 `gigigagagogogege@gmail.com`＋粉專，另有 `support/index.html`（三語支援頁，網址 `…/jiujiu-game/support/`，填 Apple 的 Support URL）。app 內關於頁與設定頁底部都有連結（`.about-priv`／`.legal-priv`，走家長關卡，`PRIVACY_URL` 依 `LANG` 選頁）。**功能一改變隱私（新增網路請求、SDK、雲端同步、新的儲存內容）就要同步改三份政策、商店的 Data safety／App Privacy 表單與 `docs/store-checklist.md`**；介面文字不要再說「瀏覽器」（包成 app 後不精確）。「指數三寶飯」是連結，走**家長關卡** `#o-gate`（`openGate(url)`：兩位數 × 一位數，答對才 `window.open`），`FB_URL` 是粉專正式網址 `facebook.com/profile.php?id=100084000897269`（不帶 `mibextid` 追蹤參數）。寵物插畫是 AI 生成，著作權保護在多數地區不明確，商業化前要考慮請人重繪或至少留存生成紀錄。
+- 著作權聲明放在設定頁最下面（`.legal`，小字不顯眼）：© 指數三寶飯（ianyclin）；字型授權寫在關於頁（三種語言都要列三套字型），授權檔在 `assets/fonts/OFL-*.txt`。版本號目前 1.2（1.2：英文、日文介面，回家的寵物可以請回來）。**隱私權政策**：`privacy/index.html`（中）、`en.html`、`ja.html`，GitHub Pages 提供（`https://ianyclin.github.io/jiujiu-game/privacy/`），聯絡方式是 `gigigagagogogege@gmail.com`＋粉專，另有 `support/index.html`（三語支援頁，網址 `…/jiujiu-game/support/`，填 Apple 的 Support URL）。app 內關於頁與設定頁底部都有連結（`.about-priv`／`.legal-priv`，走家長關卡，`PRIVACY_URL` 依 `LANG` 選頁）。**功能一改變隱私（新增網路請求、SDK、雲端同步、新的儲存內容）就要同步改三份政策、商店的 Data safety／App Privacy 表單與 `docs/store-checklist.md`**；介面文字不要再說「瀏覽器」（包成 app 後不精確）。「指數三寶飯」是連結，走**家長關卡** `#o-gate`（`openGate(url)`：混合運算 `a + b × c`，答對才 `window.open`），`FB_URL` 是粉專正式網址 `facebook.com/profile.php?id=100084000897269`（不帶 `mibextid` 追蹤參數）。寵物插畫是 AI 生成，著作權保護在多數地區不明確，商業化前要考慮請人重繪或至少留存生成紀錄。
 - **商店文案與截圖**：文案唯一來源 `store/listing.json`（中英日，名稱、副標、簡短／完整說明、關鍵字），`python3 tools/make-listing.py` 檢查字數上限並產生 `docs/store-listing.md`（含類別、分級、隱私問卷填法、審核備註）；截圖 `node tools/store-screenshots.cjs` 用 Playwright 開真的遊戲、種存檔、依各商店尺寸截五張（主選單、流星、星圖、寵物、拔河）×三語言，輸出 `store/screenshots/`（JPEG）。**改了畫面或介面文字、發新版時要重截**；商店文案提到的功能（五種玩法、寵物名字、「沒有廣告・不用網路」）要跟遊戲同步。
 
 ## 語言與對象
@@ -25,7 +25,7 @@
 
 - 不放第三方廣告、追蹤、分析 SDK。
 - 資料只存本機；若未來做雲端同步，要先設計家長關卡。
-- 外部連結與購買前要有家長關卡（例如請大人解一題）。`openGate(target, why)`：target 是網址時答對後出現「前往」鈕（用 click 開，iOS 才不擋），題目兩位數 × 一位數；是函式時答對直接執行（清除所有紀錄、清掉玩家都走這裡），題目兩位數 × 兩位數（12～19 × 12～19，小五解一位數的太快）。
+- 外部連結與購買前要有家長關卡（例如請大人解一題）。`openGate(target, why)`：target 是網址時答對後出現「前往」鈕（用 click 開，iOS 才不擋），題目是**混合運算，先乘後加**：`a + b × c`（a 3～9、b 3～9、c 12～19，例如 `5 + 2 × 13 =`）；是函式時答對直接執行（清除所有紀錄、清掉玩家都走這裡），題目 `a + b × c − d × e`（答案至少 10）。選混合運算是因為孩子在練的就是乘法，純乘法擋不住他們；沒學過運算順序的孩子會從左算到右而答錯。小學高年級或孩子家教得好時仍可能解開，這是用「大人比較會」的題目擋小孩，不是安全機制。題目存在 `gate.expr`，作答格數跟答案位數一致，`#gate-q` 窄螢幕會換行。
 - 不收集任何個資。
 
 ## 架構（index.html 內的區塊順序）
@@ -90,7 +90,7 @@
 - 20 題計時，跟上次最佳成績（逐題時間陣列）賽跑；第一次對手是每題 3.6 秒的新手幽靈。不出 ×1。連輸（`best.ghostLoss`）每次讓幽靈慢 8%，最多 3 次（狀態好的一天不該留下追不到的幽靈），輸 1 次起就標「（幽靈放慢了一點）」；破真實紀錄歸零、只追過放慢的幽靈減 1 級（結果卡標題「追上幽靈了！」、note「離最快紀錄還差 x 秒」）。紀錄仍是真實最快時間。
 
 ### 雙人拔河
-- 上下分割畫面，答對拉一格，6 格贏。只有下方「小隊長」的作答記進星圖，小隊長不出 ×1。上方可選大人加難（兩位數 × 一位數）。
+- 上下分割畫面，答對拉一格，6 格贏。只有下方「小隊長」的作答記進星圖，小隊長不出 ×1。上方可選大人加難（混合運算 `a + b × c`）。
 - 兩邊各出各的題（小隊長照錯題加權、對手隨機抽題庫），不同題；按鈕文字是「一樣難的題目」。實力相近的兩人是隨機漫步，平均 36 次答對才分勝負、尾巴很長，所以**繩子會變滑**：開局 `VF_AT` 45 秒後一次拉 2 格、90 秒後 3 格（`vForce()` 每幀檢查，`V.t0` 是局內時間、暫停時 `vPause(false)` 往後平移；`vPull(dir)` 夾在 ±win），切換時 toast「繩子變滑了！拉兩格」＋ `SFX.power`，繩子加 `.f2`／`.f3` 變色發光，`openVersusReset()` 清掉。
 - 輸給機器人時上方顯示「機器人贏了」用灰字、沒有煙火；孩子贏才有。
 - **兩人同時按**：`#s-versus` 設 `touch-action:none`，拔河時 `gesturestart` 也擋掉（iOS Safari 不理 `user-scalable=no`，兩個人的手指同時落下會被當成雙指縮放，吃掉其中一邊）；高度 ≥ 760px 時 `.half` 底部留 30px（≤ 700px 名牌會藏起來，中間這段不加，免得內容超出半邊），上方那位（轉 180°）的鍵盤才不會貼著螢幕上緣（iOS 會先扣住貼邊的觸控看是不是系統手勢）。

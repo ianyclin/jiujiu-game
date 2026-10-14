@@ -418,6 +418,7 @@ html,body{overscroll-behavior:none}
 .legal{margin:0;font-size:11px;line-height:1.5;color:rgba(147,169,192,.7);text-align:center}
 .legal a,.about-fb,.about-priv{color:var(--ice);text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:12px 6px;margin:-12px -6px}   /* 觸控範圍 ≥ 44px，版面不變 */
 #gate-pad{margin-block:4px}
+#gate-q{display:block;text-align:center;white-space:normal;font-size:clamp(24px,7vw,34px);line-height:1.5;text-wrap:balance}   /* 混合運算比較長，窄螢幕要能換行 */
 .setlist{display:grid;gap:8px;text-align:left}
 .setrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .setrow b{display:block;font-size:16px;font-weight:900}
@@ -3418,16 +3419,21 @@ makePad($('#m-pad'), meteorKey);
 makePad($('#g-pad'), ghostKey);
 makePad($('#v-bot [data-pad]'), d => vKey(0, d));
 makePad($('#v-top [data-pad]'), d => vKey(1, d));
-// 家長關卡：外部連結前要大人解一題（兩位數 × 一位數），答對才開新分頁。兒童 app 硬限制。
+// 家長關卡：外部連結前要大人解一題（混合運算，先乘後加），答對才開新分頁。兒童 app 硬限制。
 const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
 // target 是網址（答對後出現「前往」鈕，用 click 開才不會被 iOS 擋）或函式（答對直接執行，例如清除紀錄）
 function openGate(target, why) {
-  const hard = typeof target === 'function';   // 清除紀錄、刪人這種不可逆的，題目難一點（小五也解得開一位數的）
-  const a = ri(12, 19), b = hard ? ri(12, 19) : ri(3, 9);
-  gate = { ans: a * b, buf: '', target };
+  // 題目是混合運算（先乘除、後加減）：孩子在練的正是乘法，純乘法擋不住他們；「5 + 2 × 13」要記得先乘，沒學過運算順序的孩子會從左算到右而答錯
+  const hard = typeof target === 'function';   // 清除紀錄、刪人這種不可逆的：兩個乘法一加一減，答案至少 10
+  let expr, ans;
+  do {
+    if (hard) { const a = ri(10, 40), b = ri(12, 19), c = ri(3, 9), d = ri(3, 9), e = ri(3, 9); expr = `${a} + ${b} × ${c} − ${d} × ${e}`; ans = a + b * c - d * e; }
+    else { const a = ri(3, 9), b = ri(3, 9), c = ri(12, 19); expr = `${a} + ${b} × ${c}`; ans = a + b * c; }
+  } while (ans < 10);
+  gate = { ans, expr, buf: '', target };
   $('#gate-why').textContent = why || tx('gate.why');
-  $('#gate-q').innerHTML = `${a} × ${b} = ${slots(String(a * b).length, '')}`; $('#gate-hint').textContent = ''; $('#gate-go').hidden = true; $('#gate-pad').hidden = false;
+  $('#gate-q').innerHTML = `${expr} = ${slots(String(ans).length, '')}`; $('#gate-hint').textContent = ''; $('#gate-go').hidden = true; $('#gate-pad').hidden = false;
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();   // 不然按 Enter 會重開關卡
   $('#o-gate').hidden = false;
 }
@@ -3443,7 +3449,7 @@ function gateKey(d) {
     }
     gate.buf = ''; SFX.wrong(); $('#gate-hint').textContent = tx('gate.no'); const c = $('#gate-q'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
   }
-  const m = $('#gate-q').innerHTML.match(/^(\d+) × (\d+) = /); if (m) $('#gate-q').innerHTML = `${m[1]} × ${m[2]} = ${slots(n, gate.buf)}`;
+  $('#gate-q').innerHTML = `${gate.expr} = ${slots(n, gate.buf)}`;
 }
 makePad($('#gate-pad'), gateKey);
 $('#gate-go').addEventListener('click', () => { if (!gate || !gate.ok) return; const u = gate.target; gate = null; $('#o-gate').hidden = true; window.open(u, '_blank', 'noopener'); });
