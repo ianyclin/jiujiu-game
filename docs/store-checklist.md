@@ -71,7 +71,14 @@
 
 - **家長關卡**：選了方案 E（你提的）——混合運算、先乘後加，例如 `5 + 2 × 13 =`；不可逆操作用 `a + b × c − d × e`。已在 [#53](https://github.com/ianyclin/jiujiu-game/pull/53) 實作。仍是「大人比較會」的題目，不是安全機制；真人觀察再看。
 - **聯絡 email**：`gigigagagogogege@gmail.com`，已寫進三份隱私權政策與三語支援頁（`support/`，給 Apple 的 Support URL）。公開在網頁上，之後可能收到垃圾信。
-- 帳號類型、Bundle ID：見下節，待決定（建議：個人帳號、沿用現有 Bundle ID）。
+- **帳號類型**：個人帳號（「指數三寶飯」不是登記的公司，組織帳號要 D-U-N-S）。商店的開發者欄會顯示本名；遊戲內 © 仍是指數三寶飯。
+- **Bundle ID／套件名稱**：沿用 `io.github.ianyclin.jiujiumeteor`（上架後不能改）。
+- **iPad 方向**：四個方向都支援、不鎖直向（iPadOS 26 起 `UIRequiresFullScreen` 已過時，Apple 要求 iPad app 支援所有方向）。iPhone 維持直向。
+- **年齡層**：Apple Kids 6–8 ＋ 9–11；Google 目標年齡 6–8、9–12。不勾 5 歲以下。
+- **截圖**：第一版用遊戲原圖，不加標語與外框（誠實、省事；之後要做行銷圖再說）。
+- **原生備份**：不做。已有 [#52](https://github.com/ianyclin/jiujiu-game/pull/52) 的手動「備份紀錄」，先觀察。
+- **價格**：建議第一版**免費、無廣告、無內購**（理由見第六節）。上 Google Play 前要最後確認，因為 Google 上「免費改付費」不行。
+
 
 ## 四、需要你決定的事
 
@@ -97,3 +104,36 @@
 - Apple App Review Guidelines 1.3、5.1.1、5.1.4（本次已讀原文）
 - Google Play Families 政策、Data safety、Target API level 要求（請對照 Play Console 說明頁）
 - Google Play 新個人帳號封閉測試要求（搜尋結果；以 Play Console 說明為準）
+
+## 六、價格怎麼決定
+
+**建議：第一版免費，沒有廣告、沒有內購。**
+
+| 考量 | 說明 |
+|---|---|
+| 目前的承諾 | 隱私權政策、商店文案都寫「沒有廣告、沒有內購」。要收費只能是「付費下載」（一次買斷），不影響這些承諾；改成內購或訂閱就要加家長關卡後面的購買流程、改文案，還要處理收據與退款。 |
+| 改不回來 | **Google Play：免費 app 上架後不能改成付費**（只能另上一個新 app）。付費改免費可以。Apple 兩個方向都能隨時改。所以「先免費」在 Google 是不可逆的決定，上架前要確定。 |
+| 抽成 | Apple 小型企業計畫、Google 的對應方案，年營收 100 萬美元以下抽 15%（Google 2026 年起在部分地區另有調整，以後台為準）。 |
+| 額外手續 | 付費需要：Apple 的付費應用程式協議、銀行帳戶、稅務資料（W-8BEN 等）；Google 的付款資料（商家帳戶）。免費不用。 |
+| 成本 | Apple 年費約 US$99、Google 一次約 US$25。付費版要賣出約 50 份 US$2.99（扣 15%）才回本 Apple 一年的年費。 |
+| 觸及 | 兒童教育類大多是免費（常靠訂閱）。付費下載會大幅減少下載數，也更難找到 Google 封閉測試要的 20 位測試者。 |
+| 品牌 | 遊戲的定位是「指數三寶飯」粉專分享給家長的作品；免費、無廣告、不收資料本身就是賣點。 |
+
+如果想收費，比較好的做法是**付費下載、一次買斷**（例如 US$2.99／NT$90／¥400），不要內購或訂閱；而且 Google 要在**第一次上架時**就設成付費。
+
+## 七、直到上架還需要的步驟
+
+**A. 我可以做的（都已完成）**：隱私權政策與支援頁、家長關卡、Capacitor 專案、自動建 APK、商店文案與截圖。
+
+**B. 你要做的**
+1. **在 Android 手機裝 APK 試玩**（GitHub → Actions → Android APK → 最新一次 → Artifacts）。看：載入、觸控、音效、狀態列與手勢列有沒有擋到畫面、粉專與隱私權政策連結（過家長關卡後）會不會開瀏覽器、備份紀錄能不能用。
+2. **確認網址打得開**：`https://ianyclin.github.io/jiujiu-game/privacy/`、`…/support/`。
+3. **請母語者看英日文**：隱私權政策、支援頁、商店文案（`store/listing.json`）、遊戲介面。
+4. **決定價格**（見第六節）。
+5. **Google Play**：註冊開發者帳號（個人、約 US$25、身分驗證）→ 建立應用程式（套件名稱 `io.github.ianyclin.jiujiumeteor`）→ 產生 **upload key**（金鑰檔與密碼自己保管，不要進 repo）→ 建簽署的 AAB（`android/` 用 Android Studio 的 Build → Generate Signed Bundle，或把 key 告訴我怎麼放在本機、我補 `signingConfigs`）→ 上傳到**封閉測試**、找 **20 位測試者連續 14 天** → 填商店資料（`docs/store-listing.md`：文案、截圖、主圖、圖示 `assets/icon/icon-512.png`、類別、目標年齡、內容分級問卷、Data safety、隱私權政策網址）→ 申請正式版。
+6. **Apple App Store**：註冊 Apple Developer Program（個人、約 US$99/年）→ 在 Mac 安裝 Xcode 26 以上 → `npm install && npm run sync && npx cap open ios` → Signing 選你的 Team → 在 Apple Developer 註冊 Bundle ID → Product → Archive → 上傳 → **TestFlight** 自己與家人先玩 → App Store Connect 填資料（名稱、副標、說明、關鍵字、截圖、**Kids 類別與年齡層**、年齡分級問卷、App Privacy 選「不收集資料」、隱私權政策與支援網址、審核備註）→ 送審。
+7. **iPad 實機**（TestFlight）：直橫向、台前調度把視窗縮小時有沒有誤出「請轉直」、安全區。
+
+**C. 送審後**
+- 被退件時把審核訊息貼給我。最可能的理由是 Apple 4.2「最低功能／網頁包裝」，回覆重點見第四節決策 7。
+- 正式上架後，每次更新：改 `index.html` → 合併到 main → Actions 自動建 APK 測試 → 改版本號（`about.ver` 三語、`android/app/build.gradle` 的 versionName、iOS 的 MARKETING_VERSION）→ 建簽署的 AAB／Archive 上傳。
