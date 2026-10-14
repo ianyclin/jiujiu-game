@@ -28,7 +28,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 | App 名稱 | 桌面名稱短：英文「9×9 Meteor」、中日「九九流星隊」。iOS 用 `en／zh-Hant／ja.lproj/InfoPlist.strings`（已加進 pbxproj 的 `PBXVariantGroup` 與 `knownRegions`），Android 用 `values`（英文預設）、`values-zh`、`values-ja`。商店上的長名稱另外設（步驟 4） |
 | 圖示 | `tools/make-app-icons.py` 從 `assets/icon/icon-1024.png` 產生：iOS 1024（不透明 RGB，App Store 不接受透明）；Android legacy 方形／圓形與 adaptive 前景（art 縮到 66%，可見範圍是中間 72/108）＋背景（夜空模糊） |
 | 啟動畫面 | 夜空底色 `#08111f` ＋圖示置中，iOS storyboard 與 Android `Theme.SplashScreen` 都是，不閃白 |
-| 直向鎖定 | iOS：iPhone、iPad 都只列 `Portrait`，iPad 加 `UIRequiresFullScreen`（不然 App Store 要求 iPad 支援四個方向）。Android：`screenOrientation="portrait"`。**注意**：Android 16（targetSdk 36）在 sw ≥ 600dp 的大螢幕（平板、折疊機展開）會忽略這個鎖定；遊戲橫向版面本來就能玩（CLAUDE.md 的平板規則），所以不處理 |
+| 方向 | **iPhone 只有直向**（`UISupportedInterfaceOrientations`）；**iPad 四個方向都支援**、不加 `UIRequiresFullScreen`：iPadOS 26 起這個鍵已過時、未來會被忽略，Apple 要求 iPad app 支援所有方向與可調整大小的視窗（TN3192）。遊戲本來就有 iPad 橫向版面（CLAUDE.md 的平板規則）。Android：`screenOrientation="portrait"`，但 Android 16（targetSdk 36）在平板、折疊機展開時會忽略，同樣靠遊戲本身的橫向版面。**實機請看**：iPad 台前調度把視窗縮得很小時，遊戲是否誤出「請把手機轉直」提示（`.rotate` 只在觸控裝置、橫向、高度 < 500px 出現） |
 | 深色 | iOS `UIUserInterfaceStyle = Dark`、Android 視窗底色夜空色；`SystemBars.style = DARK`（淺色圖示）。遊戲刻意只做夜空一種主題，手機設成亮色模式時狀態列也不會變成黑字黑底 |
 | 安全區 | 不改 `index.html`。iOS：`contentInset: never` → WKWebView 全螢幕，`viewport-fit=cover` 讓 `env(safe-area-inset-*)` 跟 Safari 加入主畫面一樣，`:root` 的 padding 處理一次。Android：Capacitor 8 的 SystemBars 預設 `insetsHandling: css`，舊 WebView（< 140）把 WebView 內縮、`env()` 回 0；新 WebView 照 `viewport-fit=cover` 滿版並給正確的 `env()`。兩種都不會讓遊戲被狀態列或手勢條蓋住，也不會算兩次（這是讀 Capacitor 原始碼與文件的結論，未在實機驗證） |
 | 權限 | iOS：無。Android：**拿掉 `INTERNET`**（遊戲離線，Data safety 寫「不收集」更乾淨）；沒有任何其他權限 |
