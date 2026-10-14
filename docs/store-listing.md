@@ -18,7 +18,7 @@
 | 關鍵字（Apple Keywords） | 44／100 | 九九乘法,乘法表,背九九,小學,國小,數學,二年級,三年級,練習,遊戲,學習,教育,速算 |
 | 新功能（What's New） | 21／4000 | 第一版：五種玩法、星圖、每日任務、養寵物。 |
 
-**完整說明**（595／4000）
+**完整說明**（654／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
@@ -39,6 +39,7 @@
 【給家長】
 ● 沒有廣告、沒有內購、不用登入，不收集任何個人資料。
 ● 完全離線，不用網路也能玩。遊戲紀錄只存在這台裝置上，我們看不到。
+● 換新手機或平板時，大人可以在設定用「備份紀錄」把紀錄搬過去（備份檔或備份碼，存在你自己選的地方，遊戲不會上傳）。
 ● 最多 4 位孩子，各有自己的紀錄。設定裡可以選要練哪幾個乘法表（1 到 12）。
 ● 要連到外部網頁之前，需要大人回答一題。
 ● 介面有繁體中文、English、日本語。
@@ -57,7 +58,7 @@
 | 關鍵字（Apple Keywords） | 96／100 | multiplication,times table,math,kids,practice,grade 2,grade 3,learn,facts,school,education,drill |
 | 新功能（What's New） | 69／4000 | First release: five games, star map, daily quests and a pet to raise. |
 
-**完整說明**（1784／4000）
+**完整說明**（1974／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
@@ -78,6 +79,7 @@ THE MORE THEY PLAY, THE BETTER THEY KNOW IT
 FOR PARENTS
 ● No ads, no in-app purchases, no sign-in, and no personal data collected.
 ● Works fully offline. Progress is saved only on this device, and we can't see it.
+● Getting a new phone or tablet? A grown-up can use "Back up records" in Settings to move progress over with a backup file or code. You keep it wherever you like; the game never uploads it.
 ● Up to 4 kids, each with their own progress. In Settings you can pick which times tables to practice (1 to 12).
 ● A grown-up has to answer a question before any link opens outside the game.
 ● Available in English, Traditional Chinese and Japanese.
@@ -96,7 +98,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 | 關鍵字（Apple Keywords） | 40／100 | 九九,かけ算,算数,小学生,2年生,3年生,練習,暗記,ゲーム,学習,知育,計算 |
 | 新功能（What's New） | 37／4000 | はじめてのリリース：5つの遊び、星マップ、デイリーミッション、ペット育成。 |
 
-**完整說明**（880／4000）
+**完整說明**（972／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
@@ -117,6 +119,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 【保護者の方へ】
 ● 広告なし、アプリ内課金なし、ログイン不要。個人情報は一切集めません。
 ● 完全オフラインで遊べます。記録はこの端末の中にだけ保存され、私たちには見えません。
+● 機種変更のときは、大人の方が設定の「きろくのバックアップ」から記録を移せます（バックアップファイルまたはコード。保存先はご自身で選び、ゲームがアップロードすることはありません）。
 ● 最大4人まで、それぞれの記録を保存できます。設定で練習する段（1〜12）を選べます。
 ● ゲームの外のページを開く前に、大人の方が問題に答える必要があります。
 ● 画面は日本語・繁体字中国語・英語に対応しています。
@@ -177,6 +180,3 @@ No login is needed. To see the pet and star map screens quickly, tap "Star Map" 
 - Google 的規格我查不到官方頁（網路被擋），數字來自搜尋結果與既有知識（手機截圖 2–8 張、短邊 ≥ 320、長邊 ≤ 3840 且比例不超過 2:1；主圖 1024×500；圖示 512×512 → 用 `assets/icon/icon-512.png`），**請在 Play Console 上傳時確認**。
 - 截圖是遊戲原圖，沒有裝置外框與行銷標語。需要的話再另外設計。
 
-## 五、已知小問題（截圖時發現，不影響上架）
-
-- 寵物頁：戴圍巾時，圍巾尾巴會蓋住寵物的名字（截圖改戴領結避開）。可另開 issue 調整配件位置。

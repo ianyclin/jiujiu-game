@@ -85,9 +85,6 @@ No login is needed. To see the pet and star map screens quickly, tap "Star Map" 
 - Google 的規格我查不到官方頁（網路被擋），數字來自搜尋結果與既有知識（手機截圖 2–8 張、短邊 ≥ 320、長邊 ≤ 3840 且比例不超過 2:1；主圖 1024×500；圖示 512×512 → 用 `assets/icon/icon-512.png`），**請在 Play Console 上傳時確認**。
 - 截圖是遊戲原圖，沒有裝置外框與行銷標語。需要的話再另外設計。
 
-## 五、已知小問題（截圖時發現，不影響上架）
-
-- 寵物頁：戴圍巾時，圍巾尾巴會蓋住寵物的名字（截圖改戴領結避開）。可另開 issue 調整配件位置。
 ''')
 open(os.path.join(root, 'docs', 'store-listing.md'), 'w', encoding='utf-8').write('\n'.join(o))
 print('ok')
