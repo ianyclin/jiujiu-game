@@ -176,7 +176,8 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .xbtn{align-self:flex-end;margin:-6px -6px -44px 0;z-index:2;font-size:18px;font-weight:900;color:var(--muted)}
 .help h3{text-align:center;margin-bottom:4px}
 .card .hhead{position:sticky;top:-22px;z-index:2;margin:-22px -20px 0;padding:16px 20px 8px;background:#152a45;border-bottom:1px solid var(--line)}
-.card .hhead h3{margin:0}
+.card .hhead h3{margin:0;padding:0 40px;text-wrap:balance}
+.set-h{margin:4px 0 -6px;font-size:16px;color:var(--sun);text-align:left}
 .card .hhead .xbtn{position:absolute;top:10px;right:12px;margin:0}
 .brand-t{color:var(--sun);text-shadow:0 2px 0 #a87a00}
 .help h4{margin:8px 0 0;font-size:15px;color:var(--sun);letter-spacing:.08em}
@@ -769,7 +770,6 @@ html,body{overscroll-behavior:none}
       <div class="wlist" id="w-list"></div>
       <div class="btn-col">
         <button class="danger" type="button" id="w-clear" data-t="w.clearAll"></button>
-        <button class="btn alt" type="button" id="w-close" data-t="close"></button>
       </div>
     </div>
   </div>
@@ -787,16 +787,15 @@ html,body{overscroll-behavior:none}
 
   <div class="overlay" id="o-quest" hidden>
     <div class="card">
-      <h3 data-t="menu.quest"></h3>
+      <div class="hhead"><h3 data-t="menu.quest"></h3><button class="icon-btn xbtn" type="button" id="q-close" data-ta="close">✕</button></div>
       <div class="q-head"><span id="q-meta"></span></div>
       <div class="q-list" id="q-list"></div>
-      <div class="btn-col"><button class="btn alt" type="button" id="q-close" data-t="close"></button></div>
     </div>
   </div>
 
   <div class="overlay" id="o-who" hidden>
     <div class="card">
-      <h3 data-t="who.title"></h3>
+      <div class="hhead"><h3 data-t="who.title"></h3><button class="icon-btn xbtn" type="button" id="who-close" data-ta="close">✕</button></div>
       <p data-t="who.p"></p>
       <div class="who-list" id="who-list"></div>
       <small class="who-hint" id="who-hint"></small>
@@ -805,8 +804,6 @@ html,body{overscroll-behavior:none}
       <div class="btn-col">
         <button class="btn" type="button" id="who-add" data-t="who.add"></button>
         <button class="btn alt" type="button" id="who-rename" data-t="who.rename"></button>
-        <button class="link-btn danger" type="button" id="who-del"></button>
-        <button class="btn alt" type="button" id="who-close" data-t="close"></button>
       </div>
     </div>
   </div>
@@ -838,20 +835,20 @@ html,body{overscroll-behavior:none}
 
   <div class="overlay" id="o-alum" hidden>
     <div class="card">
+      <button class="icon-btn xbtn" type="button" id="alum-close" data-ta="close">✕</button>
       <div class="name-egg big" id="alum-pet"></div>
       <h3 id="alum-name"></h3>
       <p id="alum-sub"></p>
       <p id="alum-note" style="color:var(--ice)"></p>
       <div class="btn-col">
         <button class="btn" type="button" id="alum-go"></button>
-        <button class="btn alt" type="button" id="alum-close" data-t="close"></button>
       </div>
     </div>
   </div>
 
   <div class="overlay" id="o-about" hidden>
     <div class="card help">
-      <h3 data-th="about.title"></h3>
+      <div class="hhead"><h3 data-th="about.title"></h3><button class="icon-btn xbtn" type="button" id="about-close" data-ta="close">✕</button></div>
       <h4 data-t="about.what"></h4>
       <ul class="rules" data-th="about.whatL"></ul>
       <h4 data-t="about.parents"></h4>
@@ -863,7 +860,6 @@ html,body{overscroll-behavior:none}
         <li data-t="about.credits"></li>
         <li><span data-t="about.ver"></span><span id="about-env" style="color:var(--muted)"></span></li>
       </ul>
-      <div class="btn-col"><button class="btn alt" type="button" id="about-close" data-t="close"></button></div>
     </div>
   </div>
 
@@ -893,13 +889,12 @@ html,body{overscroll-behavior:none}
       <button class="btn alt" type="button" id="bk-paste" data-t="bk.pasteGo"></button>
       <div class="bk-msg" id="bk-msg" role="status"></div>
       <div class="btn-col" id="bk-confirm" hidden><button class="danger" type="button" id="bk-yes" data-t="bk.yes"></button><button class="btn alt" type="button" id="bk-no" data-t="cancel"></button></div>
-      <button class="btn alt" type="button" id="bk-close" data-t="close"></button>
     </div>
   </div>
 
   <div class="overlay" id="o-set" hidden>
     <div class="card">
-      <h3 id="set-title"></h3>
+      <div class="hhead"><h3 id="set-title"></h3><button class="icon-btn xbtn" type="button" id="set-close" data-ta="close">✕</button></div>
       <div class="setlist">
         <div class="setrow tables"><div><b data-t="set.lang"></b></div><div class="langs" id="set-lang" role="group" data-ta="set.lang"></div></div>
         <div class="setrow"><div><b data-t="set.music"></b><small data-t="set.musicD"></small></div><button class="sw" data-set="music" type="button" aria-pressed="true" data-ta="set.music"><i></i></button></div>
@@ -907,9 +902,13 @@ html,body{overscroll-behavior:none}
         <div class="setrow"><div><b data-t="set.mix"></b><small data-t="set.mixD"></small></div><button class="sw" data-set="mix" type="button" aria-pressed="false" data-ta="set.mix"><i></i></button></div>
         <div class="setrow tables"><div><b data-t="set.tables"></b><small id="set-t-d"></small></div><div class="tgrid" id="set-tables" role="group" data-ta="set.tables"></div></div>
         <div class="setrow"><div><b data-t="set.seq"></b><small data-t="set.seqD"></small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" data-ta="set.seq"><i></i></button></div>
-        <div class="setrow"><div><b data-t="set.backup"></b><small data-t="set.backupD"></small></div><button class="link-btn" type="button" id="go-backup" data-t="set.backupGo"></button></div>
       </div>
-      <div class="btn-col"><button class="btn alt" type="button" id="go-about" data-th="about.title"></button><button class="btn alt" type="button" id="set-close" data-t="close"></button></div>
+      <h4 class="set-h" data-t="set.parents"></h4>
+      <div class="setlist">
+        <div class="setrow"><div><b data-t="set.backup"></b><small data-t="set.backupD"></small></div><button class="link-btn" type="button" id="go-backup" data-t="set.backupGo"></button></div>
+        <div class="setrow" id="set-delrow"><div><b data-t="set.del"></b><small id="set-delD"></small></div><button class="link-btn danger" type="button" id="set-del" data-t="set.delGo"></button></div>
+      </div>
+      <div class="btn-col"><button class="btn alt" type="button" id="go-about" data-th="about.title"></button></div>
       <p class="legal">© 2026 <a href="#" id="legal-fb" data-t="author"></a><span data-t="legal.id"></span><span style="white-space:nowrap" data-t="legal.rights"></span></p>
       <p class="legal"><a href="#" class="legal-priv" data-t="privacy"></a></p>
     </div>
@@ -946,7 +945,6 @@ html,body{overscroll-behavior:none}
       <ul class="rules" data-th="help.who"></ul>
       <h4 data-t="set.tables"></h4>
       <ul class="rules" data-th="help.tables"></ul>
-      <div class="btn-col"><button class="btn alt" type="button" id="h-close" data-t="close"></button></div>
     </div>
   </div>
 
@@ -1078,7 +1076,7 @@ const STR = {
     // 誰在玩
     'who.switch': '換人', 'who.title': '誰在玩？', 'who.p': '每個人有自己的星圖、紀錄和寵物。', 'who.ph': '名字（6 個字內）', 'who.inAria': '名字',
     'who.sug': ['哥哥', '姊姊', '弟弟', '妹妹'], 'who.add': '新增一個人', 'who.rename': '幫目前的人改名', 'who.renameFirst': '我就叫這個名字',
-    'who.del': '清掉「{name}」的紀錄（要請大人）', 'who.noName': '沒有名字', 'who.tap': '點我取名字', 'who.me': '現在是你', 'who.mine': '換我',
+    'who.noName': '沒有名字', 'who.tap': '點我取名字', 'who.me': '現在是你', 'who.mine': '換我',
     'who.hintFirst': '先打你的名字，再按「我就叫這個名字」。', 'who.full': '最多 4 個人。', 'who.fullT': '最多 4 個人', 'who.fullRename': '最多 4 個人，改名請按下面的按鈕',
     'who.turn': '{name}，換你玩！', 'who.need': '先打名字', 'who.taken': '已經有這個名字了', 'who.welcome': '{name}，歡迎加入！', 'who.hi': '{name}，你好！',
     'who.cleared': '{name}的紀錄清掉了', 'who.delWhy': '要刪除「{name}」的所有紀錄，請大人先回答這一題。',
@@ -1113,8 +1111,8 @@ const STR = {
     'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、圍巾、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'help.quest': '<li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li><li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>',
     'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li><li>換新的平板或手機時，請大人在「設定」用<b>備份紀錄</b>把紀錄搬過去。</li>',
-    'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（要請大人）', 'set.backupGo': '打開',
-    'bk.why': '要備份或匯入紀錄，請大人先回答這一題。', 'bk.title': '備份紀錄',
+    'set.parents': '家長區', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄（要請大人）', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（匯入要請大人）', 'set.backupGo': '打開',
+    'bk.why': '匯入會取代這台裝置上所有人的紀錄，請大人先回答這一題。', 'bk.title': '備份紀錄',
     'bk.p': '備份包含這台裝置上所有人的星圖、紀錄、寵物和設定。網頁版和 App 版的紀錄是分開存的，要靠備份搬過去；也可以存起來以防萬一。',
     'bk.exportT': '匯出', 'bk.file': '存成備份檔', 'bk.copy': '複製備份碼', 'bk.saved': '備份檔已經產生。',
     'bk.copied': '備份碼已經複製，可以貼到備忘錄或傳給自己保存。', 'bk.copyManual': '請長按下面的備份碼，全選後複製。',
@@ -1212,7 +1210,7 @@ const STR = {
     'q.all': 'All of today\'s missions done! Badge +1', 'q.allStreak': 'All of today\'s missions done! Badge +1, {s} days in a row',
     'who.switch': 'Switch player', 'who.title': 'Who\'s playing?', 'who.p': 'Everyone gets their own star map, records and pet.', 'who.ph': 'Name (max 10)', 'who.inAria': 'Name',
     'who.sug': ['Big Bro', 'Big Sis', 'Little Bro', 'Little Sis'], 'who.add': 'Add a player', 'who.rename': 'Rename this player', 'who.renameFirst': 'That\'s my name',
-    'who.del': 'Erase {name}\'s records (ask a grown-up)', 'who.noName': 'No name', 'who.tap': 'Tap to add your name', 'who.me': 'That\'s you', 'who.mine': 'My turn',
+    'who.noName': 'No name', 'who.tap': 'Tap to add your name', 'who.me': 'That\'s you', 'who.mine': 'My turn',
     'who.hintFirst': 'Type your name, then tap "That\'s my name".', 'who.full': 'Up to 4 players.', 'who.fullT': 'Up to 4 players', 'who.fullRename': 'Up to 4 players. To rename, use the button below',
     'who.turn': '{name}, it\'s your turn!', 'who.need': 'Type a name first', 'who.taken': 'That name is taken', 'who.welcome': 'Welcome, {name}!', 'who.hi': 'Hi, {name}!',
     'who.cleared': '{name}\'s records are erased', 'who.delWhy': 'This deletes all of {name}\'s records. A grown-up needs to answer this first.',
@@ -1244,8 +1242,8 @@ const STR = {
     'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, scarf, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>Tap a pet that went home to visit it, or <b>bring it back</b>. Your current pet goes home to rest and keeps its progress, so you can swap back anytime.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
     'help.quest': '<li>There are <b>3 small missions</b> every day. They check off by themselves. Finish all three for a <b>badge</b>.</li><li>Finish several days in a row and you\'ll see your streak. New missions come tomorrow.</li>',
     'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li><li>Getting a new tablet or phone? A grown-up can move your records with <b>Back up records</b> in Settings.</li>',
-    'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (ask a grown-up)', 'set.backupGo': 'Open',
-    'bk.why': 'To back up or restore records, a grown-up needs to answer this first.', 'bk.title': 'Back up records',
+    'set.parents': 'For grown-ups', 'set.del': 'Delete player', 'set.delD': 'Delete {name} and all of their records (ask a grown-up)', 'set.delGo': 'Delete', 'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (importing needs a grown-up)', 'set.backupGo': 'Open',
+    'bk.why': 'Importing replaces every player\'s records on this device. A grown-up needs to answer this first.', 'bk.title': 'Back up records',
     'bk.p': 'A backup holds every player\'s star map, records, pet and settings on this device. The website and the app keep separate records, so use a backup to move them. You can also keep one just in case.',
     'bk.exportT': 'Export', 'bk.file': 'Save backup file', 'bk.copy': 'Copy backup code', 'bk.saved': 'Backup file created.',
     'bk.copied': 'Backup code copied. Paste it into Notes or send it to yourself to keep it.', 'bk.copyManual': 'Press and hold the code below, select all, then copy.',
@@ -1342,7 +1340,7 @@ const STR = {
     'q.all': '今日のミッションぜんぶクリア！バッジ +1', 'q.allStreak': '今日のミッションぜんぶクリア！バッジ +1、{s}日れんぞく',
     'who.switch': '人をかえる', 'who.title': 'だれがあそぶ？', 'who.p': 'ひとりひとりに、星マップ・記ろく・ペットがあるよ。', 'who.ph': '名前（6文字まで）', 'who.inAria': '名前',
     'who.sug': ['おにいちゃん', 'おねえちゃん', 'おとうと', 'いもうと'], 'who.add': '人をふやす', 'who.rename': 'いまの人の名前をかえる', 'who.renameFirst': 'この名前にする',
-    'who.del': '「{name}」の記ろくをけす（大人の人にきいてね）', 'who.noName': '名前なし', 'who.tap': 'タップして名前をつけよう', 'who.me': 'いまはきみ', 'who.mine': 'こうたい',
+    'who.noName': '名前なし', 'who.tap': 'タップして名前をつけよう', 'who.me': 'いまはきみ', 'who.mine': 'こうたい',
     'who.hintFirst': '名前を打って、「この名前にする」をおしてね。', 'who.full': '4人まで。', 'who.fullT': '4人までだよ', 'who.fullRename': '4人までだよ。名前をかえるときは下のボタン',
     'who.turn': '{name}、きみの番だよ！', 'who.need': '先に名前を打ってね', 'who.taken': 'その名前はもうあるよ', 'who.welcome': '{name}、ようこそ！', 'who.hi': '{name}、こんにちは！',
     'who.cleared': '{name}の記ろくをけしたよ', 'who.delWhy': '「{name}」の記録をすべて消去します。大人の方がこの問題に答えてください。',
@@ -1374,8 +1372,8 @@ const STR = {
     'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおそう。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、マフラー、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
     'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
     'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li><li>新しいタブレットやスマホにかえるときは、大人の人に「せってい」の<b>きろくのバックアップ</b>でうつしてもらおう。</li>',
-    'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（大人の人にきいてね）', 'set.backupGo': 'ひらく',
-    'bk.why': '記録のバックアップ・読み込みをするには、大人の方がこの問題に答えてください。', 'bk.title': '記録のバックアップ',
+    'set.parents': 'おうちの人むけ', 'set.del': 'プレイヤーをけす', 'set.delD': '「{name}」の名前と記ろくをぜんぶけす（大人の人にきいてね）', 'set.delGo': 'けす', 'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（読みこみは大人の人にきいてね）', 'set.backupGo': 'ひらく',
+    'bk.why': '読み込むと、この端末の全員の記録が置き換わります。大人の方がこの問題に答えてください。', 'bk.title': '記録のバックアップ',
     'bk.p': 'この端末にいる全員の星マップ・記録・ペット・設定をまとめて保存します。Web版とアプリ版の記録は別々に保存されるため、移すときはバックアップを使ってください。念のための保存にも使えます。',
     'bk.exportT': '書き出し', 'bk.file': 'バックアップファイルを保存', 'bk.copy': 'バックアップコードをコピー', 'bk.saved': 'バックアップファイルを作成しました。',
     'bk.copied': 'コードをコピーしました。メモアプリなどに貼り付けて保存してください。', 'bk.copyManual': '下のコードを長押しして、すべて選択してからコピーしてください。',
@@ -3195,9 +3193,8 @@ function renderWho() {
   $('#who-rename').textContent = tx(noName ? 'who.renameFirst' : 'who.rename');
   $('#who-rename').className = noName ? 'btn' : 'btn alt';
   $('#who-hint').textContent = noName ? tx('who.hintFirst') : (WHO.list.length >= WHO_MAX ? tx('who.full') : '');
-  $('#who-del').textContent = tx('who.del', { name: cur.name });
   $('#who-sug').innerHTML = tx('who.sug').map(n => `<button type="button" data-n="${n}">${n}</button>`).join('');
-  $('#who-del').hidden = noName; $('#who-list').hidden = noName && WHO.list.length === 1;   // 還沒取名：不要給紅色按鈕、名單也沒意義
+  $('#who-list').hidden = noName && WHO.list.length === 1;   // 還沒取名：不要給紅色按鈕、名單也沒意義
 }
 function switchWho(id) {
   if (mode !== 'menu' || !WHO.list.some(x => x.id === id)) return;
@@ -3231,14 +3228,14 @@ $('#who-rename').addEventListener('click', () => {
   whoCur().name = name; saveWho(); renderWho(); refreshMenu(); $('#who-in').value = ''; $('#who-in').blur(); SFX.ding(); toast(tx('who.hi', { name }));
   if (first) $('#o-who').hidden = true;   // 第一次取名完就關掉，直接去玩
 });
-$('#who-del').addEventListener('click', () => {
+$('#set-del').addEventListener('click', () => {   // 設定 → 家長區：刪除目前的玩家（原本在「誰在玩」，太顯眼、容易試按）
   const me = whoCur();
   openGate(() => {
     try { localStorage.removeItem(keyFor(me.id)); } catch (e) {}
     WHO.list = WHO.list.filter(x => x.id !== me.id);
     if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
     const next = WHO.list[0].id; WHO.cur = next; saveWho(); KEY = keyFor(next); loadDB(); setLang(); rebuildPool(); ensureDaily(); refreshMenu(); renderWho(); DB.set.music ? musStart() : musStop();
-    toast(tx('who.cleared', { name: whoLabel(me) }));
+    $('#o-set').hidden = true; toast(tx('who.cleared', { name: whoLabel(me) }));
   }, tx('who.delWhy', { name: whoLabel(me) }));
 });
 $('#who-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!whoCur().name) $('#who-rename').click(); else if (WHO.list.length < WHO_MAX) $('#who-add').click(); else toast(tx('who.fullRename')); } e.stopPropagation(); });
@@ -3292,7 +3289,6 @@ $('#w-clear').addEventListener('click', () => {
   if (Date.now() - wArm < 3000) { Object.keys(DB.facts).forEach(clearFact); save(); openWrong(); refreshMenu(); }
   else { wArm = Date.now(); $('#w-clear').textContent = tx('w.arm'); setTimeout(() => { if (Date.now() - wArm >= 2900) $('#w-clear').textContent = tx('w.clearAll'); }, 3000); }
 });
-$('#w-close').addEventListener('click', () => { $('#o-wrong').hidden = true; });
 $('#w-close2').addEventListener('click', () => { $('#o-wrong').hidden = true; });
 $('#go-wrong').addEventListener('click', openWrong);
 
@@ -3326,7 +3322,6 @@ function pickMode() {
   $('#o-mode').hidden = false;
 }
 $$('[data-sd]').forEach(b => b.addEventListener('click', () => { DB.set.sudden = b.dataset.sd === '1'; save(); $('#o-mode').hidden = true; startMeteor(); }));
-$('#h-close').addEventListener('click', () => { $('#o-help').hidden = true; });
 $('#h-close2').addEventListener('click', () => { $('#o-help').hidden = true; });
 
 /* ================= 共用：結果、倒數、導覽 ================= */
@@ -3385,7 +3380,8 @@ function refreshMenu() {
   renderTables(); renderLangs();
   $('#brand-note').textContent = isStdRange() ? tx('brand.note') : rangeText('note');
   $('#brand-note').classList.toggle('on', !isStdRange());
-  $('#set-title').textContent = whoCur().name ? tx('set.titleWho', { name: whoCur().name }) : tx('set.title');   // 連續幫幾個孩子設定時知道現在是誰的
+  $('#set-title').textContent = whoCur().name ? tx('set.titleWho', { name: whoCur().name }) : tx('set.title');
+  $('#set-delrow').hidden = !whoCur().name; $('#set-delD').textContent = tx('set.delD', { name: whoCur().name });   // 還沒取名的人沒有可刪的   // 連續幫幾個孩子設定時知道現在是誰的
   const mp = $('#menu-pet'), hasPet = !!(DB.pet.kind && PET_KINDS[DB.pet.kind]);
   mp.hidden = !hasPet; if (hasPet) { const html = petSVG(DB.pet.kind, petStage(DB.pet.fed), wearObj()); if (mp._html !== html) { $('#menu-pet-img').innerHTML = html; mp._html = html; } }   // 主選單走來走去的寵物
   renderQuests(); renderWho(); placeMenuPet();   // 走道在 renderWho 之後算（鈕寬跟著名字變）
@@ -3458,7 +3454,7 @@ document.addEventListener('click', e => { if (e.target.closest && e.target.close
 const PRIVACY_URL = { 'zh-Hant': 'https://ianyclin.github.io/jiujiu-game/privacy/', en: 'https://ianyclin.github.io/jiujiu-game/privacy/en.html', ja: 'https://ianyclin.github.io/jiujiu-game/privacy/ja.html' };
 document.addEventListener('click', e => { if (e.target.closest && e.target.closest('.legal-priv, .about-priv')) { e.preventDefault(); openGate(PRIVACY_URL[LANG] || PRIVACY_URL.en); } });   // 委派：applyStr() 重填 innerHTML 之後連結也要走家長關卡
 $('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; $('#about-env').textContent = tx('about.env', { w: innerWidth, h: innerHeight, cw: W, ch: H, d: (window.devicePixelRatio || 1).toFixed(1) }); });   // 回報問題時好判斷是哪種裝置、畫布有沒有量錯
-$('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; });
+$('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; refreshMenu(); $('#o-set').hidden = false; });   // 從設定打開的，關掉回到設定
 $('#gate-close').addEventListener('click', () => { gate = null; $('#o-gate').hidden = true; });
 
 /* ================= 備份紀錄（匯出／匯入） ================= */
@@ -3523,19 +3519,23 @@ function bkApply(b) {
   try { sessionStorage.setItem(BK_DONE, '1'); } catch (e) {}
   location.reload(); return true;
 }
-$('#go-backup').addEventListener('click', () => openGate(openBackup, tx('bk.why')));
+$('#go-backup').addEventListener('click', openBackup);   // 匯出不用家長關卡（不會改到紀錄）；匯入會取代所有人的紀錄，按「確定匯入」時才要
 $('#bk-file').addEventListener('click', bkFile);
 $('#bk-copy').addEventListener('click', bkCopy);
 $('#bk-pick').addEventListener('click', () => { $('#bk-in-file').value = ''; $('#bk-in-file').click(); });
 $('#bk-in-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (!f) return; if (f.size > 4e6) { bkMsg(tx('bk.bad'), true); return; } const r = new FileReader(); r.onload = () => bkCheck(r.result); r.onerror = () => bkMsg(tx('bk.bad'), true); r.readAsText(f); });
 $('#bk-paste').addEventListener('click', () => bkCheck($('#bk-in').value));
-$('#bk-yes').addEventListener('click', () => { if (bkPending && !bkApply(bkPending)) bkMsg(tx('bk.fail'), true); });
+$('#bk-yes').addEventListener('click', () => { const b = bkPending; if (!b) return; openGate(() => { if (!bkApply(b)) bkMsg(tx('bk.fail'), true); }, tx('bk.why')); });
 $('#bk-no').addEventListener('click', () => { bkPending = null; $('#bk-confirm').hidden = true; bkMsg(''); });
-['#bk-close', '#bk-close2'].forEach(s => $(s).addEventListener('click', () => { $('#o-backup').hidden = true; }));
+$('#bk-close2').addEventListener('click', () => { $('#o-backup').hidden = true; refreshMenu(); $('#o-set').hidden = false; });   // 從設定打開的，關掉回到設定
 try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE); setTimeout(() => toast(tx('bk.done')), 400); } } catch (e) {}
 
 addEventListener('keydown', e => {
   if (e.repeat || (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName))) return;
+  if (e.key === 'Escape' && $('#o-gate').hidden) {   // 有右上 ✕ 的卡片：Esc 等於按 ✕（最上面那張）
+    const o = $$('.overlay').filter(x => !x.hidden && x.offsetParent && x.querySelector(':scope > .card .xbtn')).pop();
+    if (o) { o.querySelector('.xbtn').click(); e.preventDefault(); return; }
+  }
   let d = null;
   if (/^[0-9]$/.test(e.key)) d = e.key;
   else if (e.key === 'Backspace') d = 'back';
