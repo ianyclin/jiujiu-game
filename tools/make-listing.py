@@ -41,21 +41,21 @@ w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己�
 |---|---|
 | Apple 主要類別／次要類別 | 教育（Education）／遊戲（Games → Educational） |
 | Apple Kids 類別 | 勾選，年齡層 **6–8 ＋ 9–11**（不勾 5 歲以下） |
-| Apple 年齡分級問卷 | 全部「無」（無暴力、無使用者產生內容、無動態消息、無不受限網頁存取、無賭博、無購買）→ 預期 4+ |
+| Apple 年齡分級問卷 | 照實填：暴力、使用者產生內容、動態消息、不受限網頁存取、賭博都「無」；問到 App 內購買就照實回答「有」（一次性解鎖）→ 預期 4+ |
 | Google 類別 | 教育（Education）；Families：目標年齡 6–8、9–12 |
 | Google 內容分級（IARC） | 全部「否」；預期全年齡 |
-| 價格 | 免費、無內購、無廣告（Play Console「包含廣告」選「否」） |
+| 價格 | App 本身**免費**＋一個**非消耗型**內購 `unlock_all`（建議 US$2.99，解鎖幽靈競速、雙人拔河、哪個大、炸彈拆除）；無廣告（Play Console「包含廣告」選「否」）。Apple 要在商品設定打開「家人共享」 |
 | 版權欄（Apple Copyright） | `© 2026 指數三寶飯` |
 
 ## 三、隱私問卷（照實填）
 
 | 商店欄位 | 填法 | 依據 |
 |---|---|---|
-| Apple App Privacy | **Data Not Collected**（不收集資料）；不追蹤 | 沒有 SDK、沒有網路請求；`PrivacyInfo.xcprivacy` 一致 |
+| Apple App Privacy | **Data Not Collected**（不收集資料）；不追蹤 | 遊戲本身沒有網路請求；購買走 StoreKit，Apple 的說明頁寫「You are not responsible for disclosing data collected by Apple」，付款資料在 app 外輸入、開發者拿不到也不算收集；`PrivacyInfo.xcprivacy` 一致 |
 | Apple Privacy Policy URL | `https://ianyclin.github.io/jiujiu-game/privacy/`（各語言版可填 `…/privacy/en.html`、`…/privacy/ja.html`） | merge 後要先在瀏覽器確認打得開 |
 | Apple Support URL | `https://ianyclin.github.io/jiujiu-game/support/`（三語支援頁，內含聯絡 email 與常見問題；在 #48 的分支） | merge 後先在瀏覽器確認打得開 |
 | 聯絡 email（Apple／Google 開發者資料） | `gigigagagogogege@gmail.com` | 會公開顯示 |
-| Google Data safety | 「此應用程式不會收集或分享任何使用者資料」。因為沒有收集，傳輸加密與刪除要求兩欄不適用 | Android 已拿掉 `INTERNET` 權限 |
+| Google Data safety | 預計填「此應用程式不會收集或分享任何使用者資料」，**但上架前要在 Play Console 的說明再確認一次**：Google 付款程式庫（billing 9.1.0）會帶進 Google 自己的記錄元件（`datatransport`，也是 `INTERNET`／`ACCESS_NETWORK_STATE` 權限的來源），Google 的說明把付款程式庫列為「財務資訊」的例子，但沒有講清楚只用它解鎖、不存購買紀錄的 app 要不要申報；查不到官方答案就問 Play 支援 | 遊戲程式本身不連網；我們沒有伺服器、收不到購買紀錄 |
 | Google 廣告 ID 宣告 | 不使用 | — |
 | 「備份紀錄」功能 | 不改變上面的答案：備份檔／備份碼由大人自己存放，遊戲不上傳、我們收不到，所以仍是「不收集」 | 隱私權政策已寫明 |
 | Google「目標對象與內容」 | 勾選兒童年齡層；回答「含有廣告：否」 | — |
@@ -64,8 +64,9 @@ w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己�
 **App Review Notes 建議內容（英文）**：
 
 ```text
-9×9 Meteor Squad is an offline times-tables practice game for children. It has no accounts, no ads, no in-app purchases, no third-party SDKs and makes no network requests. All progress is stored on the device only.
-The only links that leave the app are the author's Facebook page and the privacy policy. Both are behind a parental gate (a grown-up must answer a math question first), as required for the Kids Category.
+9×9 Meteor Squad is an offline times-tables practice game for children. It has no accounts, no ads, no analytics or advertising SDKs, and the game itself makes no network requests. All progress is stored on the device only.
+In-app purchase: Meteor Defense, the Star Map, the pet and daily missions are free. The other four games (Ghost Race, Tug of War, Biggest? Smallest?, Bomb Squad) can each be played once for free; after that, tapping one shows a card asking the child to get a grown-up. One non-consumable purchase (unlock_all) unlocks all four. The purchase screen, Restore Purchase and promo code redemption are only reachable after a parental gate (a math question), either from that card or from Settings > For grown-ups > Unlock all games.
+The only links that leave the app are the author's Facebook page and the privacy policy. Both are behind the same parental gate, as required for the Kids Category.
 No login is needed. To see the pet and star map screens quickly, tap "Star Map" or "Pet" on the main menu.
 ```
 

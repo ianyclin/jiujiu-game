@@ -3,7 +3,7 @@
 遊戲本體仍是單檔 `index.html` + `assets/`，**原封不動**包進 app。`tools/make-www.mjs` 把它們複製到 `www/`（產物、不進版控；只少放一個商店用的 `icon-1024.png`），`cap sync` 再複製進 `ios/`、`android/`。網頁版（GitHub Pages）不受影響。
 
 - `appId`：`io.github.ianyclin.jiujiumeteor`（**請確認**：Google Play 的套件名稱上架後永遠不能改；Apple 的 Bundle ID 也很難改。若你有自己的網域，改成反向網域，一次要改 `capacitor.config.json`、`android/app/build.gradle` 的 `namespace`／`applicationId`、`android/.../MainActivity.java` 的 package 與路徑、`strings.xml`、`ios/App/App.xcodeproj/project.pbxproj` 的 `PRODUCT_BUNDLE_IDENTIFIER`）。
-- 外掛：**零**。只有 Capacitor 核心（`@capacitor/core`、`android`、`ios`）。沒有第三方 SDK，`NSPrivacyAccessedAPITypes` 為空。
+- 外掛：**一個**，`@capgo/native-purchases` 8.9.5（App 內購買；免費開源 MPL-2.0，iOS 用 StoreKit 2、Android 用 Google Play Billing 9.1.0）。讀過原始碼：外掛自己不連網、不加權限、iOS 沒用到 required-reason API，所以 `NSPrivacyAccessedAPITypes` 仍為空。遊戲沒有 bundler，直接用 Capacitor 橋接的 `Capacitor.nativePromise('NativePurchases', 方法, 參數)` 呼叫（兩個平台都有）。沒有廣告、分析等第三方 SDK。
 
 ## 指令
 
@@ -31,11 +31,11 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 | 方向 | **iPhone 只有直向**（`UISupportedInterfaceOrientations`）；**iPad 四個方向都支援**、不加 `UIRequiresFullScreen`：iPadOS 26 起這個鍵已過時、未來會被忽略，Apple 要求 iPad app 支援所有方向與可調整大小的視窗（TN3192）。遊戲本來就有 iPad 橫向版面（CLAUDE.md 的平板規則）。Android：`screenOrientation="portrait"`，但 Android 16（targetSdk 36）在平板、折疊機展開時會忽略，同樣靠遊戲本身的橫向版面。**實機請看**：iPad 台前調度把視窗縮得很小時，遊戲是否誤出「請把手機轉直」提示（`.rotate` 只在觸控裝置、橫向、高度 < 500px 出現） |
 | 深色 | iOS `UIUserInterfaceStyle = Dark`、Android 視窗底色夜空色；`SystemBars.style = DARK`（淺色圖示）。遊戲刻意只做夜空一種主題，手機設成亮色模式時狀態列也不會變成黑字黑底 |
 | 安全區 | 不改 `index.html`。iOS：`contentInset: never` → WKWebView 全螢幕，`viewport-fit=cover` 讓 `env(safe-area-inset-*)` 跟 Safari 加入主畫面一樣，`:root` 的 padding 處理一次。Android：Capacitor 8 的 SystemBars 預設 `insetsHandling: css`，舊 WebView（< 140）把 WebView 內縮、`env()` 回 0；新 WebView 照 `viewport-fit=cover` 滿版並給正確的 `env()`。兩種都不會讓遊戲被狀態列或手勢條蓋住，也不會算兩次（這是讀 Capacitor 原始碼與文件的結論，未在實機驗證） |
-| 權限 | iOS：無。Android：**拿掉 `INTERNET`**（遊戲離線，Data safety 寫「不收集」更乾淨）；沒有任何其他權限 |
+| 權限 | iOS：無。Android：`com.android.vending.BILLING`（購買）；`INTERNET`、`ACCESS_NETWORK_STATE` 是 Google 付款程式庫帶進來的（它的記錄元件 `com.google.android.datatransport`），遊戲本身不連網。不用 `tools:node="remove"` 拿掉：Google 的背景記錄沒有網路權限時可能在真機丟例外，這裡沒有實機測不到。CI 用白名單檢查，多出任何權限就失敗 |
 | 備份 | Android `allowBackup="false"`：孩子的紀錄不進 Google 備份，跟隱私權政策「只存本機」一致。iOS 的整機備份系統會帶走 app 資料，無法關，已寫進隱私權政策第 6 節 |
 | 出口合規 | `ITSAppUsesNonExemptEncryption = false` |
 | Privacy Manifest | `ios/App/App/PrivacyInfo.xcprivacy`：不追蹤、不收集、無 required-reason API |
-| 版本 | `MARKETING_VERSION` 1.2、`versionName` 1.2（與關於頁一致；改版時三處一起改：`index.html` 的 `about.ver` ×3 語言、pbxproj、`build.gradle`） |
+| 版本 | `MARKETING_VERSION` 1.3、`versionName` 1.3（與關於頁一致；改版時三處一起改：`index.html` 的 `about.ver` ×3 語言、pbxproj、`build.gradle`） |
 
 ## localStorage 在 App 裡的保存
 
@@ -64,7 +64,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 - **版本號**：`versionCode` 用 run 編號（`CI_VERSION_CODE`），越新越大；`versionName` 仍是 1.2。
 - **簽名固定**：`android/app/debug.keystore` 是進版控的**測試用** debug 金鑰（密碼 `android`）。每次建的 APK 簽名相同，手機上可以**直接覆蓋安裝，紀錄保留**。這把金鑰公開無妨，Google Play 不收 debug 簽署的檔案；上架用的 upload key 是另一把，絕不進版控。
   - 2026-10-14 之前我在對話裡傳的那個 APK 是用別的金鑰簽的，換成 CI 建的版本時要先解除安裝一次（**先用設定裡的「備份紀錄」備份**）。
-- **建置後自動檢查**：套件名稱、版本、沒有 `INTERNET` 權限、APK 裡的 `index.html` 與 repo 逐位元相同；任何一項不對就失敗。
+- **建置後自動檢查**：套件名稱、版本、權限白名單（BILLING、Google 付款程式庫的兩個網路權限、androidx 內部權限；多一個就失敗，少了 BILLING 也失敗）、APK 裡的 `index.html` 與 repo 逐位元相同；任何一項不對就失敗。
 - 這是 debug 版：只給自己和測試者安裝。上架用的 AAB 要用你的 upload key 簽，見下節。
 
 ## 簽署與上架
@@ -76,7 +76,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 
 **已驗證（2026-10-14，在 Linux 上實際建置）**
 - `gradle assembleDebug` 與 `gradle bundleRelease` 都成功：`app-debug.apk` 約 6.9 MB、`app-release.aab`（未簽署）約 5.8 MB。環境：JDK 21、Android SDK 36（platforms;android-36、build-tools;36.0.0）、Gradle 8.14.3。
-- 用 `aapt2` 檢查成品：套件 `io.github.ianyclin.jiujiumeteor`、versionName 1.2、minSdk 24、targetSdk 36；**沒有 `INTERNET` 權限**（唯一的權限是 androidx 自己定義、只給本 app 的內部權限，不是使用者要同意的）；`allowBackup=false`、`screenOrientation=portrait`；桌面名稱英文「9×9 Meteor」、`zh`／`zh-TW`／`zh-HK`／`ja` 都是「九九流星隊」；APK 內的 `assets/public/index.html` 與 repo 的 `index.html` 逐位元相同，20 張寵物圖都在。
+- 用 `aapt2` 檢查成品：套件 `io.github.ianyclin.jiujiumeteor`、versionName 1.2、minSdk 24、targetSdk 36；當時**沒有 `INTERNET` 權限**（1.3 加了購買後，Google 付款程式庫帶進 `INTERNET`／`ACCESS_NETWORK_STATE`，見上面「權限」）；`allowBackup=false`、`screenOrientation=portrait`；桌面名稱英文「9×9 Meteor」、`zh`／`zh-TW`／`zh-HK`／`ja` 都是「九九流星隊」；APK 內的 `assets/public/index.html` 與 repo 的 `index.html` 逐位元相同，20 張寵物圖都在。
 - 建置抓到並修掉兩個資源問題：`colors.xml` 註解裡的 `--`（XML 不允許），以及繁中地區（zh-TW、zh-HK）會落回英文名稱（加了 `values-zh-rTW`、`values-zh-rHK`）。
 
 **沒驗證到**
@@ -97,3 +97,12 @@ npm install && npm run sync && cd android && gradle assembleDebug --max-workers=
 ```
 
 Maven Central 偶爾回 429（瞬間請求太多），重跑即可。
+
+## App 內購買（1.3）
+
+- 商品：一個**非消耗型** `unlock_all`（程式裡的 `IAP_ID`），解鎖幽靈競速、雙人拔河、哪個大、炸彈拆除。網頁版（不是 Capacitor）全部解鎖，不受影響。
+- 判斷是不是 App：`Capacitor.isNativePlatform()`；`Capacitor.getPlatform()` 分 iOS／Android。
+- 開啟 app、回到前景（還沒解鎖時）都會 `getPurchases` 問商店：iOS 用 `onlyCurrentEntitlements`（目前帳號、含家人共享、不含已退款）；Android 只認 `purchaseState === "1"`，沒確認（acknowledge）的會補確認——在 Play 商店兌換的優惠碼也從這裡進來，**3 天內沒確認 Google 會自動退款**。
+- 退款不會自動鎖回去（怕商店一時查不到就鎖住付過錢的人）。
+- **沒驗證到的事**：沒有真的商店帳號與商品，購買、回復購買、優惠碼都只用假的 Capacitor 物件在瀏覽器測過流程（`getProducts`／`purchaseProduct`／`getPurchases`／`acknowledgePurchase`／`restorePurchases`／`presentOfferCodeRedeemSheet` 的參數與回傳照外掛 8.9.5 的型別定義）。上架前要在 TestFlight（沙盒）與 Play 授權測試帳號實際買一次、刪 app 重裝看會不會自己解鎖、Android 兌換一組促銷代碼。
+
