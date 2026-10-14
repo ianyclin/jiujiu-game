@@ -425,6 +425,11 @@ html,body{overscroll-behavior:none}
 .sw{width:64px;height:44px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex:none;padding:0;transition:background .15s,border-color .15s}
 .sw i{position:absolute;top:4px;left:4px;width:34px;height:34px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
 .setrow.tables{grid-template-columns:minmax(0,1fr);row-gap:8px}
+.bk-h{margin:6px 0 -6px;font-size:16px;color:var(--sun);text-align:left}
+.bk-code{width:100%;min-height:72px;font:12px/1.4 ui-monospace,Menlo,monospace;color:var(--paper);background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px;padding:8px 10px;resize:vertical;-webkit-user-select:text;user-select:text;word-break:break-all}
+.bk-code:focus{outline:2px solid var(--mint);border-color:var(--mint)}
+.bk-msg{min-height:1.3em;font-weight:700;color:var(--mint);font-size:14px;line-height:1.5}
+.bk-msg.bad{color:#ff9a9a}
 .tgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
 .tgrid button{aspect-ratio:1;min-height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font-family:var(--f-num);font-size:22px;cursor:pointer;padding:0;touch-action:manipulation;transition:background .15s,border-color .15s,color .15s}
 .tgrid button[aria-pressed="true"]{background:rgba(255,210,63,.16);border-color:var(--sun);color:var(--sun)}
@@ -871,6 +876,25 @@ html,body{overscroll-behavior:none}
     </div>
   </div>
 
+  <div class="overlay" id="o-backup" hidden>
+    <div class="card">
+      <div class="hhead"><h3 data-t="bk.title"></h3><button class="icon-btn xbtn" type="button" id="bk-close2" data-ta="close">✕</button></div>
+      <p data-t="bk.p"></p>
+      <h4 class="bk-h" data-t="bk.exportT"></h4>
+      <div class="btn-col"><button class="btn" type="button" id="bk-file" data-t="bk.file"></button><button class="btn alt" type="button" id="bk-copy" data-t="bk.copy"></button></div>
+      <textarea class="bk-code" id="bk-out" readonly hidden aria-label="code"></textarea>
+      <h4 class="bk-h" data-t="bk.importT"></h4>
+      <p data-t="bk.importP"></p>
+      <button class="btn alt" type="button" id="bk-pick" data-t="bk.pick"></button>
+      <input type="file" id="bk-in-file" accept=".json,.txt,application/json,text/plain" hidden>
+      <textarea class="bk-code" id="bk-in" data-tp="bk.pastePh" data-ta="bk.pastePh"></textarea>
+      <button class="btn alt" type="button" id="bk-paste" data-t="bk.pasteGo"></button>
+      <div class="bk-msg" id="bk-msg" role="status"></div>
+      <div class="btn-col" id="bk-confirm" hidden><button class="danger" type="button" id="bk-yes" data-t="bk.yes"></button><button class="btn alt" type="button" id="bk-no" data-t="cancel"></button></div>
+      <button class="btn alt" type="button" id="bk-close" data-t="close"></button>
+    </div>
+  </div>
+
   <div class="overlay" id="o-set" hidden>
     <div class="card">
       <h3 id="set-title"></h3>
@@ -881,6 +905,7 @@ html,body{overscroll-behavior:none}
         <div class="setrow"><div><b data-t="set.mix"></b><small data-t="set.mixD"></small></div><button class="sw" data-set="mix" type="button" aria-pressed="false" data-ta="set.mix"><i></i></button></div>
         <div class="setrow tables"><div><b data-t="set.tables"></b><small id="set-t-d"></small></div><div class="tgrid" id="set-tables" role="group" data-ta="set.tables"></div></div>
         <div class="setrow"><div><b data-t="set.seq"></b><small data-t="set.seqD"></small></div><button class="sw" data-set="seqLabel" type="button" aria-pressed="true" data-ta="set.seq"><i></i></button></div>
+        <div class="setrow"><div><b data-t="set.backup"></b><small data-t="set.backupD"></small></div><button class="link-btn" type="button" id="go-backup" data-t="set.backupGo"></button></div>
       </div>
       <div class="btn-col"><button class="btn alt" type="button" id="go-about" data-th="about.title"></button><button class="btn alt" type="button" id="set-close" data-t="close"></button></div>
       <p class="legal">© 2026 <a href="#" id="legal-fb" data-t="author"></a><span data-t="legal.id"></span><span style="white-space:nowrap" data-t="legal.rights"></span></p>
@@ -1083,7 +1108,15 @@ const STR = {
     'help.wrong': '<li>答錯過的題目都列在這裡，最常錯的排最前面。</li><li>練熟了它會自己消失；也可以按「清除」把那題的紀錄歸零。</li>',
     'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、圍巾、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'help.quest': '<li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li><li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>',
-    'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li>',
+    'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li><li>換新的平板或手機時，請大人在「設定」用<b>備份紀錄</b>把紀錄搬過去。</li>',
+    'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（要請大人）', 'set.backupGo': '打開',
+    'bk.why': '要備份或匯入紀錄，請大人先回答這一題。', 'bk.title': '備份紀錄',
+    'bk.p': '備份包含這台裝置上所有人的星圖、紀錄、寵物和設定。網頁版和 App 版的紀錄是分開存的，要靠備份搬過去；也可以存起來以防萬一。',
+    'bk.exportT': '匯出', 'bk.file': '存成備份檔', 'bk.copy': '複製備份碼', 'bk.saved': '備份檔已經產生。',
+    'bk.copied': '備份碼已經複製，可以貼到備忘錄或傳給自己保存。', 'bk.copyManual': '請長按下面的備份碼，全選後複製。',
+    'bk.importT': '匯入', 'bk.importP': '匯入會取代這台裝置上所有人的紀錄。', 'bk.pick': '選擇備份檔', 'bk.pastePh': '或把備份碼貼在這裡', 'bk.pasteGo': '用備份碼匯入',
+    'bk.bad': '看不懂這個備份。請確認是九九流星隊的備份檔或備份碼，而且有完整複製。',
+    'bk.found': '備份裡有 {n} 個人：{names}（{date} 備份）。匯入後，這台裝置原本的紀錄會被取代。', 'bk.yes': '確定匯入', 'bk.done': '匯入完成！', 'bk.fail': '匯入失敗，這台裝置的空間可能不夠。',
     'help.tables': '<li>在「設定」裡點數字，<b>亮的才會出</b>。平常 1 到 9 都亮，就是九九乘法。</li><li>還在學的時候，可以只留學過的，例如只亮 2 和 5。</li><li>想挑戰就把 10、11、12 也點亮，答案最大到 144。</li><li>所有遊戲和星圖都會跟著改。每一種乘法表的最快紀錄會<b>另外記一份</b>。</li>',
   },
   // 英文：給美國／國際學校的小二、小三。複數用函式；標點自己帶空白
@@ -1205,7 +1238,15 @@ const STR = {
     'help.wrong': '<li>Problems you got wrong are listed here, most missed first.</li><li>Once you know one, it disappears by itself. You can also tap "Clear" to reset it.</li>',
     'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, scarf, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>Tap a pet that went home to visit it, or <b>bring it back</b>. Your current pet goes home to rest and keeps its progress, so you can swap back anytime.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
     'help.quest': '<li>There are <b>3 small missions</b> every day. They check off by themselves. Finish all three for a <b>badge</b>.</li><li>Finish several days in a row and you\'ll see your streak. New missions come tomorrow.</li>',
-    'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li>',
+    'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li><li>Getting a new tablet or phone? A grown-up can move your records with <b>Back up records</b> in Settings.</li>',
+    'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (ask a grown-up)', 'set.backupGo': 'Open',
+    'bk.why': 'To back up or restore records, a grown-up needs to answer this first.', 'bk.title': 'Back up records',
+    'bk.p': 'A backup holds every player\'s star map, records, pet and settings on this device. The website and the app keep separate records, so use a backup to move them. You can also keep one just in case.',
+    'bk.exportT': 'Export', 'bk.file': 'Save backup file', 'bk.copy': 'Copy backup code', 'bk.saved': 'Backup file created.',
+    'bk.copied': 'Backup code copied. Paste it into Notes or send it to yourself to keep it.', 'bk.copyManual': 'Press and hold the code below, select all, then copy.',
+    'bk.importT': 'Import', 'bk.importP': 'Importing replaces every player\'s records on this device.', 'bk.pick': 'Choose backup file', 'bk.pastePh': 'Or paste a backup code here', 'bk.pasteGo': 'Import from code',
+    'bk.bad': 'This doesn\'t look like a 9×9 Meteor Squad backup. Check that it\'s the right file or that the whole code was copied.',
+    'bk.found': v => `Found ${v.n} player${v.n === 1 ? '' : 's'}: ${v.names} (backed up ${v.date}). Importing replaces the records on this device.`, 'bk.yes': 'Import', 'bk.done': 'Import complete!', 'bk.fail': 'Import failed. This device may be out of storage.',
     'help.tables': '<li>In Settings, tap the numbers. <b>Only lit tables are asked.</b> Normally 1 to 9 are lit: the classic times tables.</li><li>While you\'re still learning, keep just the ones you know, like only 2 and 5.</li><li>For a challenge, light up 10, 11 and 12 too. Answers go up to 144.</li><li>All the games and the Star Map follow along. Each set of tables keeps <b>its own best times</b>.</li>',
   },
   // 日本語：tools/make-fonts.py 靠「  ja: {」到下一個「  },」找這段，切 Zen Maru Gothic 的字。小学 3 年生向け。漢字は 3 年生までに習う字を中心に、むずかしい言葉はひらがな・カタカナ（おうちの方向けの文は普通の漢字）
@@ -1326,7 +1367,15 @@ const STR = {
     'help.wrong': '<li>まちがえた問題がここにならぶよ。いちばんまちがえた問題が上。</li><li>できるようになると、かってにきえるよ。「けす」をおしてリセットもできるよ。</li>',
     'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおそう。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、マフラー、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
     'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
-    'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li>',
+    'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li><li>新しいタブレットやスマホにかえるときは、大人の人に「せってい」の<b>きろくのバックアップ</b>でうつしてもらおう。</li>',
+    'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（大人の人にきいてね）', 'set.backupGo': 'ひらく',
+    'bk.why': '記録のバックアップ・読み込みをするには、大人の方がこの問題に答えてください。', 'bk.title': '記録のバックアップ',
+    'bk.p': 'この端末にいる全員の星マップ・記録・ペット・設定をまとめて保存します。Web版とアプリ版の記録は別々に保存されるため、移すときはバックアップを使ってください。念のための保存にも使えます。',
+    'bk.exportT': '書き出し', 'bk.file': 'バックアップファイルを保存', 'bk.copy': 'バックアップコードをコピー', 'bk.saved': 'バックアップファイルを作成しました。',
+    'bk.copied': 'コードをコピーしました。メモアプリなどに貼り付けて保存してください。', 'bk.copyManual': '下のコードを長押しして、すべて選択してからコピーしてください。',
+    'bk.importT': '読み込み', 'bk.importP': '読み込むと、この端末の全員の記録が置き換わります。', 'bk.pick': 'バックアップファイルを選ぶ', 'bk.pastePh': 'またはバックアップコードをここに貼り付け', 'bk.pasteGo': 'コードから読み込む',
+    'bk.bad': '九九流星隊のバックアップとして読み取れませんでした。正しいファイルか、コードを最後までコピーしたか確認してください。',
+    'bk.found': 'バックアップには {n} 人分の記録があります：{names}（{date} に保存）。読み込むと、この端末の記録は置き換わります。', 'bk.yes': '読み込む', 'bk.done': '読み込みが完了しました！', 'bk.fail': '読み込みに失敗しました。端末の空き容量が足りない可能性があります。',
     'help.tables': '<li>「せってい」で数字をタップ。<b>光っているだんだけ</b>出るよ。ふだんは1〜9がぜんぶ光っていて、ふつうの九九だよ。</li><li>まだ習っているとちゅうなら、習ったところだけのこそう。たとえば2と5だけ。</li><li>チャレンジしたいなら、10・11・12も光らせよう。答えは144まで。</li><li>すべてのゲームと星マップが、それに合わせてかわるよ。だんの組み合わせごとに、ベスト記ろくは<b>べつべつ</b>に記ろくされるよ。</li>',
   },
 };
@@ -1356,6 +1405,7 @@ function setLang() { LANG = LANGS.includes(DB.set.lang) ? DB.set.lang : langAuto
 /* ================= 存檔 ================= */
 // 多人：WHO = { cur, list:[{id, name}] } 存在 PKEY；每個人一把存檔 key（第一個人 id 是空字串，沿用舊 key，舊存檔自動變成第一個人）
 let KEY = 'jiujiu-meteor-v1';
+let bkFrozen = false;   // 備份匯入寫完、重新載入之前，記憶體裡的舊紀錄不能再寫回去（save／saveWho 都看它）
 const PKEY = 'jiujiu-meteor-who', WHO_MAX = 4;
 let WHO = { cur: '', list: [{ id: '', name: '' }] };
 try {
@@ -1366,7 +1416,7 @@ WHO.list = WHO.list.filter((x, i, a) => a.findIndex(y => y.id === x.id) === i);
 if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
 if (!WHO.list.some(x => x.id === WHO.cur)) WHO.cur = WHO.list[0].id;
 const keyFor = id => id ? `jiujiu-meteor-v1:${id}` : 'jiujiu-meteor-v1';
-const saveWho = () => { try { localStorage.setItem(PKEY, JSON.stringify(WHO)); } catch (e) {} };
+const saveWho = () => { if (bkFrozen) return; try { localStorage.setItem(PKEY, JSON.stringify(WHO)); } catch (e) {} };
 const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
 KEY = keyFor(WHO.cur);
 const BEST0 = () => ({ meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null, ghostLoss: 0 });
@@ -1427,6 +1477,7 @@ function loadDB() {
 }
 loadDB(); setLang();
 function save() {
+  if (bkFrozen) return;
   Object.keys(DB.bests).forEach(k => { if (JSON.stringify(DB.bests[k]) === JSON.stringify(BEST0())) delete DB.bests[k]; });   // 沒紀錄的範圍不存
   DB.retest = retest.map(r => r.k);
   try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {}
@@ -2847,7 +2898,11 @@ const FEED = 10;
 // ar 是圖的寬高比（切圖腳本印出來的），擺放用 place() 依頭中心 hx,hy、頭半徑 hr、圖最高點 top 算出中心與寬度。
 const GEAR = [
   { id: 'bow', at: 1, slot: 'head', ar: 1.249, place: (hx, hy, hr) => [hx - hr * 0.62, hy - hr * 0.78, hr * 0.95, -15] },
-  { id: 'scarf', at: 2, slot: 'neck', ar: 0.875, place: (hx, hy, hr) => [hx + hr * 0.1, hy + hr * 0.55 + hr * 1.35 / 0.875 * 0.3, hr * 1.35, 0] },
+  { id: 'scarf', at: 2, slot: 'neck', ar: 0.875, place: (hx, hy, hr) => {   // 尾巴垂到地面（117）以下會蓋住名字：超過就縮小（最多縮到 0.7）再上移到地面為止
+    let w = hr * 1.35, cy = hy + hr * 0.55 + w / 0.875 * 0.3; const bot = cy + w / 0.875 / 2;
+    if (bot > 117) { w *= Math.max(0.7, 1 - (bot - 117) / (w / 0.875) * 0.6); cy = Math.min(cy, 117 - w / 0.875 / 2); }
+    return [hx + hr * 0.1, cy, w, 0];
+  } },
   { id: 'glasses', at: 4, slot: 'face', ar: 2.612, place: (hx, hy, hr) => [hx, hy - hr * 0.22, hr * 1.55, 0] },
   { id: 'balloon', at: 6, slot: 'side', ar: 0.57, place: (hx, hy, hr) => [hx + hr * 1.05, hy + hr * 0.4 - hr * 0.9 / 0.57 / 2, hr * 0.9, 0] },
   { id: 'cap', at: 8, slot: 'head', ar: 1.299, place: (hx, hy, hr) => [hx, hy - hr * 0.5 - hr * 1.75 / 1.299 * 0.38, hr * 1.75, 0] },
@@ -3301,7 +3356,7 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; }); $('#toast').classList.toggle('mid', name === 'versus');
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; $('#o-about').hidden = true; $('#o-who').hidden = true; $('#o-alum').hidden = true; $('#o-pbye').hidden = true; gate = null; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; $('#o-about').hidden = true; $('#o-who').hidden = true; $('#o-alum').hidden = true; $('#o-pbye').hidden = true; $('#o-backup').hidden = true; gate = null; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
@@ -3391,6 +3446,79 @@ document.addEventListener('click', e => { if (e.target.closest && e.target.close
 $('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; $('#about-env').textContent = tx('about.env', { w: innerWidth, h: innerHeight, cw: W, ch: H, d: (window.devicePixelRatio || 1).toFixed(1) }); });   // 回報問題時好判斷是哪種裝置、畫布有沒有量錯
 $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; });
 $('#gate-close').addEventListener('click', () => { gate = null; $('#o-gate').hidden = true; });
+
+/* ================= 備份紀錄（匯出／匯入） ================= */
+// 網頁版（GitHub Pages）和 App 版的 localStorage 各自分開，要靠備份搬：內容是 WHO 加每個人的存檔原文。
+// 匯出成 .json 檔（iPad／手機用分享面板，電腦直接下載）或備份碼（BK_PRE + base64，貼在備忘錄、傳給自己）；匯入接受兩種，取代這台裝置所有人的紀錄。
+// 整個視窗走家長關卡（匯入不可逆）；匯入只寫 localStorage 再重新載入，存檔照常經過 loadDB() 的消毒。
+const BK_APP = 'jiujiu-meteor', BK_PRE = 'JJMS1:', BK_DONE = 'jiujiu-meteor-bk-done';
+let bkPending = null;
+const bkMsg = (t, bad) => { const m = $('#bk-msg'); m.textContent = t; m.classList.toggle('bad', !!bad); };
+function backupObj() {
+  save(); const saves = {};
+  WHO.list.forEach(x => { const k = keyFor(x.id); try { const r = localStorage.getItem(k); if (r) saves[k] = JSON.parse(r); } catch (e) {} });
+  return { app: BK_APP, v: 1, at: new Date().toISOString(), who: { cur: WHO.cur, list: WHO.list, asked: true }, saves };
+}
+const b64e = s => { const u = new TextEncoder().encode(s); let b = ''; for (let i = 0; i < u.length; i += 0x8000) b += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(b); };
+const b64d = s => new TextDecoder().decode(Uint8Array.from(atob(s), c => c.charCodeAt(0)));
+// 讀備份：檔案內容是 JSON，備份碼是 BK_PRE + base64（前後多貼了字也沒關係）；不合法就回 null
+function bkParse(text) {
+  text = String(text || '').trim(); if (!text || text.length > 4e6) return null;
+  try {
+    const i = text.indexOf(BK_PRE); if (i >= 0) text = b64d(text.slice(i + BK_PRE.length).replace(/[^A-Za-z0-9+/=]/g, ''));
+    const o = JSON.parse(text);
+    if (!o || o.app !== BK_APP || !o.who || !Array.isArray(o.who.list) || !o.saves || typeof o.saves !== 'object') return null;
+    const list = o.who.list.filter(x => x && typeof x.id === 'string' && (x.id === '' || /^p[0-9a-z]{1,16}$/.test(x.id))).filter((x, i, a) => a.findIndex(y => y.id === x.id) === i).slice(0, WHO_MAX).map(x => ({ id: x.id, name: String(x.name || '').slice(0, 10) }));
+    if (!list.length) return null;
+    const saves = {}; list.forEach(x => { const sv = o.saves[keyFor(x.id)]; if (sv && typeof sv === 'object' && !Array.isArray(sv)) saves[keyFor(x.id)] = sv; });
+    return { at: typeof o.at === 'string' ? o.at.slice(0, 10) : '', who: { cur: list.some(x => x.id === o.who.cur) ? o.who.cur : list[0].id, list, asked: true }, saves };
+  } catch (e) { return null; }
+}
+function openBackup() {
+  bkPending = null; $('#bk-out').hidden = true; $('#bk-out').value = ''; $('#bk-in').value = ''; $('#bk-confirm').hidden = true; bkMsg('');
+  $('#o-set').hidden = true; $('#o-backup').hidden = false;
+}
+async function bkFile() {
+  const text = JSON.stringify(backupObj()), name = `jiujiu-backup-${today()}.json`;
+  try {   // iPad／手機：分享面板（存到「檔案」、AirDrop、LINE…）
+    const f = new File([text], name, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: name }); bkMsg(tx('bk.saved')); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  if (window.Capacitor) return bkCopy();   // App 的 WebView 不支援下載，改給備份碼
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' })); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); bkMsg(tx('bk.saved'));
+}
+async function bkCopy() {
+  const code = BK_PRE + b64e(JSON.stringify(backupObj())), out = $('#bk-out');
+  out.value = code; out.hidden = false;
+  try { await navigator.clipboard.writeText(code); bkMsg(tx('bk.copied')); } catch (e) { out.focus(); out.select(); bkMsg(tx('bk.copyManual')); }
+}
+function bkCheck(text) {
+  const b = bkParse(text); bkPending = b; $('#bk-confirm').hidden = !b;
+  if (!b) { bkMsg(tx('bk.bad'), true); return; }
+  bkMsg(tx('bk.found', { n: b.who.list.length, names: b.who.list.map(x => x.name || tx('who.noName')).join(tx('sep')), date: b.at || '?' }));
+}
+// 取代：舊的人在備份裡沒有的存檔刪掉，寫入備份的每個人與 WHO，然後重新載入（期間 bkFrozen 擋住記憶體裡的舊資料寫回）
+function bkApply(b) {
+  bkFrozen = true;
+  try {
+    WHO.list.forEach(x => { const k = keyFor(x.id); if (!(k in b.saves)) localStorage.removeItem(k); });
+    b.who.list.forEach(x => { const k = keyFor(x.id); if (b.saves[k]) localStorage.setItem(k, JSON.stringify(b.saves[k])); else localStorage.removeItem(k); });
+    localStorage.setItem(PKEY, JSON.stringify(b.who));
+  } catch (e) { bkFrozen = false; save(); saveWho(); return false; }
+  try { sessionStorage.setItem(BK_DONE, '1'); } catch (e) {}
+  location.reload(); return true;
+}
+$('#go-backup').addEventListener('click', () => openGate(openBackup, tx('bk.why')));
+$('#bk-file').addEventListener('click', bkFile);
+$('#bk-copy').addEventListener('click', bkCopy);
+$('#bk-pick').addEventListener('click', () => { $('#bk-in-file').value = ''; $('#bk-in-file').click(); });
+$('#bk-in-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (!f) return; if (f.size > 4e6) { bkMsg(tx('bk.bad'), true); return; } const r = new FileReader(); r.onload = () => bkCheck(r.result); r.onerror = () => bkMsg(tx('bk.bad'), true); r.readAsText(f); });
+$('#bk-paste').addEventListener('click', () => bkCheck($('#bk-in').value));
+$('#bk-yes').addEventListener('click', () => { if (bkPending && !bkApply(bkPending)) bkMsg(tx('bk.fail'), true); });
+$('#bk-no').addEventListener('click', () => { bkPending = null; $('#bk-confirm').hidden = true; bkMsg(''); });
+['#bk-close', '#bk-close2'].forEach(s => $(s).addEventListener('click', () => { $('#o-backup').hidden = true; }));
+try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE); setTimeout(() => toast(tx('bk.done')), 400); } } catch (e) {}
 
 addEventListener('keydown', e => {
   if (e.repeat || (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName))) return;
