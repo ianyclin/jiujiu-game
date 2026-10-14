@@ -57,6 +57,7 @@ w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己�
 | 聯絡 email（Apple／Google 開發者資料） | `gigigagagogogege@gmail.com` | 會公開顯示 |
 | Google Data safety | 「此應用程式不會收集或分享任何使用者資料」。因為沒有收集，傳輸加密與刪除要求兩欄不適用 | Android 已拿掉 `INTERNET` 權限 |
 | Google 廣告 ID 宣告 | 不使用 | — |
+| 「備份紀錄」功能 | 不改變上面的答案：備份檔／備份碼由大人自己存放，遊戲不上傳、我們收不到，所以仍是「不收集」 | 隱私權政策已寫明 |
 | Google「目標對象與內容」 | 勾選兒童年齡層；回答「含有廣告：否」 | — |
 | App Review Notes（給 Apple） | 見下 | — |
 
