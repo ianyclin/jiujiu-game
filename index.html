@@ -3083,13 +3083,13 @@ const PET_HEAD = {   // [hx, hy, hr, top, ny]：ny 是下巴（脖子）的高�
 // 所以量過的直接寫在 PET_FACE（null 用頭圓推算：蛋和毛毛的頭圓就是臉）。量法同 ny：寵物圖放大加 120 單位格線，目測眼睛與額頭
 const faceOf = (hx, hy, hr) => ({ ex: hx, ey: hy - hr * 0.22, ew: hr * 1.35, hb: hy - hr * 0.338, hw: hr * 1.59 });
 const PET_FACE = {
-  funny: [null, { ex: 61, ey: 86, ew: 34, hb: 84, hw: 24 }, { ex: 60, ey: 70, ew: 47, hb: 67, hw: 34 }, { ex: 60.5, ey: 57, ew: 57, hb: 49, hw: 40 }, { ex: 58, ey: 55, ew: 62, hb: 45, hw: 48 }],
+  funny: [null, { ex: 60, ey: 86, ew: 34, hb: 84, hw: 24 }, { ex: 60, ey: 70, ew: 47, hb: 67, hw: 34 }, { ex: 60.5, ey: 57, ew: 57, hb: 49, hw: 40 }, { ex: 59.5, ey: 55, ew: 62, hb: 45, hw: 48 }],
   cool: [null, { ex: 59, ey: 87.5, ew: 20, hb: 81, hw: 24 }, { ex: 56, ey: 73.5, ew: 25, hb: 67, hw: 30 }, { ex: 54, ey: 54, ew: 30, hb: 47, hw: 34 }, { ex: 57, ey: 46, ew: 28, hb: 40, hw: 34 }],
   cute: [null, null, null, null, null],
   legend: [null, { ex: 56, ey: 98, ew: 21, hb: 89, hw: 30 }, { ex: 47, ey: 87, ew: 22, hb: 76, hw: 28 }, { ex: 60, ey: 71, ew: 24, hb: 60, hw: 30 }, { ex: 60, ey: 63, ew: 21.4, hb: 52, hw: 28 }],
 };
 function petSVG(kind, st, wear = null) {   // wear：{ head, face, neck, side } 或 null（不戴）
-  const [hx, hy, hr, top, ny] = PET_HEAD[kind][st], f = (PET_FACE[kind] && PET_FACE[kind][st]) || faceOf(hx, hy, hr);
+  const [hx0, hy, hr, top, ny] = PET_HEAD[kind][st], f = (PET_FACE[kind] && PET_FACE[kind][st]) || faceOf(hx0, hy, hr), hx = f.ex;   // 左右一律對齊量過的臉中心（頭圓的 hx 在小龍、星狐有幾張差 3～4 單位，金牌、領結會歪）
   const gear = wear ? SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top, ny, f)).join('') : '', back = wear ? BACK_SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top, ny, f)).join('') : '';
   const frontG = wear && GEAR_BY[wear.back] && GEAR_BY[wear.back].front ? `<g opacity="${GEAR_BY[wear.back].front}">${gearSVG(wear.back, hx, hy, hr, top, ny, f)}</g>` : '';
   return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/>${back}<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gear}${frontG}</svg>`;
