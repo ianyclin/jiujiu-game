@@ -2,13 +2,14 @@
 
 用法：python3 tools/cut-gear.py <來源圖.png>
 順序：第一列 蝴蝶結、圍巾、墨鏡、氣球、棒球帽；第二列 圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。
+圍巾在 1.3 換成金牌（圍巾要繞脖子，放不好），這支跳過圍巾那格；金牌用 tools/cut-one.py 從單張圖切。
 輸出各自裁到邊緣、最長邊 256px、256 色。結束時印出每張的寬高比，拿去填 index.html 的 GEAR 表 ar 欄位。
 """
 import sys, os, json
 import numpy as np
 from PIL import Image
 from collections import deque
-IDS = [['bow', 'scarf', 'glasses', 'balloon', 'cap'], ['specs', 'bowtie', 'star', 'wizard', 'halo']]
+IDS = [['bow', '_scarf', 'glasses', 'balloon', 'cap'], ['specs', 'bowtie', 'star', 'wizard', 'halo']]
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'gear') + '/'
 
 def remove_bg(img):
@@ -66,6 +67,7 @@ meta = {}
 for r, row in enumerate(rows):
     for c, (_, x0, y0, x1, y1) in enumerate(row):
         gid = IDS[r][c]
+        if gid.startswith('_'): continue   # 不再使用的格子（圍巾）
         sub = img.crop((x0, y0, x1, y1))
         if gid == 'specs':   # 圓框眼鏡：鏡片裡的淡色改半透明，不然會把眼睛蓋住
             a = np.asarray(sub).copy(); light = a[:, :, :3].min(axis=2) >= 200
