@@ -2049,13 +2049,18 @@ function bossQ() {
 function spawnBoss() {
   const m = newMeteor(bossQ(), true);
   m.hp = m.hpMax = 5 + Math.floor(M.wave / 5);
-  M.boss = m; M.list.push(m); hud();
-  const me = M;
-  if (M.missiles > 0) setTimeout(() => { if (M === me && M.boss) { ftxt(W / 2, GY - 60, tx('m.haveMissile'), '#ffae57', 26); SFX.ding(); } }, 900);
+  M.boss = m; M.list.push(m); hud();   // 發射鈕與「有飛彈」提示等魔王進到畫面裡才出現（bossSeen()），不然飛彈在畫面外命中，孩子看不到扣血
+}
+// 魔王從畫面上方慢慢掉下來：身體露出一半在 HUD 下面才算「看得到」
+const hudBottom = () => { const e = $('#s-meteor .hud'); const b = e && e.getBoundingClientRect(); return b && b.height ? b.bottom : safeTop() + 70; };
+function bossSeen() {
+  const b = M.boss; if (!b || b.dead || b.seen || b.y < hudBottom()) return;
+  b.seen = true; hud();
+  if (M.missiles > 0) { ftxt(W / 2, GY - 60, tx('m.haveMissile'), '#ffae57', 26); SFX.ding(); }
 }
 // 飛彈手動發射：點 HUD 的飛彈圖示或按空白鍵／Enter，一次一枚
 function launchMissile() {
-  if (!M || M.over || M.paused || !M.boss || M.boss.dead || M.missiles <= 0) return;
+  if (!M || M.over || M.paused || !M.boss || M.boss.dead || !M.boss.seen || M.missiles <= 0) return;
   M.missiles--; hud();
   const tp = tipPos();
   M.rockets.push({ x: tp.x, y: tp.y, a: tA, v: 260, t: 0 });
@@ -2073,8 +2078,9 @@ function updateRockets(dt) {
       if (Math.hypot(b.x - r.x, b.y - r.y) < b.r * 0.85) {
         r.dead = true;
         spark(r.x, r.y, 34, ['#ffae57', '#ffd23f', '#ffffff'], 260, 4, 0.7, 120); ring(r.x, r.y, b.r * 1.5, '#ffae57', 6);
-        if (b.hp > 1) { b.hp--; b.flash = 0.5; ftxt(b.x, b.y - b.r - 34, tx('m.missileHit'), '#ffae57', 26); }
-        else ftxt(b.x, b.y - b.r - 34, tx('m.lastHp'), '#ffd23f', 24);
+        const fy = Math.max(b.y - b.r - 34, hudBottom() + 40);   // 字不能飄到 HUD 後面
+        if (b.hp > 1) { b.hp--; b.flash = 0.5; ftxt(b.x, fy, tx('m.missileHit'), '#ffae57', 26); }
+        else ftxt(b.x, fy, tx('m.lastHp'), '#ffd23f', 24);
         shake(0.2, 6); SFX.boom();
       }
     }
@@ -2110,7 +2116,7 @@ function updateMeteor(dt) {
   if (M.dbl > 0) { M.dbl -= dt; $('#m-dbl').hidden = M.dbl <= 0; $('#m-dbl i').style.width = clamp(M.dbl / 10 * 100, 0, 100) + '%'; }
   if (M.inv > 0) { M.inv -= dt; $('#m-inv').hidden = M.inv <= 0; $('#m-inv i').style.width = clamp(M.inv / M.invMax * 100, 0, 100) + '%'; }
   const invOn = M.inv > 0; $('#m-hshield').toggleAttribute('hidden', !invOn); $('#m-hearts').classList.toggle('inv', invOn);   // 無敵：心旁邊有盾牌、心發光
-  updateDrops(dt); updateRockets(dt);
+  updateDrops(dt); updateRockets(dt); bossSeen();
   if (M.bossDelay > 0) { M.bossDelay -= dt; if (M.bossDelay <= 0) spawnBoss(); }
   M.spawnT -= dt;
   const smalls = M.list.filter(m => !m.boss).length;
@@ -2430,8 +2436,8 @@ function drawRock(m, tgt) {
       g.fillStyle = '#1a0610'; g.beginPath(); g.arc(s * r * 0.3 + Math.sin(T * 2) * 2, -r * 0.44, r * 0.055, 0, 6.283); g.fill();
       g.strokeStyle = '#ff6161'; g.lineWidth = 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(s * r * 0.48, -r * 0.66); g.lineTo(s * r * 0.14, -r * 0.56); g.stroke();
     }
-    const pw = Math.min(16, r * 1.5 / m.hpMax - 3);
-    for (let i = 0; i < m.hpMax; i++) { g.fillStyle = i < m.hp ? '#ff6161' : 'rgba(255,255,255,.18)'; rr(-m.hpMax * (pw + 3) / 2 + i * (pw + 3), -r - 22, pw, 8, 3); g.fill(); }
+    const pw = Math.min(16, r * 1.5 / m.hpMax - 3), py = Math.max(-r - 22, hudBottom() + 6 - m.y);   // 血條：魔王還在上面時貼著 HUD 下緣，不跑到畫面外
+    for (let i = 0; i < m.hpMax; i++) { g.fillStyle = i < m.hp ? '#ff6161' : 'rgba(255,255,255,.18)'; rr(-m.hpMax * (pw + 3) / 2 + i * (pw + 3), py, pw, 8, 3); g.fill(); }
   }
   const parts = m.q.text.split(' = ');
   const L = m.q.lines ? m.q.lines.slice() : parts.length === 2 ? [parts[0], '= ' + parts[1]] : [parts[0]];
@@ -2498,7 +2504,7 @@ function hud() {
   const f = $('#m-fire'); f.hidden = M.missiles <= 0;
   f.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffae57"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#f2f6fb"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>'.repeat(M.missiles);
   f.setAttribute('aria-label', tx('m.fireN', { n: M.missiles }));
-  const ready = !!M.boss && !M.boss.dead && M.missiles > 0;
+  const ready = !!M.boss && !M.boss.dead && !!M.boss.seen && M.missiles > 0;
   f.classList.toggle('ready', ready); if (ready) f.hidden = true;   // 魔王在場時庫存顯示在大發射鈕上，HUD 不重複（魔王波的 HUD 會擠到連擊）
   const f2 = $('#m-fire2'); f2.hidden = !ready;   // 鍵盤上方的大發射鈕：魔王在場且有飛彈才出現
   if (ready) f2.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 2 17l4-1 1 4 4-2 1-6z" fill="#ffd23f"/><path d="M8 12c2-6 7-9 14-10-1 7-4 12-10 14z" fill="#ffffff"/><circle cx="15" cy="9" r="2" fill="#ff6161"/></svg>${tx('m.fire')}${M.missiles > 1 ? ` ×${M.missiles}` : ''}`;
@@ -3025,16 +3031,16 @@ const FEED = 10;
 // ar 是圖的寬高比（切圖腳本印出來的），擺放用 place() 依頭中心 hx,hy、頭半徑 hr、圖最高點 top 算出中心與寬度。
 const GEAR = [
   { id: 'bow', at: 1, slot: 'head', ar: 1.249, place: (hx, hy, hr) => [hx - hr * 0.62, hy - hr * 0.78, hr * 0.95, -15] },
-  { id: 'scarf', at: 2, slot: 'neck', ar: 0.875, place: (hx, hy, hr) => {   // 尾巴垂到地面（117）以下會蓋住名字：超過就縮小（最多縮到 0.7）再上移到地面為止
-    let w = hr * 1.35, cy = hy + hr * 0.55 + w / 0.875 * 0.3; const bot = cy + w / 0.875 / 2;
-    if (bot > 117) { w *= Math.max(0.7, 1 - (bot - 117) / (w / 0.875) * 0.6); cy = Math.min(cy, 117 - w / 0.875 / 2); }
-    return [hx + hr * 0.1, cy, w, 0];
+  { id: 'scarf', at: 2, slot: 'neck', ar: 0.875, place: (hx, hy, hr, top, ny) => {   // 圍巾上緣貼著下巴（ny），不能往上蓋到嘴巴；尾巴超過 120 會蓋住名字：放不下就縮小（最多縮到 0.55）
+    let w = hr * 1.35; const fit = (120 - ny) / 0.88 * 0.875;
+    if (w > fit) w = Math.max(w * 0.55, fit);
+    const h = w / 0.875; return [hx + hr * 0.05, ny + h * 0.38, w, 0];
   } },
   { id: 'glasses', at: 4, slot: 'face', ar: 2.612, place: (hx, hy, hr) => [hx, hy - hr * 0.22, hr * 1.55, 0] },
   { id: 'balloon', at: 6, slot: 'side', ar: 0.57, place: (hx, hy, hr) => [hx + hr * 1.05, hy + hr * 0.4 - hr * 0.9 / 0.57 / 2, hr * 0.9, 0] },
   { id: 'cap', at: 8, slot: 'head', ar: 1.299, place: (hx, hy, hr) => [hx, hy - hr * 0.5 - hr * 1.75 / 1.299 * 0.38, hr * 1.75, 0] },
   { id: 'specs', at: 10, slot: 'face', ar: 2.207, place: (hx, hy, hr) => [hx, hy - hr * 0.22, hr * 1.5, 0] },
-  { id: 'bowtie', at: 12, slot: 'neck', ar: 1.778, place: (hx, hy, hr) => [hx, hy + hr * 0.95, hr * 1.1, 0] },
+  { id: 'bowtie', at: 12, slot: 'neck', ar: 1.778, place: (hx, hy, hr, top, ny) => [hx, ny + hr * 1.1 / 1.778 * 0.45, hr * 1.1, 0] },
   { id: 'star', at: 15, slot: 'head', ar: 1.497, place: (hx, hy, hr) => [hx + hr * 0.62, hy - hr * 0.8, hr * 0.85, 15] },
   { id: 'wizard', at: 20, slot: 'head', ar: 1.225, place: (hx, hy, hr) => [hx + hr * 0.1, hy - hr * 0.45 - hr * 1.9 / 1.225 * 0.4, hr * 1.9, 0] },
   { id: 'halo', at: 30, slot: 'head', ar: 2.415, place: (hx, hy, hr, top) => [hx, top - 8, hr * 1.9, 0] },
@@ -3046,10 +3052,11 @@ const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; }); 
 const SLOTS = ['side', 'neck', 'head', 'face'];   // 畫在寵物前面的順序：旁邊、脖子、頭頂、臉（臉最上層）
 const BACK_SLOTS = ['back'];   // 畫在寵物後面（翅膀、光環之類的華麗配件）
 // GEAR 項目可加 hidden: true：徽章沒到門檻前，清單上完全不出現（稀有的驚喜），到門檻時 toast 揭曉
-function gearSVG(id, hx, hy, hr, top) {
+function gearSVG(id, hx, hy, hr, top, ny) {
   const g = GEAR_BY[id]; if (!g) return '';
   if (top === undefined) top = hy - hr;
-  const [cx, cy, w, rot] = g.place(hx, hy, hr, top), h = w / g.ar;
+  if (ny === undefined) ny = hy + hr * 0.9;
+  const [cx, cy, w, rot] = g.place(hx, hy, hr, top, ny), h = w / g.ar;
   return `<image href="assets/gear/${id}.png" x="${(cx - w / 2).toFixed(1)}" y="${(cy - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"${rot ? ` transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : ''}/>`;
 }
 // 戴的東西存成 { head, face, neck, side }；舊存檔是字串（單一配件），載入時轉過來
@@ -3064,16 +3071,16 @@ const petStage = fed => { let st = 0; PET_STAGES.forEach((s, i) => { if (fed >= 
 function earn(n) { DB.pet.dust += n; save(); if (mode === 'menu') $('#b-pet').textContent = DB.pet.dust; }
 // 寵物圖是 assets/pets/{kind}-{stage}.png（400×400 透明 PNG，由 ChatGPT 生成的角色成長圖用 tools/cut-pets.py 切出來）。
 // 配件仍用 SVG 疊在頭上：PET_HEAD 是每張圖的 [頭中心 x, 頭中心 y, 頭半徑, 圖最高點 y]（120 單位座標）。眼睛約在 hy - 0.25*hr。
-const PET_HEAD = {
-  funny: [[59.8, 96.0, 14.8, 75.0], [59.8, 94.1, 18.7, 78.9], [60.0, 78.0, 23.4, 53.1], [60.0, 68.1, 29.4, 36.9], [60.0, 55.7, 32.9, 16.5]],
-  cool: [[59.8, 94.3, 14.2, 71.7], [60.0, 85.9, 11.7, 63.3], [59.8, 70.0, 14.1, 38.7], [59.8, 56.0, 16.1, 18.6], [59.8, 42.9, 18.1, 3.0]],
-  cute: [[60.0, 89.8, 17.5, 62.7], [60.0, 96.8, 15.4, 71.1], [60.0, 91.7, 27.0, 50.4], [59.8, 85.6, 31.9, 34.5], [60.0, 74.6, 35.3, 11.1]],
-  legend: [[59.8, 94, 18.6, 71.1], [59.8, 97, 17.2, 72.6], [60, 83.8, 16.7, 58.8], [60, 66.7, 15.1, 30.3], [59.8, 61.1, 15.2, 20.7]],
+const PET_HEAD = {   // [hx, hy, hr, top, ny]：ny 是下巴（脖子）的高度，圍巾、領結從這裡掛；量法：把寵物圖放大加 120 單位格線，目測嘴巴下緣
+  funny: [[59.8, 96.0, 14.8, 75.0, 100], [59.8, 94.1, 18.7, 78.9, 107], [60.0, 78.0, 23.4, 53.1, 100], [60.0, 68.1, 29.4, 36.9, 100], [60.0, 55.7, 32.9, 16.5, 92]],
+  cool: [[59.8, 94.3, 14.2, 71.7, 100], [60.0, 85.9, 11.7, 63.3, 92], [59.8, 70.0, 14.1, 38.7, 85], [59.8, 56.0, 16.1, 18.6, 72], [59.8, 42.9, 18.1, 3.0, 61]],
+  cute: [[60.0, 89.8, 17.5, 62.7, 98], [60.0, 96.8, 15.4, 71.1, 108], [60.0, 91.7, 27.0, 50.4, 101], [59.8, 85.6, 31.9, 34.5, 98], [60.0, 74.6, 35.3, 11.1, 91]],
+  legend: [[59.8, 94, 18.6, 71.1, 100], [59.8, 97, 17.2, 72.6, 105], [60, 83.8, 16.7, 58.8, 100], [60, 66.7, 15.1, 30.3, 80], [59.8, 61.1, 15.2, 20.7, 74]],
 };
 function petSVG(kind, st, wear = null) {   // wear：{ head, face, neck, side } 或 null（不戴）
-  const [hx, hy, hr, top] = PET_HEAD[kind][st];
-  const gear = wear ? SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '', back = wear ? BACK_SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top)).join('') : '';
-  const frontG = wear && GEAR_BY[wear.back] && GEAR_BY[wear.back].front ? `<g opacity="${GEAR_BY[wear.back].front}">${gearSVG(wear.back, hx, hy, hr, top)}</g>` : '';
+  const [hx, hy, hr, top, ny] = PET_HEAD[kind][st];
+  const gear = wear ? SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top, ny)).join('') : '', back = wear ? BACK_SLOTS.map(sl => gearSVG(wear[sl], hx, hy, hr, top, ny)).join('') : '';
+  const frontG = wear && GEAR_BY[wear.back] && GEAR_BY[wear.back].front ? `<g opacity="${GEAR_BY[wear.back].front}">${gearSVG(wear.back, hx, hy, hr, top, ny)}</g>` : '';
   return `<svg viewBox="0 0 120 120" aria-hidden="true" style="overflow:visible"><ellipse cx="60" cy="117" rx="${Math.round(hr * 1.4 + 10)}" ry="4" fill="rgba(0,0,0,.35)"/>${back}<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>${gear}${frontG}</svg>`;
 }
 function openPet() {
@@ -3124,6 +3131,8 @@ function renderAlumni() {
   const all = Array.isArray(DB.pet.released) ? DB.pet.released : [], el = $('#pet-alumni');
   const R = all.map((r, i) => ({ r, i })).filter(x => x.r && PET_KINDS[x.r.kind]);
   el.hidden = !R.length;
+  const cur = PET_KINDS[DB.pet.kind] && !$('#pet-show').hidden;   // 養著寵物時放在餵食鈕下面、配件上面（放最下面要捲過整片配件才看得到，孩子找不到）；挑蛋時放在蛋下面
+  if (cur) $('#pet-gear').before(el); else $('#pet-show').after(el);
   if (R.length) el.innerHTML = `<div class="alum-t">${tx('pet.alumni')}</div>` + R.map(({ r, i }) => `<button type="button" class="alum" data-i="${i}" aria-label="${esc(tx('alum.aria', { name: alumName(r) }))}">${petSVG(r.kind, petStage(alumFed(r)))}<span>${esc(alumName(r))}</span><small>${tx('home.' + r.kind)}</small></button>`).join('');
 }
 let alumIdx = -1;
