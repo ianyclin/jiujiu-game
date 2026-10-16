@@ -391,7 +391,7 @@ html,body{overscroll-behavior:none}
 .gear button.mystery{border-style:dashed;border-color:rgba(159,220,255,.45);background:rgba(159,220,255,.05);color:var(--muted)}
 .gear button.mystery .qmark{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:2px dashed rgba(159,220,255,.6);color:var(--ice);font-weight:900;font-size:18px}
 .gear button[aria-pressed="true"]{border-color:var(--sun);background:rgba(255,210,63,.14);color:var(--sun)}
-.gear button:disabled{opacity:.45;cursor:default}
+.gear button:disabled,.gear button.locked:not(.mystery){opacity:.45;cursor:default}
 .gear-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
 .pet-stage.bye svg{animation:petBye 1.6s ease-in forwards}
 @keyframes petBye{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(.5);opacity:0}}
@@ -1102,7 +1102,7 @@ const STR = {
     'pet.legendAria': '傳說蛋，還沒解鎖', 'pet.unknown': '？？？', 'pet.needBadges': '徽章 {n}/{m}', 'pet.needBye': '送一隻回家', 'pet.canPick': '可以選了', 'pet.soon': '即將登場',
     'pet.alumni': '回家的夥伴（點一下去看牠）', 'alum.aria': '去看{name}', 'alum.sub': '{stage}・住在{home}', 'alum.back': '請牠回來', 'alum.swap': '跟{cur}換',
     'alum.swapNote': '{cur}會先回{home}休息，長大的進度都會留著，想牠的時候再換回來。', 'alum.backToast': '{name}回來了！',
-    'gear.title': '配件（集到幾個徽章就能戴，每個位置各一樣）', 'gear.badges': '徽章 ×{n}', 'gear.mysteryAria': '神祕配件，徽章 ×{n}', 'gear.on': '戴著', 'gear.q': '？',
+    'gear.title': '配件（集到幾個徽章就能戴，每個位置各一樣）', 'gear.badges': '徽章 ×{n}', 'gear.mysteryAria': '神祕配件，徽章 ×{n}', 'gear.on': '戴著', 'gear.q': '？', 'gear.need': '完成每日任務，收集徽章就能戴喔！（還差 {n} 個）', 'pet.legendNeed': '完成每日任務收集 {n} 個徽章，再送一隻寵物回家，就能選牠喔！',
     'name.title': '幫牠取個名字', 'name.aria': '寵物名字', 'name.ok': '就叫這個名字', 'name.back': '換一顆蛋',
     // 星圖
     'st.new': '還沒遇過', 'st.learn': '熟悉中', 'st.weak': '容易錯', 'st.star': '已點亮', 'map.reset': '清除所有紀錄', 'map.cleared': '紀錄已清除。',
@@ -1249,7 +1249,7 @@ const STR = {
     'pet.legendAria': 'Legendary egg, still locked', 'pet.unknown': '???', 'pet.needBadges': 'Badges {n}/{m}', 'pet.needBye': 'Send a pet home', 'pet.canPick': 'Ready to pick!', 'pet.soon': 'Coming soon',
     'pet.alumni': 'Back home (tap to visit)', 'alum.aria': 'Visit {name}', 'alum.sub': '{stage} · lives in {home}', 'alum.back': 'Bring it back', 'alum.swap': 'Swap with {cur}',
     'alum.swapNote': '{cur} will rest in {home} and keep its progress. You can swap back anytime.', 'alum.backToast': '{name} is back!',
-    'gear.title': 'Outfits (unlock with badges, one per spot)', 'gear.badges': 'Badges ×{n}', 'gear.mysteryAria': 'Mystery item, badges ×{n}', 'gear.on': 'Wearing', 'gear.q': '?',
+    'gear.title': 'Outfits (unlock with badges, one per spot)', 'gear.badges': 'Badges ×{n}', 'gear.mysteryAria': 'Mystery item, badges ×{n}', 'gear.on': 'Wearing', 'gear.q': '?', 'gear.need': 'Finish daily missions to collect badges! ({n} more to go)', 'pet.legendNeed': 'Collect {n} badges from daily missions and send a pet home to pick this one!',
     'name.title': 'Name your pet', 'name.aria': 'Pet name', 'name.ok': 'That\'s the name!', 'name.back': 'Pick another egg',
     'st.new': 'Not yet', 'st.learn': 'Learning', 'st.weak': 'Tricky', 'st.star': 'Star!', 'map.reset': 'Erase all records', 'map.cleared': 'Records erased.',
     'map.resetWhy': 'This erases all records (star map, pet, stardust and badges). A grown-up needs to answer this first.',
@@ -1389,7 +1389,7 @@ const STR = {
     'pet.legendAria': 'でんせつのたまご、まだえらべない', 'pet.unknown': '？？？', 'pet.needBadges': 'バッジ {n}/{m}', 'pet.needBye': '1ぴき家にかえす', 'pet.canPick': 'えらべるよ', 'pet.soon': 'もうすぐ',
     'pet.alumni': '家に帰ったなかま（タップで会いに行けるよ）', 'alum.aria': '{name}に会いに行く', 'alum.sub': '{stage}・{home}にすんでいる', 'alum.back': 'よびもどす', 'alum.swap': '{cur}とこうたい',
     'alum.swapNote': '{cur}は{home}で休むよ。大きくなったところはそのままで、いつでもまたこうたいできるよ。', 'alum.backToast': '{name}がもどってきた！',
-    'gear.title': 'きせかえ（バッジが集まるとつけられる、1か所に1つずつ）', 'gear.badges': 'バッジ ×{n}', 'gear.mysteryAria': 'なぞのアイテム、バッジ ×{n}', 'gear.on': 'つけてる', 'gear.q': '？',
+    'gear.title': 'きせかえ（バッジが集まるとつけられる、1か所に1つずつ）', 'gear.badges': 'バッジ ×{n}', 'gear.mysteryAria': 'なぞのアイテム、バッジ ×{n}', 'gear.on': 'つけてる', 'gear.q': '？', 'gear.need': '毎日のミッションをクリアして、バッジを集めよう！（あと{n}こ）', 'pet.legendNeed': '毎日のミッションでバッジを{n}こ集めて、ペットを1ぴき家にかえすと、えらべるよ！',
     'name.title': '名前をつけてね', 'name.aria': 'ペットの名前', 'name.ok': 'この名前にする', 'name.back': 'ほかのたまごにする',
     'st.new': 'まだ', 'st.learn': 'れんしゅう', 'st.weak': 'にがて', 'st.star': '星', 'map.reset': '記ろくをぜんぶけす', 'map.cleared': '記ろくをけしたよ。',
     'map.resetWhy': 'すべての記録（星マップ・ペット・星くず・バッジ）を消去します。大人の方がこの問題に答えてください。',
@@ -3109,7 +3109,7 @@ function renderPet() {
       const need = [];
       if (DB.daily.badges < LEGEND_BADGES) need.push(tx('pet.needBadges', { n: DB.daily.badges, m: LEGEND_BADGES }));
       if (!DB.pet.sent) need.push(tx('pet.needBye'));
-      return `<button type="button" class="pet-card locked" disabled aria-label="${tx('pet.legendAria')}"><svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="#2a1b4a" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6 5"/><text x="60" y="78" text-anchor="middle" font-size="44" font-weight="900" fill="#ffb347" font-family="Lilita One,sans-serif">?</text></svg><b>${tx('pet.unknown')}</b><small>${LEGEND_READY ? need.join(tx('plus')) || tx('pet.canPick') : tx('pet.soon')}</small></button>`;
+      return `<button type="button" class="pet-card locked" aria-disabled="true" data-lock="legend" aria-label="${tx('pet.legendAria')}"><svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 18c20 0 34 24 34 48 0 20-15 36-34 36S26 86 26 66c0-24 14-48 34-48z" fill="#2a1b4a" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6 5"/><text x="60" y="78" text-anchor="middle" font-size="44" font-weight="900" fill="#ffb347" font-family="Lilita One,sans-serif">?</text></svg><b>${tx('pet.unknown')}</b><small>${LEGEND_READY ? need.join(tx('plus')) || tx('pet.canPick') : tx('pet.soon')}</small></button>`;
     }).join('');
     return;
   }
@@ -3131,8 +3131,8 @@ function renderGear() {
   const B_ = DB.daily.badges, W = wearObj();
   $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + GEAR.map(g => {
     const ok = B_ >= g.at, on = W[g.slot] === g.id;
-    if (g.hidden && !ok) return `<button type="button" class="mystery" disabled aria-label="${tx('gear.mysteryAria', { n: g.at })}"><span class="qmark">${tx('gear.q')}</span>${tx('pet.unknown')}<small>${tx('gear.badges', { n: g.at })}</small></button>`;   // 神祕配件：先給個問號，到門檻才現身
-    return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : 'disabled'}><img src="assets/gear/${g.id}.png" alt="">${tx('gear.' + g.id)}<small>${ok ? tx(on ? 'gear.on' : 'slot.' + g.slot) : tx('gear.badges', { n: g.at })}</small></button>`;
+    if (g.hidden && !ok) return `<button type="button" class="mystery locked" aria-disabled="true" data-lock="${g.at}" aria-label="${tx('gear.mysteryAria', { n: g.at })}"><span class="qmark">${tx('gear.q')}</span>${tx('pet.unknown')}<small>${tx('gear.badges', { n: g.at })}</small></button>`;   // 神祕配件：先給個問號，到門檻才現身
+    return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : `class="locked" aria-disabled="true" data-lock="${g.at}"`}><img src="assets/gear/${g.id}.png" alt="">${tx('gear.' + g.id)}<small>${ok ? tx(on ? 'gear.on' : 'slot.' + g.slot) : tx('gear.badges', { n: g.at })}</small></button>`;
   }).join('');
 }
 // 回家的夥伴：每隻一顆鈕（data-i 是 released 的索引），點了開 #o-alum 看牠或請牠回來
@@ -3193,7 +3193,9 @@ function releasePet() {
     if (mode === 'pet') renderPet();
   }, 1700);
 }
-$('#pet-gear').addEventListener('click', e => { const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; const g = GEAR_BY[b.dataset.gear], W = wearObj(); W[g.slot] = W[g.slot] === g.id ? '' : g.id; save(); renderPet(); SFX.ding(); });
+$('#pet-gear').addEventListener('click', e => {
+  const L = e.target.closest('[data-lock]'); if (L) { toast(tx('gear.need', { n: Math.max(1, +L.dataset.lock - DB.daily.badges) })); return; }   // 還沒解鎖：告訴孩子怎麼拿到
+  const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; const g = GEAR_BY[b.dataset.gear], W = wearObj(); W[g.slot] = W[g.slot] === g.id ? '' : g.id; save(); renderPet(); SFX.ding(); });
 $('#pet-bye').addEventListener('click', askRelease);
 function feedPet() {
   const P_ = DB.pet; if (P_.dust < FEED || !PET_KINDS[P_.kind]) return;
@@ -3220,7 +3222,7 @@ function openName(kind) {
   $('#name-sug').innerHTML = NAME_SUG(kind).map(n => `<button type="button" data-n="${n}">${n}</button>`).join('');
   $('#o-name').hidden = false;
 }
-$('#pet-cards').addEventListener('click', e => { const b = e.target.closest('.pet-card'); if (!b) return; openName(b.dataset.kind); });
+$('#pet-cards').addEventListener('click', e => { const b = e.target.closest('.pet-card'); if (!b) return; if (b.dataset.lock) { toast(tx('pet.legendNeed', { n: LEGEND_BADGES })); return; } openName(b.dataset.kind); });
 $('#name-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) $('#name-in').value = b.dataset.n; });
 $('#name-back').addEventListener('click', () => { $('#o-name').hidden = true; });
 $('#name-ok').addEventListener('click', () => {
