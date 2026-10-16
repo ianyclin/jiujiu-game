@@ -3575,9 +3575,9 @@ makePad($('#v-top [data-pad]'), d => vKey(1, d));
 const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
 // target 是網址（答對後出現「前往」鈕，用 click 開才不會被 iOS 擋）或函式（答對直接執行，例如清除紀錄）
-function openGate(target, why) {
+function openGate(target, why, hard = typeof target === 'function') {   // hard：不可逆的（清除紀錄、刪人）用兩個乘法；購買和外部連結用一個乘法，大人心算得出來
   // 題目是混合運算（先乘除、後加減）：孩子在練的正是乘法，純乘法擋不住他們；「5 + 2 × 13」要記得先乘，沒學過運算順序的孩子會從左算到右而答錯
-  const hard = typeof target === 'function';   // 清除紀錄、刪人這種不可逆的：兩個乘法一加一減，答案至少 10
+  // hard（清除紀錄、刪人這種不可逆的）：兩個乘法一加一減，答案至少 10
   let expr, ans;
   do {
     if (hard) { const a = ri(10, 40), b = ri(12, 19), c = ri(3, 9), d = ri(3, 9), e = ri(3, 9); expr = `${a} + ${b} × ${c} − ${d} × ${e}`; ans = a + b * c - d * e; }
@@ -3619,7 +3619,7 @@ function openLock(m) {
   $('#lock-p').textContent = tx('lock.p', { m: tx('meteor.name') });
   $('#o-lock').hidden = false;
 }
-const askBuy = () => openGate(openBuy, tx('gate.buy'));
+const askBuy = () => openGate(openBuy, tx('gate.buy'), false);   // 購買用簡單的那種（a + b × c）：Apple 1.3 一定要家長關卡，但題目太難大人會放棄
 const paidNames = () => PAID.map(m => tx(m + '.name')).join(tx('sep'));
 const IAP = APP && CAP.nativePromise ? (m, o) => CAP.nativePromise('NativePurchases', m, o || {}) : null;
 let iapPrice = '', iapBusy = false;
