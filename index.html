@@ -439,6 +439,13 @@ html,body{overscroll-behavior:none}
 .bk-code:focus{outline:2px solid var(--mint);border-color:var(--mint)}
 .bk-msg{min-height:1.3em;font-weight:700;color:var(--mint);font-size:14px;line-height:1.5}
 .bk-msg.bad{color:#ff9a9a}
+.pdel-list{display:flex;flex-direction:column;gap:8px}
+.pdel{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);text-align:left}
+.pdel svg{width:52px;height:52px;flex:none;overflow:visible}
+.pdel>div{flex:1;min-width:0}
+.pdel b{display:block;overflow-wrap:anywhere}
+.pdel small{display:block;color:var(--muted);font-size:12px;font-weight:700}
+.pdel .danger{flex:none}
 .tgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
 .tgrid button{aspect-ratio:1;min-height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font-family:var(--f-num);font-size:22px;cursor:pointer;padding:0;touch-action:manipulation;transition:background .15s,border-color .15s,color .15s}
 .tgrid button[aria-pressed="true"]{background:rgba(255,210,63,.16);border-color:var(--sun);color:var(--sun)}
@@ -936,6 +943,14 @@ html,body{overscroll-behavior:none}
     </div>
   </div>
 
+  <div class="overlay" id="o-petdel" hidden>
+    <div class="card">
+      <div class="hhead"><h3 data-t="pdel.title"></h3><button class="icon-btn xbtn" type="button" id="pdel-close" data-ta="close">✕</button></div>
+      <p data-t="pdel.p"></p>
+      <div class="pdel-list" id="pdel-list"></div>
+    </div>
+  </div>
+
   <div class="overlay" id="o-set" hidden>
     <div class="card">
       <div class="hhead"><h3 id="set-title"></h3><button class="icon-btn xbtn" type="button" id="set-close" data-ta="close">✕</button></div>
@@ -951,6 +966,7 @@ html,body{overscroll-behavior:none}
       <div class="setlist">
         <div class="setrow app-only"><div><b data-t="set.unlock"></b><small id="set-unlockD"></small></div><button class="link-btn" type="button" id="set-unlock" data-t="set.unlockGo"></button></div>
         <div class="setrow"><div><b data-t="set.backup"></b><small data-t="set.backupD"></small></div><button class="link-btn" type="button" id="go-backup" data-t="set.backupGo"></button></div>
+        <div class="setrow" id="set-petrow"><div><b data-t="set.pet"></b><small data-t="set.petD"></small></div><button class="link-btn" type="button" id="go-petdel" data-t="set.petGo"></button></div>
         <div class="setrow" id="set-delrow"><div><b data-t="set.del"></b><small id="set-delD"></small></div><button class="link-btn danger" type="button" id="set-del" data-t="set.delGo"></button></div>
       </div>
       <div class="btn-col"><button class="btn alt" type="button" id="go-about" data-th="about.title"></button></div>
@@ -1137,7 +1153,7 @@ const STR = {
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': '保留所有權利。',
     'about.title': '關於<span class="brand-t">九九流星隊</span>', 'about.what': '這是什麼', 'about.parents': '給家長', 'about.made': '製作',
     'about.whatL': '<li>給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，是把「都會但偶爾背錯」練到<b>又快又不會錯</b>。</li><li>答錯的題目會偷偷更常出現，孩子只覺得在玩。星圖看得到每一題熟不熟。</li>',
-    'about.parentsL': '<li><b>沒有廣告、沒有追蹤、不收集任何資料</b>。所有紀錄只存在這台裝置裡。</li><li>每個人的紀錄分開存（主選單「誰在玩」）。換裝置時，請用「設定 → 家長區 → 備份紀錄」搬過去；刪掉 app 或清除資料，紀錄就不見了。想重來可以在星圖頁「清除所有紀錄」（要大人解一題）。</li>',
+    'about.parentsL': '<li><b>沒有廣告、沒有追蹤、不收集任何資料</b>。所有紀錄只存在這台裝置裡。</li><li>每個人的紀錄分開存（主選單「誰在玩」）。換裝置時，請用「設定 → 家長區 → 備份紀錄」搬過去；刪掉 app 或清除資料，紀錄就不見了。想重來可以在星圖頁「清除所有紀錄」（要大人解一題）。</li><li>想刪掉寵物（現在的或回家的夥伴），在「設定 → 家長區 → 刪除寵物」（要大人解一題）。星塵和配件會留著。</li>',
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（就是一個三寶爸）。',
     privacy: '隱私權政策', 'about.priv': '<a href="#" class="about-priv">隱私權政策</a>：我們不收集任何資料（要大人解一題才會打開）。',
     'about.credits': '寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC、Zen Maru Gothic 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。',
@@ -1158,7 +1174,8 @@ const STR = {
     'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、金牌、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'help.quest': '<li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li><li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>',
     'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li><li>換新的平板或手機時，請大人在「設定」用<b>備份紀錄</b>把紀錄搬過去。</li>',
-    'set.parents': '家長區', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄（要請大人）', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（匯入要請大人）', 'set.backupGo': '打開',
+    'set.parents': '家長區', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄（要請大人）', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（匯入要請大人）', 'set.backupGo': '打開', 'set.pet': '刪除寵物', 'set.petD': '把現在的寵物或回家的夥伴永遠刪掉（要請大人）', 'set.petGo': '打開',
+    'pdel.title': '刪除寵物', 'pdel.p': '刪掉的寵物不會回來。星塵和配件會留著。', 'pdel.cur': '{stage}・現在的夥伴', 'pdel.go': '刪除', 'pdel.aria': '刪除{name}', 'pdel.why': '要永遠刪除「{name}」，請大人先回答這一題。', 'pdel.done': '「{name}」刪掉了',
     'lock.trial': '免費試玩', 'lock.locked': '要請大人解鎖', 'lock.title': '{name}試玩過囉！', 'lock.p': '想一直玩，請大人幫你解鎖。{m}還是可以一直玩喔！', 'lock.ask': '請大人來看', 'lock.ok': '好',
     'trial.start': '免費試玩一次！', 'nudge.title': '還有別的遊戲喔！', 'nudge.p': '{games}，每一種都可以免費玩一次。在主選單點點看！',
     'gate.buy': '要購買或使用優惠碼，請大人先回答這一題。', 'buy.title': '解鎖全部遊戲',
@@ -1279,7 +1296,7 @@ const STR = {
     author: '指數三寶飯', 'legal.id': ' (ianyclin) ', 'legal.rights': 'All rights reserved.',
     'about.title': 'About <span class="brand-t">9×9 Meteor Squad</span>', 'about.what': 'What is this?', 'about.parents': 'For parents', 'about.made': 'Credits',
     'about.whatL': '<li>A times tables game for kids (around 2nd–3rd grade). The goal isn\'t learning the facts for the first time. It takes "I know them but slip sometimes" all the way to <b>fast and never wrong</b>.</li><li>Missed facts quietly come up more often, while your child just feels like they\'re playing. The Star Map shows how well each fact is known.</li>',
-    'about.parentsL': '<li><b>No ads, no tracking, no data collected.</b> All records stay on this device.</li><li>Each player\'s records are kept separately ("Who\'s playing" on the menu). To move to a new device, use Settings → For grown-ups → Back up records. Deleting the app or clearing its data erases them. To start over, use "Erase all records" on the Star Map page (a grown-up solves a problem first).</li>',
+    'about.parentsL': '<li><b>No ads, no tracking, no data collected.</b> All records stay on this device.</li><li>Each player\'s records are kept separately ("Who\'s playing" on the menu). To move to a new device, use Settings → For grown-ups → Back up records. Deleting the app or clearing its data erases them. To start over, use "Erase all records" on the Star Map page (a grown-up solves a problem first).</li><li>To remove a pet (current or back home), use Settings → For grown-ups → Delete pets (needs a grown-up). Stardust and outfits stay.</li>',
     'about.author': 'Made by <a href="#" class="about-fb">指數三寶飯</a> (a dad of three).',
     privacy: 'Privacy Policy', 'about.priv': '<a href="#" class="about-priv">Privacy Policy</a>: we collect no data at all (a grown-up solves a problem first to open it).',
     'about.credits': 'Pet and outfit art is AI-generated. Fonts are Chiron GoRound TC, Zen Maru Gothic and Lilita One (SIL Open Font License), bundled with the game, so nothing loads from outside. Music and sound effects are synthesized live in code.',
@@ -1299,7 +1316,8 @@ const STR = {
     'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, medal, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>Tap a pet that went home to visit it, or <b>bring it back</b>. Your current pet goes home to rest and keeps its progress, so you can swap back anytime.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
     'help.quest': '<li>There are <b>3 small missions</b> every day. They check off by themselves. Finish all three for a <b>badge</b>.</li><li>Finish several days in a row and you\'ll see your streak. New missions come tomorrow.</li>',
     'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li><li>Getting a new tablet or phone? A grown-up can move your records with <b>Back up records</b> in Settings.</li>',
-    'set.parents': 'For grown-ups', 'set.del': 'Delete player', 'set.delD': 'Delete {name} and all of their records (ask a grown-up)', 'set.delGo': 'Delete', 'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (importing needs a grown-up)', 'set.backupGo': 'Open',
+    'set.parents': 'For grown-ups', 'set.del': 'Delete player', 'set.delD': 'Delete {name} and all of their records (ask a grown-up)', 'set.delGo': 'Delete', 'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (importing needs a grown-up)', 'set.backupGo': 'Open', 'set.pet': 'Delete pets', 'set.petD': 'Remove your pet or a pet back home for good (ask a grown-up)', 'set.petGo': 'Open',
+    'pdel.title': 'Delete pets', 'pdel.p': 'A deleted pet can\'t come back. Your stardust and outfits stay.', 'pdel.cur': '{stage} · your pet now', 'pdel.go': 'Delete', 'pdel.aria': 'Delete {name}', 'pdel.why': 'This deletes {name} for good. A grown-up needs to answer this first.', 'pdel.done': '{name} was deleted',
     'lock.trial': 'Free try', 'lock.locked': 'Ask a grown-up to unlock', 'lock.title': 'You tried {name}!', 'lock.p': 'To keep playing, ask a grown-up to unlock it. You can always play {m}!', 'lock.ask': 'Get a grown-up', 'lock.ok': 'OK',
     'trial.start': 'Free try!', 'nudge.title': 'There are more games!', 'nudge.p': '{games}: you can try each one once for free. Tap one on the menu!',
     'gate.buy': 'To buy or use a promo code, a grown-up needs to answer this first.', 'buy.title': 'Unlock all games',
@@ -1419,7 +1437,7 @@ const STR = {
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': 'All rights reserved.',
     'about.title': '<span class="brand-t">九九流星隊</span>について', 'about.what': 'これは何？', 'about.parents': 'おうちの方へ', 'about.made': '制作',
     'about.whatL': '<li>小学生（2〜3年生くらい）が九九を練習するゲームです。目標は「覚える」ことではなく、「わかっているのに時々まちがえる」を<b>速く、まちがえずに</b>答えられるまで練習することです。</li><li>まちがえた問題はこっそり多めに出題されますが、子どもは遊んでいるだけに感じます。星マップで、一問ずつの習熟度が見られます。</li>',
-    'about.parentsL': '<li><b>広告なし・追跡なし・データ収集なし</b>。記録はすべて、この端末の中だけに保存されます。</li><li>記録は人ごとに分けて保存されます（メニューの「だれがあそぶ？」）。端末を変えるときは「設定 → おうちの人むけ → きろくのバックアップ」で移せます。アプリやデータを消すと、記録も消えます。最初からやり直すときは、星マップの「記ろくをぜんぶけす」から（大人が一問解く必要があります）。</li>',
+    'about.parentsL': '<li><b>広告なし・追跡なし・データ収集なし</b>。記録はすべて、この端末の中だけに保存されます。</li><li>記録は人ごとに分けて保存されます（メニューの「だれがあそぶ？」）。端末を変えるときは「設定 → おうちの人むけ → きろくのバックアップ」で移せます。アプリやデータを消すと、記録も消えます。最初からやり直すときは、星マップの「記ろくをぜんぶけす」から（大人が一問解く必要があります）。</li><li>ペット（今のペットや家に帰ったなかま）を消すには「せってい → おうちの人むけ → ペットをけす」（大人の方が問題に答えます）。星くずときせかえは残ります。</li>',
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（3人の子のパパです）。',
     privacy: 'プライバシーポリシー', 'about.priv': '<a href="#" class="about-priv">プライバシーポリシー</a>：データはいっさい集めません（大人が問題を1問解くと開きます）。',
     'about.credits': 'ペットときせかえのイラストはAIで生成しています。フォントは Zen Maru Gothic、Chiron GoRound TC、Lilita One（SIL Open Font License）で、ゲームといっしょに配布しているため外部には接続しません。音楽と効果音はプログラムでリアルタイムに合成しています。',
@@ -1439,7 +1457,8 @@ const STR = {
     'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおそう。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、きんメダル、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
     'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
     'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li><li>新しいタブレットやスマホにかえるときは、大人の人に「せってい」の<b>きろくのバックアップ</b>でうつしてもらおう。</li>',
-    'set.parents': 'おうちの人むけ', 'set.del': 'プレイヤーをけす', 'set.delD': '「{name}」の名前と記ろくをぜんぶけす（大人の人にきいてね）', 'set.delGo': 'けす', 'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（読みこみは大人の人にきいてね）', 'set.backupGo': 'ひらく',
+    'set.parents': 'おうちの人むけ', 'set.del': 'プレイヤーをけす', 'set.delD': '「{name}」の名前と記ろくをぜんぶけす（大人の人にきいてね）', 'set.delGo': 'けす', 'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（読みこみは大人の人にきいてね）', 'set.backupGo': 'ひらく', 'set.pet': 'ペットをけす', 'set.petD': '今のペットや家に帰ったなかまを、ずっとけす（大人の人にきいてね）', 'set.petGo': 'ひらく',
+    'pdel.title': 'ペットをけす', 'pdel.p': 'けしたペットはもどってこないよ。星くずときせかえはのこるよ。', 'pdel.cur': '{stage}・今のなかま', 'pdel.go': 'けす', 'pdel.aria': '{name}をけす', 'pdel.why': '「{name}」を完全に消去します。大人の方がこの問題に答えてください。', 'pdel.done': '「{name}」をけしたよ',
     'lock.trial': 'おためし', 'lock.locked': '大人の人にひらいてもらおう', 'lock.title': '{name}をためしたよ！', 'lock.p': 'ずっとあそぶには、大人の人にひらいてもらってね。{m}は、いつでもあそべるよ！', 'lock.ask': '大人の人をよぶ', 'lock.ok': 'わかった',
     'trial.start': 'おためしで1回あそべるよ！', 'nudge.title': 'ほかのゲームもあるよ！', 'nudge.p': '{games}は、1回ずつただであそべるよ。メニューでえらんでみてね！',
     'gate.buy': '購入やコードの入力には、大人の方がこの問題に答えてください。', 'buy.title': 'すべてのゲームを解除',
@@ -3171,6 +3190,28 @@ function alumSwap() {
 $('#pet-alumni').addEventListener('click', e => { const b = e.target.closest('.alum'); if (b) openAlum(+b.dataset.i); });
 $('#alum-go').addEventListener('click', alumSwap);
 $('#alum-close').addEventListener('click', () => { $('#o-alum').hidden = true; });
+// 設定 → 家長區：永遠刪除寵物（現在的或回家的夥伴），走難的家長關卡；星塵、配件、送回家的次數（傳說蛋）都留著
+function petDelList() { return [...(PET_KINDS[DB.pet.kind] ? [{ cur: true }] : []), ...(Array.isArray(DB.pet.released) ? DB.pet.released : []).filter(r => r && PET_KINDS[r.kind]).map(r => ({ r }))]; }
+function renderPetDel() {
+  const L = petDelList(); if (!L.length) { $('#o-petdel').hidden = true; refreshMenu(); $('#o-set').hidden = false; return; }
+  $('#pdel-list').innerHTML = L.map((x, i) => {
+    const kind = x.cur ? DB.pet.kind : x.r.kind, st = petStage(x.cur ? DB.pet.fed : alumFed(x.r)), name = x.cur ? petName() : alumName(x.r);
+    const sub = x.cur ? tx('pdel.cur', { stage: tx('stage.' + st) }) : tx('alum.sub', { stage: tx('stage.' + st), home: tx('home.' + kind) });
+    return `<div class="pdel">${petSVG(kind, st)}<div><b>${esc(name)}</b><small>${esc(sub)}</small></div><button class="danger" type="button" data-i="${i}" aria-label="${esc(tx('pdel.aria', { name }))}">${tx('pdel.go')}</button></div>`;
+  }).join('');
+}
+function openPetDel() { if (byeing) return; $('#o-set').hidden = true; $('#o-petdel').hidden = false; renderPetDel(); }
+$('#go-petdel').addEventListener('click', openPetDel);
+$('#pdel-close').addEventListener('click', () => { $('#o-petdel').hidden = true; refreshMenu(); $('#o-set').hidden = false; });   // 從設定打開的，關掉回到設定
+$('#pdel-list').addEventListener('click', e => {
+  const b = e.target.closest('[data-i]'); if (!b) return; const x = petDelList()[+b.dataset.i]; if (!x) return;
+  const P_ = DB.pet, name = x.cur ? petName() : alumName(x.r), kind = P_.kind, fed = P_.fed;
+  openGate(() => {
+    if (x.cur) { if (P_ !== DB.pet || P_.kind !== kind || P_.fed !== fed) return; P_.kind = ''; P_.name = ''; P_.fed = 0; }   // 關卡期間換了寵物就不刪
+    else { const i = (DB.pet.released || []).indexOf(x.r); if (i < 0) return; DB.pet.released.splice(i, 1); }
+    save(); renderPetDel(); toast(tx('pdel.done', { name }));
+  }, tx('pdel.why', { name }));
+});
 // 放回家要在確認卡上按；確認鈕在卡片打開 0.7 秒內、或跟上一下點擊相隔不到 0.6 秒（還在連點）都不理
 function askRelease() {
   const P_ = DB.pet; if (byeing || !PET_KINDS[P_.kind] || petStage(P_.fed) < 4 || now() < byeLock) return;
@@ -3514,7 +3555,7 @@ function countdown(cb) {
 function show(name) {
   mode = name;
   $$('.screen').forEach(s => { s.hidden = s.id !== 's-' + name; }); $('#toast').classList.toggle('mid', name === 'versus');
-  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; $('#o-about').hidden = true; $('#o-who').hidden = true; $('#o-alum').hidden = true; $('#o-pbye').hidden = true; $('#o-backup').hidden = true; $('#o-lock').hidden = true; $('#o-buy').hidden = true; $('#o-nudge').hidden = true; gate = null; cdTok++;
+  $('#o-result').hidden = true; $('#o-pause').hidden = true; $('#o-count').hidden = true; $('#o-wrong').hidden = true; $('#v-pausebox').hidden = true; $('#o-help').hidden = true; $('#o-mode').hidden = true; $('#o-set').hidden = true; $('#o-quest').hidden = true; $('#o-name').hidden = true; $('#o-gate').hidden = true; $('#o-about').hidden = true; $('#o-who').hidden = true; $('#o-alum').hidden = true; $('#o-pbye').hidden = true; $('#o-backup').hidden = true; $('#o-petdel').hidden = true; $('#o-lock').hidden = true; $('#o-buy').hidden = true; $('#o-nudge').hidden = true; gate = null; cdTok++;
   if (name !== 'meteor') { if (M) M.over = true; M = null; }
   if (name !== 'ghost') G = null;
   if (name !== 'cmp') C = null;
@@ -3539,6 +3580,7 @@ function refreshMenu() {
   $('#brand-note').textContent = isStdRange() ? tx('brand.note') : rangeText('note');
   $('#brand-note').classList.toggle('on', !isStdRange());
   $('#set-title').textContent = whoCur().name ? tx('set.titleWho', { name: whoCur().name }) : tx('set.title');
+  $('#set-petrow').hidden = !petDelList().length;   // 沒有寵物就不顯示
   $('#set-delrow').hidden = !whoCur().name; $('#set-delD').textContent = tx('set.delD', { name: whoCur().name });   // 還沒取名的人沒有可刪的   // 連續幫幾個孩子設定時知道現在是誰的
   const mp = $('#menu-pet'), hasPet = !!(DB.pet.kind && PET_KINDS[DB.pet.kind]);
   mp.hidden = !hasPet; if (hasPet) { const html = petSVG(DB.pet.kind, petStage(DB.pet.fed), wearObj()); if (mp._html !== html) { $('#menu-pet-img').innerHTML = html; mp._html = html; } }   // 主選單走來走去的寵物
