@@ -144,6 +144,8 @@ html:not(.app) .app-only{display:none!important}
 .slot{display:inline-grid;place-items:center;width:.82em;height:1.08em;border-radius:.16em;background:rgba(255,255,255,.07);border-bottom:4px solid var(--muted);font-style:normal;color:var(--sun)}
 .slot.on{border-color:var(--sun);background:rgba(255,210,63,.1)}
 .hint{font-size:14px;color:#ff9a9a;font-weight:700;min-height:1.3em;text-align:center;white-space:pre-line}
+.hint.study{animation:hintGlow .8s ease-in-out infinite alternate}   /* 加減答錯、時間停住看算法的 3 秒 */
+@keyframes hintGlow{from{text-shadow:none}to{text-shadow:0 0 10px rgba(255,154,154,.85)}}
 .shake{animation:shk .35s}
 @keyframes shk{20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
 .icon-btn{width:44px;height:44px;border-radius:13px;border:1px solid var(--line);background:rgba(12,24,41,.66);cursor:pointer;display:grid;place-items:center;flex:none}
@@ -1162,10 +1164,10 @@ const STR = {
     rotate: '請把手機轉直',
     // 遊戲說明（每段是一串 <li>）
     'help.games': '五個遊戲', 'help.other': '其他', 'help.chestT': '寶箱流星', 'help.comboT': '連擊', 'help.whoT': '誰在玩', 'help.questT': '每日任務',
-    'help.meteor': '<li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台會一直瞄準<b>同一顆</b>直到打掉；有別顆快掉到地上了，才會先轉過去打它，這時下面的題目會跳一下。</li><li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。加減題還會教你怎麼算，像 7 + 8：<b>雙倍</b> 7 + 7 = 14，再加 1；或<b>湊十</b> 8 + 2 = 10，10 + 5 = 15。</li><li>有時候流星上寫「7 的倍數」加一串數字「7、14、?、28」，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li><li>流星掉到小鎮會<b>扣 1 顆心</b>。一整波都沒失誤 +50 分。</li><li>每 5 波出現<b>錯題魔王</b>，專出你常錯或還不熟的題目。要<b>一次就答對</b>才算打中一下，打中 6 下以上才打得倒，波數越高血越多。魔王來的時候沒有小流星，專心打牠就好。打倒 +200 分、<b>必掉寶箱</b>。</li><li>魔王掉到小鎮也是<b>扣 1 顆心</b>，然後下一波就開始了。</li><li>補心只靠寶箱，心最多 3 顆。</li><li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>',
+    'help.meteor': '<li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台會一直瞄準<b>同一顆</b>直到打掉；有別顆快掉到地上了，才會先轉過去打它，這時下面的題目會跳一下。</li><li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。加減題還會教你怎麼算，像 7 + 8：<b>雙倍</b> 7 + 7 = 14，再加 1；或<b>湊十</b> 8 + 2 = 10，10 + 5 = 15。這時流星會<b>停 3 秒</b>，讓你看清楚。</li><li>有時候流星上寫「7 的倍數」加一串數字「7、14、?、28」，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li><li>流星掉到小鎮會<b>扣 1 顆心</b>。一整波都沒失誤 +50 分。</li><li>每 5 波出現<b>錯題魔王</b>，專出你常錯或還不熟的題目。要<b>一次就答對</b>才算打中一下，打中 6 下以上才打得倒，波數越高血越多。魔王來的時候沒有小流星，專心打牠就好。打倒 +200 分、<b>必掉寶箱</b>。</li><li>魔王掉到小鎮也是<b>扣 1 顆心</b>，然後下一波就開始了。</li><li>補心只靠寶箱，心最多 3 顆。</li><li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>',
     'help.chest': '<li>第 2 波起，<b>? × 7 = 56</b> 這種反過來問的流星會帶著寶箱。<b>一次就答對</b>打掉它，就會掉一樣東西。</li><li>寶箱有三種：<b>銀色</b>常見、<b>金色</b>少見、<b>彩虹色</b>稀有，越稀有開起來越熱鬧。</li><li>銀色：+30 分、時間凍結、<b>連擊護盾</b>。金色：雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b>。</li><li>連擊護盾：右上角的連擊數字會罩在一顆亮亮的泡泡裡。答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>，泡泡就破了。已經有泡泡了，再拿到就變成 +50 分。</li><li>追蹤飛彈最多存 3 枚（滿了再拿到就變成 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li><li>彩虹色：<b>超新星</b>把正在掉的小流星全部清掉（你正在打的那顆和魔王除外）、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已經 3 顆、或一擊即死模式，就變成 +100 分）。</li>',
     'help.combo': '<li>每題 10 分，2.5 秒內答對再 +5。每連對 5 題，分數多乘 1 倍，最多 5 倍。答錯後照著重打只有 3 分，也不算連擊。</li><li>連擊 10、30、50、100 有慶祝動畫。答錯或流星落地，連擊歸零。</li>',
-    'help.ghost': '<li>20 題計時。另一條跑道是<b>最快的你</b>（你最好的一次），追過它就是新紀錄。第一次是跟<b>新手幽靈</b>跑。</li><li>輸了幽靈會慢一點點（最多三次），追過它就會慢慢變回最快的你。</li>',
+    'help.ghost': '<li>20 題計時。另一條跑道是<b>最快的你</b>（你最好的一次），追過它就是新紀錄。第一次是跟<b>新手幽靈</b>跑。</li><li>輸了幽靈會慢一點點（最多三次），追過它就會慢慢變回最快的你。</li><li>加減題答錯時，你和幽靈都會<b>停 3 秒</b>，讓你看怎麼算，不算時間。</li>',
     'help.versus': '<li>平板放中間，面對面搶答。答對把星星拉過來一格，先拉到底的贏；答錯停 1 秒。</li><li>拉很久還分不出勝負，<b>繩子會變滑</b>：45 秒後一次拉兩格，一分半後一次拉三格。</li><li>下方「小隊長」的作答會記進星圖和錯題本。</li><li>沒有人陪你玩？選<b>機器人</b>當對手。它算題的速度跟你平常差不多，你落後它會慢一點，你領先它會快一點，偶爾也會算錯。</li>',
     'help.cmp': '<li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。點對不會點亮星星（要打出答案才算）。</li><li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li><li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現，你點的那題下次玩流星或幽靈時也會再考你一次。</li><li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>',
     'help.bomb': '<li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。點對不會點亮星星（要打出答案才算）。</li><li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點，下次玩流星或幽靈時也會再考你一次。</li><li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>',
@@ -1304,10 +1306,10 @@ const STR = {
     'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.no': 'Not quite. Try again',
     rotate: 'Please turn your phone upright',
     'help.games': 'Five games', 'help.other': 'More', 'help.chestT': 'Treasure meteors', 'help.comboT': 'Combos', 'help.whoT': 'Who\'s playing', 'help.questT': 'Daily missions',
-    'help.meteor': '<li>Each meteor has a math problem. Type the answer and the cannon zaps it with a laser. The cannon keeps aiming at <b>the same meteor</b> until it\'s gone. It only turns to another one that\'s about to hit the ground, and then the problem below gives a little hop.</li><li>If you answer wrong, the meteor shows the answer. <b>Type it in</b> to knock it down. For + and −, it also shows a trick, like 7 + 8: <b>double</b> 7 + 7 = 14, plus 1; or <b>make 10</b>: 8 + 2 = 10, 10 + 5 = 15.</li><li>Sometimes a meteor says "Count by 7s" with numbers like "7, 14, ?, 28". Just <b>type the missing number</b>. You\'ll see these in Ghost Race and Tug of War too.</li><li>A meteor that hits the town <b>costs 1 heart</b>. A whole wave with no misses: +50 points.</li><li>Every 5 waves the <b>Mistake Boss</b> shows up with problems you often miss or don\'t know well yet. Only answers <b>right on the first try</b> count as hits. It takes 6 or more hits, and more in later waves. No small meteors come with the boss, so just focus on it. Beat it for +200 points and a <b>chest every time</b>.</li><li>If the boss hits the town, that\'s also <b>1 heart</b>, and the next wave starts.</li><li>Hearts only come from chests. You can have up to 3.</li><li><b>One Hit</b>: only 1 heart, with its own high score.</li>',
+    'help.meteor': '<li>Each meteor has a math problem. Type the answer and the cannon zaps it with a laser. The cannon keeps aiming at <b>the same meteor</b> until it\'s gone. It only turns to another one that\'s about to hit the ground, and then the problem below gives a little hop.</li><li>If you answer wrong, the meteor shows the answer. <b>Type it in</b> to knock it down. For + and −, it also shows a trick, like 7 + 8: <b>double</b> 7 + 7 = 14, plus 1; or <b>make 10</b>: 8 + 2 = 10, 10 + 5 = 15. The meteors <b>stop for 3 seconds</b> so you can read it.</li><li>Sometimes a meteor says "Count by 7s" with numbers like "7, 14, ?, 28". Just <b>type the missing number</b>. You\'ll see these in Ghost Race and Tug of War too.</li><li>A meteor that hits the town <b>costs 1 heart</b>. A whole wave with no misses: +50 points.</li><li>Every 5 waves the <b>Mistake Boss</b> shows up with problems you often miss or don\'t know well yet. Only answers <b>right on the first try</b> count as hits. It takes 6 or more hits, and more in later waves. No small meteors come with the boss, so just focus on it. Beat it for +200 points and a <b>chest every time</b>.</li><li>If the boss hits the town, that\'s also <b>1 heart</b>, and the next wave starts.</li><li>Hearts only come from chests. You can have up to 3.</li><li><b>One Hit</b>: only 1 heart, with its own high score.</li>',
     'help.chest': '<li>From wave 2, meteors that ask backwards, like <b>? × 7 = 56</b>, carry a chest. Knock one down <b>right on the first try</b> and it drops something.</li><li>There are three kinds of chests: <b>silver</b> (common), <b>gold</b> (not so common) and <b>rainbow</b> (rare). Rarer chests open with a bigger party.</li><li>Silver: +30 points, time freeze, <b>combo shield</b>. Gold: double points for 10 seconds, invincible for 10 seconds, <b>homing missile</b>.</li><li>Combo shield: your combo number (top right) sits in a shiny bubble. If you answer wrong or a meteor hits the town, it protects you once: <b>your combo stays</b> and the bubble pops. Getting another while you have one gives +50 points.</li><li>You can store up to 3 homing missiles (more give +50 points). The top left shows how many you have. When the boss appears, a flashing <b>"Fire" button</b> pops up above the keypad. Each tap fires one missile and takes 1 hit off the boss, but the last hit is up to you.</li><li>Rainbow: <b>Supernova</b> clears all the small falling meteors (except the one you\'re answering and the boss), <b>invincible for 20 seconds</b>, or <b>an extra heart</b> (+100 points if you already have 3 or are playing One Hit).</li>',
     'help.combo': '<li>Each answer is 10 points, +5 if you answer within 2.5 seconds. Every 5 in a row adds 1 to your multiplier, up to ×5. Retyping after a mistake gives only 3 points and doesn\'t count for your combo.</li><li>Combos of 10, 30, 50 and 100 get a celebration. A mistake or a meteor hitting the ground resets your combo.</li>',
-    'help.ghost': '<li>20 questions against the clock. The other lane is <b>the fastest you</b> (your best run). Pass it to set a new record. The first time, you race the <b>rookie ghost</b>.</li><li>If you lose, the ghost slows down a little (up to three times). Beat it, and it slowly speeds back up to your best.</li>',
+    'help.ghost': '<li>20 questions against the clock. The other lane is <b>the fastest you</b> (your best run). Pass it to set a new record. The first time, you race the <b>rookie ghost</b>.</li><li>If you lose, the ghost slows down a little (up to three times). Beat it, and it slowly speeds back up to your best.</li><li>If you miss a + or − question, you and the ghost both <b>stop for 3 seconds</b> so you can read the trick. That time doesn\'t count.</li>',
     'help.versus': '<li>Put the tablet between you and answer face to face. Each right answer pulls the star one step toward you. Pull it all the way to win. A wrong answer freezes you for 1 second.</li><li>If nobody wins for a long time, <b>the rope gets slippery</b>: after 45 seconds each pull moves 2 steps, after 90 seconds 3 steps.</li><li>Only the bottom player (the Captain) gets answers saved to the Star Map and Mistakes.</li><li>Nobody to play with? Pick the <b>Robot</b>. It answers about as fast as you usually do. It slows down when you\'re behind, speeds up when you\'re ahead, and makes mistakes sometimes too.</li>',
     'help.cmp': '<li>You get three problems. If it asks for the <b>biggest</b>, tap the one with the biggest answer. If it asks for the <b>smallest</b>, tap the smallest. Tapping doesn\'t light up stars (only typed answers do).</li><li>The answers are close, so work them out before you tap. After 3 right in a row, they get even closer.</li><li>If you tap the wrong one, all three answers show. Tap <b>the right one</b> to go on. Both the right problem and the one you tapped will come up more often, and the one you tapped comes back next time you play Meteor Defense or Ghost Race.</li><li>A round is 10 questions. Only <b>all 10 right</b> counts for a best time. One mistake and that round isn\'t timed.</li>',
     'help.bomb': '<li>If the bomb says <b>7</b>, tap the answers in the 7 times table: 7, 14, 21… Not all of them are on the board, so tap the ones you find. Below, it says "Found 0 / 5". Tapping doesn\'t light up stars (only typed answers do).</li><li>Tap a number that doesn\'t belong and the bomb <b>explodes</b>. It also explodes when the fuse burns out. Watch out for look-alikes like 27 and 57! Numbers you tapped wrong or didn\'t find come up a bit more, and come back next time you play Meteor Defense or Ghost Race.</li><li>A round is 5 bombs. Only <b>all 5 defused</b> counts for a best time.</li>',
@@ -1445,10 +1447,10 @@ const STR = {
     'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.no': 'ちがいます。もう一度どうぞ',
     rotate: 'スマホをたてにしてね',
     'help.games': '5つのゲーム', 'help.other': 'そのほか', 'help.chestT': 'たからばこ流星', 'help.comboT': 'コンボ', 'help.whoT': 'だれがあそぶ？', 'help.questT': '毎日のミッション',
-    'help.meteor': '<li>流星には計算の問題がのっているよ。答えを打つと、ほう台がレーザーでうちおとすよ。ほう台は<b>同じ流星</b>をずっとねらっていて、ほかの流星が地面にぶつかりそうなときだけ、そっちをねらうよ。そのとき下の問題がピョンとはねるよ。</li><li>まちがえると流星に答えが出るよ。<b>そのまま打てば</b>うちおとせるよ。たし算・ひき算は、とき方も出るよ。7 + 8 なら <b>おなじ数</b> 7 + 7 = 14 に 1 たす、または <b>10をつくる</b> 8 + 2 = 10、10 + 5 = 15。</li><li>流星に「7のだん」と「7、14、?、28」のような数がならぶことがあるよ。<b>？の数</b>を打てばOK。ゴーストレースとつなひきでも出るよ。</li><li>流星が町に落ちると<b>ハートが1つへる</b>よ。1ウェーブのあいだミスなしなら +50点。</li><li>5ウェーブごとに<b>まちがいボス</b>が出るよ。きみがよくまちがえる問題や、まだなれていない問題を出してくるよ。<b>1回で正かい</b>しないとダメージにならないよ。6回以上当てるとたおせて、ウェーブが進むほどライフがふえるよ。ボスのときは小さい流星は来ないから、ボスに集中しよう。たおすと +200点、<b>かならずたからばこ</b>が出るよ。</li><li>ボスが町に落ちても<b>ハートが1つへって</b>、次のウェーブが始まるよ。</li><li>ハートがふえるのはたからばこだけ。ハートは3つまで。</li><li><b>一発アウト</b>：ハートは1つだけ。ハイスコアはべつに記ろくされるよ。</li>',
+    'help.meteor': '<li>流星には計算の問題がのっているよ。答えを打つと、ほう台がレーザーでうちおとすよ。ほう台は<b>同じ流星</b>をずっとねらっていて、ほかの流星が地面にぶつかりそうなときだけ、そっちをねらうよ。そのとき下の問題がピョンとはねるよ。</li><li>まちがえると流星に答えが出るよ。<b>そのまま打てば</b>うちおとせるよ。たし算・ひき算は、とき方も出るよ。7 + 8 なら <b>おなじ数</b> 7 + 7 = 14 に 1 たす、または <b>10をつくる</b> 8 + 2 = 10、10 + 5 = 15。このとき流星は<b>3びょう止まる</b>から、よく見てね。</li><li>流星に「7のだん」と「7、14、?、28」のような数がならぶことがあるよ。<b>？の数</b>を打てばOK。ゴーストレースとつなひきでも出るよ。</li><li>流星が町に落ちると<b>ハートが1つへる</b>よ。1ウェーブのあいだミスなしなら +50点。</li><li>5ウェーブごとに<b>まちがいボス</b>が出るよ。きみがよくまちがえる問題や、まだなれていない問題を出してくるよ。<b>1回で正かい</b>しないとダメージにならないよ。6回以上当てるとたおせて、ウェーブが進むほどライフがふえるよ。ボスのときは小さい流星は来ないから、ボスに集中しよう。たおすと +200点、<b>かならずたからばこ</b>が出るよ。</li><li>ボスが町に落ちても<b>ハートが1つへって</b>、次のウェーブが始まるよ。</li><li>ハートがふえるのはたからばこだけ。ハートは3つまで。</li><li><b>一発アウト</b>：ハートは1つだけ。ハイスコアはべつに記ろくされるよ。</li>',
     'help.chest': '<li>ウェーブ2から、<b>? × 7 = 56</b> みたいに反対から聞く流星が、たからばこを持っているよ。<b>1回で正かい</b>してうちおとすと、アイテムが出るよ。</li><li>たからばこは3しゅるい：<b>銀</b>はよく出る、<b>金</b>はときどき、<b>にじ色</b>はレア。レアほどにぎやかにひらくよ。</li><li>銀：+30点、時間ストップ、<b>コンボシールド</b>。金：点数2ばい10秒、むてき10秒、<b>ホーミングミサイル</b>。</li><li>コンボシールド：右上のコンボの数字が、キラキラのあわにつつまれるよ。まちがえたり流星が町に落ちたりしたとき1回だけ守ってくれて、<b>コンボが0にならない</b>よ。そのときあわはわれるよ。もうあわがあるときにまたもらうと +50点。</li><li>ホーミングミサイルは3こまでためられるよ（いっぱいのときは +50点）。左上にいくつあるか出るよ。ボスが出ると、キーボードの上にピカピカの<b>「はっしゃ」ボタン</b>が出るよ。1回おすと1ぱつ、ボスのライフを1へらすよ。でもさいごの1回は自分で当ててね。</li><li>にじ色：<b>スーパーノヴァ</b>で落ちてくる小さい流星をぜんぶけす（いま答えている流星とボスはのこる）、<b>むてき20秒</b>、<b>ハート+1</b>（ハートが3つあるときや一発アウトのときは +100点）。</li>',
     'help.combo': '<li>1問10点、2.5秒までに答えると +5点。5問れんぞく正かいするごとに、点数のばいりつが1つ上がって、いちばん上は5ばい。まちがえたあとに打ち直すと3点だけで、コンボにもならないよ。</li><li>コンボ10・30・50・100で、おいわいのアニメがあるよ。まちがえたり流星が落ちたりすると、コンボは0にもどるよ。</li>',
-    'help.ghost': '<li>20問のタイムレース。となりのコースは<b>いちばん速いきみ</b>（きみのベスト）。おいこせば新記ろく！はじめては<b>ルーキーゴースト</b>と走るよ。</li><li>負けるとゴーストが少しおそくなるよ（3回まで）。勝つと、少しずつベストのきみにもどるよ。</li>',
+    'help.ghost': '<li>20問のタイムレース。となりのコースは<b>いちばん速いきみ</b>（きみのベスト）。おいこせば新記ろく！はじめては<b>ルーキーゴースト</b>と走るよ。</li><li>負けるとゴーストが少しおそくなるよ（3回まで）。勝つと、少しずつベストのきみにもどるよ。</li><li>たし算・ひき算をまちがえると、きみもゴーストも<b>3びょう止まる</b>よ。とき方を見てね。その時間はかぞえないよ。</li>',
     'help.versus': '<li>タブレットを間において、むかい合って早く答えよう。正かいすると星を1マス引っぱれるよ。さいごまで引っぱったら勝ち。まちがえると1秒とまるよ。</li><li>長いあいだ勝負がつかないと、<b>つながすべりやすくなる</b>よ：45秒たつと1回で2マス、90秒たつと3マス。</li><li>下の「たいちょう」の答えだけが、星マップとまちがい帳に記ろくされるよ。</li><li>いっしょにあそぶ人がいない？<b>ロボット</b>をえらぼう。きみのいつもの速さと同じくらいで答えるよ。きみが負けているとゆっくり、勝っていると速くなって、ときどきまちがえるよ。</li>',
     'help.cmp': '<li>3つの式が出るよ。<b>いちばん大きい</b>と聞かれたら答えがいちばん大きいものを、<b>いちばん小さい</b>と聞かれたらいちばん小さいものをタップ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>3つの答えはとても近いから、計算してからタップしよう。3問れんぞく正かいすると、もっと近くなるよ。</li><li>まちがえると3つの答えが出るよ。<b>正しいもの</b>をタップすると次に進むよ。まちがえたときは、正しい問題とタップした問題がこれから多めに出て、タップした問題は、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回10問。<b>10問ぜんぶ正かい</b>のときだけタイムをくらべるよ。1問でもまちがえたら、その回はタイムなし。</li>',
     'help.bomb': '<li>ばくだんに「<b>7</b>」と書いてあったら、7のだんの答え（7、14、21…）をタップしよう。ぜんぶあるとはかぎらないから、あるものだけタップ。下に「みつけた 0 / 5」と出るよ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>ちがう数をタップすると<b>ばくはつ</b>！どうか線がもえつきても、ばくはつするよ。27や57みたいな、にている数に気をつけて！まちがえた数や見つけられなかった数は少し多めに出て、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回に5こ。<b>5こぜんぶかいじょ</b>したときだけタイムをくらべるよ。</li>',
@@ -2045,7 +2047,7 @@ function newMeteor(q, boss) {
 }
 function startMeteor() {
   show('meteor');
-  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, shield: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
+  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, shield: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, study: 0, studyM: null, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
   P.length = 0; beams.length = 0; curT = null; lastBar = '';
   $('#m-freeze').hidden = true; $('#m-dbl').hidden = true; $('#m-inv').hidden = true;
   const me = M;
@@ -2150,18 +2152,21 @@ function getTarget() {
   let low = null;
   for (const m of M.list) if (!m.dead && m.y > -m.r * 0.6 && (!low || m.y + m.r > low.y + low.r)) low = m;
   if (!low || !curT || curT.dead || low === curT || !M.list.includes(curT) || curT.y <= -curT.r * 0.6) return low;
-  const sm = M.freeze > 0 ? 0.25 : 1, left = (GY - 34 - (low.y + low.r * 0.45)) / Math.max(1, low.vy * sm);
+  const sm = M.study > 0 ? 0 : M.freeze > 0 ? 0.25 : 1, left = (GY - 34 - (low.y + low.r * 0.45)) / Math.max(1, low.vy * sm);
   return left < 3 ? low : curT;
 }
 function updateMeteor(dt) {
-  const sm = M.freeze > 0 ? 0.25 : 1;
+  if (M.study > 0 && (!M.studyM || M.studyM.dead || !M.list.includes(M.studyM))) { M.study = 0; bar(); }   // 照答案打掉了就繼續
+  const study = M.study > 0;
+  if (study) { M.study -= dt; for (const m of M.list) if (m.tStart) m.tStart += dt * 1000; if (M.study <= 0) bar(); }   // 停住的時間不算進別顆的反應時間；時間到要重畫，提示才不再發亮
+  const sm = study ? 0 : M.freeze > 0 ? 0.25 : 1;
   if (M.freeze > 0) { M.freeze -= dt; $('#m-freeze').hidden = M.freeze <= 0; $('#m-freeze i').style.width = clamp(M.freeze / 4 * 100, 0, 100) + '%'; }
   if (M.dbl > 0) { M.dbl -= dt; $('#m-dbl').hidden = M.dbl <= 0; $('#m-dbl i').style.width = clamp(M.dbl / 10 * 100, 0, 100) + '%'; }
   if (M.inv > 0) { M.inv -= dt; $('#m-inv').hidden = M.inv <= 0; $('#m-inv i').style.width = clamp(M.inv / M.invMax * 100, 0, 100) + '%'; }
   const invOn = M.inv > 0; $('#m-hshield').toggleAttribute('hidden', !invOn); $('#m-hearts').classList.toggle('inv', invOn);   // 無敵：心旁邊有盾牌、心發光
   updateDrops(dt); updateRockets(dt); bossSeen();
-  if (M.bossDelay > 0) { M.bossDelay -= dt; if (M.bossDelay <= 0) spawnBoss(); }
-  M.spawnT -= dt;
+  if (M.bossDelay > 0 && !study) { M.bossDelay -= dt; if (M.bossDelay <= 0) spawnBoss(); }
+  if (!study) M.spawnT -= dt;
   const smalls = M.list.filter(m => !m.boss).length;
   if (!M.list.length && M.spawnT > 0.5 && M.bossDelay <= 0) M.spawnT = 0.5;
   if (M.spawnT <= 0 && !M.bossWave) {   // 魔王波只有魔王，不出小流星
@@ -2364,8 +2369,9 @@ function shieldSave(x, y) {
   M.shield = 0; ftxt(x, y, tx('m.shieldSave'), '#9fdcff', 26); ring(x, y, 100, '#9fdcff', 5); SFX.ding();
   return true;
 }
+const STUDY = 3;   // 加減答錯、有算法可以教時，時間停 3 秒讓孩子看（流星、幽靈；拔河不停，對手還在答）
 function miss(m) {
-  if (!m.revealed) { M.tot++; record(m.q.k, false, 0); M.wrongs.push(m.q); }
+  if (!m.revealed) { M.tot++; record(m.q.k, false, 0); M.wrongs.push(m.q); if (howTo(m.q).length) { M.study = STUDY; M.studyM = m; } }
   m.revealed = true; m.flash = 0.6; if (!shieldSave(m.x, m.y - m.r - 30)) M.combo = 0; M.waveMiss++;
   tHurt = 0.35; SFX.wrong();
   const el = $('#m-answer'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
@@ -2423,7 +2429,7 @@ function drawMeteorScene(dt) {
     g.shadowBlur = 0; g.globalAlpha = 1;
   }
   g.restore();
-  if (M.freeze > 0) { g.fillStyle = 'rgba(159,220,255,.07)'; g.fillRect(0, 0, W, gy); }
+  if (M.freeze > 0 || M.study > 0) { g.fillStyle = 'rgba(159,220,255,.07)'; g.fillRect(0, 0, W, gy); }
   for (const m of M.list) drawRock(m, m === curT && !M.over);
   for (const o of M.drops) drawDrop(o);
   drawRockets();
@@ -2566,7 +2572,7 @@ function bar() {
   let h;
   if (M.over) h = `<div class="aq dim">${tx('m.over')}</div>`;
   else if (!tg) h = `<div class="aq dim">${tx('m.wait')}</div><div class="hint"></div>`;
-  else h = `<div class="aq${tg.q.seq ? ' seq' : ''}">${qHTML(tg.q, M.buf)}</div><div class="hint">${tg.revealed ? revealText(tg.q) : ''}</div>`;
+  else h = `<div class="aq${tg.q.seq ? ' seq' : ''}">${qHTML(tg.q, M.buf)}</div><div class="hint${M.study > 0 && tg === M.studyM ? ' study' : ''}">${tg.revealed ? revealText(tg.q) : ''}</div>`;
   if (h !== lastBar) { $('#m-answer').innerHTML = h; lastBar = h; }
 }
 function pause(on) {
@@ -2591,10 +2597,10 @@ function startGhost() {
   $('#g-q').innerHTML = ''; $('#g-hint').textContent = ''; $('#g-prog').textContent = tx('ready');
   countdown(() => { G.started = true; G.t0 = now(); nextGQ(); });
 }
-function nextGQ() { G.q = makeQ(pickFact(null, true), true, true); G.buf = ''; G.rev = false; G.qt = now(); gRender(); }
+function nextGQ() { G.q = makeQ(pickFact(null, true), true, true); G.buf = ''; G.rev = false; G.study = 0; G.qt = now(); gRender(); }
 function gRender() {
   $('#g-q').innerHTML = G.q ? qHTML(G.q, G.buf) : ''; $('#g-q').classList.toggle('seq', !!(G.q && G.q.seq));
-  $('#g-hint').textContent = G.rev ? revealText(G.q) : '';
+  $('#g-hint').textContent = G.rev ? revealText(G.q) : ''; $('#g-hint').classList.toggle('study', !!G.study);
   $('#g-prog').textContent = tx('g.prog', { i: Math.min(G.i + 1, G.n), n: G.n });
   $('#g-you').style.left = (G.i / G.n * 100) + '%';
 }
@@ -2615,7 +2621,7 @@ function ghostKey(d) {
       if (G.i >= G.n) return finishGhost();
       nextGQ(); return;
     }
-    if (!G.rev) { record(G.q.k, false, 0); G.wrongs.push(G.q); }
+    if (!G.rev) { record(G.q.k, false, 0); G.wrongs.push(G.q); if (howTo(G.q).length) { G.study = now() + STUDY * 1000; G.sl = now(); } }   // 加減答錯：你和幽靈都停 3 秒看算法
     G.rev = true; G.buf = ''; SFX.wrong();
     const c = $('#g-card'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
   }
@@ -2623,6 +2629,7 @@ function ghostKey(d) {
 }
 function updateGhost() {
   if (!G || !G.started || G.done) return;
+  if (G.study) { const t = now(), d = Math.min(t, G.study) - G.sl; G.t0 += d; G.qt += d; G.sl = t; if (t >= G.study) { G.study = 0; $('#g-hint').classList.remove('study'); } }   // 停住的時間不算
   const el = now() - G.t0;
   $('#g-timer').textContent = (el / 1000).toFixed(1);
   let gi = 0; while (gi < G.n && G.ghost[gi] <= el) gi++;
