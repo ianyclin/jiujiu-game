@@ -18,7 +18,7 @@
 | 關鍵字（Apple Keywords） | 49／100 | 九九乘法,乘法表,背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,遊戲 |
 | 新功能（What's New） | 53／4000 | 1.3：熟練度改看「想出答案要多久」，手慢的孩子也公平；流星防衛戰免費，另外四種玩法可試玩後一次購買解鎖。 |
 
-**完整說明**（807／4000）
+**完整說明**（856／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
@@ -43,6 +43,7 @@
 ● 玩遊戲不用網路（只有購買時需要連到商店）。遊戲紀錄只存在這台裝置上，我們看不到。
 ● 換新手機或平板時，大人可以在設定用「備份紀錄」把紀錄搬過去（備份檔或備份碼，存在你自己選的地方，遊戲不會上傳）。
 ● 最多 4 位孩子，各有自己的紀錄。設定裡可以選要練哪幾個乘法表（1 到 12）。
+● 也可以改練 20 以內的加減（進位、退位），或乘法、加減一起練。答錯時會教湊十、雙倍等算法。
 ● 要連到外部網頁之前，需要大人回答一題。
 ● 介面有繁體中文、English、日本語。
 
@@ -60,7 +61,7 @@
 | 關鍵字（Apple Keywords） | 98／100 | multiplication,multiply,math,kids,practice,grade 2,grade 3,learn,facts,school,education,drill,game |
 | 新功能（What's New） | 195／4000 | 1.3: Fluency now measures how long it takes to think of the answer, so slower typists aren't held back. Meteor Defense is free; the other four games can be tried, then unlocked with one purchase. |
 
-**完整說明**（2431／4000）
+**完整說明**（2582／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
@@ -85,6 +86,7 @@ FOR PARENTS
 ● Plays fully offline (only purchases need to reach the store). Progress is saved only on this device, and we can't see it.
 ● Getting a new phone or tablet? A grown-up can use "Back up records" in Settings to move progress over with a backup file or code. You keep it wherever you like; the game never uploads it.
 ● Up to 4 kids, each with their own progress. In Settings you can pick which times tables to practice (1 to 12).
+● You can also switch to adding and subtracting within 20 (with regrouping), or practice both. Missed problems show tricks like making 10 and doubles.
 ● A grown-up has to answer a question before any link opens outside the game.
 ● Available in English, Traditional Chinese and Japanese.
 
@@ -102,7 +104,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 | 關鍵字（Apple Keywords） | 41／100 | かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,ゲーム,学習,知育,計算 |
 | 新功能（What's New） | 73／4000 | 1.3：じゅくれん度を「答えを思いつくまでの時間」で見るようにしました。流星ディフェンスは無料、ほかの4つはお試しのあと1回の購入で解除できます。 |
 
-**完整說明**（1212／4000）
+**完整說明**（1292／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
@@ -127,6 +129,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ● 完全オフラインで遊べます（購入時のみストアに接続します）。記録はこの端末の中にだけ保存され、私たちには見えません。
 ● 機種変更のときは、大人の方が設定の「きろくのバックアップ」から記録を移せます（バックアップファイルまたはコード。保存先はご自身で選び、ゲームがアップロードすることはありません）。
 ● 最大4人まで、それぞれの記録を保存できます。設定で練習する段（1〜12）を選べます。
+● 20までのたし算・ひき算（くり上がり・くり下がり）の練習や、かけ算といっしょの練習もできます。まちがえると「10をつくる」「同じ数」などのとき方が出ます。
 ● ゲームの外のページを開く前に、大人の方が問題に答える必要があります。
 ● 画面は日本語・繁体字中国語・英語に対応しています。
 
