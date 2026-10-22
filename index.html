@@ -2738,7 +2738,7 @@ function newVQ(i) {
 function vRender(i) {
   const p = V.p[i], e = vEl[i];
   e.querySelector('[data-q]').innerHTML = p.q ? qHTML(p.q, p.buf) : ''; e.querySelector('[data-q]').classList.toggle('seq', !!(p.q && p.q.seq));
-  e.querySelector('[data-hint]').textContent = p.rev ? (p.q.f ? revealText(p.q) : tx('reveal', { a: p.q.ans })) : '';
+  e.querySelector('[data-hint]').textContent = p.rev ? (p.q.f ? (innerHeight >= 700 ? revealText(p.q) : (howTo(p.q).pop() || tx('reveal', { a: p.q.ans }))) : tx('reveal', { a: p.q.ans })) : '';   // 拔河半邊很擠：矮螢幕只給一行（有進位就給湊十，算法最後一個數就是答案）
   e.classList.toggle('locked', now() < p.lock);
 }
 function vKey(i, d) {
