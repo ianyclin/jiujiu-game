@@ -68,6 +68,7 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 .mode{display:grid;grid-template-columns:62px 1fr;column-gap:14px;row-gap:3px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;transition:transform .08s,box-shadow .08s}
 .mode:active{transform:translateY(4px);box-shadow:0 2px 0 var(--keyEdge)}
 .mode{position:relative}
+.mode.off{opacity:.38;box-shadow:none}.mode.off:active{transform:none}   /* 只練加減時，炸彈、哪個大（只出乘法）變暗；點了會說明 */
 /* App 版：還沒解鎖的遊戲右上角的小牌子（試玩／鎖）；網頁版不會出現 */
 .m-lock{position:absolute;top:-9px;right:14px;display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:900;line-height:20px;background:var(--mint);color:#08111f;box-shadow:0 2px 0 rgba(0,0,0,.35);pointer-events:none}
 .m-lock.locked{background:#33475f;color:var(--ice);padding:2px 8px}
@@ -291,6 +292,8 @@ html,body{overscroll-behavior:none}
 .cell.sel{outline:2px solid var(--paper);outline-offset:1px}
 .cell.off{opacity:.28}
 @keyframes pulse{50%{box-shadow:0 0 0 3px rgba(255,97,97,.25)}}
+.map-tabs{width:100%;max-width:520px}
+.map-note{margin:-4px 0 0;font-size:13px;color:var(--muted);max-width:520px;text-align:center;text-wrap:pretty;line-height:1.5}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;font-size:13px;color:var(--muted)}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
 .info{width:100%;max-width:520px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:15px;line-height:1.6;min-height:52px}
@@ -740,7 +743,9 @@ html,body{overscroll-behavior:none}
         <button class="link-btn" type="button" data-home data-t="back"></button>
         <h2><span data-t="menu.map"></span><b id="map-count"></b></h2>
       </div>
+      <div class="langs map-tabs" id="map-tabs" role="group" data-ta="menu.map" hidden></div>
       <div class="grid99" id="grid99"></div>
+      <p class="map-note" id="map-note" data-t="map.addNote" hidden></p>
       <div class="legend">
         <span><i></i><span data-t="st.new"></span></span>
         <span><i style="background:rgba(255,174,87,.3);border-color:rgba(255,174,87,.5)"></i><span data-t="st.learn"></span></span>
@@ -1059,7 +1064,7 @@ const STR = {
     'bomb.name': '炸彈拆除', 'bomb.desc': '引線燒完前，點掉炸彈上那個數的倍數！',
     'best.meteor': '最高 {n} 分', 'best.sudden': '即死 {n} 分', 'best.ghost': '最佳 {s} 秒', 'best.cmp': '最快 {s} 秒', 'best.bomb': '最快 {s} 秒',
     // 乘法表範圍
-    'range.to': '{a} 到 {b}', 'note.only': '只練 {t} 的乘法表', 'note.add': '正在練 20 以內加減', 'note.both': '乘法和加減一起練', 'note.plus': '加上 {t} 的乘法表', 'map.only': '目前只練 {t} 的乘法表', 'map.plus': '目前加上 {t} 的乘法表',
+    'range.to': '{a} 到 {b}', 'note.only': '只練 {t} 的乘法表', 'note.add': '正在練 20 以內加減', 'mode.mulOnly': '這個遊戲練乘法。想玩請大人到設定改「要練什麼」。', 'note.both': '乘法和加減一起練', 'note.plus': '加上 {t} 的乘法表', 'map.only': '目前只練 {t} 的乘法表', 'map.plus': '目前加上 {t} 的乘法表',
     'set.tableAria': '{n} 的乘法表', 'set.d.std': '1 到 9 都亮，就是九九乘法，{c} 題', 'set.d.plus': '九九再加上 {t} 的乘法表，最大到 {m} × {m}，{c} 題',
     'set.d.only': '只出 {t} 的乘法表，{c} 題', 'set.d.onlyMax': '只出 {t} 的乘法表，最大到 {m} × {m}，{c} 題', 'set.atLeast': '至少要留一個乘法表',
     'seq.label': '{n} 的倍數',
@@ -1127,6 +1132,7 @@ const STR = {
     'map.resetWhy': '要清除所有紀錄（星圖、寵物、星塵和徽章都會清掉），請大人先回答這一題。',
     'map.today': '今天答對 <b>{a}</b> 題', 'map.todayW': '今天答對 <b>{a}</b> 題、錯 <b>{w}</b> 題', 'map.avg': '最近每題大約 <b>{s}</b> 秒想出答案', 'map.days': '最近 7 天玩了 <b>{n}</b> 天。',
     'map.more': '多亮 {n} 顆星', 'map.less': '少 {n} 顆星', 'map.faster': '每題快 {s} 秒', 'map.slower': '每題慢 {s} 秒', 'map.vs': '比 {n} 天前：{list}。',
+    'map.tab.mul': '乘法', 'map.tab.add': '加減', plusAria: '{a} 加 {b}', 'map.addNote': '一格是加法和它的減法（7 + 8、15 − 8），兩題都熟才亮。', 'map.addNone': '還沒有加減的紀錄。到設定的「要練什麼」選「加減」或「都練」，玩過就會出現。',
     'map.none': '還沒有打答案的紀錄。每一題打對 3 次以上、又快又穩，就會點亮成一顆星。',
     'map.weak': '最常出錯：{list}。<br>這些題目在遊戲裡會比較常出現，練熟了紅格會自己變回來。',
     'map.fine': '已經遇過 <b>{n}</b> 題，目前沒有特別容易錯的題目。點任一格可以看細節。',
@@ -1150,7 +1156,7 @@ const STR = {
     'w.meta': '答錯 {w} 次・答過 {n} 次', 'w.metaSoft': '在炸彈或哪個大點錯過・答過 {n} 次', 'w.metaSoft0': '在炸彈或哪個大點錯過，還沒打過答案', 'w.empty': '目前沒有容易錯的題目，太厲害了！',
     // 設定、關於、家長關卡
     'set.title': '設定', 'set.titleWho': '設定（{name}）', 'set.music': '音樂', 'set.musicD': '背景音樂', 'set.sound': '音效', 'set.soundD': '按鍵、打中、爆炸的聲音',
-    'set.what': '要練什麼', 'set.whatD': '加減是 20 以內，有進位、退位。炸彈和哪個大只練乘法', 'what.mul': '乘法', 'what.add': '加減', 'what.both': '都練', 'set.tables': '要練哪幾個乘法表',
+    'set.what': '要練什麼', 'set.whatD': '加減是 20 以內，有進位、退位。炸彈和哪個大只出乘法，只練加減時會變暗', 'what.mul': '乘法', 'what.add': '加減', 'what.both': '都練', 'set.tables': '要練哪幾個乘法表',
     'set.seq': '數列題提示', 'set.seqD': '數列題上面會寫出是幾的倍數。關掉就要自己看出是幾的乘法表，比較難',
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': '保留所有權利。',
     'about.title': '關於<span class="brand-t">九九流星隊</span>', 'about.what': '這是什麼', 'about.parents': '給家長', 'about.made': '製作',
@@ -1171,7 +1177,7 @@ const STR = {
     'help.versus': '<li>平板放中間，面對面搶答。答對把星星拉過來一格，先拉到底的贏；答錯停 1 秒。</li><li>拉很久還分不出勝負，<b>繩子會變滑</b>：45 秒後一次拉兩格，一分半後一次拉三格。</li><li>下方「小隊長」的作答會記進星圖和錯題本。</li><li>沒有人陪你玩？選<b>機器人</b>當對手。它算題的速度跟你平常差不多，你落後它會慢一點，你領先它會快一點，偶爾也會算錯。</li>',
     'help.cmp': '<li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。點對不會點亮星星（要打出答案才算）。</li><li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li><li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現，你點的那題下次玩流星或幽靈時也會再考你一次。</li><li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>',
     'help.bomb': '<li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。點對不會點亮星星（要打出答案才算）。</li><li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點，下次玩流星或幽靈時也會再考你一次。</li><li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>',
-    'help.map': '<li>每一題<b>打對</b> 3 次以上（×1 的題 1 次就好）、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li><li>紅色一閃一閃的是<b>容易錯</b>的題目，遊戲裡會偷偷更常出現，直到你把它練熟。</li>',
+    'help.map': '<li>每一題<b>打對</b> 3 次以上（×1 的題 1 次就好）、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li><li>紅色一閃一閃的是<b>容易錯</b>的題目，遊戲裡會偷偷更常出現，直到你把它練熟。</li><li>練加減的時候，星圖上面可以切到<b>加減</b>。每一格是加法和它的減法，兩題都熟才會亮。</li>',
     'help.wrong': '<li>答錯過的題目都列在這裡，最常錯的排最前面。</li><li>練熟了它會自己消失；也可以按「清除」把那題的紀錄歸零。</li>',
     'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、金牌、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'help.quest': '<li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li><li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>',
@@ -1212,7 +1218,7 @@ const STR = {
     'cmp.name': 'Biggest? Smallest?', 'cmp.desc': 'Tap the problem with the biggest (or smallest) answer.',
     'bomb.name': 'Bomb Squad', 'bomb.desc': 'Tap every answer in the table before it blows up!',
     'best.meteor': 'Best {n}', 'best.sudden': 'One-hit {n}', 'best.ghost': 'Best {s}s', 'best.cmp': 'Best {s}s', 'best.bomb': 'Best {s}s',
-    'range.to': '{a}–{b}', 'note.only': 'Only the {t} times tables', 'note.add': 'Practicing + and − within 20', 'note.both': 'Times tables plus + and −', 'note.plus': 'Plus the {t} times tables', 'map.only': 'Practicing only the {t} times tables', 'map.plus': 'Also practicing the {t} times tables',
+    'range.to': '{a}–{b}', 'note.only': 'Only the {t} times tables', 'note.add': 'Practicing + and − within 20', 'mode.mulOnly': 'This one is times tables. Ask a grown-up to change What to practice in Settings.', 'note.both': 'Times tables plus + and −', 'note.plus': 'Plus the {t} times tables', 'map.only': 'Practicing only the {t} times tables', 'map.plus': 'Also practicing the {t} times tables',
     'set.tableAria': '{n} times table', 'set.d.std': '1 to 9 are on: the classic times tables, {c} problems', 'set.d.plus': 'Classic tables plus {t}, up to {m} × {m}, {c} problems',
     'set.d.only': 'Only the {t} tables, {c} problems', 'set.d.onlyMax': 'Only the {t} tables, up to {m} × {m}, {c} problems', 'set.atLeast': 'Keep at least one table on',
     'seq.label': 'Count by {n}s',
@@ -1274,6 +1280,7 @@ const STR = {
     'map.resetWhy': 'This erases all records (star map, pet, stardust and badges). A grown-up needs to answer this first.',
     'map.today': 'Today: <b>{a}</b> right', 'map.todayW': 'Today: <b>{a}</b> right, <b>{w}</b> wrong', 'map.avg': 'About <b>{s}</b>s to think of each answer lately', 'map.days': 'Played <b>{n}</b> of the last 7 days. ',
     'map.more': v => `${v.n} more star${v.n === 1 ? '' : 's'}`, 'map.less': v => `${v.n} fewer star${v.n === 1 ? '' : 's'}`, 'map.faster': '{s}s faster per question', 'map.slower': '{s}s slower per question', 'map.vs': 'Since {n} days ago: {list}. ',
+    'map.tab.mul': 'Times', 'map.tab.add': '+ and −', plusAria: '{a} plus {b}', 'map.addNote': 'Each square is an addition and its subtraction (7 + 8 and 15 − 8). Both need to be solid to light up.', 'map.addNone': 'No + and − answers yet. In Settings, pick "+ and −" or "Both" under What to practice, then play.',
     'map.none': 'No typed answers yet. Type a problem right 3 or more times, fast and steady, to light it up as a star.',
     'map.weak': 'Most missed: {list}.<br>These come up more often in the games. Once you know them, the red squares turn back.',
     'map.fine': v => `You've met <b>${v.n}</b> problem${v.n === 1 ? '' : 's'}, and none are tricky right now. Tap any square for details.`,
@@ -1293,7 +1300,7 @@ const STR = {
     'w.p': 'These are the problems you\'ve missed most lately. They come up more often in the games. Once you know one, tap "Clear" and it goes back to normal.', 'w.clearAll': 'Clear all', 'w.arm': 'Tap again to clear all', 'w.clear': 'Clear',
     'w.meta': 'Wrong {w}× · answered {n}×', 'w.metaSoft': 'Missed in Bomb Squad or Biggest · answered {n}×', 'w.metaSoft0': 'Missed in Bomb Squad or Biggest, not typed yet', 'w.empty': 'Nothing tricky right now. Amazing!',
     'set.title': 'Settings', 'set.titleWho': 'Settings ({name})', 'set.music': 'Music', 'set.musicD': 'Background music', 'set.sound': 'Sound', 'set.soundD': 'Keys, hits and explosions',
-    'set.what': 'What to practice', 'set.whatD': 'Adding and subtracting within 20, with regrouping. Bomb Squad and Biggest? Smallest? stay times tables', 'what.mul': 'Times', 'what.add': '+ and −', 'what.both': 'Both', 'set.tables': 'Which times tables',
+    'set.what': 'What to practice', 'set.whatD': 'Adding and subtracting within 20, with regrouping. Bomb Squad and Biggest? Smallest? are times tables only, so they dim when you pick + and −', 'what.mul': 'Times', 'what.add': '+ and −', 'what.both': 'Both', 'set.tables': 'Which times tables',
     'set.seq': 'Pattern hints', 'set.seqD': 'Number patterns say which table they count by. Turn off to figure it out yourself (harder)',
     author: '指數三寶飯', 'legal.id': ' (ianyclin) ', 'legal.rights': 'All rights reserved.',
     'about.title': 'About <span class="brand-t">9×9 Meteor Squad</span>', 'about.what': 'What is this?', 'about.parents': 'For parents', 'about.made': 'Credits',
@@ -1313,7 +1320,7 @@ const STR = {
     'help.versus': '<li>Put the tablet between you and answer face to face. Each right answer pulls the star one step toward you. Pull it all the way to win. A wrong answer freezes you for 1 second.</li><li>If nobody wins for a long time, <b>the rope gets slippery</b>: after 45 seconds each pull moves 2 steps, after 90 seconds 3 steps.</li><li>Only the bottom player (the Captain) gets answers saved to the Star Map and Mistakes.</li><li>Nobody to play with? Pick the <b>Robot</b>. It answers about as fast as you usually do. It slows down when you\'re behind, speeds up when you\'re ahead, and makes mistakes sometimes too.</li>',
     'help.cmp': '<li>You get three problems. If it asks for the <b>biggest</b>, tap the one with the biggest answer. If it asks for the <b>smallest</b>, tap the smallest. Tapping doesn\'t light up stars (only typed answers do).</li><li>The answers are close, so work them out before you tap. After 3 right in a row, they get even closer.</li><li>If you tap the wrong one, all three answers show. Tap <b>the right one</b> to go on. Both the right problem and the one you tapped will come up more often, and the one you tapped comes back next time you play Meteor Defense or Ghost Race.</li><li>A round is 10 questions. Only <b>all 10 right</b> counts for a best time. One mistake and that round isn\'t timed.</li>',
     'help.bomb': '<li>If the bomb says <b>7</b>, tap the answers in the 7 times table: 7, 14, 21… Not all of them are on the board, so tap the ones you find. Below, it says "Found 0 / 5". Tapping doesn\'t light up stars (only typed answers do).</li><li>Tap a number that doesn\'t belong and the bomb <b>explodes</b>. It also explodes when the fuse burns out. Watch out for look-alikes like 27 and 57! Numbers you tapped wrong or didn\'t find come up a bit more, and come back next time you play Meteor Defense or Ghost Race.</li><li>A round is 5 bombs. Only <b>all 5 defused</b> counts for a best time.</li>',
-    'help.map': '<li>Type a problem right 3 or more times (×1 problems just once), fast and steady, and it <b>lights up as a star</b>. Tap any square to see its record.</li><li>Flashing red squares are <b>tricky</b> problems. They secretly come up more often in the games until you\'ve got them.</li>',
+    'help.map': '<li>Type a problem right 3 or more times (×1 problems just once), fast and steady, and it <b>lights up as a star</b>. Tap any square to see its record.</li><li>Flashing red squares are <b>tricky</b> problems. They secretly come up more often in the games until you\'ve got them.</li><li>When you practice + and −, switch the Star Map to <b>+ and −</b> at the top. Each square is an addition and its subtraction. Both need to be solid to light up.</li>',
     'help.wrong': '<li>Problems you got wrong are listed here, most missed first.</li><li>Once you know one, it disappears by itself. You can also tap "Clear" to reset it.</li>',
     'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, medal, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>Tap a pet that went home to visit it, or <b>bring it back</b>. Your current pet goes home to rest and keeps its progress, so you can swap back anytime.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
     'help.quest': '<li>There are <b>3 small missions</b> every day. They check off by themselves. Finish all three for a <b>badge</b>.</li><li>Finish several days in a row and you\'ll see your streak. New missions come tomorrow.</li>',
@@ -1354,7 +1361,7 @@ const STR = {
     'cmp.name': 'どれが大きい？', 'cmp.desc': '答えがいちばん大きい（小さい）式をタップ。',
     'bomb.name': 'ばくだんかいじょ', 'bomb.desc': 'ばくはつする前に、そのだんの答えをぜんぶタップ！',
     'best.meteor': 'ベスト {n}', 'best.sudden': '一発 {n}', 'best.ghost': 'ベスト {s}秒', 'best.cmp': 'ベスト {s}秒', 'best.bomb': 'ベスト {s}秒',
-    'range.to': '{a}〜{b}', 'note.only': '{t}のだんだけ練習', 'note.add': '20までのたし算・ひき算を練習中', 'note.both': 'かけ算とたし算・ひき算をいっしょに', 'note.plus': '{t}のだんもプラス', 'map.only': 'いまは{t}のだんだけ練習中', 'map.plus': 'いまは{t}のだんもプラスして練習中',
+    'range.to': '{a}〜{b}', 'note.only': '{t}のだんだけ練習', 'note.add': '20までのたし算・ひき算を練習中', 'mode.mulOnly': 'これはかけ算のゲームだよ。せっていの「何を練習する？」を大人の人にかえてもらってね。', 'note.both': 'かけ算とたし算・ひき算をいっしょに', 'note.plus': '{t}のだんもプラス', 'map.only': 'いまは{t}のだんだけ練習中', 'map.plus': 'いまは{t}のだんもプラスして練習中',
     'set.tableAria': '{n}のだん', 'set.d.std': '1〜9がぜんぶオン：ふつうの九九、{c}問', 'set.d.plus': '九九に{t}のだんをプラス、いちばん大きいのは {m} × {m}、{c}問',
     'set.d.only': '{t}のだんだけ、{c}問', 'set.d.onlyMax': '{t}のだんだけ、いちばん大きいのは {m} × {m}、{c}問', 'set.atLeast': '1つはのこしてね',
     'seq.label': '{n}のだん',
@@ -1415,6 +1422,7 @@ const STR = {
     'map.resetWhy': 'すべての記録（星マップ・ペット・星くず・バッジ）を消去します。大人の方がこの問題に答えてください。',
     'map.today': '今日の正かい <b>{a}</b>問', 'map.todayW': '今日の正かい <b>{a}</b>問・まちがい <b>{w}</b>問', 'map.avg': 'さいきんは1問 <b>{s}</b>秒くらいで答えが出るよ', 'map.days': 'さいきん7日のうち <b>{n}</b>日あそんだよ。',
     'map.more': '星が{n}こふえた', 'map.less': '星が{n}こへった', 'map.faster': '1問{s}秒速くなった', 'map.slower': '1問{s}秒おそくなった', 'map.vs': '{n}日前とくらべると：{list}。',
+    'map.tab.mul': 'かけ算', 'map.tab.add': 'たし・ひき', plusAria: '{a} たす {b}', 'map.addNote': '1つのマスに、たし算とそのひき算が入っているよ（7 + 8 と 15 − 8）。どちらもできると光るよ。', 'map.addNone': 'まだたし算・ひき算の記ろくがないよ。せっていの「何を練習する？」で「たし・ひき」か「りょうほう」をえらんで遊んでね。',
     'map.none': 'まだ答えを打った記ろくがないよ。1つの問題を3回以上、速く正しく答えると星になるよ。',
     'map.weak': 'いちばんまちがえる問題：{list}。<br>この問題はゲームで多めに出るよ。できるようになると、赤いマスは元にもどるよ。',
     'map.fine': 'もう <b>{n}</b>問に出会ったよ。いまは、とくににがてな問題はないよ。マスをタップするとくわしく見られるよ。',
@@ -1434,7 +1442,7 @@ const STR = {
     'w.p': 'さいきんよくまちがえる問題だよ。ゲームで多めに出るよ。おぼえたら「けす」をおすと、ふつうにもどるよ。', 'w.clearAll': 'ぜんぶけす', 'w.arm': 'もう一回おすと、ぜんぶけすよ', 'w.clear': 'けす',
     'w.meta': 'まちがい {w}回・答えた {n}回', 'w.metaSoft': 'ばくだんか「どれが大きい？」でまちがえた・答えた {n}回', 'w.metaSoft0': 'ばくだんか「どれが大きい？」でまちがえた、まだ答えを打っていない', 'w.empty': 'いまはにがてな問題がないよ。すごい！',
     'set.title': 'せってい', 'set.titleWho': 'せってい（{name}）', 'set.music': '音楽', 'set.musicD': 'BGM', 'set.sound': 'こうか音', 'set.soundD': 'ボタン・命中・ばくはつの音',
-    'set.what': '何を練習する？', 'set.whatD': 'たし算・ひき算は 20 まで（くり上がり・くり下がりあり）。ばくだんかいじょ と どれが大きい？ はかけ算だけ', 'what.mul': 'かけ算', 'what.add': 'たし・ひき', 'what.both': 'りょうほう', 'set.tables': '練習するだん',
+    'set.what': '何を練習する？', 'set.whatD': 'たし算・ひき算は 20 まで（くり上がり・くり下がりあり）。ばくだんかいじょ と どれが大きい？ はかけ算だけなので、たし・ひきのときはうすくなるよ', 'what.mul': 'かけ算', 'what.add': 'たし・ひき', 'what.both': 'りょうほう', 'set.tables': '練習するだん',
     'set.seq': '数のならびのヒント', 'set.seqD': '数のならびの問題に、何のだんかを出すよ。オフにすると自分で見つけるから、むずかしくなる',
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': 'All rights reserved.',
     'about.title': '<span class="brand-t">九九流星隊</span>について', 'about.what': 'これは何？', 'about.parents': 'おうちの方へ', 'about.made': '制作',
@@ -1454,7 +1462,7 @@ const STR = {
     'help.versus': '<li>タブレットを間において、むかい合って早く答えよう。正かいすると星を1マス引っぱれるよ。さいごまで引っぱったら勝ち。まちがえると1秒とまるよ。</li><li>長いあいだ勝負がつかないと、<b>つながすべりやすくなる</b>よ：45秒たつと1回で2マス、90秒たつと3マス。</li><li>下の「たいちょう」の答えだけが、星マップとまちがい帳に記ろくされるよ。</li><li>いっしょにあそぶ人がいない？<b>ロボット</b>をえらぼう。きみのいつもの速さと同じくらいで答えるよ。きみが負けているとゆっくり、勝っていると速くなって、ときどきまちがえるよ。</li>',
     'help.cmp': '<li>3つの式が出るよ。<b>いちばん大きい</b>と聞かれたら答えがいちばん大きいものを、<b>いちばん小さい</b>と聞かれたらいちばん小さいものをタップ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>3つの答えはとても近いから、計算してからタップしよう。3問れんぞく正かいすると、もっと近くなるよ。</li><li>まちがえると3つの答えが出るよ。<b>正しいもの</b>をタップすると次に進むよ。まちがえたときは、正しい問題とタップした問題がこれから多めに出て、タップした問題は、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回10問。<b>10問ぜんぶ正かい</b>のときだけタイムをくらべるよ。1問でもまちがえたら、その回はタイムなし。</li>',
     'help.bomb': '<li>ばくだんに「<b>7</b>」と書いてあったら、7のだんの答え（7、14、21…）をタップしよう。ぜんぶあるとはかぎらないから、あるものだけタップ。下に「みつけた 0 / 5」と出るよ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>ちがう数をタップすると<b>ばくはつ</b>！どうか線がもえつきても、ばくはつするよ。27や57みたいな、にている数に気をつけて！まちがえた数や見つけられなかった数は少し多めに出て、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回に5こ。<b>5こぜんぶかいじょ</b>したときだけタイムをくらべるよ。</li>',
-    'help.map': '<li>1つの問題を3回以上<b>打って正かい</b>（×1の問題は1回でOK）して、速くてまちがえないと、<b>星になって光る</b>よ。マスをタップすると、その問題の記ろくが見られるよ。</li><li>赤くピカピカしているのは<b>にがて</b>な問題。できるようになるまで、ゲームでこっそり多めに出るよ。</li>',
+    'help.map': '<li>1つの問題を3回以上<b>打って正かい</b>（×1の問題は1回でOK）して、速くてまちがえないと、<b>星になって光る</b>よ。マスをタップすると、その問題の記ろくが見られるよ。</li><li>赤くピカピカしているのは<b>にがて</b>な問題。できるようになるまで、ゲームでこっそり多めに出るよ。</li><li>たし算・ひき算を練習しているときは、星マップの上で<b>たし・ひき</b>にきりかえられるよ。1つのマスはたし算とそのひき算で、どちらもできると光るよ。</li>',
     'help.wrong': '<li>まちがえた問題がここにならぶよ。いちばんまちがえた問題が上。</li><li>できるようになると、かってにきえるよ。「けす」をおしてリセットもできるよ。</li>',
     'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおそう。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、きんメダル、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
     'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
@@ -1604,7 +1612,7 @@ try {
 } catch (e) {}
 const saveUL = () => { try { localStorage.setItem(UL_KEY, JSON.stringify(UL)); } catch (e) {} };
 const unlocked = () => !APP || UL.ok;
-const famOK = f => (unlocked() || !PAID.includes(f)) && !(f === 'stars' && DB.set.what === 'add');   // 每日任務只出玩得到的遊戲；只練加減時不出「點亮星星」（星圖是乘法）
+const famOK = f => (unlocked() || !PAID.includes(f)) && !(DB.set.what === 'add' && (f === 'stars' || f === 'cmp' || f === 'bomb'));   // 每日任務只出玩得到的遊戲；只練加減時不出「點亮星星」（乘法的星）和只出乘法的炸彈、哪個大
 const trialLeft = m => !UL.trial[m];
 const mustBuy = m => PAID.includes(m) && !unlocked() && !trialLeft(m);
 document.documentElement.classList.toggle('app', APP);
@@ -1654,8 +1662,8 @@ function weightOf(f) {
   if (f.op === '×' && (f.a === 1 || f.b === 1)) w *= 0.25;
   return w;
 }
-// 「要練什麼」set.what：乘法／加減／都練。都練時哪一邊比較弱（平均權重高）就多出那一邊，每邊至少 25%
-const addShare = () => { const avg = P => P.reduce((t, f) => t + weightOf(f), 0) / P.length, a = avg(ADDSUB), m = avg(MUL); return clamp(a / (a + m), 0.25, 0.75); };
+// 「要練什麼」set.what：乘法／加減／都練。都練時哪一邊比較弱（平均權重高）就多出那一邊，每邊至少 25%（乘法用不含 ×1 的平均：×1 權重打了折，算進去會讓加減一開始就偏多）
+const addShare = () => { const avg = P => P.reduce((t, f) => t + weightOf(f), 0) / P.length, a = avg(ADDSUB), m = avg(MUL2.length ? MUL2 : MUL); return clamp(a / (a + m), 0.25, 0.75); };
 const practicePool = no1 => DB.set.what === 'add' ? ADDSUB : (DB.set.what === 'both' && Math.random() < addShare()) ? ADDSUB : (no1 ? MUL2 : MUL);
 // no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）
 function pickFact(pool, no1) {
@@ -2584,7 +2592,9 @@ function pause(on) {
 
 /* ================= 幽靈競速 ================= */
 let G = null;
-const goGhost = () => paid('ghost', startGhost), goCmp = () => paid('cmp', startCmp), goBomb = () => paid('bomb', startBomb), goVersus = () => paid('versus', startVersus);
+// 炸彈、哪個大只出乘法：只練加減時變暗，點了說明怎麼打開（不用 disabled，點不到就沒辦法說明）
+function mulOnly(m) { return (m === 'cmp' || m === 'bomb') && DB.set.what === 'add'; }
+const goGhost = () => paid('ghost', startGhost), goCmp = () => mulOnly('cmp') ? toast(tx('mode.mulOnly')) : paid('cmp', startCmp), goBomb = () => mulOnly('bomb') ? toast(tx('mode.mulOnly')) : paid('bomb', startBomb), goVersus = () => paid('versus', startVersus);
 function startGhost() {
   show('ghost');
   const best = DB.best.ghost && DB.best.ghost.length === 20 ? DB.best.ghost : null;
@@ -3309,9 +3319,28 @@ $('#menu-pet').addEventListener('click', openPet);
 $('.cpu-face').addEventListener('animationend', e => { if (e.animationName === 'shk') e.currentTarget.classList.remove('oops'); });   // 算錯的抖動結束後恢復思考中的晃動
 
 /* ================= 星圖 ================= */
-let resetArm = 0;
-function openMap() {
-  show('map');
+let resetArm = 0, mapTab = 'mul';
+// 加減星圖：練加減（或以前練過）才有上面的分頁。一格＝加法和它的減法（7 + 8、15 − 8）：有紅就紅、兩題都星才星、都沒遇過才是新
+const hasAdd = () => DB.set.what !== 'mul' || ADDSUB.some(f => DB.facts[f.k] && DB.facts[f.k].n);
+function addState(a, b) { const x = state(a + '+' + b), y = state((a + b) + '-' + b); return x === 'weak' || y === 'weak' ? 'weak' : x === 'star' && y === 'star' ? 'star' : x === 'new' && y === 'new' ? 'new' : 'learn'; }
+const addStars = () => { let n = 0; for (let a = 2; a <= 9; a++) for (let b = 2; b <= 9; b++) if (addState(a, b) === 'star') n++; return n; };
+function openMap() { mapTab = DB.set.what === 'add' ? 'add' : 'mul'; show('map'); renderMap(); resetArm = 0; $('#map-reset').textContent = tx('map.reset'); }
+function renderMap() {
+  const tabs = hasAdd(), box = $('#map-tabs'); if (!tabs) mapTab = 'mul';
+  box.hidden = !tabs; $('#map-note').hidden = mapTab !== 'add';
+  if (tabs) {
+    if (!box.children.length) ['mul', 'add'].forEach(t => { const b = document.createElement('button'); b.type = 'button'; b.dataset.tab = t; box.appendChild(b); });
+    $$('#map-tabs button').forEach(b => { b.textContent = tx('map.tab.' + b.dataset.tab); b.setAttribute('aria-pressed', String(b.dataset.tab === mapTab)); });
+  }
+  const grid = $('#grid99');
+  if (mapTab === 'add') {
+    let h = '<div class="h">+</div>';
+    for (let b = 2; b <= 9; b++) h += `<div class="h">${b}</div>`;
+    for (let a = 2; a <= 9; a++) { h += `<div class="h">${a}</div>`; for (let b = 2; b <= 9; b++) h += `<button type="button" class="cell ${addState(a, b)}" data-a="${a}" data-b="${b}" aria-label="${tx('plusAria', { a, b })}">${a + b}</button>`; }
+    grid.innerHTML = h; grid.className = 'grid99'; grid.style.gridTemplateColumns = 'repeat(9,minmax(0,1fr))';
+    $('#map-count').textContent = `${addStars()}/64`;
+    mapInfoDefault(); return;
+  }
   let h = '<div class="h">×</div>';
   for (let b = 1; b <= cols(); b++) h += `<div class="h">${b}</div>`;
   for (let a = 1; a <= cols(); a++) {   // 沒勾的列變暗，孩子知道後面還有
@@ -3319,12 +3348,20 @@ function openMap() {
     h += `<div class="h${off}">${a}</div>`;
     for (let b = 1; b <= cols(); b++) { const k = a + 'x' + b; h += `<button type="button" class="cell ${state(k)}${off}" data-k="${k}" aria-label="${tx('timesAria', { a, b })}">${a * b}</button>`; }
   }
-  const grid = $('#grid99'); grid.innerHTML = h; grid.className = 'grid99' + (cols() > 9 ? ' wide' : ''); grid.style.gridTemplateColumns = `repeat(${cols() + 1},minmax(0,1fr))`;
+  grid.innerHTML = h; grid.className = 'grid99' + (cols() > 9 ? ' wide' : ''); grid.style.gridTemplateColumns = `repeat(${cols() + 1},minmax(0,1fr))`;
   $('#map-count').textContent = `${starCount()}/${MUL.length}`;
   mapInfoDefault();
-  resetArm = 0; $('#map-reset').textContent = tx('map.reset');
 }
+$('#map-tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.dataset.tab === mapTab) return; mapTab = b.dataset.tab; renderMap(); SFX.ding(); });
 function mapInfoDefault() {
+  if (mapTab === 'add') {
+    const ws = ADDSUB.filter(f => state(f.k) === 'weak').sort((a, b) => weightOf(b) - weightOf(a)).slice(0, 6);
+    const seen = ADDSUB.filter(f => DB.facts[f.k] && DB.facts[f.k].n).length;
+    const ts = ADDSUB.map(f => DB.facts[f.k]).filter(s => s && s.t > 0).map(s => s.t), at = ts.length ? ts.reduce((a, b) => a + b, 0) / ts.length : 0;
+    const pre = at ? tx('map.avg', { s: (at / 1000).toFixed(1) }) + tx('period') : '';
+    $('#map-info').innerHTML = !seen ? tx('map.addNone') : pre + (ws.length ? tx('map.weak', { list: ws.map(f => `<b>${f.a} ${f.op} ${f.b}</b>`).join(tx('sep')) }) : tx('map.fine', { n: seen }));
+    return;
+  }
   const ws = MUL.filter(f => state(f.k) === 'weak').sort((a, b) => weightOf(b) - weightOf(a)).slice(0, 6);
   const seen = MUL.filter(f => DB.facts[f.k] && DB.facts[f.k].n).length;
   let pre = isStdRange() ? '' : rangeText('map', true) + tx('period');
@@ -3346,6 +3383,13 @@ function mapInfoDefault() {
 $('#grid99').addEventListener('click', e => {
   const c = e.target.closest('.cell'); if (!c) return;
   $$('.cell.sel').forEach(x => x.classList.remove('sel')); c.classList.add('sel');
+  if (c.dataset.a) {   // 加減：一格兩題（加法和它的減法）
+    const a = +c.dataset.a, b = +c.dataset.b, sum = a + b;
+    $('#map-info').innerHTML = [[a + '+' + b, `${a} + ${b} = ${sum}`], [sum + '-' + b, `${sum} − ${b} = ${a}`]].map(([k, eq]) => {
+      const s = DB.facts[k]; return !s || !s.n ? tx('map.cellNew', { eq }) : tx('map.cell', { eq, st: tx('st.' + state(k)), n: s.n, t: s.t ? secs(s.t) : '—', w: s.w || 0 });
+    }).join('<br>');
+    return;
+  }
   const k = c.dataset.k, [a, b] = k.split('x').map(Number), s = DB.facts[k], st = state(k);
   const eq = `${a} × ${b} = ${a * b}`;
   $('#map-info').innerHTML = !s || !s.n ? tx('map.cellNew', { eq })
@@ -3353,7 +3397,7 @@ $('#grid99').addEventListener('click', e => {
 });
 $('#map-reset').addEventListener('click', () => {
   openGate(() => {   // 清除要請大人解一題，孩子不能自己清
-    const set = DB.set; DB = fresh(); DB.set = set; retest = []; recent = []; save(); rebuildPool(); openMap(); refreshMenu();   // 重測佇列也要清，不然舊錯題會被再考
+    const set = DB.set; DB = fresh(); DB.set = set; retest = []; recent = []; save(); rebuildPool(); renderMap(); refreshMenu();   // 重測佇列也要清，不然舊錯題會被再考
     $('#map-info').textContent = tx('map.cleared');
   }, tx('map.resetWhy'));
 });
@@ -3612,6 +3656,7 @@ function refreshMenu() {
   $('#brand-note').textContent = wn || (isStdRange() ? tx('brand.note') : rangeText('note'));
   $('#brand-note').classList.toggle('on', !!wn || !isStdRange());
   $('#set-title').textContent = whoCur().name ? tx('set.titleWho', { name: whoCur().name }) : tx('set.title');
+  ['cmp', 'bomb'].forEach(m => { const b = $('#go-' + m), off = mulOnly(m); b.classList.toggle('off', off); if (off) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled'); });
   $('#set-petrow').hidden = !petDelList().length;   // 沒有寵物就不顯示
   $('#set-delrow').hidden = !whoCur().name; $('#set-delD').textContent = tx('set.delD', { name: whoCur().name });   // 還沒取名的人沒有可刪的   // 連續幫幾個孩子設定時知道現在是誰的
   const mp = $('#menu-pet'), hasPet = !!(DB.pet.kind && PET_KINDS[DB.pet.kind]);
@@ -3763,7 +3808,7 @@ let nudgeArm = false;
 function meteorRun() { if (!APP || UL.ok) return; UL.runs++; saveUL(); nudgeArm = true; }
 function maybeNudge() {
   if (!nudgeArm || unlocked()) return;
-  const left = PAID.filter(trialLeft);
+  const left = PAID.filter(m => trialLeft(m) && !mulOnly(m));
   if (!left.length || !((UL.nudged === 0 && UL.runs >= 3) || (UL.nudged === 1 && UL.runs >= 10))) return;
   nudgeArm = false;
   setTimeout(() => {
