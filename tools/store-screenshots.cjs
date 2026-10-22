@@ -52,7 +52,7 @@ function seed(lang) {
     save: {
       facts, retest: [],
       bests: { std: { meteor: 1840, sudden: 920, ghost, cmpT: 27800, bomb: 58200, ghostLoss: 0 } },
-      set: { mix: false, sound: false, music: false, sudden: false, seqLabel: true, tables: [1, 2, 3, 4, 5, 6, 7, 8, 9], lang },
+      set: { what: 'mul', sound: false, music: false, sudden: false, seqLabel: true, tables: [1, 2, 3, 4, 5, 6, 7, 8, 9], lang },
       daily: { date: '', tasks: [], badges: 15, streak: 4, lastDone: '', starBase: 40, ans: 38, wrong: 3, log: {} },
       pet: { kind: 'cute', name: LANGS[lang].pet, dust: 126, fed: 380, wear: { head: 'star', face: 'glasses', neck: 'bowtie', side: 'balloon', back: '' }, released: [], sent: 0 },
     },
