@@ -149,6 +149,7 @@ html:not(.app) .app-only{display:none!important}
 #m-answer .hint.multi{position:absolute;left:10px;right:10px;bottom:calc(100% + 4px);padding:8px 10px;border-radius:14px;background:rgba(8,17,31,.9);border:1px solid rgba(255,154,154,.4);min-height:0;line-height:1.45}   /* 流星：多行算法浮在鍵盤區上方，鍵盤區不長高、地面不動 */
 .hint.study{animation:hintGlow .8s ease-in-out infinite alternate}   /* 加減答錯、時間停住看算法的 3 秒 */
 @keyframes hintGlow{from{text-shadow:none}to{text-shadow:0 0 10px rgba(255,154,154,.85)}}
+@media (prefers-reduced-motion:reduce){.hint.study{text-shadow:0 0 10px rgba(255,154,154,.85)}}   /* 減少動態：不閃，直接亮著 */
 .shake{animation:shk .35s}
 @keyframes shk{20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
 .icon-btn{width:44px;height:44px;border-radius:13px;border:1px solid var(--line);background:rgba(12,24,41,.66);cursor:pointer;display:grid;place-items:center;flex:none}
@@ -1170,7 +1171,7 @@ const STR = {
     privacy: '隱私權政策', 'about.priv': '<a href="#" class="about-priv">隱私權政策</a>：我們不收集任何資料（要大人解一題才會打開）。',
     'about.credits': '寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC、Zen Maru Gothic 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。',
     'about.ver': '版本 1.3。© 2026 指數三寶飯 保留所有權利。', 'about.env': '　畫面 {w}×{h}，畫布 {cw}×{ch} @{d}',
-    'gate.title': '請大人來一下', 'gate.why': '要打開外面的網頁，請大人先回答這一題。', 'gate.go': '前往', 'gate.ok': '答對了！', 'gate.no': '不對喔，再試一次',
+    'gate.title': '請大人來一下', 'gate.why': '要打開外面的網頁，請大人先回答這一題。', 'gate.go': '前往', 'gate.ok': '答對了！', 'gate.wait': '答錯太多次了，30 秒後再試。', 'gate.no': '不對喔，換一題',
     rotate: '請把手機轉直',
     // 遊戲說明（每段是一串 <li>）
     'help.games': '五個遊戲', 'help.addT': '練加減', 'help.add': '<li>大人可以在「設定」的「要練什麼」選<b>乘法</b>、<b>加減</b>或<b>都練</b>。</li><li>加減是 20 以內，像 <b>8 + 7</b>、<b>15 − 8</b>，有時候是 <b>7 + ? = 15</b>。</li><li>答錯了會教你怎麼算：<b>雙倍</b>（7 + 8 想成 7 + 7 再加 1）、<b>湊十</b>（8 + 7 想成 8 + 2 = 10，再加 5）、<b>湊十的好朋友</b>（4 和 6）、<b>想加法</b>（15 − 8 想成 8 + 7 = 15）。</li><li>有教你怎麼算的時候，流星和幽靈會<b>停 3 秒</b>。照著答案打完就繼續。</li><li>選「都練」時，比較不熟的那一種會出比較多。</li><li>炸彈拆除和哪個大只練乘法，只練加減時會變暗。</li><li>星圖上面可以切到<b>加減</b>，看每一題熟不熟。</li>', 'help.other': '其他', 'help.chestT': '寶箱流星', 'help.comboT': '連擊', 'help.whoT': '誰在玩', 'help.questT': '每日任務',
@@ -1188,17 +1189,17 @@ const STR = {
     'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li><li>換新的平板或手機時，請大人在「設定」用<b>備份紀錄</b>把紀錄搬過去。</li>',
     'set.parents': '家長區', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄（要請大人）', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（匯入要請大人）', 'set.backupGo': '打開', 'set.pet': '刪除寵物', 'set.petD': '把現在的寵物或回家的夥伴永遠刪掉（要請大人）', 'set.petGo': '打開',
     'pdel.title': '刪除寵物', 'pdel.p': '刪掉的寵物不會回來。星塵和配件會留著。', 'pdel.cur': '{stage}・現在的夥伴', 'pdel.go': '刪除', 'pdel.aria': '刪除{name}', 'pdel.why': '要永遠刪除「{name}」，請大人先回答這一題。', 'pdel.done': '「{name}」刪掉了',
-    'lock.trialN': '免費試玩 {n} 次', 'lock.locked': '要請大人解鎖', 'lock.title': '{name}的試玩用完囉！', 'lock.p': '想一直玩，請大人幫你解鎖。{m}還是可以一直玩喔！', 'lock.ask': '請大人來看', 'lock.ok': '好',
-    'trial.start': '免費試玩！還可以再試玩 {n} 次', 'trial.last': '這是最後一次免費試玩！', 'nudge.title': '還有別的遊戲喔！', 'nudge.p': '{games}都可以免費試玩。在主選單點點看！',
+    'lock.trialN': '免費試玩 {n} 次', 'lock.locked': '試玩用完了', 'lock.title': '{name}的試玩用完囉！', 'lock.p': '試玩結束了。{m}、星圖和寵物都可以一直玩喔！', 'lock.ask': '給大人看', 'lock.ok': '好',
+    'trial.start': '免費試玩！還可以再試玩 {n} 次', 'trial.last': '免費試玩！', 'nudge.title': '還有別的遊戲喔！', 'nudge.p': '{games}都可以免費試玩。在主選單點點看！',
     'gate.buy': '要購買或使用優惠碼，請大人先回答這一題。', 'buy.title': '解鎖全部遊戲',
     'buy.list': '<li>{g}，四個遊戲都可以一直玩。</li><li><b>一次購買，永久使用</b>：不是訂閱，沒有廣告，也沒有其他要買的東西。</li><li>這台裝置上的每個玩家都能玩。</li>',
     'buy.thanks': '你的支持，讓作者能繼續做新的練習遊戲。謝謝！', 'buy.go': '購買 {p}', 'buy.goNoP': '購買', 'buy.restore': '回復購買', 'buy.code': '使用優惠碼', 'buy.later': '之後再說',
     'buy.codeAnd': '按「購買」後，在 Google Play 付款畫面點付款方式，選「兌換代碼」輸入優惠碼。', 'buy.wait': '跟商店連線中…', 'buy.done': '解鎖了！四個遊戲都可以一直玩囉！', 'buy.owned': '已經解鎖了，謝謝你的支持！',
-    'buy.pending': '付款還在處理中，完成後就會解鎖。', 'buy.fail': '購買沒有完成，可以再試一次。', 'buy.none': '這個帳號沒有找到購買紀錄。', 'buy.offline': '連不上商店，等一下再試。',
-    'set.unlock': '解鎖全部遊戲', 'set.unlockD': '流星防衛戰免費，另外四個遊戲一次購買解鎖（要請大人）', 'set.unlockOk': '已經解鎖，謝謝支持！', 'set.unlockGo': '看看',
-    'help.unlockT': '解鎖遊戲', 'help.unlock': '<li>{m}、星圖、寵物和每日任務，都可以一直玩。</li><li>另外四個遊戲，<b>每一種都可以免費玩 3 次</b>。想一直玩，請大人幫你解鎖。</li><li>還沒解鎖時，每日任務只會出你玩得到的遊戲。</li>',
+    'buy.noProd': '現在讀不到商店的商品，請稍後再試。', 'buy.codeOld': '這台裝置不能在 App 裡兌換，請到 App Store 的帳號頁面兌換代碼。', 'buy.pending': '付款還在處理中，完成後就會解鎖。', 'buy.fail': '購買沒有完成，可以再試一次。', 'buy.none': '這個帳號沒有找到購買紀錄。', 'buy.offline': '連不上商店，等一下再試。',
+    'set.unlock': '解鎖全部遊戲', 'set.unlockD': '流星防衛戰免費，另外四個遊戲一次購買解鎖（要請大人）', 'set.unlockOk': '四個遊戲都解鎖了', 'set.unlockGo': '看看',
+    'help.unlockT': '解鎖遊戲', 'help.unlock': '<li>{m}、星圖、寵物和每日任務，都可以一直玩。</li><li>另外四個遊戲，<b>每一種都可以免費玩 3 次</b>。之後要不要解鎖，由大人決定。</li><li>還沒解鎖時，每日任務只會出你玩得到的遊戲。</li>',
     'about.buyT': '費用', 'about.buyL': '<li>{m}、星圖、寵物與每日任務免費；另外四個遊戲各可試玩 3 次，在「設定 → 家長區」<b>一次購買</b>就全部解鎖（不是訂閱），這台裝置的每個玩家都能玩。</li><li>付款由 App Store／Google Play 處理，我們收不到任何付款或帳號資料。購買和優惠碼都要先請大人解一題。</li>',
-    'bk.why': '匯入會取代這台裝置上所有人的紀錄，請大人先回答這一題。', 'bk.title': '備份紀錄',
+    'bk.again': '可以了，再按一次「{b}」。', 'bk.exWhy': '要把紀錄傳到 App 外面，請大人先回答這一題。', 'bk.why': '匯入會取代這台裝置上所有人的紀錄，請大人先回答這一題。', 'bk.title': '備份紀錄',
     'bk.p': '備份包含這台裝置上所有人的星圖、紀錄、寵物和設定。網頁版和 App 版的紀錄是分開存的，要靠備份搬過去；也可以存起來以防萬一。',
     'bk.exportT': '匯出', 'bk.file': '存成備份檔', 'bk.copy': '複製備份碼', 'bk.saved': '備份檔已經產生。',
     'bk.copied': '備份碼已經複製，可以貼到備忘錄或傳給自己保存。', 'bk.copyManual': '請長按下面的備份碼，全選後複製。',
@@ -1314,7 +1315,7 @@ const STR = {
     privacy: 'Privacy Policy', 'about.priv': '<a href="#" class="about-priv">Privacy Policy</a>: we collect no data at all (a grown-up solves a problem first to open it).',
     'about.credits': 'Pet and outfit art is AI-generated. Fonts are Chiron GoRound TC, Zen Maru Gothic and Lilita One (SIL Open Font License), bundled with the game, so nothing loads from outside. Music and sound effects are synthesized live in code.',
     'about.ver': 'Version 1.3. © 2026 指數三寶飯. All rights reserved.', 'about.env': '  Screen {w}×{h}, canvas {cw}×{ch} @{d}',
-    'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.no': 'Not quite. Try again',
+    'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.wait': 'Too many tries. Wait 30 seconds and try again.', 'gate.no': 'Not quite. Try a new one.',
     rotate: 'Please turn your phone upright',
     'help.games': 'Five games', 'help.addT': 'Adding and subtracting', 'help.add': '<li>A grown-up can pick <b>Times</b>, <b>+ and −</b> or <b>Both</b> under What to practice in Settings.</li><li>Adding and subtracting go up to 20, like <b>8 + 7</b> and <b>15 − 8</b>, and sometimes <b>7 + ? = 15</b>.</li><li>Miss one and it shows you a trick: <b>double</b> (7 + 8 is 7 + 7, plus 1), <b>make 10</b> (8 + 7 is 8 + 2 = 10, plus 5), <b>pairs that make 10</b> (4 and 6), or <b>think plus</b> (15 − 8: 8 + 7 = 15).</li><li>When a trick shows up, the meteors and the ghost <b>stop for 3 seconds</b>. Type the answer and you keep going.</li><li>With Both, the kind you know less comes up more.</li><li>Bomb Squad and Biggest? Smallest? are times tables only, so they dim when you pick + and −.</li><li>Switch the Star Map to <b>+ and −</b> at the top to see how well you know each one.</li>', 'help.other': 'More', 'help.chestT': 'Treasure meteors', 'help.comboT': 'Combos', 'help.whoT': 'Who\'s playing', 'help.questT': 'Daily missions',
     'help.meteor': '<li>Each meteor has a math problem. Type the answer and the cannon zaps it with a laser. The cannon keeps aiming at <b>the same meteor</b> until it\'s gone. It only turns to another one that\'s about to hit the ground, and then the problem below gives a little hop.</li><li>If you answer wrong, the meteor shows the answer. <b>Type it in</b> to knock it down. For + and −, it also shows a trick, like 7 + 8: <b>double</b> 7 + 7 = 14, plus 1; or <b>make 10</b>: 8 + 2 = 10, 10 + 5 = 15. When a trick shows up, the meteors <b>stop for 3 seconds</b> so you can read it.</li><li>In times tables, sometimes a meteor says "Count by 7s" with numbers like "7, 14, ?, 28". Just <b>type the missing number</b>. You\'ll see these in Ghost Race and Tug of War too.</li><li>A meteor that hits the town <b>costs 1 heart</b>. A whole wave with no misses: +50 points.</li><li>Every 5 waves the <b>Mistake Boss</b> shows up with problems you often miss or don\'t know well yet. Only answers <b>right on the first try</b> count as hits. It takes 6 or more hits, and more in later waves. No small meteors come with the boss, so just focus on it. Beat it for +200 points and a <b>chest every time</b>.</li><li>If the boss hits the town, that\'s also <b>1 heart</b>, and the next wave starts.</li><li>Hearts only come from chests. You can have up to 3.</li><li><b>One Hit</b>: only 1 heart, with its own high score.</li>',
@@ -1331,17 +1332,17 @@ const STR = {
     'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li><li>Getting a new tablet or phone? A grown-up can move your records with <b>Back up records</b> in Settings.</li>',
     'set.parents': 'For grown-ups', 'set.del': 'Delete player', 'set.delD': 'Delete {name} and all of their records (ask a grown-up)', 'set.delGo': 'Delete', 'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (importing needs a grown-up)', 'set.backupGo': 'Open', 'set.pet': 'Delete pets', 'set.petD': 'Remove your pet or a pet back home for good (ask a grown-up)', 'set.petGo': 'Open',
     'pdel.title': 'Delete pets', 'pdel.p': 'A deleted pet can\'t come back. Your stardust and outfits stay.', 'pdel.cur': '{stage} · your pet now', 'pdel.go': 'Delete', 'pdel.aria': 'Delete {name}', 'pdel.why': 'This deletes {name} for good. A grown-up needs to answer this first.', 'pdel.done': '{name} was deleted',
-    'lock.trialN': v => `${v.n} free ${v.n === 1 ? 'try' : 'tries'}`, 'lock.locked': 'Ask a grown-up to unlock', 'lock.title': 'No more free tries of {name}!', 'lock.p': 'To keep playing, ask a grown-up to unlock it. You can always play {m}!', 'lock.ask': 'Get a grown-up', 'lock.ok': 'OK',
-    'trial.start': v => `Free try! ${v.n} more ${v.n === 1 ? 'try' : 'tries'} left`, 'trial.last': 'This is your last free try!', 'nudge.title': 'There are more games!', 'nudge.p': '{games}: you can try them for free. Tap one on the menu!',
+    'lock.trialN': v => `${v.n} free ${v.n === 1 ? 'try' : 'tries'}`, 'lock.locked': 'No free tries left', 'lock.title': 'No more free tries of {name}!', 'lock.p': 'The free tries are over. You can always play {m}, the Star Map and your pet!', 'lock.ask': 'For grown-ups', 'lock.ok': 'OK',
+    'trial.start': v => `Free try! ${v.n} more ${v.n === 1 ? 'try' : 'tries'} left`, 'trial.last': 'Free try!', 'nudge.title': 'There are more games!', 'nudge.p': '{games}: you can try them for free. Tap one on the menu!',
     'gate.buy': 'To buy or use a promo code, a grown-up needs to answer this first.', 'buy.title': 'Unlock all games',
     'buy.list': '<li>Play all four games ({g}) as much as you like.</li><li><b>One purchase, yours to keep</b>: no subscription, no ads, nothing else to buy.</li><li>Every player on this device can play.</li>',
     'buy.thanks': 'Your support helps the author keep making new practice games. Thank you!', 'buy.go': 'Buy for {p}', 'buy.goNoP': 'Buy', 'buy.restore': 'Restore purchase', 'buy.code': 'Use a promo code', 'buy.later': 'Not now',
     'buy.codeAnd': 'Tap "Buy", then on the Google Play payment screen tap the payment method and choose "Redeem code".', 'buy.wait': 'Talking to the store…', 'buy.done': 'Unlocked! Play all four games anytime!', 'buy.owned': 'All unlocked. Thank you for your support!',
-    'buy.pending': 'The payment is still processing. The games unlock when it goes through.', 'buy.fail': 'The purchase did not go through. You can try again.', 'buy.none': 'No purchase found for this account.', 'buy.offline': 'Cannot reach the store. Try again later.',
-    'set.unlock': 'Unlock all games', 'set.unlockD': 'Meteor Defense is free. One purchase unlocks the other four (ask a grown-up)', 'set.unlockOk': 'Unlocked. Thank you!', 'set.unlockGo': 'View',
-    'help.unlockT': 'Unlocking games', 'help.unlock': '<li>{m}, the Star Map, your pet and daily missions are always free.</li><li>You can <b>try each of the other four games 3 times for free</b>. To keep playing them, ask a grown-up to unlock them.</li><li>Until then, daily missions only use games you can play.</li>',
+    'buy.noProd': "The store item isn't available right now. Please try again later.", 'buy.codeOld': "This device can't redeem codes in the app. Please redeem it from your account page in the App Store.", 'buy.pending': 'The payment is still processing. The games unlock when it goes through.', 'buy.fail': 'The purchase did not go through. You can try again.', 'buy.none': 'No purchase found for this account.', 'buy.offline': 'Cannot reach the store. Try again later.',
+    'set.unlock': 'Unlock all games', 'set.unlockD': 'Meteor Defense is free. One purchase unlocks the other four (ask a grown-up)', 'set.unlockOk': 'All four games are unlocked', 'set.unlockGo': 'View',
+    'help.unlockT': 'Unlocking games', 'help.unlock': '<li>{m}, the Star Map, your pet and daily missions are always free.</li><li>You can <b>try each of the other four games 3 times for free</b>. After that, unlocking them is up to a grown-up.</li><li>Until then, daily missions only use games you can play.</li>',
     'about.buyT': 'Price', 'about.buyL': '<li>{m}, the Star Map, pets and daily missions are free. Each of the other four games can be tried 3 times, and <b>one purchase</b> in Settings → For grown-ups unlocks them all (not a subscription) for every player on this device.</li><li>Payment is handled by the App Store / Google Play. We never receive any payment or account details. Buying and promo codes are behind a grown-up check.</li>',
-    'bk.why': 'Importing replaces every player\'s records on this device. A grown-up needs to answer this first.', 'bk.title': 'Back up records',
+    'bk.again': 'OK. Tap “{b}” again.', 'bk.exWhy': 'To send records out of the app, a grown-up needs to answer this first.', 'bk.why': 'Importing replaces every player\'s records on this device. A grown-up needs to answer this first.', 'bk.title': 'Back up records',
     'bk.p': 'A backup holds every player\'s star map, records, pet and settings on this device. The website and the app keep separate records, so use a backup to move them. You can also keep one just in case.',
     'bk.exportT': 'Export', 'bk.file': 'Save backup file', 'bk.copy': 'Copy backup code', 'bk.saved': 'Backup file created.',
     'bk.copied': 'Backup code copied. Paste it into Notes or send it to yourself to keep it.', 'bk.copyManual': 'Press and hold the code below, select all, then copy.',
@@ -1456,7 +1457,7 @@ const STR = {
     privacy: 'プライバシーポリシー', 'about.priv': '<a href="#" class="about-priv">プライバシーポリシー</a>：データはいっさい集めません（大人が問題を1問解くと開きます）。',
     'about.credits': 'ペットときせかえのイラストはAIで生成しています。フォントは Zen Maru Gothic、Chiron GoRound TC、Lilita One（SIL Open Font License）で、ゲームといっしょに配布しているため外部には接続しません。音楽と効果音はプログラムでリアルタイムに合成しています。',
     'about.ver': 'バージョン 1.3。© 2026 指數三寶飯 All rights reserved.', 'about.env': '　画面 {w}×{h}、キャンバス {cw}×{ch} @{d}',
-    'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.no': 'ちがいます。もう一度どうぞ',
+    'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.wait': 'まちがいが多いので、30秒たってからもう一度どうぞ。', 'gate.no': 'ちがいます。べつの問題をどうぞ',
     rotate: 'スマホをたてにしてね',
     'help.games': '5つのゲーム', 'help.addT': 'たし算・ひき算', 'help.add': '<li>大人の人が「せってい」の「何を練習する？」で<b>かけ算</b>・<b>たし・ひき</b>・<b>りょうほう</b>をえらべるよ。</li><li>たし算・ひき算は20まで。<b>8 + 7</b>、<b>15 − 8</b>、ときどき <b>7 + ? = 15</b> も出るよ。</li><li>まちがえると、とき方が出るよ：<b>おなじ数</b>（7 + 8 は 7 + 7 に 1 たす）、<b>10をつくる</b>（8 + 7 は 8 + 2 = 10、あと 5）、<b>10になるなかま</b>（4 と 6）、<b>たし算で考える</b>（15 − 8 は 8 + 7 = 15）。</li><li>とき方が出たときは、流星とゴーストが<b>3びょう止まる</b>よ。答えを打てばつづきから。</li><li>「りょうほう」のときは、にがてなほうが多めに出るよ。</li><li>ばくだんかいじょ と どれが大きい？ はかけ算だけなので、たし・ひきのときはうすくなるよ。</li><li>星マップの上で<b>たし・ひき</b>にきりかえると、1問ずつのできぐあいが見られるよ。</li>', 'help.other': 'そのほか', 'help.chestT': 'たからばこ流星', 'help.comboT': 'コンボ', 'help.whoT': 'だれがあそぶ？', 'help.questT': '毎日のミッション',
     'help.meteor': '<li>流星には計算の問題がのっているよ。答えを打つと、ほう台がレーザーでうちおとすよ。ほう台は<b>同じ流星</b>をずっとねらっていて、ほかの流星が地面にぶつかりそうなときだけ、そっちをねらうよ。そのとき下の問題がピョンとはねるよ。</li><li>まちがえると流星に答えが出るよ。<b>そのまま打てば</b>うちおとせるよ。たし算・ひき算は、とき方も出るよ。7 + 8 なら <b>おなじ数</b> 7 + 7 = 14 に 1 たす、または <b>10をつくる</b> 8 + 2 = 10、10 + 5 = 15。とき方が出たときは、流星が<b>3びょう止まる</b>から、よく見てね。</li><li>かけ算のときは、流星に「7のだん」と「7、14、?、28」のような数がならぶことがあるよ。<b>？の数</b>を打てばOK。ゴーストレースとつなひきでも出るよ。</li><li>流星が町に落ちると<b>ハートが1つへる</b>よ。1ウェーブのあいだミスなしなら +50点。</li><li>5ウェーブごとに<b>まちがいボス</b>が出るよ。きみがよくまちがえる問題や、まだなれていない問題を出してくるよ。<b>1回で正かい</b>しないとダメージにならないよ。6回以上当てるとたおせて、ウェーブが進むほどライフがふえるよ。ボスのときは小さい流星は来ないから、ボスに集中しよう。たおすと +200点、<b>かならずたからばこ</b>が出るよ。</li><li>ボスが町に落ちても<b>ハートが1つへって</b>、次のウェーブが始まるよ。</li><li>ハートがふえるのはたからばこだけ。ハートは3つまで。</li><li><b>一発アウト</b>：ハートは1つだけ。ハイスコアはべつに記ろくされるよ。</li>',
@@ -1473,17 +1474,17 @@ const STR = {
     'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li><li>新しいタブレットやスマホにかえるときは、大人の人に「せってい」の<b>きろくのバックアップ</b>でうつしてもらおう。</li>',
     'set.parents': 'おうちの人むけ', 'set.del': 'プレイヤーをけす', 'set.delD': '「{name}」の名前と記ろくをぜんぶけす（大人の人にきいてね）', 'set.delGo': 'けす', 'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（読みこみは大人の人にきいてね）', 'set.backupGo': 'ひらく', 'set.pet': 'ペットをけす', 'set.petD': '今のペットや家に帰ったなかまを、ずっとけす（大人の人にきいてね）', 'set.petGo': 'ひらく',
     'pdel.title': 'ペットをけす', 'pdel.p': 'けしたペットはもどってこないよ。星くずときせかえはのこるよ。', 'pdel.cur': '{stage}・今のなかま', 'pdel.go': 'けす', 'pdel.aria': '{name}をけす', 'pdel.why': '「{name}」を完全に消去します。大人の方がこの問題に答えてください。', 'pdel.done': '「{name}」をけしたよ',
-    'lock.trialN': 'おためし あと{n}回', 'lock.locked': '大人の人にひらいてもらおう', 'lock.title': '{name}のおためしはおしまい！', 'lock.p': 'ずっとあそぶには、大人の人にひらいてもらってね。{m}は、いつでもあそべるよ！', 'lock.ask': '大人の人をよぶ', 'lock.ok': 'わかった',
-    'trial.start': 'おためし！あと{n}回ためせるよ', 'trial.last': 'これがさいごのおためしだよ！', 'nudge.title': 'ほかのゲームもあるよ！', 'nudge.p': '{games}は、ただでためせるよ。メニューでえらんでみてね！',
+    'lock.trialN': 'おためし あと{n}回', 'lock.locked': 'おためしはおしまい', 'lock.title': '{name}のおためしはおしまい！', 'lock.p': 'おためしはおしまい。{m}、星マップ、ペットは、いつでもあそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった',
+    'trial.start': 'おためし！あと{n}回ためせるよ', 'trial.last': 'おためし！', 'nudge.title': 'ほかのゲームもあるよ！', 'nudge.p': '{games}は、ただでためせるよ。メニューでえらんでみてね！',
     'gate.buy': '購入やコードの入力には、大人の方がこの問題に答えてください。', 'buy.title': 'すべてのゲームを解除',
     'buy.list': '<li>{g}の4つのゲームが、いつでも遊べるようになります。</li><li><b>1回の購入でずっと使えます</b>：サブスクリプションではなく、広告もほかの課金もありません。</li><li>この端末のすべてのプレイヤーが遊べます。</li>',
     'buy.thanks': 'ご支援が、新しい練習ゲームづくりの力になります。ありがとうございます！', 'buy.go': '{p}で購入', 'buy.goNoP': '購入', 'buy.restore': '購入を復元', 'buy.code': 'コードを使う', 'buy.later': 'あとで',
     'buy.codeAnd': '「購入」をタップし、Google Play の支払い画面で支払い方法をタップして「コードを利用」を選んでください。', 'buy.wait': 'ストアに接続中…', 'buy.done': 'ひらいたよ！4つのゲームがいつでもあそべるよ！', 'buy.owned': '解除済みです。ご支援ありがとうございます！',
-    'buy.pending': 'お支払いを処理中です。完了するとゲームが解除されます。', 'buy.fail': '購入が完了しませんでした。もう一度お試しください。', 'buy.none': 'このアカウントの購入履歴が見つかりません。', 'buy.offline': 'ストアに接続できません。しばらくしてからお試しください。',
-    'set.unlock': 'ぜんぶのゲームをひらく', 'set.unlockD': '流星ディフェンスはむりょう。ほかの4つは1回の購入でひらくよ（大人の人にきいてね）', 'set.unlockOk': 'ひらいているよ。ありがとう！', 'set.unlockGo': 'みる',
-    'help.unlockT': 'ゲームをひらく', 'help.unlock': '<li>{m}、星マップ、ペット、毎日のミッションは、いつでもあそべるよ。</li><li>ほかの4つのゲームは、<b>3回ずつただであそべる</b>よ。ずっとあそぶには、大人の人にひらいてもらってね。</li><li>ひらくまでは、毎日のミッションはあそべるゲームからだけ出るよ。</li>',
+    'buy.noProd': 'いまストアの商品を読み込めません。しばらくしてからお試しください。', 'buy.codeOld': 'この端末ではアプリ内でコードを使えません。App Store のアカウントページから引き換えてください。', 'buy.pending': 'お支払いを処理中です。完了するとゲームが解除されます。', 'buy.fail': '購入が完了しませんでした。もう一度お試しください。', 'buy.none': 'このアカウントの購入履歴が見つかりません。', 'buy.offline': 'ストアに接続できません。しばらくしてからお試しください。',
+    'set.unlock': 'ぜんぶのゲームをひらく', 'set.unlockD': '流星ディフェンスはむりょう。ほかの4つは1回の購入でひらくよ（大人の人にきいてね）', 'set.unlockOk': '4つのゲームがぜんぶあそべるよ', 'set.unlockGo': 'みる',
+    'help.unlockT': 'ゲームをひらく', 'help.unlock': '<li>{m}、星マップ、ペット、毎日のミッションは、いつでもあそべるよ。</li><li>ほかの4つのゲームは、<b>3回ずつただであそべる</b>よ。そのあとどうするかは、おうちの人がきめるよ。</li><li>ひらくまでは、毎日のミッションはあそべるゲームからだけ出るよ。</li>',
     'about.buyT': '料金', 'about.buyL': '<li>{m}・星マップ・ペット・毎日のミッションは無料です。ほかの4つのゲームはそれぞれ3回お試しでき、「設定 → おうちの人むけ」で<b>1回購入</b>するとすべて解除されます（サブスクリプションではありません）。この端末のすべてのプレイヤーが遊べます。</li><li>お支払いは App Store／Google Play が行い、支払い情報やアカウント情報が私たちに届くことはありません。購入とコードの入力には、大人向けの確認問題があります。</li>',
-    'bk.why': '読み込むと、この端末の全員の記録が置き換わります。大人の方がこの問題に答えてください。', 'bk.title': '記録のバックアップ',
+    'bk.again': 'OK です。もう一度「{b}」をおしてください。', 'bk.exWhy': '記録をアプリの外に送るには、大人の方がこの問題に答えてください。', 'bk.why': '読み込むと、この端末の全員の記録が置き換わります。大人の方がこの問題に答えてください。', 'bk.title': '記録のバックアップ',
     'bk.p': 'この端末にいる全員の星マップ・記録・ペット・設定をまとめて保存します。Web版とアプリ版の記録は別々に保存されるため、移すときはバックアップを使ってください。念のための保存にも使えます。',
     'bk.exportT': '書き出し', 'bk.file': 'バックアップファイルを保存', 'bk.copy': 'バックアップコードをコピー', 'bk.saved': 'バックアップファイルを作成しました。',
     'bk.copied': 'コードをコピーしました。メモアプリなどに貼り付けて保存してください。', 'bk.copyManual': '下のコードを長押しして、すべて選択してからコピーしてください。',
@@ -1527,7 +1528,7 @@ const PKEY = 'jiujiu-meteor-who', WHO_MAX = 4;
 let WHO = { cur: '', list: [{ id: '', name: '' }] };
 try {
   const w = JSON.parse(localStorage.getItem(PKEY));
-  if (w && Array.isArray(w.list) && w.list.length) WHO = { cur: typeof w.cur === 'string' ? w.cur : '', list: w.list.filter(x => x && typeof x.id === 'string').map(x => ({ id: x.id, name: String(x.name || '').slice(0, 10) })).slice(0, WHO_MAX), asked: !!w.asked };
+  if (w && Array.isArray(w.list) && w.list.length) WHO = { cur: typeof w.cur === 'string' ? w.cur : '', list: w.list.filter(x => x && typeof x.id === 'string').map(x => ({ id: x.id, name: typeof x.name === 'string' ? x.name.slice(0, 10) : '' })).slice(0, WHO_MAX), asked: !!w.asked };
 } catch (e) {}
 WHO.list = WHO.list.filter((x, i, a) => a.findIndex(y => y.id === x.id) === i);
 if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
@@ -1550,12 +1551,14 @@ function mkDB(o) {
 }
 // 壞掉的 facts（null、缺欄位、字串）會讓加權變 NaN、整個遊戲每題都一樣，載入時只留合法的
 const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
+// 存檔裡的物件只拿自己的欄位（'__proto__' 這種 key 不能用 Object.assign 搬，會改到原型）
+const plain = o => { const r = {}; if (o && typeof o === 'object' && !Array.isArray(o)) Object.keys(o).forEach(k => { if (k !== '__proto__') r[k] = o[k]; }); return r; };
 function cleanFacts(fc) {
   const out = {};
   if (!fc || typeof fc !== 'object' || Array.isArray(fc)) return out;
   Object.keys(fc).forEach(k => {
     const s = fc[k], m = /^([1-9]\d?)([x+\-])([1-9]\d?)$/.exec(k); if (!s || typeof s !== 'object' || !m) return;
-    const a = +m[1], b = +m[3]; if (m[2] === 'x' ? (a < 1 || a > T_MAX || b < 1 || b > T_MAX) : (a > (m[2] === '-' ? 18 : 10) || b > 10)) return;   // 只留真的存在的題目
+    const a = +m[1], b = +m[3]; if (m[2] === 'x' ? (a < 1 || a > T_MAX || b < 1 || b > T_MAX) : m[2] === '+' ? (a < 2 || a > 9 || b < 2 || b > 9) : (b < 2 || b > 9 || a - b < 2 || a - b > 9)) return;   // 加減只留真的會出的（2～9 加 2～9、對應的減法）   // 只留真的存在的題目
     out[k] = { n: clamp(Math.round(num(s.n)), 0, 1e6), err: clamp(num(s.err), 0, 1), t: clamp(Math.round(num(s.t)), 0, 9000) };
     if (s.w) out[k].w = clamp(Math.round(num(s.w)), 0, 1e6);
     if (s.sw) out[k].sw = clamp(Math.round(num(s.sw)), 0, 99);
@@ -1569,7 +1572,7 @@ function cleanRest(D) {
   P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string').map(r => Object.assign({ kind: r.kind, name: String(r.name || '').slice(0, 10), date: typeof r.date === 'string' ? r.date : '' }, Number.isFinite(r.fed) ? { fed: clamp(Math.round(r.fed), 0, 1e6) } : {}));
   P.sent = Math.max(Math.round(num(P.sent)), P.released.filter(r => !('fed' in r) || r.fed >= 500).length);   // 送回家（究極）過幾次：傳說蛋看這個，請夥伴回來不會又鎖回去；舊存檔用名單裡的究極補
   const Y = D.daily; Y.badges = Math.max(0, Math.round(num(Y.badges))); Y.streak = Math.max(0, Math.round(num(Y.streak))); Y.ans = Math.max(0, Math.round(num(Y.ans))); Y.starBase = Math.round(num(Y.starBase));
-  const log = {}; if (Y.log && typeof Y.log === 'object' && !Array.isArray(Y.log)) Object.keys(Y.log).forEach(d => { const v = Y.log[d]; if (/^\d{4}-\d{2}-\d{2}$/.test(d) && v && typeof v === 'object') log[d] = { s: num(v.s), t: num(v.t), r: typeof v.r === 'string' ? v.r : 'std', a: num(v.a), m: num(v.m) }; }); Y.log = log;
+  const log = {}; if (Y.log && typeof Y.log === 'object' && !Array.isArray(Y.log)) Object.keys(Y.log).forEach(d => { const v = Y.log[d]; if (/^\d{4}-\d{2}-\d{2}$/.test(d) && v && typeof v === 'object') log[d] = { s: num(v.s), t: num(v.t), r: typeof v.r === 'string' ? v.r : 'std', a: num(v.a), m: num(v.m), ...(Number.isFinite(v.as) ? { as: v.as, at: num(v.at) } : {}) }; }); Y.log = log;   // as／at：加減星圖的比較要用
   Y.wrong = Math.max(0, Math.round(num(Y.wrong)));
   Y.tasks = (Array.isArray(Y.tasks) ? Y.tasks : []).filter(x => x && typeof x.id === 'string' && Number.isFinite(+x.n) && +x.n > 0).map(x => ({ id: x.id, n: Math.round(+x.n), p: Math.max(0, Math.round(num(+x.p))), done: !!x.done }));
   if (typeof Y.date !== 'string') Y.date = ''; if (typeof Y.lastDone !== 'string') Y.lastDone = '';
@@ -1590,9 +1593,9 @@ function loadDB() {
       const d = JSON.parse(raw), f = fresh();
       const bests = {}; Object.keys(d.bests || {}).forEach(k => { const b = d.bests[k]; if (k === '__proto__' || k === 'constructor' || !b || typeof b !== 'object' || Array.isArray(b)) return; bests[k] = Object.assign(BEST0(), b); });
       if (d.best) bests.std = Object.assign(BEST0(), d.best, bests.std || {});   // 舊存檔只有一份 best，歸到標準九九
-      DB = mkDB({ facts: cleanFacts(d.facts), tm: TMODE, bests, retest: Array.isArray(d.retest) ? d.retest.filter(k => typeof k === 'string').slice(0, 40) : [], set: Object.assign(f.set, d.set || {}), daily: Object.assign(f.daily, d.daily || {}), pet: Object.assign(f.pet, d.pet || {}) });
+      DB = mkDB({ facts: cleanFacts(d.facts), tm: TMODE, bests, retest: Array.isArray(d.retest) ? d.retest.filter(k => typeof k === 'string').slice(0, 40) : [], set: Object.assign(f.set, plain(d.set)), daily: Object.assign(f.daily, plain(d.daily)), pet: Object.assign(f.pet, plain(d.pet)) });
       DB.set.tables = cleanTables(DB.set.tables);
-      if (!d.set || !('what' in d.set)) DB.set.what = d.set && [true, 'true', 1].includes(d.set.mix) ? 'both' : 'mul';   // 1.3 以前的「混入十以內加減」開關 → 都練
+      const ds = plain(d.set); if (!('what' in ds)) DB.set.what = [true, 'true', 1].includes(ds.mix) ? 'both' : 'mul';   // set 不是物件（壞存檔）也不能丟例外：例外會走到 fresh() 然後把整份紀錄存成空的   // 1.3 以前的「混入十以內加減」開關 → 都練
       if (!['mul', 'add', 'both'].includes(DB.set.what)) DB.set.what = 'mul'; delete DB.set.mix;
       cleanRest(DB);
       if (d.tm !== TMODE) Object.keys(DB.facts).forEach(k => {   // 舊存檔量到按完答案、門檻 3.6 秒（三位數 4.2 秒）：等比例換到新門檻，換版當下星星一顆都不變
@@ -1627,7 +1630,7 @@ document.documentElement.classList.toggle('app', APP);
 function renderLocks() {
   PAID.forEach(m => {
     const e = $('#go-' + m + ' .m-lock'); if (!e) return;
-    const show = !unlocked() && !mulOnly(m); e.hidden = !show; if (!show) return;   // 只練加減時變暗的卡片不放「免費試玩」
+    const show = !unlocked() && !mulOnly(m); e.hidden = !show; if (!show) { $('#go-' + m).removeAttribute('aria-label'); return; }   // 只練加減時變暗的卡片不放「免費試玩」
     const t = trialLeft(m); e.classList.toggle('locked', !t);
     e.innerHTML = t ? tx('lock.trialN', { n: t }) : '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="8" rx="2" fill="currentColor"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>';
     $('#go-' + m).setAttribute('aria-label', tx(m + '.name') + (t ? '（' + tx('lock.trialN', { n: t }) + '）' : '（' + tx('lock.locked') + '）'));
@@ -1666,12 +1669,12 @@ rebuildPool();
 const FLUENT_MS = 3000, WEIGHT_MS = 2000;   // 想出答案（到第一個數字）平滑 ≤ 3 秒才亮星；2 秒起開始多出
 function weightOf(f) {
   const s = DB.facts[f.k];
-  let w = (!s || !s.n) ? 1.6 + (s ? s.err * 8 : 0) : 1 + s.err * 8 + clamp((s.t - WEIGHT_MS) / 2000, 0, 2);
+  let w = (!s || !s.n) ? 1.6 + (s ? s.err * 8 : 0) : 1 + s.err * 8 + clamp((s.t - WEIGHT_MS) / 1000, 0, 3);   // 想超過 2 秒每多 1 秒 +1（最多 +3）：會但慢的題（3 秒）比沒遇過的還常出
   if (f.op === '×' && (f.a === 1 || f.b === 1)) w *= 0.25;
   return w;
 }
-// 「要練什麼」set.what：乘法／加減／都練。都練時哪一邊比較弱（平均權重高）就多出那一邊，每邊至少 25%（乘法用不含 ×1 的平均：×1 權重打了折，算進去會讓加減一開始就偏多）
-const addShare = () => { const avg = P => P.reduce((t, f) => t + weightOf(f), 0) / P.length, a = avg(ADDSUB), m = avg(MUL2.length ? MUL2 : MUL); return clamp(a / (a + m), 0.25, 0.75); };
+// 「要練什麼」set.what：乘法／加減／都練。都練時哪一邊比較弱（平均權重高）就多出那一邊，每邊至少 15%（乘法用不含 ×1 的平均：×1 權重打了折，算進去會讓加減一開始就偏多）
+const addShare = () => { const ex = P => P.reduce((t, f) => t + Math.max(0, weightOf(f) - 1), 0) / P.length, a = ex(ADDSUB), m = ex(MUL2.length ? MUL2 : MUL); return a + m < 0.05 ? 0.5 : clamp(a / (a + m), 0.15, 0.85); };   // 比「超出 1 的權重」：熟的題權重是 1，用平均的話兩邊永遠接近一半；每邊至少 15%
 const practicePool = no1 => DB.set.what === 'add' ? ADDSUB : (DB.set.what === 'both' && Math.random() < addShare()) ? ADDSUB : (no1 ? MUL2 : MUL);
 // no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）
 function pickFact(pool, no1) {
@@ -1750,6 +1753,8 @@ function record(k, ok, ms, soft) {
   if (ok) DB.daily.ans = (DB.daily.ans || 0) + 1; else DB.daily.wrong = (DB.daily.wrong || 0) + 1;
   save();
 }
+// 打答案答對：數列題（7、14、?、28）用加法就算得出來，只輕量記對（不算次數、不點星）；反向題不記時間
+function recordOk(q, ms) { if (q.seq) record(q.k, true, 0, true); else record(q.k, true, q.rev ? 0 : ms); }
 // 一次失手只到「熟悉中」（0.4），短期內再錯一次才「容易錯」；×1 的題答對 1 次就算星（出現率低、又簡單）
 function state(k) {
   const s = DB.facts[k];
@@ -2071,7 +2076,7 @@ function newMeteor(q, boss) {
 }
 function startMeteor() {
   show('meteor');
-  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, shield: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, study: 0, studyM: null, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
+  M = { score: 0, hearts: DB.set.sudden ? 1 : 3, sudden: !!DB.set.sudden, drops: [], dbl: 0, inv: 0, invMax: 10, missiles: 0, shield: 0, rockets: [], wave: 0, kills: 0, goal: 0, combo: 0, maxCombo: 0, list: [], spawnT: 1.6, buf: '', lock: null, switchT: 0, freeze: 0, study: 0, studyM: null, rest: 0, boss: null, bossDelay: 0, bossWave: false, ok: 0, tot: 0, wrongs: [], over: false, paused: false, waveMiss: 0, fall: 12, int: 4, max: 2 };
   P.length = 0; beams.length = 0; curT = null; lastBar = '';
   $('#m-freeze').hidden = true; $('#m-dbl').hidden = true; $('#m-inv').hidden = true;
   const me = M;
@@ -2083,10 +2088,10 @@ function nextWave() {
   const me = M;
   if (perfect) { M.score += 50; earn(5); banner(tx('m.perfect'), 'good'); SFX.power(); setTimeout(() => M === me && !M.over && waveBanner(), 1300); }
   M.wave++; M.kills = 0; M.waveMiss = 0; quest('wave', M.wave, 'max');
-  const w = M.wave;
-  M.fall = Math.max(5.4, 12.5 - w * 0.75);
-  M.int = Math.max(1.25, 4 - w * 0.32);
-  M.max = Math.min(6, 2 + Math.floor(w / 2));
+  const w = M.wave, r = w - Math.floor(w / 5);   // 難度級數：魔王波不算（不然魔王後一波一次跳兩級）
+  M.fall = Math.max(5.4, 12.5 - r * 0.75);
+  M.int = Math.max(1.25, 4 - r * 0.32);
+  M.max = Math.min(6, 2 + Math.floor(r / 2));
   M.goal = 8 + 2 * Math.min(w, 6);
   M.bossWave = w % 5 === 0;
   if (M.bossWave) M.bossDelay = 1.8;
@@ -2181,14 +2186,17 @@ function getTarget() {
 }
 function updateMeteor(dt) {
   if (M.study > 0 && (!M.studyM || M.studyM.dead || !M.list.includes(M.studyM))) { M.study = 0; bar(); }   // 照答案打掉了就繼續
-  const study = M.study > 0;
-  if (study) { M.study -= dt; for (const m of M.list) if (m.tStart) m.tStart += dt * 1000; if (M.study <= 0) bar(); }   // 停住的時間不算進別顆的反應時間；時間到要重畫，提示才不再發亮
+  const study = M.study > 0 || M.rest > 0;   // rest：掉心後的喘息，跟看算法一樣全部停住
+  if (study) for (const m of M.list) if (m.tStart) m.tStart += dt * 1000;   // 停住的時間不算進反應時間
+  if (M.rest > 0) M.rest -= dt;
+  if (M.study > 0) { M.study -= dt; if (M.study <= 0) bar(); }   // 時間到要重畫，提示才不再發亮
   const sm = study ? 0 : M.freeze > 0 ? 0.25 : 1;
   if (M.freeze > 0 && !study) { M.freeze -= dt; $('#m-freeze').hidden = M.freeze <= 0; $('#m-freeze i').style.width = clamp(M.freeze / 4 * 100, 0, 100) + '%'; }
   if (M.dbl > 0 && !study) { M.dbl -= dt; $('#m-dbl').hidden = M.dbl <= 0; $('#m-dbl i').style.width = clamp(M.dbl / 10 * 100, 0, 100) + '%'; }
   if (M.inv > 0 && !study) { M.inv -= dt; $('#m-inv').hidden = M.inv <= 0; $('#m-inv i').style.width = clamp(M.inv / M.invMax * 100, 0, 100) + '%'; }
   const invOn = M.inv > 0; $('#m-hshield').toggleAttribute('hidden', !invOn); $('#m-hearts').classList.toggle('inv', invOn);   // 無敵：心旁邊有盾牌、心發光
   updateDrops(study ? 0 : dt); updateRockets(dt); bossSeen();   // 停住時寶箱、道具時間也不走
+  if (M.waveIn > 0 && !study) { M.waveIn -= dt; if (M.waveIn <= 0) { M.waveIn = 0; nextWave(); } }
   if (M.bossDelay > 0 && !study) { M.bossDelay -= dt; if (M.bossDelay <= 0) spawnBoss(); }
   if (!study) M.spawnT -= dt;
   const smalls = M.list.filter(m => !m.boss).length;
@@ -2224,7 +2232,7 @@ function impact(m) {
   if (M.inv > 0) {   // 無敵時落地不算答錯
     spark(m.x, y, 40, ['#ffd23f', '#ffffff'], 280, 4, 0.8, 200); ring(m.x, y, 170, '#ffd23f', 8);
     ftxt(m.x, y - 70, tx('m.invHit'), '#ffd23f', 30); domeFlash = 1; shake(0.2, 5); SFX.power();
-    if (m.boss) { M.boss = null; setTimeout(() => M === me && !M.over && nextWave(), 900); }
+    if (m.boss) { M.boss = null; M.waveIn = 0.9; }
     hud(); bar(); return;
   }
   if (m.tStart && !m.revealed) { M.tot++; record(m.q.k, false, 0); M.wrongs.push(m.q); }
@@ -2232,9 +2240,12 @@ function impact(m) {
   rocks(m.x, y, 10, '#5b4a5f'); ring(m.x, y, 120, 'rgba(255,120,90,.9)', 6);
   M.hearts -= 1; if (!shieldSave(m.x, y - 100)) M.combo = 0; M.waveMiss++;   // 魔王落地也只扣 1 顆：扣 2 顆再立刻下一波對小二是懸崖
   domeFlash = 1; shake(0.45, 12); flashA = 0.25; SFX.hurt();
-  if (m.boss) { M.boss = null; if (M.hearts > 0) setTimeout(() => M === me && !M.over && nextWave(), 900); }
+  if (m.boss) { M.boss = null; if (M.hearts > 0) M.waveIn = 0.9; }
   hud(); bar();
-  if (M.hearts <= 0) gameOver();
+  if (M.hearts <= 0) return gameOver();
+  // 喘口氣：掉一顆心後全部停 1.2 秒，快落地的往上推到至少還有 2 秒（不然擠在一起的流星會一口氣把三顆心掉光）
+  M.rest = 1.2;
+  for (const o of M.list) if (!o.dead && o.vy > 0) { const top = GY - 34 - o.r * 0.45 - o.vy * 2; if (o.y > top) o.y = top; }
 }
 
 /* ---- 寶箱掉落 ---- */
@@ -2344,7 +2355,7 @@ function tipPos() { return { x: W / 2 + Math.cos(tA) * 48, y: GY - 26 + Math.sin
 function hit(m) {
   if (m === M.studyM) { M.study = 0; M.studyM = null; }   // 照答案打對（魔王換題）就繼續
   const ms = now() - (m.tStart || now()), fresh = !m.revealed;
-  if (fresh) { M.tot++; M.ok++; record(m.q.k, true, (m.q.rev || m.q.seq) ? 0 : (m.fk || ms)); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
+  if (fresh) { M.tot++; M.ok++; recordOk(m.q, m.fk || ms); M.combo++; M.maxCombo = Math.max(M.maxCombo, M.combo); quest('answers'); quest('combo', M.combo, 'max'); earn(1); }
   const mult = 1 + Math.min(4, Math.floor(M.combo / 5));
   const pts = fresh ? (10 + (ms < 2500 ? 5 : 0)) * mult * (M.dbl > 0 ? 2 : 1) : 3;
   M.score += pts;
@@ -2386,7 +2397,7 @@ function killBoss(m) {
   flashA = 0.6; shake(0.6, 14); SFX.big();
   const me = M;
   setTimeout(() => { if (M === me && !M.over) spawnDrop(m.x, Math.min(m.y, GY - 220)); }, 500);
-  setTimeout(() => M === me && !M.over && nextWave(), 1200);
+  M.waveIn = 1.2;   // 下一波用遊戲時間算（暫停時不會在暫停卡後面開始）
 }
 // 連擊護盾：答錯或流星落地時擋一次，連擊不歸零；用掉就沒了
 function shieldSave(x, y) {
@@ -2639,7 +2650,7 @@ function ghostKey(d) {
   if (G.buf.length >= String(G.q.ans).length) {
     const v = parseInt(G.buf, 10);
     if (v === G.q.ans) {
-      if (!G.rev) { G.ok++; record(G.q.k, true, (G.q.rev || G.q.seq) ? 0 : (G.fk || now() - G.qt)); quest('answers'); earn(1); }
+      if (!G.rev) { G.ok++; recordOk(G.q, G.fk || now() - G.qt); quest('answers'); earn(1); }
       G.times.push(Math.round(now() - G.t0)); G.i++;
       SFX.zap(G.i);
       const c = $('#g-card'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
@@ -2717,7 +2728,7 @@ function openVersusReset() {
 function vPause(on) {
   if (!V || V.over) { $('#v-pausebox').hidden = true; return; }
   if (on && !V.paused) V.pausedAt = now();
-  if (!on && V.paused) { const d = now() - V.pausedAt; V.t0 += d; V.p.forEach(p => { p.qt += d; p.lock += d; if (p.due) p.due += d; }); }
+  if (!on && V.paused) { const d = now() - V.pausedAt; V.t0 = shiftT(V.t0, d); V.p.forEach(p => { p.qt = shiftT(p.qt, d); p.lock += d; if (p.due) p.due += d; }); }   // 還沒開始（倒數中）的不平移到未來
   V.paused = on; $('#v-pausebox').hidden = !on; musDuck(on);
 }
 // 機器人速度：孩子歷史平均反應時間（沒紀錄用 3.6 秒），再依戰況調整：落後時機器人放慢、領先時加快，讓勝率在五五附近
@@ -2725,11 +2736,11 @@ function cpuBase() {
   const P = DB.set.what === 'add' ? ADDSUB : DB.set.what === 'both' ? MUL2.concat(ADDSUB) : MUL2;   // 只看現在在練的題
   const ts = P.map(f => DB.facts[f.k]).filter(s => s && s.t > 0).map(s => s.t);
   const avg = ts.length >= 5 ? ts.reduce((a, b) => a + b, 0) / ts.length : 3600;
-  return clamp(avg + 1200, 2200, 7000);   // 孩子的時間只到第一個數字，機器人再加上按完答案的時間、再慢一點點
+  return clamp(avg + 500, 2200, 7000);   // 孩子的時間只到第一個數字，機器人再補上按鍵的時間（原本 +1.2 秒，模擬裡孩子幾乎都贏）
 }
 function cpuDelay() {
   const lead = -V.pos;   // 小隊長領先幾格（pos 負的是小隊長那邊）
-  const k = lead >= 3 ? 0.8 : lead <= -3 ? 1.35 : lead <= -1 ? 1.15 : 1;
+  const k = lead >= 3 ? 0.8 : lead >= 1 ? 0.9 : lead <= -3 ? 1.35 : lead <= -1 ? 1.15 : 1;   // 兩邊都會追趕，勝負比較接近五五
   return V.base * k * rnd(0.75, 1.3);
 }
 const VF_AT = [45, 90];   // 拔河開局幾秒後力道變 2、3（實力相近的兩人是隨機漫步，平均 36 次答對才分勝負、尾巴很長）
@@ -2795,7 +2806,7 @@ function vKey(i, d) {
   if (p.buf.length >= String(p.q.ans).length) {
     const v = parseInt(p.buf, 10);
     if (v === p.q.ans) {
-      if (i === 0 && !p.rev) { record(p.q.k, true, (p.q.rev || p.q.seq) ? 0 : (p.fk || now() - p.qt)); quest('answers'); earn(1); }
+      if (i === 0 && !p.rev) { recordOk(p.q, p.fk || now() - p.qt); quest('answers'); earn(1); }
       vPull(i === 0 ? -1 : 1);
       const r = $('#v-knot').getBoundingClientRect();
       spark(r.left + 17, r.top + 17, 18, i === 0 ? ['#5ff2d0', '#ffffff'] : ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
@@ -2805,7 +2816,7 @@ function vKey(i, d) {
     if (i === 0 && !p.rev) record(p.q.k, false, 0);
     p.rev = true; p.buf = ''; p.lock = now() + 1000; SFX.wrong();
     const e = vEl[i].querySelector('[data-q]'); e.classList.remove('shake'); void e.offsetWidth; e.classList.add('shake');
-    setTimeout(() => V && !V.over && vRender(i), 1020);
+    const me = V; setTimeout(() => V === me && !V.over && vRender(i), 1020);
   }
   vRender(i);
 }
@@ -3296,18 +3307,17 @@ function releasePet() {
   el.classList.add('bye'); $('#pet-bye').hidden = true;
   spark(x, y, 60, ['#ffd23f', '#5ff2d0', '#ffffff', K.c2], 260, 4, 1.4, -40); SFX.fan(); confetti(40);
   const nm = petName(); toast(tx('pet.byeToast', { name: nm, home: tx('home.' + kind) }));
-  setTimeout(() => {
-    (P_.released = P_.released || []).push({ kind, name: nm, date: today(), fed: P_.fed });
-    P_.kind = ''; P_.name = ''; P_.fed = 0; P_.sent = (P_.sent || 0) + 1; byeing = false; save();
-    if (mode === 'pet') renderPet();
-  }, 1700);
+  (P_.released = P_.released || []).push({ kind, name: nm, date: today(), fed: P_.fed });   // 紀錄馬上寫：動畫期間換玩家也不會漏掉
+  P_.kind = ''; P_.name = ''; P_.fed = 0; P_.sent = (P_.sent || 0) + 1; save();
+  setTimeout(() => { byeing = false; if (mode === 'pet') renderPet(); }, 1700);   // 飄走動畫播完才重畫成挑蛋
 }
 $('#pet-gear').addEventListener('click', e => {
+  if (byeing) return;   // 飄走動畫中不重畫（不然寵物會跑回來）
   const L = e.target.closest('[data-lock]'); if (L) { toast(tx('gear.need', { n: Math.max(1, +L.dataset.lock - DB.daily.badges) })); return; }   // 還沒解鎖：告訴孩子怎麼拿到
   const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; const g = GEAR_BY[b.dataset.gear], W = wearObj(); W[g.slot] = W[g.slot] === g.id ? '' : g.id; save(); renderPet(); SFX.ding(); });
 $('#pet-bye').addEventListener('click', askRelease);
 function feedPet() {
-  const P_ = DB.pet; if (P_.dust < FEED || !PET_KINDS[P_.kind]) return;
+  const P_ = DB.pet; if (byeing || P_.dust < FEED || !PET_KINDS[P_.kind]) return;
   const before = petStage(P_.fed);
   P_.dust -= FEED; P_.fed += FEED; save();
   const st = petStage(P_.fed), r = $('#pet-stage').getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
@@ -3456,6 +3466,7 @@ const QBY = Object.create(null); QUESTS.forEach(q => { QBY[q.id] = q; });
 const daysAgo = d => Math.round((new Date(today()) - new Date(d)) / 864e5);
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+function hardQuests() { return DB.best.meteor < 200 ? ['boss', 'wave', 'combo', 'bomball', 'cmpperfect'] : []; }   // 還沒玩過流星防衛戰（或分數很低）的孩子做不到的任務
 function ensureDaily() {
   const D = DB.daily, t = today();
   if (!Array.isArray(D.tasks)) D.tasks = [];
@@ -3466,12 +3477,15 @@ function ensureDaily() {
     D.ans = 0; D.wrong = 0;
   }
   // 還沒玩過流星防衛戰（或分數很低）的孩子，先不抽魔王、波數、連擊這種做不到的任務
-  const hard = DB.best.meteor < 200 ? ['boss', 'wave', 'combo', 'bomball', 'cmpperfect'] : [];
-  const pool = QUESTS.filter(q => !hard.includes(q.id) && famOK(q.fam)), fams = new Set(), tasks = [];
-  while (tasks.length < 3 && pool.length) {
-    const q = pool.splice(ri(0, pool.length - 1), 1)[0];
-    if (fams.has(q.fam)) continue;
-    fams.add(q.fam); tasks.push({ id: q.id, n: q.n, p: 0, done: false });
+  // 星圖快滿（剩不到 4 格）時不抽「點亮星星」，不然做不到、那天就拿不到徽章；抽不滿 3 個才放寬
+  const hard = hardQuests(), starsOk = starsMax() - starsNow() >= 4, fams = new Set(), tasks = [];
+  for (const strict of [true, false]) {
+    const pool = QUESTS.filter(q => famOK(q.fam) && (!strict || (!hard.includes(q.id) && (q.id !== 'stars' || starsOk))));
+    while (tasks.length < 3 && pool.length) {
+      const q = pool.splice(ri(0, pool.length - 1), 1)[0];
+      if (fams.has(q.fam)) continue;
+      fams.add(q.fam); tasks.push({ id: q.id, n: q.n, p: 0, done: false });
+    }
   }
   D.date = t; D.tasks = tasks; D.starBase = starsNow(); save();
 }
@@ -3481,7 +3495,7 @@ function fixLocked(D) {
   let ch = false;
   D.tasks.forEach((x, i) => {
     if (x.done || famOK(QBY[x.id].fam)) return;
-    const fams = new Set(D.tasks.map(y => QBY[y.id].fam)), hard = DB.best.meteor < 200 ? ['boss', 'wave', 'combo'] : [];
+    const fams = new Set(D.tasks.map(y => QBY[y.id].fam)), hard = hardQuests();
     const c = QUESTS.filter(q => famOK(q.fam) && !fams.has(q.fam) && !hard.includes(q.id)); if (!c.length) return;
     const q = c[ri(0, c.length - 1)]; D.tasks[i] = { id: q.id, n: q.n, p: 0, done: false }; ch = true;
   });
@@ -3594,13 +3608,15 @@ function openWrong() {
   wArm = 0; $('#w-clear').textContent = tx('w.clearAll');
   $('#o-wrong').hidden = false;
 }
-function clearFact(k) { const s = DB.facts[k]; if (s) { s.err = 0; s.w = 0; } retest = retest.filter(r => r.k !== k); }
+// 清掉＝從錯題本拿掉，不是「學會了」：err 留在 0.15（熟悉中、不列在錯題本），要再打對一次才會亮星
+function clearFact(k) { const s = DB.facts[k]; if (s) { s.err = Math.min(s.err, 0.15); s.w = 0; s.sw = 0; } retest = retest.filter(r => r.k !== k); }
 $('#w-list').addEventListener('click', e => {
   const b = e.target.closest('.wx'); if (!b) return;
   clearFact(b.dataset.k); save(); openWrong(); refreshMenu();
 });
 $('#w-clear').addEventListener('click', () => {
-  if (Date.now() - wArm < 3000) { wrongList(Infinity).forEach(clearFact);   // 只清看得到的（另一種練習的錯題不動）
+  const dt = Date.now() - wArm; if (dt < 600) return;   // 連點兩下不算確認
+  if (dt < 3000) { wrongList(Infinity).forEach(clearFact);   // 只清看得到的（另一種練習的錯題不動）
     save(); openWrong(); refreshMenu(); }
   else { wArm = Date.now(); $('#w-clear').textContent = tx('w.arm'); setTimeout(() => { if (Date.now() - wArm >= 2900) $('#w-clear').textContent = tx('w.clearAll'); }, 3000); }
 });
@@ -3631,7 +3647,7 @@ $('#go-help').addEventListener('click', () => { $('#o-help').hidden = false; });
 $('#go-set').addEventListener('click', () => { refreshMenu(); $('#o-set').hidden = false; });
 $('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 function pickMode() {
-  if (!DB.best.meteor && !DB.best.sudden) { DB.set.sudden = false; save(); return startMeteor(); }   // 第一次玩先不問模式
+  if (!Object.values(DB.bests).some(b => b && (b.meteor || b.sudden))) { DB.set.sudden = false; save(); return startMeteor(); }   // 真的第一次玩（哪一種練習都沒紀錄）才不問模式；換到加減時不會吃掉「一擊即死」的選擇
   $('#pk-std').textContent = DB.best.meteor ? tx('mode.best', { n: DB.best.meteor }) : '';
   $('#pk-sd').textContent = DB.best.sudden ? tx('mode.best', { n: DB.best.sudden }) : '';
   $('#o-mode').hidden = false;
@@ -3663,7 +3679,7 @@ function countdown(cb) {
   el.hidden = false; let n = 3;
   const step = () => {
     if (tok !== cdTok || mode !== m0) return;   // 舊倒數不要碰共用的元素（新倒數可能已經在用）
-    if (covered()) { setTimeout(step, 250); return; }   // 切背景／轉橫時倒數停住，回來再繼續
+    if (covered() || (mode === 'versus' && V && V.paused)) { setTimeout(step, 250); return; }   // 切背景／轉橫／拔河暫停時倒數停住，回來再繼續
     if (n > 0) { el.innerHTML = `<span>${n}</span>`; SFX.tick(); n--; setTimeout(step, 700); }
     else { el.innerHTML = `<span class="go">${tx('go')}</span>`; SFX.go(); setTimeout(() => { if (tok === cdTok) el.hidden = true; }, 600); cb(); }
   };
@@ -3739,17 +3755,22 @@ makePad($('#v-top [data-pad]'), d => vKey(1, d));
 const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
 // target 是網址（答對後出現「前往」鈕，用 click 開才不會被 iOS 擋）或函式（答對直接執行，例如清除紀錄）
-function openGate(target, why, hard = typeof target === 'function') {   // hard：不可逆的（清除紀錄、刪人）用兩個乘法；購買和外部連結用一個乘法，大人心算得出來
-  // 題目是混合運算（先乘除、後加減）：孩子在練的正是乘法，純乘法擋不住他們；「5 + 2 × 13」要記得先乘，沒學過運算順序的孩子會從左算到右而答錯
-  // hard（清除紀錄、刪人這種不可逆的）：兩個乘法一加一減，答案至少 10
+let gateWait = 0;
+function gateExpr(hard) {
   let expr, ans;
   do {
     if (hard) { const a = ri(10, 40), b = ri(12, 19), c = ri(3, 9), d = ri(3, 9), e = ri(3, 9); expr = `${a} + ${b} × ${c} − ${d} × ${e}`; ans = a + b * c - d * e; }
     else { const a = ri(3, 9), b = ri(3, 9), c = ri(12, 19); expr = `${a} + ${b} × ${c}`; ans = a + b * c; }
   } while (ans < 10);
-  gate = { ans, expr, buf: '', target };
+  return { expr, ans };
+}
+function openGate(target, why, hard = typeof target === 'function') {   // hard：不可逆的（清除紀錄、刪人）用兩個乘法；購買和外部連結用一個乘法，大人心算得出來
+  // 題目是混合運算（先乘除、後加減）：孩子在練的正是乘法，純乘法擋不住他們；「5 + 2 × 13」要記得先乘，沒學過運算順序的孩子會從左算到右而答錯
+  // hard（清除紀錄、刪人這種不可逆的）：兩個乘法一加一減，答案至少 10
+  if (now() < gateWait) { toast(tx('gate.wait')); return; }   // 連錯 3 次後 30 秒內不給再試（亂按猜不出來）
+  gate = Object.assign(gateExpr(hard), { buf: '', target, hard, miss: 0 });
   $('#gate-why').textContent = why || tx('gate.why');
-  $('#gate-q').innerHTML = `${expr} = ${slots(String(ans).length, '')}`; $('#gate-hint').textContent = ''; $('#gate-go').hidden = true; $('#gate-pad').hidden = false;
+  $('#gate-q').innerHTML = `${gate.expr} = ${slots(String(gate.ans).length, '')}`; $('#gate-hint').textContent = ''; $('#gate-go').hidden = true; $('#gate-pad').hidden = false;
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();   // 不然按 Enter 會重開關卡
   $('#o-gate').hidden = false;
 }
@@ -3763,7 +3784,11 @@ function gateKey(d) {
       if (typeof t === 'function') { gate = null; $('#o-gate').hidden = true; t(); return; }
       gate.buf = ''; gate.ok = true; SFX.ding(); $('#gate-hint').textContent = tx('gate.ok'); $('#gate-pad').hidden = true; $('#gate-go').hidden = false; return;
     }
-    gate.buf = ''; SFX.wrong(); $('#gate-hint').textContent = tx('gate.no'); const c = $('#gate-q'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+    SFX.wrong(); gate.miss++;
+    if (gate.miss >= 3) { gate = null; $('#o-gate').hidden = true; gateWait = now() + 30000; toast(tx('gate.wait')); return; }   // 連錯 3 次：關掉、30 秒後再來
+    Object.assign(gate, gateExpr(gate.hard), { buf: '' });   // 答錯就換一題（同一題不能一直猜）
+    $('#gate-hint').textContent = tx('gate.no'); const c = $('#gate-q'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+    $('#gate-q').innerHTML = `${gate.expr} = ${slots(String(gate.ans).length, '')}`; return;
   }
   $('#gate-q').innerHTML = `${gate.expr} = ${slots(n, gate.buf)}`;
 }
@@ -3786,27 +3811,28 @@ function openLock(m) {
 const askBuy = () => openGate(openBuy, tx('gate.buy'), false);   // 購買用簡單的那種（a + b × c）：Apple 1.3 一定要家長關卡，但題目太難大人會放棄
 const paidNames = () => PAID.map(m => tx(m + '.name')).join(tx('sep'));
 const IAP = APP && CAP.nativePromise ? (m, o) => CAP.nativePromise('NativePurchases', m, o || {}) : null;
-let iapPrice = '', iapBusy = false;
+let iapPrice = '', iapBusy = false, iapNoProd = false;   // iapNoProd：問過商店但沒有這個商品（或連不上）→ 購買鈕停用
 const buyMsg = t => { $('#buy-msg').textContent = t || ''; };
 function renderBuy() {
   const ok = unlocked();
   $('#buy-list').innerHTML = tx('buy.list', { g: paidNames() });
   $('#buy-go').textContent = iapPrice ? tx('buy.go', { p: iapPrice }) : tx('buy.goNoP');
   ['#buy-go', '#buy-restore', '#buy-code'].forEach(id => { $(id).hidden = ok; $(id).disabled = iapBusy; });
+  if (!ok && iapNoProd && !iapPrice) { $('#buy-go').disabled = true; if (!iapBusy) buyMsg(tx('buy.noProd')); }   // 商店沒有這個商品／連不上：不讓人按了才失敗
   if (ok) buyMsg(tx('buy.owned'));
 }
 function openBuy() {
   buyMsg(''); renderBuy(); $('#o-buy').hidden = false;
   if (IAP && !iapPrice) IAP('getProducts', { productIdentifiers: [IAP_ID], productType: 'inapp' }).then(r => {
-    const p = r && r.products && r.products[0]; if (p && p.priceString) { iapPrice = String(p.priceString); renderBuy(); }
-  }).catch(() => {});
+    const p = r && r.products && r.products[0]; if (p && p.priceString) { iapPrice = String(p.priceString); iapNoProd = false; } else iapNoProd = true; renderBuy();
+  }).catch(() => { iapNoProd = true; renderBuy(); });
 }
 function setUnlocked(quiet) {
   if (UL.ok) return;
   UL.ok = true; saveUL(); renderLocks(); renderSetUnlock(); if (!$('#o-buy').hidden) renderBuy();
   if (!quiet) { toast(tx('buy.done')); SFX.fan(); confetti(60); }
 }
-const ownedTx = p => p && p.productIdentifier === IAP_ID && (IOS || p.purchaseState === '1');   // Android 只有 "1" 是付完款（"0" 是付款處理中）
+const ownedTx = p => p && p.productIdentifier === IAP_ID && (IOS || p.purchaseState === '1');   // Android 只有 "1" 是付完款（"2" 是付款處理中、"0" 是未知）
 // 問商店這台裝置的帳號有沒有買過：true 有、false 沒有、null 問不到。Android 在 Play 商店兌換的優惠碼也會出現在這裡，要在 3 天內確認（acknowledge），不然 Google 會自動退款
 async function iapCheck(quiet) {
   if (!IAP) return null;
@@ -3824,10 +3850,18 @@ async function iapBuy() {
   iapBusy = true; renderBuy(); buyMsg(tx('buy.wait'));
   try {
     const t = await IAP('purchaseProduct', { productIdentifier: IAP_ID, productType: 'inapp', isConsumable: false });
-    if (IOS || ownedTx(t)) { setUnlocked(); buyMsg(tx('buy.owned')); }
-    else if (t && t.purchaseState === '0') buyMsg(tx('buy.pending'));
+    if (IOS || ownedTx(t)) {
+      if (!IOS && t.isAcknowledged === false && t.purchaseToken) IAP('acknowledgePurchase', { purchaseToken: t.purchaseToken }).catch(() => {});   // 外掛自己也會確認，但可能被關連線搶先；再確認一次無害（3 天沒確認 Google 會退款）
+      setUnlocked(); buyMsg(tx('buy.owned'));
+    }
+    else if (t && t.purchaseState === '2') buyMsg(tx('buy.pending'));
     else if (await iapCheck()) buyMsg(tx('buy.owned')); else buyMsg(tx('buy.fail'));
-  } catch (e) { buyMsg(cancelled(e) ? '' : tx('buy.fail')); }
+  } catch (e) {
+    const m = String((e && (e.code || e.message)) || e);
+    if (cancelled(e)) buyMsg('');
+    else if (/pending/i.test(m)) buyMsg(tx('buy.pending'));   // 「購買前詢問」、付款處理中：外掛用 reject 回來，不是失敗；核准後由 transactionUpdated／回前景的檢查解鎖
+    else buyMsg((await iapCheck()) ? tx('buy.owned') : tx('buy.fail'));   // 已經買過（ITEM_ALREADY_OWNED）也會 reject：再問一次商店
+  }
   iapBusy = false; renderBuy();
 }
 async function iapRestore() {
@@ -3840,7 +3874,7 @@ async function iapRestore() {
 }
 function iapCode() {
   if (!IOS) { buyMsg(tx('buy.codeAnd')); return; }   // Android 的優惠碼在 Google 的付款畫面或 Play 商店輸入，app 裡沒有輸入框
-  IAP('presentOfferCodeRedeemSheet').then(() => setTimeout(() => iapCheck(), 1500)).catch(() => buyMsg(tx('buy.fail')));
+  IAP('presentOfferCodeRedeemSheet').then(() => setTimeout(() => iapCheck(), 1500)).catch(() => buyMsg(tx('buy.codeOld')));   // iOS 16.3 以前不能在 app 裡兌換
 }
 function renderSetUnlock() {
   if (!APP) return;
@@ -3900,8 +3934,11 @@ const b64d = s => new TextDecoder().decode(Uint8Array.from(atob(s), c => c.charC
 function bkParse(text) {
   text = String(text || '').trim(); if (!text || text.length > 4e6) return null;
   try {
-    const i = text.indexOf(BK_PRE); if (i >= 0) text = b64d(text.slice(i + BK_PRE.length).replace(/[^A-Za-z0-9+/=]/g, ''));
-    const o = JSON.parse(text);
+    let o = null; const i = text.indexOf(BK_PRE);
+    if (i >= 0) {   // 備份碼前後多貼了字也沒關係：只取前綴後面連續的 base64（中間的換行空白去掉），後面黏到的英數字一點一點去掉再試
+      const s = (text.slice(i + BK_PRE.length).replace(/\s+/g, '').match(/^[A-Za-z0-9+/]*={0,2}/) || [''])[0];
+      for (let L = s.length - s.length % 4, end = Math.max(0, L - 64); L > end && !o; L -= 4) { try { o = JSON.parse(b64d(s.slice(0, L))); } catch (e) {} }
+    } else o = JSON.parse(text);
     if (!o || o.app !== BK_APP || !o.who || !Array.isArray(o.who.list) || !o.saves || typeof o.saves !== 'object') return null;
     const list = o.who.list.filter(x => x && typeof x.id === 'string' && (x.id === '' || /^p[0-9a-z]{1,16}$/.test(x.id))).filter((x, i, a) => a.findIndex(y => y.id === x.id) === i).slice(0, WHO_MAX).map(x => ({ id: x.id, name: String(x.name || '').slice(0, 10) }));
     if (!list.length) return null;
@@ -3910,6 +3947,7 @@ function bkParse(text) {
   } catch (e) { return null; }
 }
 function openBackup() {
+  bkGated = false;
   bkPending = null; $('#bk-out').hidden = true; $('#bk-out').value = ''; $('#bk-in').value = ''; $('#bk-confirm').hidden = true; bkMsg('');
   $('#o-set').hidden = true; $('#o-backup').hidden = false;
 }
@@ -3945,7 +3983,9 @@ function bkApply(b) {
   location.reload(); return true;
 }
 $('#go-backup').addEventListener('click', openBackup);   // 匯出不用家長關卡（不會改到紀錄）；匯入會取代所有人的紀錄，按「確定匯入」時才要
-$('#bk-file').addEventListener('click', bkFile);
+// App：存成備份檔會打開系統分享面板（LINE、郵件…＝離開 App），Apple 1.3 要在家長關卡後面。分享要使用者剛點過，所以過關後請大人再按一次
+let bkGated = false;
+$('#bk-file').addEventListener('click', () => { if (!APP || bkGated) return bkFile(); openGate(() => { bkGated = true; bkMsg(tx('bk.again', { b: tx('bk.file') })); }, tx('bk.exWhy'), false); });
 $('#bk-copy').addEventListener('click', bkCopy);
 $('#bk-pick').addEventListener('click', () => { $('#bk-in-file').value = ''; $('#bk-in-file').click(); });
 $('#bk-in-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (!f) return; if (f.size > 4e6) { bkMsg(tx('bk.bad'), true); return; } const r = new FileReader(); r.onload = () => bkCheck(r.result); r.onerror = () => bkMsg(tx('bk.bad'), true); r.readAsText(f); });
@@ -3958,8 +3998,10 @@ try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE);
 addEventListener('keydown', e => {
   if (e.repeat || (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName))) return;
   if (e.key === 'Escape' && $('#o-gate').hidden) {   // 有右上 ✕ 的卡片：Esc 等於按 ✕（最上面那張）
-    const o = $$('.overlay').filter(x => !x.hidden && x.offsetParent && x.querySelector(':scope > .card .xbtn')).pop();
-    if (o) { o.querySelector('.xbtn').click(); e.preventDefault(); return; }
+    const vis = $$('.overlay').filter(x => !x.hidden && x.offsetParent), z = x => +getComputedStyle(x).zIndex || 0;
+    const top = vis.reduce((t, x) => !t || z(x) >= z(t) ? x : t, null);   // 最上面那張（z-index 高的優先，同高看 DOM 順序）；它沒有 ✕ 就不動（例如購買卡蓋在設定上）
+    const xb = top && top.querySelector(':scope > .card .xbtn');
+    if (xb) { xb.click(); e.preventDefault(); return; }
   }
   let d = null;
   if (/^[0-9]$/.test(e.key)) d = e.key;
