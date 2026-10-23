@@ -3217,12 +3217,12 @@ const PET_HEAD = {   // [hx, hy, hr, top, ny]：ny 是下巴（脖子）的高�
   legend: [[59.8, 94, 18.6, 71.1, 100], [59.8, 97, 17.2, 72.6, 105], [48, 84, 13.5, 58.8, 94], [60, 66.7, 15.1, 30.3, 80], [59.8, 61.1, 15.2, 20.7, 74]],
 };
 // 臉：眼睛中心 ex,ey、兩眼外緣的距離 ew（眼鏡）、帽子底緣 hb 與寬 hw（帽子）。頭圓推算的位置在青蛙（眼睛凸在頭頂、本來就戴帽子）、小龍、星狐上不準，
-// 所以量過的直接寫在 PET_FACE（null 用頭圓推算：蛋和毛毛的頭圓就是臉）。量法同 ny：寵物圖放大加 120 單位格線，目測眼睛與額頭
+// 所以量過的直接寫在 PET_FACE（null 用頭圓推算，只剩蛋；毛毛原本也用推算，幼體、究極的眼鏡偏高，2026-10 改成量過的值）。量法同 ny：寵物圖放大加 120 單位格線，目測眼睛與額頭
 const faceOf = (hx, hy, hr) => ({ ex: hx, ey: hy - hr * 0.22, ew: hr * 1.35, hb: hy - hr * 0.338, hw: hr * 1.59 });
 const PET_FACE = {
-  funny: [null, { ex: 60, ey: 86, ew: 34, hb: 84, hw: 24 }, { ex: 60, ey: 70, ew: 47, hb: 67, hw: 34 }, { ex: 60.5, ey: 57, ew: 57, hb: 49, hw: 40 }, { ex: 59.5, ey: 55, ew: 62, hb: 45, hw: 48 }],
-  cool: [null, { ex: 59, ey: 87.5, ew: 20, hb: 81, hw: 24 }, { ex: 56, ey: 73.5, ew: 25, hb: 67, hw: 30 }, { ex: 54, ey: 54, ew: 30, hb: 47, hw: 34 }, { ex: 57, ey: 46, ew: 28, hb: 40, hw: 34 }],
-  cute: [null, null, null, null, null],
+  funny: [null, { ex: 60, ey: 86, ew: 34, hb: 84, hw: 24 }, { ex: 60, ey: 71, ew: 47, hb: 67, hw: 34 }, { ex: 61, ey: 58.5, ew: 57, hb: 49, hw: 40 }, { ex: 58.5, ey: 54.5, ew: 62, hb: 45, hw: 48 }],
+  cool: [null, { ex: 59.5, ey: 88.5, ew: 21.5, hb: 81, hw: 24 }, { ex: 56, ey: 74, ew: 25, hb: 67, hw: 30 }, { ex: 56.7, ey: 57.5, ew: 26.5, hb: 48, hw: 34 }, { ex: 57.5, ey: 45, ew: 29, hb: 40, hw: 34 }],
+  cute: [null, { ex: 60, ey: 96.3, ew: 26.5, hb: 90.5, hw: 24.5 }, { ex: 59.7, ey: 85.6, ew: 35.5, hb: 79.5, hw: 43 }, { ex: 59.5, ey: 76.8, ew: 41, hb: 69.5, hw: 51 }, { ex: 59.8, ey: 70.7, ew: 47, hb: 62, hw: 56 }],
   legend: [null, { ex: 56, ey: 98, ew: 21, hb: 89, hw: 30 }, { ex: 47, ey: 87, ew: 22, hb: 76, hw: 28 }, { ex: 60, ey: 71, ew: 24, hb: 60, hw: 30 }, { ex: 60, ey: 63, ew: 21.4, hb: 52, hw: 28 }],
 };
 function petSVG(kind, st, wear = null) {   // wear：{ head, face, neck, side } 或 null（不戴）
