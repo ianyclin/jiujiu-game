@@ -405,6 +405,24 @@ html,body{overscroll-behavior:none}
 .gear button:disabled,.gear button.locked:not(.mystery){opacity:.45;cursor:default}
 .gear-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
 .pet-stage.bye svg{animation:petBye 1.6s ease-in forwards}
+.pet-stage{cursor:pointer;-webkit-tap-highlight-color:transparent}   /* 點牠＝摸摸 */
+.pet-love{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px;color:var(--muted);font-weight:700;margin-top:-4px}
+.pet-love i{font-style:normal;color:#ff7a9a;font-size:17px;letter-spacing:1px}
+.pet-love .lbar{width:44px;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.pet-love .lbar i{display:block;height:100%;background:#ff7a9a;border-radius:3px;transition:width .4s}
+.care button .emo{font-size:26px;line-height:32px;height:32px}
+.care button{position:relative}
+.care button.fav{border-color:rgba(255,122,154,.6)}
+.care .favtag{position:absolute;top:-8px;right:-4px;background:#ff7a9a;color:#2a0b18;font-size:11px;font-weight:900;line-height:1;padding:3px 6px;border-radius:9px;white-space:nowrap}
+.care button.locked{opacity:.45}
+.gear .bbuy{width:auto;max-width:100%;flex-direction:row;justify-content:center;min-height:44px;padding:8px 16px;font-weight:900;border-color:rgba(255,210,63,.5);color:var(--sun)}
+.gear .bbuy.locked{opacity:.45;color:var(--muted);border-color:var(--line)}
+.gear .bbuy.arm{background:rgba(255,210,63,.16)}
+.flyemo{position:fixed;z-index:8;font-size:34px;line-height:1;pointer-events:none;transition:transform .55s cubic-bezier(.3,.7,.4,1),opacity .55s}
+.pet-stage.jump svg{animation:petJump .7s ease}
+@keyframes petJump{30%{transform:translateY(-34px) scale(.96,1.06)}55%{transform:translateY(0) scale(1.1,.9)}75%{transform:translateY(-12px)}}
+.pet-stage.dance svg{animation:petDance .9s ease}
+@keyframes petDance{20%{transform:rotate(-10deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(8deg)}}
 @keyframes petBye{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(.5);opacity:0}}
 .alumni{width:100%;max-width:470px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .alum-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
@@ -734,9 +752,11 @@ html,body{overscroll-behavior:none}
       <div class="pet-show" id="pet-show" hidden>
         <div class="pet-stage" id="pet-stage"></div>
         <div class="pet-name" id="pet-name"></div>
+        <div class="pet-love" id="pet-love"></div>
         <div class="pet-bar" id="pet-barwrap"><i id="pet-bar"></i></div>
         <button class="btn" type="button" id="pet-feed"></button>
         <button class="btn alt" type="button" id="pet-bye" hidden></button>
+        <div class="gear care" id="pet-care"></div>
         <div class="gear" id="pet-gear"></div>
       </div>
       <div class="alumni" id="pet-alumni" hidden></div>
@@ -1133,6 +1153,10 @@ const STR = {
     'pet.legendAria': '傳說蛋，還沒解鎖', 'pet.unknown': '？？？', 'pet.needBadges': '徽章 {n}/{m}', 'pet.needBye': '送一隻回家', 'pet.canPick': '可以選了', 'pet.soon': '即將登場',
     'pet.alumni': '回家的夥伴（點一下去看牠）', 'alum.aria': '去看{name}', 'alum.sub': '{stage}・住在{home}', 'alum.back': '請牠回來', 'alum.swap': '跟{cur}換',
     'alum.swapNote': '{cur}會先回{home}休息，長大的進度都會留著，想牠的時候再換回來。', 'alum.backToast': '{name}回來了！',
+    'care.title': '照顧牠（花星塵，愛心會變多）', 'care.fav': '♥最愛', 'care.got': '{name}很開心！愛心 +{n}', 'care.favT': '是{name}最愛的！愛心 +{n}', 'care.lack': '星塵不夠，還差 ★{n}', 'care.pat': '摸摸{name}！愛心 +1（每天第一次）', 'care.patAria': '摸摸{name}',
+    'love.0': '剛認識', 'love.1': '朋友', 'love.2': '好朋友', 'love.3': '很要好', 'love.4': '最好的朋友', 'love.5': '一輩子的好朋友', 'love.up': '{name}更喜歡你了！現在是「{t}」', 'love.aria': '愛心 {n} 顆：{t}',
+    'food.cookie': '餅乾', 'food.carrot': '紅蘿蔔', 'food.fish': '小魚', 'food.melon': '西瓜', 'food.cake': '蛋糕', 'food.candy': '星星糖', 'food.ball': '丟球', 'food.dance': '跳舞',
+    'bbuy.go': '用 ★{n} 換 1 個徽章（每天 1 次）', 'bbuy.sure': '確定換？再按一次（★{n}）', 'bbuy.done': '今天換過徽章了，明天再來', 'bbuy.lack': '星塵不夠，還差 ★{n}（每日任務也能拿徽章喔）', 'bbuy.ok': '換到 1 個徽章！現在有 {n} 個',
     'gear.title': '配件（集到幾個徽章就能戴，每個位置各一樣）', 'gear.badges': '徽章 ×{n}', 'gear.mysteryAria': '神祕配件，徽章 ×{n}', 'gear.on': '戴著', 'gear.q': '？', 'gear.need': '完成每日任務，收集徽章就能戴喔！（還差 {n} 個）', 'pet.legendNeed': '完成每日任務收集 {n} 個徽章，再送一隻寵物回家，就能選牠喔！',
     'name.title': '幫牠取個名字', 'name.aria': '寵物名字', 'name.ok': '就叫這個名字', 'name.back': '換一顆蛋',
     // 星圖
@@ -1187,7 +1211,7 @@ const STR = {
     'help.bomb': '<li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。點對不會點亮星星（要打出答案才算）。</li><li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點，下次玩流星或幽靈時也會再考你一次。</li><li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>',
     'help.map': '<li>每一題<b>打對</b> 3 次以上（×1 的題 1 次就好）、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li><li>紅色一閃一閃的是<b>容易錯</b>的題目，遊戲裡會偷偷更常出現，直到你把它練熟。</li><li>練加減的時候，星圖上面可以切到<b>加減</b>。每一格是加法和它的減法，兩題都熟才會亮。</li>',
     'help.wrong': '<li>答錯過的題目都列在這裡，最常錯的排最前面。</li><li>練熟了它會自己消失；也可以按「清除」把那題的紀錄歸零。</li>',
-    'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、金牌、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
+    'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、金牌、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>寵物頁下面可以<b>照顧牠</b>：花星塵買點心、陪牠玩，<b>愛心</b>就會變多。每隻都有<b>最愛</b>的點心，愛心加倍。</li><li>點一下寵物就是<b>摸摸牠</b>，每天第一次摸，愛心會多一點點。愛心只會變多，不會變少。</li><li>星塵也可以<b>換徽章</b>：★300 換 1 個，每天只能換 1 次。做每日任務拿徽章還是比較快喔。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'help.quest': '<li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li><li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>',
     'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li><li>換新的平板或手機時，請大人在「設定」用<b>備份紀錄</b>把紀錄搬過去。</li>',
     'set.parents': '家長區', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄（要請大人）', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（匯入要請大人）', 'set.backupGo': '打開', 'set.pet': '刪除寵物', 'set.petD': '把現在的寵物或回家的夥伴永遠刪掉（要請大人）', 'set.petGo': '打開',
@@ -1282,6 +1306,10 @@ const STR = {
     'pet.legendAria': 'Legendary egg, still locked', 'pet.unknown': '???', 'pet.needBadges': 'Badges {n}/{m}', 'pet.needBye': 'Send a pet home', 'pet.canPick': 'Ready to pick!', 'pet.soon': 'Coming soon',
     'pet.alumni': 'Back home (tap to visit)', 'alum.aria': 'Visit {name}', 'alum.sub': '{stage} · lives in {home}', 'alum.back': 'Bring it back', 'alum.swap': 'Swap with {cur}',
     'alum.swapNote': '{cur} will rest in {home} and keep its progress. You can swap back anytime.', 'alum.backToast': '{name} is back!',
+    'care.title': 'Take care (spend stardust for hearts)', 'care.fav': '♥Fave', 'care.got': '{name} is happy! Hearts +{n}', 'care.favT': '{name}\'s favorite! Hearts +{n}', 'care.lack': 'Not enough stardust. Need ★{n} more', 'care.pat': 'You petted {name}! Hearts +1 (first time today)', 'care.patAria': 'Pet {name}',
+    'love.0': 'Just met', 'love.1': 'Friends', 'love.2': 'Good friends', 'love.3': 'Close friends', 'love.4': 'Best friends', 'love.5': 'Best friends forever', 'love.up': '{name} likes you even more! Now: "{t}"', 'love.aria': '{n} hearts: {t}',
+    'food.cookie': 'Cookie', 'food.carrot': 'Carrot', 'food.fish': 'Fish', 'food.melon': 'Melon', 'food.cake': 'Cake', 'food.candy': 'Candy', 'food.ball': 'Ball', 'food.dance': 'Dance',
+    'bbuy.go': 'Trade ★{n} for 1 badge (once a day)', 'bbuy.sure': 'Sure? Tap again (★{n})', 'bbuy.done': 'Badge traded today. Come back tomorrow', 'bbuy.lack': 'Not enough stardust. Need ★{n} more (missions give badges too)', 'bbuy.ok': 'Got 1 badge! You have {n} now',
     'gear.title': 'Outfits (unlock with badges, one per spot)', 'gear.badges': 'Badges ×{n}', 'gear.mysteryAria': 'Mystery item, badges ×{n}', 'gear.on': 'Wearing', 'gear.q': '?', 'gear.need': 'Finish daily missions to collect badges! ({n} more to go)', 'pet.legendNeed': 'Collect {n} badges from daily missions and send a pet home to pick this one!',
     'name.title': 'Name your pet', 'name.aria': 'Pet name', 'name.ok': 'That\'s the name!', 'name.back': 'Pick another egg',
     'st.new': 'Not yet', 'st.learn': 'Learning', 'st.weak': 'Tricky', 'st.star': 'Star!', 'map.reset': 'Erase all records', 'map.cleared': 'Records erased.',
@@ -1330,7 +1358,7 @@ const STR = {
     'help.bomb': '<li>If the bomb says <b>7</b>, tap the answers in the 7 times table: 7, 14, 21… Not all of them are on the board, so tap the ones you find. Below, it says "Found 0 / 5". Tapping doesn\'t light up stars (only typed answers do).</li><li>Tap a number that doesn\'t belong and the bomb <b>explodes</b>. It also explodes when the fuse burns out. Watch out for look-alikes like 27 and 57! Numbers you tapped wrong or didn\'t find come up a bit more, and come back next time you play Meteor Defense or Ghost Race.</li><li>A round is 5 bombs. Only <b>all 5 defused</b> counts for a best time.</li>',
     'help.map': '<li>Type a problem right 3 or more times (×1 problems just once), fast and steady, and it <b>lights up as a star</b>. Tap any square to see its record.</li><li>Flashing red squares are <b>tricky</b> problems. They secretly come up more often in the games until you\'ve got them.</li><li>When you practice + and −, switch the Star Map to <b>+ and −</b> at the top. Each square is an addition and its subtraction. Both need to be solid to light up.</li>',
     'help.wrong': '<li>Problems you got wrong are listed here, most missed first.</li><li>Once you know one, it disappears by itself. You can also tap "Clear" to reset it.</li>',
-    'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, medal, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>Tap a pet that went home to visit it, or <b>bring it back</b>. Your current pet goes home to rest and keeps its progress, so you can swap back anytime.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
+    'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, medal, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>Tap a pet that went home to visit it, or <b>bring it back</b>. Your current pet goes home to rest and keeps its progress, so you can swap back anytime.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>At the bottom of the pet page you can <b>take care</b> of it: spend stardust on treats and games to fill up its <b>hearts</b>. Each pet has a <b>favorite</b> treat that gives double.</li><li>Tap your pet to <b>pet it</b>. The first pat each day adds a little to its hearts. Hearts only go up, never down.</li><li>You can also <b>trade stardust for a badge</b>: ★300 for 1 badge, once a day. Daily missions are still faster.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
     'help.quest': '<li>There are <b>3 small missions</b> every day. They check off by themselves. Finish all three for a <b>badge</b>.</li><li>Finish several days in a row and you\'ll see your streak. New missions come tomorrow.</li>',
     'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li><li>Getting a new tablet or phone? A grown-up can move your records with <b>Back up records</b> in Settings.</li>',
     'set.parents': 'For grown-ups', 'set.del': 'Delete player', 'set.delD': 'Delete {name} and all of their records (ask a grown-up)', 'set.delGo': 'Delete', 'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (importing needs a grown-up)', 'set.backupGo': 'Open', 'set.pet': 'Delete pets', 'set.petD': 'Remove your pet or a pet back home for good (ask a grown-up)', 'set.petGo': 'Open',
@@ -1424,6 +1452,10 @@ const STR = {
     'pet.legendAria': 'でんせつのたまご、まだえらべない', 'pet.unknown': '？？？', 'pet.needBadges': 'バッジ {n}/{m}', 'pet.needBye': '1ぴき家にかえす', 'pet.canPick': 'えらべるよ', 'pet.soon': 'もうすぐ',
     'pet.alumni': '家に帰ったなかま（タップで会いに行けるよ）', 'alum.aria': '{name}に会いに行く', 'alum.sub': '{stage}・{home}にすんでいる', 'alum.back': 'よびもどす', 'alum.swap': '{cur}とこうたい',
     'alum.swapNote': '{cur}は{home}で休むよ。大きくなったところはそのままで、いつでもまたこうたいできるよ。', 'alum.backToast': '{name}がもどってきた！',
+    'care.title': 'おせわ（星くずをつかうと、ハートがふえるよ）', 'care.fav': '♥大すき', 'care.got': '{name}がよろこんでる！ハート +{n}', 'care.favT': '{name}の大すきなものだ！ハート +{n}', 'care.lack': '星くずがたりないよ。あと ★{n}', 'care.pat': '{name}をなでなで、ハート +1（1日の1回目）', 'care.patAria': '{name}をなでる',
+    'love.0': 'はじめまして', 'love.1': 'ともだち', 'love.2': 'なかよし', 'love.3': '大のなかよし', 'love.4': 'しんゆう', 'love.5': 'ずっとしんゆう', 'love.up': '{name}がもっとすきになってくれた！いまは「{t}」', 'love.aria': 'ハート {n}こ：{t}',
+    'food.cookie': 'クッキー', 'food.carrot': 'にんじん', 'food.fish': 'おさかな', 'food.melon': 'すいか', 'food.cake': 'ケーキ', 'food.candy': '星のあめ', 'food.ball': 'ボール', 'food.dance': 'ダンス',
+    'bbuy.go': '★{n}でバッジ1ことこうかん（1日1回）', 'bbuy.sure': 'こうかんする？もう一回おしてね（★{n}）', 'bbuy.done': '今日はもうこうかんしたよ。また明日ね', 'bbuy.lack': '星くずがたりないよ。あと ★{n}（ミッションでもバッジがもらえるよ）', 'bbuy.ok': 'バッジを1こもらった！いまは{n}こ',
     'gear.title': 'きせかえ（バッジが集まるとつけられる、1か所に1つずつ）', 'gear.badges': 'バッジ ×{n}', 'gear.mysteryAria': 'なぞのアイテム、バッジ ×{n}', 'gear.on': 'つけてる', 'gear.q': '？', 'gear.need': '毎日のミッションをクリアして、バッジを集めよう！（あと{n}こ）', 'pet.legendNeed': '毎日のミッションでバッジを{n}こ集めて、ペットを1ぴき家にかえすと、えらべるよ！',
     'name.title': '名前をつけてね', 'name.aria': 'ペットの名前', 'name.ok': 'この名前にする', 'name.back': 'ほかのたまごにする',
     'st.new': 'まだ', 'st.learn': 'れんしゅう', 'st.weak': 'にがて', 'st.star': '星', 'map.reset': '記ろくをぜんぶけす', 'map.cleared': '記ろくをけしたよ。',
@@ -1472,7 +1504,7 @@ const STR = {
     'help.bomb': '<li>ばくだんに「<b>7</b>」と書いてあったら、7のだんの答え（7、14、21…）をタップしよう。ぜんぶあるとはかぎらないから、あるものだけタップ。下に「みつけた 0 / 5」と出るよ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>ちがう数をタップすると<b>ばくはつ</b>！どうか線がもえつきても、ばくはつするよ。27や57みたいな、にている数に気をつけて！まちがえた数や見つけられなかった数は少し多めに出て、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回に5こ。<b>5こぜんぶかいじょ</b>したときだけタイムをくらべるよ。</li>',
     'help.map': '<li>1つの問題を3回以上<b>打って正かい</b>（×1の問題は1回でOK）して、速くてまちがえないと、<b>星になって光る</b>よ。マスをタップすると、その問題の記ろくが見られるよ。</li><li>赤くピカピカしているのは<b>にがて</b>な問題。できるようになるまで、ゲームでこっそり多めに出るよ。</li><li>たし算・ひき算を練習しているときは、星マップの上で<b>たし・ひき</b>にきりかえられるよ。1つのマスはたし算とそのひき算で、どちらもできると光るよ。</li>',
     'help.wrong': '<li>まちがえた問題がここにならぶよ。いちばんまちがえた問題が上。</li><li>できるようになると、かってにきえるよ。「けす」をおしてリセットもできるよ。</li>',
-    'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおしてね。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、きんメダル、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
+    'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおしてね。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、きんメダル、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>ペットのページの下で<b>おせわ</b>ができるよ。星くずでおやつを買ったり、いっしょにあそんだりすると<b>ハート</b>がふえるよ。それぞれ<b>大すき</b>なおやつがあって、ハートが2ばいになるよ。</li><li>ペットをタップすると<b>なでなで</b>。1日の1回目は、ハートが少しふえるよ。ハートはふえるだけで、へらないよ。</li><li>星くずで<b>バッジとこうかん</b>もできるよ：★300でバッジ1こ、1日1回だけ。毎日のミッションのほうが早いよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
     'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
     'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li><li>新しいタブレットやスマホにかえるときは、大人の人に「せってい」の<b>きろくのバックアップ</b>でうつしてもらおう。</li>',
     'set.parents': 'おうちの人むけ', 'set.del': 'プレイヤーをけす', 'set.delD': '「{name}」の名前と記ろくをぜんぶけす（大人の人にきいてね）', 'set.delGo': 'けす', 'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（読みこみは大人の人にきいてね）', 'set.backupGo': 'ひらく', 'set.pet': 'ペットをけす', 'set.petD': '今のペットや家に帰ったなかまを、ずっとけす（大人の人にきいてね）', 'set.petGo': 'ひらく',
@@ -1545,7 +1577,7 @@ const BEST0 = () => ({ meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null
 let recent = [], retest = [], draws = 0, lastRetest = -9, retestPick = '';   // retest：答錯的題 6～12 題後一定再考一次（延遲重測比立刻照抄有效）；兩次重測至少隔 2 題；存檔存 key（DB.retest），關掉再開也會考
 const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], tm: TMODE, set: { what: 'mul', sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice(), lang: '' },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0, ans: 0, wrong: 0, log: {} },
-  pet: { kind: '', name: '', dust: 0, fed: 0, wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [], sent: 0 } });
+  pet: { kind: '', name: '', dust: 0, fed: 0, love: 0, pat: '', badgeDay: '', wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [], sent: 0 } });
 // 最佳紀錄依乘法表範圍分開存（bests[rangeKey]），DB.best 永遠指向目前範圍那一份；getter 不可列舉所以不會存進 JSON
 function mkDB(o) {
   Object.defineProperty(o, 'best', { enumerable: false, configurable: true, get() { const k = bestKey(); return o.bests[k] || (o.bests[k] = BEST0()); } });   // 流星、幽靈的紀錄跟著「要練什麼」分開（加減快很多，不能比）
@@ -1572,7 +1604,8 @@ function cleanRest(D) {
   Object.keys(D.bests).forEach(k => { const b = D.bests[k]; if (!/^(add|(b:)?(std|\d+(,\d+)*))$/.test(k) || !b || typeof b !== 'object') { delete D.bests[k]; return; } b.meteor = clamp(num(b.meteor), 0, 1e7); b.sudden = clamp(num(b.sudden), 0, 1e7); b.cmpT = num(b.cmpT, 0) > 0 ? Math.min(num(b.cmpT), 36e5) : null; b.ghostLoss = clamp(Math.round(num(b.ghostLoss)), 0, 99); b.bomb = num(b.bomb, 0) > 0 ? Math.min(num(b.bomb), 36e5) : null; if (!(Array.isArray(b.ghost) && b.ghost.length === 20 && b.ghost.every(v => typeof v === 'number' && Number.isFinite(v)))) b.ghost = null; });
   ['sound', 'music', 'sudden', 'seqLabel'].forEach(k => { D.set[k] = D.set[k] === true || D.set[k] === 'true' || D.set[k] === 1; });   // 字串 'false' 不能當 true
   const P = D.pet; P.dust = Math.max(0, Math.round(num(P.dust))); P.fed = Math.max(0, Math.round(num(P.fed))); P.name = String(P.name || '').slice(0, 10); if (!LANGS.includes(D.set.lang)) D.set.lang = ''; if (typeof P.kind !== 'string') P.kind = '';
-  P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string').map(r => Object.assign({ kind: r.kind, name: String(r.name || '').slice(0, 10), date: typeof r.date === 'string' ? r.date : '' }, Number.isFinite(r.fed) ? { fed: clamp(Math.round(r.fed), 0, 1e6) } : {}));
+  P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string').map(r => Object.assign({ kind: r.kind, name: String(r.name || '').slice(0, 10), date: typeof r.date === 'string' ? r.date : '' }, Number.isFinite(r.fed) ? { fed: clamp(Math.round(r.fed), 0, 1e6) } : {}, Number.isFinite(r.love) ? { love: clamp(Math.round(r.love), 0, 1e6) } : {}));
+  P.love = clamp(Math.round(num(P.love)), 0, 1e6); if (typeof P.pat !== 'string') P.pat = ''; if (typeof P.badgeDay !== 'string') P.badgeDay = '';   // 愛心、今天摸過沒、今天換過徽章沒
   P.sent = Math.max(Math.round(num(P.sent)), P.released.filter(r => !('fed' in r) || r.fed >= 500).length);   // 送回家（究極）過幾次：傳說蛋看這個，請夥伴回來不會又鎖回去；舊存檔用名單裡的究極補
   const Y = D.daily; Y.badges = Math.max(0, Math.round(num(Y.badges))); Y.streak = Math.max(0, Math.round(num(Y.streak))); Y.ans = Math.max(0, Math.round(num(Y.ans))); Y.starBase = Math.round(num(Y.starBase));
   const log = {}; if (Y.log && typeof Y.log === 'object' && !Array.isArray(Y.log)) Object.keys(Y.log).forEach(d => { const v = Y.log[d]; if (/^\d{4}-\d{2}-\d{2}$/.test(d) && v && typeof v === 'object') log[d] = { s: num(v.s), t: num(v.t), r: typeof v.r === 'string' ? v.r : 'std', a: num(v.a), m: num(v.m), ...(Number.isFinite(v.as) ? { as: v.as, at: num(v.at) } : {}) }; }); Y.log = log;   // as／at：加減星圖的比較要用
@@ -3218,6 +3251,7 @@ function renderPet() {
   $('#pet-stage').innerHTML = petSVG(P_.kind, st, wearObj());
   $('#pet-stage').className = 'pet-stage' + (st === 0 && P_.dust >= FEED ? ' wobble' : '');
   $('#pet-name').innerHTML = `${esc(petName())}<small>${tx('stage.' + st)}</small>`;
+  renderLove(); renderCare(); $('#pet-stage').setAttribute('aria-label', tx('care.patAria', { name: petName() })); $('#pet-stage').setAttribute('role', 'button');
   if (next) { const from = PET_STAGES[st].at; $('#pet-bar').style.width = Math.round(clamp((P_.fed - from) / (next.at - from), 0, 1) * 100) + '%'; }
   else $('#pet-bar').style.width = '100%';
   $('#pet-barwrap').hidden = !next; $('#pet-feed').hidden = !next;
@@ -3230,7 +3264,9 @@ function renderPet() {
 let byeLock = 0, byeOpenAt = 0, byeing = false;
 function renderGear() {
   const B_ = DB.daily.badges, W = wearObj();
-  $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + GEAR.map(g => {
+  const bd = DB.pet.badgeDay === today(), can = !bd && DB.pet.dust >= BADGE_COST;
+  const bb = `<div class="gear-t"><button type="button" class="bbuy${can ? '' : ' locked'}${can && now() - bbArm < 3000 ? ' arm' : ''}" id="badge-buy"${can ? '' : ' aria-disabled="true"'}>${bd ? tx('bbuy.done') : can && now() - bbArm < 3000 ? tx('bbuy.sure', { n: BADGE_COST }) : tx('bbuy.go', { n: BADGE_COST })}</button></div>`;
+  $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + bb + GEAR.map(g => {
     const ok = B_ >= g.at, on = W[g.slot] === g.id;
     if (g.hidden && !ok) return `<button type="button" class="mystery locked" aria-disabled="true" data-lock="${g.at}" aria-label="${tx('gear.mysteryAria', { n: g.at })}"><span class="qmark">${tx('gear.q')}</span>${tx('pet.unknown')}<small>${tx('gear.badges', { n: g.at })}</small></button>`;   // 神祕配件：先給個問號，到門檻才現身
     return `<button type="button" data-gear="${g.id}" aria-pressed="${on}" ${ok ? '' : `class="locked" aria-disabled="true" data-lock="${g.at}"`}><img src="assets/gear/${g.id}.png" alt="">${tx('gear.' + g.id)}<small>${ok ? tx(on ? 'gear.on' : 'slot.' + g.slot) : tx('gear.badges', { n: g.at })}</small></button>`;
@@ -3262,8 +3298,8 @@ function openAlum(i) {
 function alumSwap() {
   const P_ = DB.pet, r = (P_.released || [])[alumIdx]; $('#o-alum').hidden = true; if (byeing || !r || !PET_KINDS[r.kind]) return;
   P_.released.splice(alumIdx, 1); alumIdx = -1;
-  if (PET_KINDS[P_.kind]) P_.released.push({ kind: P_.kind, name: petName(), date: today(), fed: P_.fed });
-  P_.kind = r.kind; P_.name = r.name || ''; P_.fed = alumFed(r); save();
+  if (PET_KINDS[P_.kind]) P_.released.push({ kind: P_.kind, name: petName(), date: today(), fed: P_.fed, love: P_.love || 0 });
+  P_.kind = r.kind; P_.name = r.name || ''; P_.fed = alumFed(r); P_.love = r.love || 0; save();
   renderPet();
   const el = $('#pet-stage'), rc = el.getBoundingClientRect(); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   spark(rc.left + rc.width / 2, rc.top + rc.height / 2, 50, ['#ffd23f', '#5ff2d0', '#ffffff', PET_KINDS[P_.kind].c2], 260, 4, 1, 80);
@@ -3289,7 +3325,7 @@ $('#pdel-list').addEventListener('click', e => {
   const b = e.target.closest('[data-i]'); if (!b) return; const x = petDelList()[+b.dataset.i]; if (!x) return;
   const P_ = DB.pet, name = x.cur ? petName() : alumName(x.r), kind = P_.kind, fed = P_.fed;
   openGate(() => {
-    if (x.cur) { if (P_ !== DB.pet || P_.kind !== kind || P_.fed !== fed) return; P_.kind = ''; P_.name = ''; P_.fed = 0; }   // 關卡期間換了寵物就不刪
+    if (x.cur) { if (P_ !== DB.pet || P_.kind !== kind || P_.fed !== fed) return; P_.kind = ''; P_.name = ''; P_.fed = 0; P_.love = 0; }   // 關卡期間換了寵物就不刪
     else { const i = (DB.pet.released || []).indexOf(x.r); if (i < 0) return; DB.pet.released.splice(i, 1); }
     save(); renderPetDel(); toast(tx('pdel.done', { name }));
   }, tx('pdel.why', { name }));
@@ -3310,12 +3346,12 @@ function releasePet() {
   el.classList.add('bye'); $('#pet-bye').hidden = true;
   spark(x, y, 60, ['#ffd23f', '#5ff2d0', '#ffffff', K.c2], 260, 4, 1.4, -40); SFX.fan(); confetti(40);
   const nm = petName(); toast(tx('pet.byeToast', { name: nm, home: tx('home.' + kind) }));
-  (P_.released = P_.released || []).push({ kind, name: nm, date: today(), fed: P_.fed });   // 紀錄馬上寫：動畫期間換玩家也不會漏掉
-  P_.kind = ''; P_.name = ''; P_.fed = 0; P_.sent = (P_.sent || 0) + 1; save();
+  (P_.released = P_.released || []).push({ kind, name: nm, date: today(), fed: P_.fed, love: P_.love || 0 });   // 紀錄馬上寫：動畫期間換玩家也不會漏掉
+  P_.kind = ''; P_.name = ''; P_.fed = 0; P_.love = 0; P_.sent = (P_.sent || 0) + 1; save();
   setTimeout(() => { byeing = false; if (mode === 'pet') renderPet(); }, 1700);   // 飄走動畫播完才重畫成挑蛋
 }
 $('#pet-gear').addEventListener('click', e => {
-  if (byeing) return;   // 飄走動畫中不重畫（不然寵物會跑回來）
+  if (byeing || e.target.closest('#badge-buy')) return;   // 飄走動畫中不重畫（不然寵物會跑回來）
   const L = e.target.closest('[data-lock]'); if (L) { toast(tx('gear.need', { n: Math.max(1, +L.dataset.lock - DB.daily.badges) })); return; }   // 還沒解鎖：告訴孩子怎麼拿到
   const b = e.target.closest('[data-gear]'); if (!b || b.disabled) return; const g = GEAR_BY[b.dataset.gear], W = wearObj(); W[g.slot] = W[g.slot] === g.id ? '' : g.id; save(); renderPet(); SFX.ding(); });
 $('#pet-bye').addEventListener('click', askRelease);
@@ -3332,6 +3368,69 @@ function feedPet() {
     setTimeout(() => { if (mode !== 'pet') return; toast(tx('pet.grow', { name: petName(), stage: tx('stage.' + st) })); confetti(40 + st * 20); flashA = 0.3; spark(x, y, 90, ['#ffd23f', '#5ff2d0', '#ff6161', '#ffffff'], 380, 4.5, 1.2, 150); ring(x, y, 220, '#ffd23f', 8); SFX.milestone(Math.min(4, st)); }, 350);
   }
 }
+// ---- 照顧寵物（電子寵物）：用星塵買點心、陪牠玩，愛心只會變多、不會變少（沒有飢餓、沒有倒扣、不催孩子回來）
+const FOODS = [{ id: 'cookie', e: '🍪', cost: 10, love: 1 }, { id: 'carrot', e: '🥕', cost: 15, love: 2 }, { id: 'fish', e: '🐟', cost: 15, love: 2 }, { id: 'melon', e: '🍉', cost: 15, love: 2 }, { id: 'cake', e: '🍰', cost: 40, love: 5 }, { id: 'candy', e: '🍬', cost: 80, love: 11 }];
+const PLAYS = [{ id: 'ball', e: '⚽', cost: 20, love: 3, anim: 'jump' }, { id: 'dance', e: '🎵', cost: 20, love: 3, anim: 'dance' }];
+const FAV = { cute: 'carrot', cool: 'fish', funny: 'melon', legend: 'candy' };   // 每隻最愛的點心：愛心加倍
+const LOVE = [0, 10, 30, 60, 100, 160];   // 愛心 0～5 顆的門檻（只顯示顆數與稱號，不寫「還差多少」）
+const loveLv = v => LOVE.reduce((l, at, i) => v >= at ? i : l, 0);
+const BADGE_COST = 300;   // 星塵換徽章：每天 1 個、要 ★300（大約 3、4 局流星），每日任務仍是最快拿徽章的方法
+let bbArm = -1e9;   // 換徽章第一下的時間（performance.now 從 0 起算，初值不能是 0）
+function renderLove() {
+  const lv = loveLv(DB.pet.love || 0), t = tx('love.' + lv);
+  const v = DB.pet.love || 0, pc = lv >= 5 ? 100 : Math.round((v - LOVE[lv]) / (LOVE[lv + 1] - LOVE[lv]) * 100);   // 下一顆愛心的小進度條（不寫數字）
+  $('#pet-love').innerHTML = `<i aria-hidden="true">${'♥'.repeat(lv)}${'♡'.repeat(5 - lv)}</i><span>${t}</span>${lv < 5 ? `<b class="lbar" aria-hidden="true"><i style="width:${pc}%"></i></b>` : ''}`;
+  $('#pet-love').setAttribute('aria-label', tx('love.aria', { n: lv, t }));
+}
+function renderCare() {
+  const P_ = DB.pet, fav = FAV[P_.kind];
+  const btn = x => { const ok = P_.dust >= x.cost, f = x.id === fav; return `<button type="button" data-care="${x.id}" class="${f ? 'fav' : ''}${ok ? '' : ' locked'}"${ok ? '' : ' aria-disabled="true"'}><span class="emo" aria-hidden="true">${x.e}</span>${tx('food.' + x.id)}<small>★${x.cost}</small>${f ? `<b class="favtag">${tx('care.fav')}</b>` : ''}</button>`; };
+  $('#pet-care').innerHTML = `<div class="gear-t">${tx('care.title')}</div>` + FOODS.map(btn).join('') + PLAYS.map(btn).join('');
+}
+function loveUp(before) {
+  const lv = loveLv(DB.pet.love || 0); if (lv <= before) return;
+  setTimeout(() => { if (mode !== 'pet') return; toast(tx('love.up', { name: petName(), t: tx('love.' + lv) })); confetti(30 + lv * 12); SFX.milestone(Math.min(4, lv)); }, 900);
+}
+function petAnim(anim) { const st = $('#pet-stage'); st.classList.remove('pop', 'jump', 'dance', 'wobble'); void st.offsetWidth; st.classList.add(anim); }
+function careFx(b, x, msg) {
+  const st = $('#pet-stage'), r = st.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * 0.45;
+  const go = () => { if (mode !== 'pet' || byeing) return; petAnim(x.anim || 'pop'); spark(cx, cy, 18, ['#ff7a9a', '#ffd23f', '#ffffff'], 180, 3, 0.7, 40); toast(msg); };
+  SFX.ding();
+  if (RM || !b) return go();
+  const br = b.getBoundingClientRect(), f = document.createElement('span');   // 點心從按鈕飛到寵物嘴邊
+  f.className = 'flyemo'; f.textContent = x.e; f.style.left = (br.left + br.width / 2 - 17) + 'px'; f.style.top = br.top + 'px'; document.body.appendChild(f);
+  requestAnimationFrame(() => { f.style.transform = `translate(${cx - br.left - br.width / 2}px,${cy - br.top}px) scale(.6)`; f.style.opacity = '.2'; });
+  setTimeout(() => { f.remove(); go(); }, 560);
+}
+$('#pet-care').addEventListener('click', e => {
+  const b = e.target.closest('[data-care]'), P_ = DB.pet; if (!b || byeing || !PET_KINDS[P_.kind]) return;
+  const x = FOODS.concat(PLAYS).find(x => x.id === b.dataset.care); if (!x) return;
+  if (P_.dust < x.cost) { toast(tx('care.lack', { n: x.cost - P_.dust })); return; }
+  const fav = FAV[P_.kind] === x.id, gain = x.love * (fav ? 2 : 1), before = loveLv(P_.love || 0);
+  P_.dust -= x.cost; P_.love = (P_.love || 0) + gain; save(); renderPet();
+  careFx(b, x, tx(fav ? 'care.favT' : 'care.got', { name: petName(), n: gain })); loveUp(before);
+});
+// 點寵物＝摸摸：每天第一次 +1 愛心（免費），之後只是開心地動一下
+$('#pet-stage').addEventListener('click', () => {
+  const P_ = DB.pet; if (byeing || !PET_KINDS[P_.kind] || $('#pet-show').hidden) return;
+  petAnim('pop'); const r = $('#pet-stage').getBoundingClientRect(); spark(r.left + r.width / 2, r.top + r.height * 0.4, 10, ['#ff7a9a', '#ffffff'], 140, 3, 0.6, 30);
+  if (P_.pat === today()) { SFX.key(); return; }
+  const before = loveLv(P_.love || 0); P_.pat = today(); P_.love = (P_.love || 0) + 1; save(); renderLove(); SFX.ding();
+  toast(tx('care.pat', { name: petName() })); loveUp(before);
+});
+// 星塵換徽章：每天 1 次；第一下變成「再按一次」，0.6～3 秒內再按才換（孩子連點不會一次花掉 300）
+$('#pet-gear').addEventListener('click', e => {
+  if (!e.target.closest('#badge-buy')) return;
+  const P_ = DB.pet;
+  if (P_.badgeDay === today()) { toast(tx('bbuy.done')); return; }
+  if (P_.dust < BADGE_COST) { toast(tx('bbuy.lack', { n: BADGE_COST - P_.dust })); return; }
+  const t = now();
+  if (t - bbArm < 600) return;
+  if (t - bbArm >= 3000) { bbArm = t; renderGear(); setTimeout(() => { if (mode === 'pet' && now() - bbArm >= 2900) renderGear(); }, 3000); return; }
+  bbArm = -1e9; P_.dust -= BADGE_COST; P_.badgeDay = today(); const D = DB.daily; D.badges++; save();
+  renderPet(); confetti(40); SFX.milestone(2); toast(tx('bbuy.ok', { n: D.badges }));
+  const g = GEAR.find(g => g.at === D.badges); if (g) setTimeout(() => toast(tx(g.hidden ? 'q.gearHidden' : 'q.gear', { g: tx('gear.' + g.id) })), 2600);
+}, true);
 const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const petName = () => DB.pet.name || (PET_KINDS[DB.pet.kind] ? tx('kind.' + DB.pet.kind) : '');
 // 取名：預設帶入建議名字，孩子可以直接按確定，也可以打自己想的（這裡需要系統鍵盤，是唯一的例外）
@@ -3349,7 +3448,7 @@ $('#name-sug').addEventListener('click', e => { const b = e.target.closest('[dat
 $('#name-back').addEventListener('click', () => { $('#o-name').hidden = true; });
 $('#name-ok').addEventListener('click', () => {
   const v = $('#name-in').value.trim().slice(0, nameMax()) || NAME_SUG(nameKind)[0];
-  DB.pet.kind = nameKind; DB.pet.name = v; save();
+  DB.pet.kind = nameKind; DB.pet.name = v; DB.pet.love = 0; DB.pet.pat = ''; save();
   $('#o-name').hidden = true; $('#name-in').blur(); renderPet(); SFX.fan(); toast(tx('pet.hello', { name: v }));
 });
 $('#name-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#name-ok').click(); } e.stopPropagation(); });
