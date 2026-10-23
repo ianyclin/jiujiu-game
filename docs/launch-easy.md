@@ -33,9 +33,12 @@
 ## 第二關：Apple App Store（每年 US$99）
 
 **4. 註冊 Apple Developer**
-- 到 `developer.apple.com` 用你的 Apple ID 註冊，選「**個人**」，付 US$99／年。
-- Apple ID 要先開「雙重認證」。
-- 個人帳號在商店上會顯示你的**本名**（不是地址）。
+- 事前：Apple ID 先開「雙重認證」（iPhone：設定 → 你的名字 → 登入與安全性）；準備信用卡（US$99／年）、身分證或護照。
+- 在 Mac 開 `developer.apple.com/programs/enroll/` → Start Your Enrollment → 登入 → 選**網頁**註冊（不用 Apple Developer app）。
+- Entity Type 選「**Individual / Sole Proprietor**」（個人）；公司要 D-U-N-S 編號，要等好幾週。
+- 姓名要跟證件、信用卡一致（護照有英文就填英文）；這個名字會顯示在商店的「開發者」欄位（不是地址）。
+- 付 US$99 → 收到「Thank you for purchasing」→ 等 Apple 開通 1～3 天，收到「Welcome to the Apple Developer Program」。
+- 卡住：「enrollment could not be completed」多半是姓名對不上；被要求上傳證件就照做再等一兩天。
 - 做完會怎樣：能登入 App Store Connect（`appstoreconnect.apple.com`）。
 
 **5. 簽「付費 App 協議」**
