@@ -18,12 +18,12 @@
 | 關鍵字（Apple Keywords） | 49／100 | 九九乘法,乘法表,背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,遊戲 |
 | 新功能（What's New） | 53／4000 | 1.3：熟練度改看「想出答案要多久」，手慢的孩子也公平；流星防衛戰免費，另外四種玩法可試玩後一次購買解鎖。 |
 
-**完整說明**（856／4000）
+**完整說明**（860／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
 
-【五種玩法】（流星防衛戰免費，另外四種各可免費試玩一次）
+【五種玩法】（流星防衛戰免費，另外四種各可免費試玩 3 次）
 ● 流星防衛戰：算出答案就發射雷射，打下往小鎮掉的流星。每 5 波有錯題魔王，還有寶箱和追蹤飛彈。
 ● 幽靈競速：20 題計時賽，追過上次的自己。
 ● 雙人拔河：面對面搶答，可以跟大人比，也能跟機器人比。
@@ -37,7 +37,7 @@
 ● 沒有「寵物餓了」，也不會倒扣，不逼孩子。
 
 【給家長】
-● 免費下載：流星防衛戰、星圖、每日任務、養寵物都免費。另外四種玩法各可試玩一次，想一直玩可以「一次購買」全部解鎖（不是訂閱，同一台裝置的每個孩子都能玩）。
+● 免費下載：流星防衛戰、星圖、每日任務、養寵物都免費。另外四種玩法各可試玩 3 次，想一直玩可以「一次購買」全部解鎖（不是訂閱，同一台裝置的每個孩子都能玩）。
 ● 購買在家長關卡後面，孩子不會誤買；付款由 App Store／Google Play 處理。
 ● 沒有廣告、不用登入，不收集任何個人資料。
 ● 玩遊戲不用網路（只有購買時需要連到商店）。遊戲紀錄只存在這台裝置上，我們看不到。
@@ -61,12 +61,12 @@
 | 關鍵字（Apple Keywords） | 98／100 | multiplication,multiply,math,kids,practice,grade 2,grade 3,learn,facts,school,education,drill,game |
 | 新功能（What's New） | 195／4000 | 1.3: Fluency now measures how long it takes to think of the answer, so slower typists aren't held back. Meteor Defense is free; the other four games can be tried, then unlocked with one purchase. |
 
-**完整說明**（2582／4000）
+**完整說明**（2588／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
 
-FIVE GAMES (Meteor Defense is free; try each of the other four once for free)
+FIVE GAMES (Meteor Defense is free; try each of the other four 3 times for free)
 ● Meteor Defense: type the answer to fire a laser and shoot down meteors falling on the little town. Every 5 waves a boss made of the facts you miss, plus treasure chests and homing missiles.
 ● Ghost Race: 20 questions against the clock. Beat your own last run.
 ● Tug of War: face-to-face for two players. Play a grown-up, or play the robot.
@@ -80,7 +80,7 @@ THE MORE THEY PLAY, THE BETTER THEY KNOW IT
 ● No "your pet is hungry" and no penalties. Nothing pressures the child.
 
 FOR PARENTS
-● Free to download: Meteor Defense, the Star Map, daily missions and the pet are free. Each of the other four games can be tried once, and a single one-time purchase unlocks them all (not a subscription; every child on the device can play).
+● Free to download: Meteor Defense, the Star Map, daily missions and the pet are free. Each of the other four games can be tried 3 times, and a single one-time purchase unlocks them all (not a subscription; every child on the device can play).
 ● Purchases sit behind a parental gate, so kids can't buy by accident. Payment is handled by the App Store / Google Play.
 ● No ads, no sign-in, and no personal data collected.
 ● Plays fully offline (only purchases need to reach the store). Progress is saved only on this device, and we can't see it.
@@ -109,7 +109,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
 
-【5つの遊び】（流星ディフェンスは無料、ほかの4つは1回ずつ無料でお試しできます）
+【5つの遊び】（流星ディフェンスは無料、ほかの4つは3回ずつ無料でお試しできます）
 ● 流星ディフェンス：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。5ウェーブごとに、まちがえやすい問題のボスが登場。宝箱や追いかけミサイルもあります。
 ● ゴーストレース：20問のタイムレース。前回の自分を追いこそう。
 ● つなひきバトル：向かい合って早押し。大人とも、ロボットとも対戦できます。
@@ -123,7 +123,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ● 「おなかがすいた」も、ペナルティもありません。子どもをせかしません。
 
 【保護者の方へ】
-● ダウンロード無料：流星ディフェンス、星マップ、毎日のミッション、ペットは無料です。ほかの4つの遊びはそれぞれ1回お試しでき、「1回の購入」ですべて解除できます（サブスクリプションではありません。同じ端末のお子さま全員が遊べます）。
+● ダウンロード無料：流星ディフェンス、星マップ、毎日のミッション、ペットは無料です。ほかの4つの遊びはそれぞれ3回お試しでき、「1回の購入」ですべて解除できます（サブスクリプションではありません。同じ端末のお子さま全員が遊べます）。
 ● 購入は保護者向けの確認問題のあとにだけ表示されるので、お子さまが誤って買うことはありません。お支払いは App Store／Google Play が行います。
 ● 広告なし、ログイン不要。個人情報は一切集めません。
 ● 完全オフラインで遊べます（購入時のみストアに接続します）。記録はこの端末の中にだけ保存され、私たちには見えません。
@@ -169,7 +169,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 
 ```text
 9×9 Meteor Squad is an offline times-tables practice game for children. It has no accounts, no ads, no analytics or advertising SDKs, and the game itself makes no network requests. All progress is stored on the device only.
-In-app purchase: Meteor Defense, the Star Map, the pet and daily missions are free. The other four games (Ghost Race, Tug of War, Biggest? Smallest?, Bomb Squad) can each be played once for free; after that, tapping one shows a card asking the child to get a grown-up. One non-consumable purchase (unlock_all) unlocks all four. The purchase screen, Restore Purchase and promo code redemption are only reachable after a parental gate (a math question), either from that card or from Settings > For grown-ups > Unlock all games.
+In-app purchase: Meteor Defense, the Star Map, the pet and daily missions are free. The other four games (Ghost Race, Tug of War, Biggest? Smallest?, Bomb Squad) can each be played 3 times for free; after that, tapping one shows a card asking the child to get a grown-up. One non-consumable purchase (unlock_all) unlocks all four. The purchase screen, Restore Purchase and promo code redemption are only reachable after a parental gate (a math question), either from that card or from Settings > For grown-ups > Unlock all games.
 The only links that leave the app are the author's Facebook page and the privacy policy. Both are behind the same parental gate, as required for the Kids Category.
 No login is needed. To see the pet and star map screens quickly, tap "Star Map" or "Pet" on the main menu.
 ```

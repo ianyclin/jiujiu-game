@@ -72,9 +72,9 @@
 - `APP = Capacitor.isNativePlatform()`；不是 App 時 `unlocked()` 永遠 true，網頁版跟以前一模一樣。`<html class="app">` 才顯示 `.app-only`（說明頁的「解鎖遊戲」、關於頁的「費用」、設定家長區的「解鎖全部遊戲」）。
 - 免費：流星防衛戰、星圖、錯題本、寵物、每日任務、備份。付費 `PAID = ['ghost','versus','cmp','bomb']`，一個非消耗型內購 `unlock_all`（`IAP_ID`）全部解鎖。
 - 狀態存在 `jiujiu-meteor-unlock`（`UL = { ok, trial, runs, nudged }`），**整台裝置共用、不分玩家、不進備份**。真正的依據是商店：開啟與回前景時 `iapCheck()` 問 `getPurchases`（iOS `onlyCurrentEntitlements`、Android 只認 `purchaseState "1"` 並補 `acknowledgePurchase`，Play 商店兌換的優惠碼 3 天內沒確認會被退款）；退款不自動鎖回去。
-- 試玩：每個付費遊戲一局。進入點都經過 `paid(m, fn)`（主選單、結果卡「再玩一次」、拔河的開始／再一局／重新開始），第一次記 `UL.trial[m]` 並 toast「免費試玩一次！」；試玩過再點出鎖卡 `#o-lock`（「請大人來看」→ `openGate(openBuy, why, false)`，用簡單的 `a + b × c`）。拔河在按「開始」才算用掉試玩，打開設定卡不算。主選單卡片右上角的牌子 `.m-lock`（`renderLocks()`）：「免費試玩」或鎖頭。
+- 試玩：每個付費遊戲 `TRIALS`（3）局（原本 1 局，玩一次常常還沒搞懂規則）。進入點都經過 `paid(m, fn)`（主選單、結果卡「再玩一次」、拔河的開始／再一局／重新開始），每局開始時 `UL.trial[m]` +1（存的是試玩過幾局；舊版存 1＝用過 1 局）並 toast「免費試玩！還可以再試玩 N 次」，最後一局是「這是最後一次免費試玩！」；`trialLeft(m)` 回剩幾局，用完再點出鎖卡 `#o-lock`（「請大人來看」→ `openGate(openBuy, why, false)`，用簡單的 `a + b × c`）。拔河在按「開始」才算用掉試玩，打開設定卡不算。主選單卡片右上角的牌子 `.m-lock`（`renderLocks()`）：「免費試玩 N 次」或鎖頭。
 - 購買卡 `#o-buy`：商店價格（`getProducts` 的 `priceString`，拿不到就只寫「購買」）、購買、回復購買（iOS 先 `restorePurchases`）、使用優惠碼（iOS `presentOfferCodeRedeemSheet`；Android 沒有 app 內輸入框，顯示「在 Google Play 付款畫面選兌換代碼」）。「支持作者」那句只在這裡。
-- 提醒 `#o-nudge`：流星防衛戰玩完（`meteorRun()`）第 3 局、第 10 局回主選單時各一次（一輩子最多兩次），只列還沒試玩的遊戲，不提購買；剛打開 app 不跳。
+- 提醒 `#o-nudge`：流星防衛戰玩完（`meteorRun()`）第 3 局、第 10 局回主選單時各一次（一輩子最多兩次），只列還有試玩次數的遊戲，不提購買；剛打開 app 不跳。
 - 每日任務：沒解鎖時只抽 `famOK()` 的任務；今天已抽到鎖住遊戲的（例如從網頁版搬來的備份）由 `fixLocked()` 換掉，已完成的不動。
 
 ### 每日任務
