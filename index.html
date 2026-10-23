@@ -3851,7 +3851,7 @@ let nudgeArm = false;
 function meteorRun() { if (!APP || UL.ok) return; UL.runs++; saveUL(); nudgeArm = true; }
 function maybeNudge() {
   if (!nudgeArm || unlocked()) return;
-  const left = PAID.filter(m => trialLeft(m) && !mulOnly(m));
+  const left = PAID.filter(m => !UL.trial[m] && !mulOnly(m));   // 只介紹還沒碰過的遊戲（試玩過的孩子已經知道了）
   if (!left.length || !((UL.nudged === 0 && UL.runs >= 3) || (UL.nudged === 1 && UL.runs >= 10))) return;
   nudgeArm = false;
   setTimeout(() => {
