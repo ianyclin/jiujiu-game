@@ -61,7 +61,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
   https://github.com/ianyclin/jiujiu-game/releases/download/android-latest/jiujiu-meteor.apk
   （GitHub 的 Releases 頁「Android 測試版（最新）」，標成 pre-release；每次換新、網址不變。**任何人都能下載這個測試版**。）
 - **下載（每一次 run、含 PR）**：Actions 頁面點進那次 run，最下面 **Artifacts** 的 `jiujiu-meteor-apk-<編號>`（zip，解開是 APK），保留 30 天，要登入 GitHub。
-- **版本號**：`versionCode` 用 run 編號（`CI_VERSION_CODE`），越新越大；`versionName` 仍是 1.2。
+- **版本號**：`versionCode` 用 run 編號（`CI_VERSION_CODE`），越新越大；`versionName` 是 1.3（iOS 的 MARKETING_VERSION 也是 1.3）。
 - **簽名固定**：`android/app/debug.keystore` 是進版控的**測試用** debug 金鑰（密碼 `android`）。每次建的 APK 簽名相同，手機上可以**直接覆蓋安裝，紀錄保留**。這把金鑰公開無妨，Google Play 不收 debug 簽署的檔案；上架用的 upload key 是另一把，絕不進版控。
   - 2026-10-14 之前我在對話裡傳的那個 APK 是用別的金鑰簽的，換成 CI 建的版本時要先解除安裝一次（**先用設定裡的「備份紀錄」備份**）。
 - **建置後自動檢查**：套件名稱、版本、權限白名單（BILLING、Google 付款程式庫的兩個網路權限、androidx 內部權限；多一個就失敗，少了 BILLING 也失敗）、APK 裡的 `index.html` 與 repo 逐位元相同；任何一項不對就失敗。
@@ -104,5 +104,5 @@ Maven Central 偶爾回 429（瞬間請求太多），重跑即可。
 - 判斷是不是 App：`Capacitor.isNativePlatform()`；`Capacitor.getPlatform()` 分 iOS／Android。
 - 開啟 app、回到前景（還沒解鎖時）都會 `getPurchases` 問商店：iOS 用 `onlyCurrentEntitlements`（目前帳號、含家人共享、不含已退款）；Android 只認 `purchaseState === "1"`，沒確認（acknowledge）的會補確認——在 Play 商店兌換的優惠碼也從這裡進來，**3 天內沒確認 Google 會自動退款**。
 - 退款不會自動鎖回去（怕商店一時查不到就鎖住付過錢的人）。
-- **沒驗證到的事**：沒有真的商店帳號與商品，購買、回復購買、優惠碼都只用假的 Capacitor 物件在瀏覽器測過流程（`getProducts`／`purchaseProduct`／`getPurchases`／`acknowledgePurchase`／`restorePurchases`／`presentOfferCodeRedeemSheet` 的參數與回傳照外掛 8.9.5 的型別定義）。上架前要在 TestFlight（沙盒）與 Play 授權測試帳號實際買一次、刪 app 重裝看會不會自己解鎖、Android 兌換一組促銷代碼。
+- **沒驗證到的事**：沒有真的商店帳號與商品，購買、恢復購買、優惠碼都只用假的 Capacitor 物件在瀏覽器測過流程（`getProducts`／`purchaseProduct`／`getPurchases`／`acknowledgePurchase`／`restorePurchases`／`presentOfferCodeRedeemSheet` 的參數與回傳照外掛 8.9.5 的型別定義）。上架前要在 TestFlight（沙盒）與 Play 授權測試帳號實際買一次、刪 app 重裝看會不會自己解鎖、Android 兌換一組促銷代碼。
 

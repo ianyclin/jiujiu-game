@@ -96,7 +96,7 @@
 **11. 用 TestFlight 自己先玩**
 - 在 iPhone 裝 TestFlight（App Store 搜尋），App Store Connect → TestFlight → 加自己和家人。
 - 在 TestFlight 裡買東西**不會扣錢**，放心按。
-- 試：買一次、刪掉重裝會不會自己解鎖、「回復購買」。
+- 試：買一次、刪掉重裝會不會自己解鎖、「恢復購買」。
 - （家人共享在 TestFlight 測不到，上架後才看得到。）
 
 **12. 填資料、送審**
