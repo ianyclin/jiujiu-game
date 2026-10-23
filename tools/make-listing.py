@@ -43,7 +43,7 @@ w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己�
 | Apple Kids 類別 | 勾選，年齡層 **6–8 ＋ 9–11**（不勾 5 歲以下） |
 | Apple 年齡分級問卷 | 照實填：暴力、使用者產生內容、動態消息、不受限網頁存取、賭博都「無」；問到 App 內購買就照實回答「有」（一次性解鎖）→ 預期 4+ |
 | Google 類別 | 教育（Education）；Families：目標年齡 6–8、9–12 |
-| Google 內容分級（IARC） | 全部「否」；預期全年齡 |
+| Google 內容分級（IARC） | 「數位購買」答「是」（有 `unlock_all` 內購），其他全部「否」；預期全年齡 |
 | 價格 | App 本身**免費**＋一個**非消耗型**內購 `unlock_all`（建議 US$2.99，解鎖幽靈競速、雙人拔河、哪個大、炸彈拆除）；無廣告（Play Console「包含廣告」選「否」）。Apple 要在商品設定打開「家人共享」 |
 | 版權欄（Apple Copyright） | `© 2026 指數三寶飯` |
 
@@ -67,6 +67,7 @@ w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己�
 9×9 Meteor Squad is an offline times-tables practice game for children. It has no accounts, no ads, no analytics or advertising SDKs, and the game itself makes no network requests. All progress is stored on the device only.
 In-app purchase: Meteor Defense, the Star Map, the pet and daily missions are free. The other four games (Ghost Race, Tug of War, Biggest? Smallest?, Bomb Squad) can each be played 3 times for free; after that, tapping one shows a card asking the child to get a grown-up. One non-consumable purchase (unlock_all) unlocks all four. The purchase screen, Restore Purchase and promo code redemption are only reachable after a parental gate (a math question), either from that card or from Settings > For grown-ups > Unlock all games.
 The only links that leave the app are the author's Facebook page and the privacy policy. Both are behind the same parental gate, as required for the Kids Category.
+Stardust (the in-game currency used to feed the pet, buy it treats and trade for badges) is earned only by answering questions and cannot be bought; the only in-app purchase is unlock_all.
 No login is needed. To see the pet and star map screens quickly, tap "Star Map" or "Pet" on the main menu.
 ```
 

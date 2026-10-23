@@ -100,6 +100,7 @@ html:not(.app) .app-only{display:none!important}
 @media (max-height:600px){.card{padding:16px 16px;gap:10px}.menu-in{gap:6px;padding-block:6px 8px}.mode{padding:7px 12px}.modes{gap:6px}.brand-mark{font-size:46px}.brand-sub span{font-size:26px}}
 #s-menu .menu-foot .chip{justify-content:center;padding-inline:6px;font-size:14px;white-space:nowrap;min-height:44px}
 #s-menu .menu-foot .chip b{font-size:14px}
+@media (max-width:360px){#s-menu .menu-foot .chip{flex-wrap:wrap;justify-content:center;row-gap:0;column-gap:5px;padding:5px 6px;font-size:14px;line-height:1.3}}   /* 320 寬：英日文放不下就把數字換到下一行 */
 #s-menu .menu-foot .chip{gap:4px;padding-inline:4px;font-size:13.5px}
 .chip{border:1px solid var(--line);background:rgba(12,24,41,.72);border-radius:999px;padding:10px 16px;min-height:44px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
 .chip b{font-family:var(--f-num);font-weight:400;color:var(--sun);font-size:17px}
@@ -335,7 +336,7 @@ html,body{overscroll-behavior:none}
 .bm-head{--bombw:clamp(84px,22vw,108px);display:flex;align-items:flex-start;gap:10px;width:100%;max-width:420px}
 .bm-rest{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .bm-head .bm-task{text-align:left;padding-top:2px}
-.bomb{width:var(--bombw);height:auto;flex:none;overflow:visible}
+.bomb{width:var(--bombw);height:auto;flex:none;overflow:visible;pointer-events:none}   /* 爆炸後本體放大到看不見，不能擋住「主選單」鈕 */
 .bomb .body{transform-origin:60px 74px}
 .fuseline{display:block;width:100%;height:28px;overflow:visible;margin-top:calc(var(--bombw) * .217 - 14px)}
 .fuseline .ash{fill:none;stroke:rgba(147,169,192,.3);stroke-width:3;stroke-dasharray:2 5;stroke-linecap:round}
@@ -415,7 +416,7 @@ html,body{overscroll-behavior:none}
 .care button.fav{border-color:rgba(255,122,154,.6)}
 .care .favtag{position:absolute;top:-8px;right:-4px;background:#ff7a9a;color:#2a0b18;font-size:11px;font-weight:900;line-height:1;padding:3px 6px;border-radius:9px;white-space:nowrap}
 .care button.locked{opacity:.45}
-.gear .bbuy{width:auto;max-width:100%;flex-direction:row;justify-content:center;min-height:44px;padding:8px 16px;font-weight:900;border-color:rgba(255,210,63,.5);color:var(--sun)}
+.gear .bbuy{display:inline-flex;width:auto;max-width:100%;flex-direction:row;justify-content:center;min-height:44px;padding:8px 16px;font-weight:900;border-color:rgba(255,210,63,.5);color:var(--sun)}
 .gear .bbuy.locked{opacity:.45;color:var(--muted);border-color:var(--line)}
 .gear .bbuy.arm{background:rgba(255,210,63,.16)}
 .flyemo{position:fixed;z-index:8;font-size:34px;line-height:1;pointer-events:none;transition:transform .55s cubic-bezier(.3,.7,.4,1),opacity .55s}
@@ -426,8 +427,8 @@ html,body{overscroll-behavior:none}
 @keyframes petBye{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(.5);opacity:0}}
 .alumni{width:100%;max-width:470px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .alum-list{width:100%;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.alum-list.scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-bottom:4px;-webkit-mask-image:linear-gradient(#000 calc(100% - 26px),transparent);mask-image:linear-gradient(#000 calc(100% - 26px),transparent)}
-.alum-list.scroll.end{-webkit-mask-image:none;mask-image:none}
+.alum-list.scroll{overflow-y:auto;scrollbar-width:thin;padding-bottom:4px;-webkit-mask-image:linear-gradient(#000 calc(100% - 26px),transparent);mask-image:linear-gradient(#000 calc(100% - 26px),transparent)}
+.alum-list.scroll.atend{-webkit-mask-image:none;mask-image:none}
 .alum-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
 .alum{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:76px;min-height:44px;padding:6px 8px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
 .alum svg{width:46px;height:46px;overflow:visible}
@@ -1157,9 +1158,9 @@ const STR = {
     'pet.alumni': '回家的夥伴（點一下去看牠）', 'alum.aria': '去看{name}', 'alum.sub': '{stage}・住在{home}', 'alum.back': '請牠回來', 'alum.swap': '跟{cur}換',
     'alum.swapNote': '{cur}會先回{home}休息，長大的進度都會留著，想牠的時候再換回來。', 'alum.backToast': '{name}回來了！',
     'care.title': '照顧牠（花星塵，愛心會變多）', 'care.fav': '♥最愛', 'care.got': '{name}很開心！愛心 +{n}', 'care.favT': '是{name}最愛的！愛心 +{n}', 'care.lack': '星塵不夠，還差 ★{n}', 'care.pat': '摸摸{name}！愛心 +1（每天第一次）', 'care.patAria': '摸摸{name}',
-    'love.0': '剛認識', 'love.1': '朋友', 'love.2': '好朋友', 'love.3': '很要好', 'love.4': '最好的朋友', 'love.5': '一輩子的好朋友', 'love.up': '{name}更喜歡你了！現在是「{t}」', 'love.aria': '愛心 {n} 顆：{t}',
+    'love.full': '♥', 'love.empty': '♡', 'love.0': '剛認識', 'love.1': '朋友', 'love.2': '好朋友', 'love.3': '很要好', 'love.4': '最好的朋友', 'love.5': '一輩子的好朋友', 'love.up': '{name}更喜歡你了！現在是「{t}」', 'love.aria': '愛心 {n} 顆：{t}',
     'food.cookie': '餅乾', 'food.carrot': '紅蘿蔔', 'food.fish': '小魚', 'food.melon': '西瓜', 'food.cake': '蛋糕', 'food.candy': '星星糖', 'food.ball': '丟球', 'food.dance': '跳舞',
-    'bbuy.go': '用 ★{n} 換 1 個徽章（每天 1 次）', 'bbuy.sure': '確定換？再按一次（★{n}）', 'bbuy.done': '今天換過徽章了，明天再來', 'bbuy.lack': '星塵不夠，還差 ★{n}（每日任務也能拿徽章喔）', 'bbuy.ok': '換到 1 個徽章！現在有 {n} 個',
+    'bbuy.go': '用 ★{n} 換 1 個徽章（每天 1 次）', 'bbuy.sure': '確定換？再按一次（★{n}）', 'bbuy.done': '今天換過徽章了（每天 1 次）', 'bbuy.lack': '星塵不夠，還差 ★{n}（每日任務也能拿徽章喔）', 'bbuy.ok': '換到 1 個徽章！現在有 {n} 個',
     'gear.title': '配件（集到幾個徽章就能戴，每個位置各一樣）', 'gear.badges': '徽章 ×{n}', 'gear.mysteryAria': '神祕配件，徽章 ×{n}', 'gear.on': '戴著', 'gear.q': '？', 'gear.need': '完成每日任務，收集徽章就能戴喔！（還差 {n} 個）', 'pet.legendNeed': '完成每日任務收集 {n} 個徽章，再送一隻寵物回家，就能選牠喔！',
     'name.title': '幫牠取個名字', 'name.aria': '寵物名字', 'name.ok': '就叫這個名字', 'name.back': '換一顆蛋',
     // 星圖
@@ -1214,7 +1215,7 @@ const STR = {
     'help.bomb': '<li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。點對不會點亮星星（要打出答案才算）。</li><li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點，下次玩流星或幽靈時也會再考你一次。</li><li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>',
     'help.map': '<li>每一題<b>打對</b> 3 次以上（×1 的題 1 次就好）、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li><li>紅色一閃一閃的是<b>容易錯</b>的題目，遊戲裡會偷偷更常出現，直到你把它練熟。</li><li>練加減的時候，星圖上面可以切到<b>加減</b>。每一格是加法和它的減法，兩題都熟才會亮。</li>',
     'help.wrong': '<li>答錯過的題目都列在這裡，最常錯的排最前面。</li><li>練熟了它會自己消失；也可以按「清除」把那題的紀錄歸零。</li>',
-    'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、金牌、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>寵物頁下面可以<b>照顧牠</b>：花星塵買點心、陪牠玩，<b>愛心</b>就會變多。每隻都有<b>最愛</b>的點心，愛心加倍。</li><li>點一下寵物就是<b>摸摸牠</b>，每天第一次摸，愛心會多一點點。愛心只會變多，不會變少。</li><li>星塵也可以<b>換徽章</b>：★300 換 1 個，每天只能換 1 次。做每日任務拿徽章還是比較快喔。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
+    'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、金牌、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>寵物頁下面可以<b>照顧牠</b>：用星塵換點心、陪牠玩，<b>愛心</b>就會變多。每隻都有<b>最愛</b>的點心，愛心加倍。</li><li>點一下寵物就是<b>摸摸牠</b>，每天第一次摸，愛心會多一點點。愛心只會變多，不會變少。</li><li>星塵也可以<b>換徽章</b>：★300 換 1 個，每天只能換 1 次。做每日任務拿徽章還是比較快喔。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'help.quest': '<li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li><li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>',
     'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li><li>換新的平板或手機時，請大人在「設定」用<b>備份紀錄</b>把紀錄搬過去。</li>',
     'set.parents': '家長區', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄（要請大人）', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（匯入要請大人）', 'set.backupGo': '打開', 'set.pet': '刪除寵物', 'set.petD': '把現在的寵物或回家的夥伴永遠刪掉（要請大人）', 'set.petGo': '打開',
@@ -1309,10 +1310,10 @@ const STR = {
     'pet.legendAria': 'Legendary egg, still locked', 'pet.unknown': '???', 'pet.needBadges': 'Badges {n}/{m}', 'pet.needBye': 'Send a pet home', 'pet.canPick': 'Ready to pick!', 'pet.soon': 'Coming soon',
     'pet.alumni': 'Back home (tap to visit)', 'alum.aria': 'Visit {name}', 'alum.sub': '{stage} · lives in {home}', 'alum.back': 'Bring it back', 'alum.swap': 'Swap with {cur}',
     'alum.swapNote': '{cur} will rest in {home} and keep its progress. You can swap back anytime.', 'alum.backToast': '{name} is back!',
-    'care.title': 'Take care (spend stardust for hearts)', 'care.fav': '♥Fave', 'care.got': '{name} is happy! Hearts +{n}', 'care.favT': '{name}\'s favorite! Hearts +{n}', 'care.lack': 'Not enough stardust. Need ★{n} more', 'care.pat': 'You petted {name}! Hearts +1 (first time today)', 'care.patAria': 'Pet {name}',
-    'love.0': 'Just met', 'love.1': 'Friends', 'love.2': 'Good friends', 'love.3': 'Close friends', 'love.4': 'Best friends', 'love.5': 'Best friends forever', 'love.up': '{name} likes you even more! Now: "{t}"', 'love.aria': '{n} hearts: {t}',
+    'care.title': 'Pet care (use stardust to add hearts)', 'care.fav': '♥Fav', 'care.got': '{name} is happy! Hearts +{n}', 'care.favT': '{name}\'s favorite! Hearts +{n}', 'care.lack': 'Not enough stardust. Need ★{n} more', 'care.pat': 'You petted {name}! Hearts +1 (first time today)', 'care.patAria': 'Pet {name}',
+    'love.full': '♥', 'love.empty': '♡', 'love.0': 'Just met', 'love.1': 'Friends', 'love.2': 'Good friends', 'love.3': 'Close friends', 'love.4': 'Best friends', 'love.5': 'Best friends forever', 'love.up': '{name} likes you even more! Now: "{t}"', 'love.aria': '{n} hearts: {t}',
     'food.cookie': 'Cookie', 'food.carrot': 'Carrot', 'food.fish': 'Fish', 'food.melon': 'Melon', 'food.cake': 'Cake', 'food.candy': 'Candy', 'food.ball': 'Ball', 'food.dance': 'Dance',
-    'bbuy.go': 'Trade ★{n} for 1 badge (once a day)', 'bbuy.sure': 'Sure? Tap again (★{n})', 'bbuy.done': 'Badge traded today. Come back tomorrow', 'bbuy.lack': 'Not enough stardust. Need ★{n} more (missions give badges too)', 'bbuy.ok': 'Got 1 badge! You have {n} now',
+    'bbuy.go': 'Trade ★{n} for 1 badge (once a day)', 'bbuy.sure': 'Sure? Tap again (★{n})', 'bbuy.done': 'Already traded today (once a day)', 'bbuy.lack': 'Not enough stardust. Need ★{n} more (missions give badges too)', 'bbuy.ok': 'Got 1 badge! You have {n} now',
     'gear.title': 'Outfits (unlock with badges, one per spot)', 'gear.badges': 'Badges ×{n}', 'gear.mysteryAria': 'Mystery item, badges ×{n}', 'gear.on': 'Wearing', 'gear.q': '?', 'gear.need': 'Finish daily missions to collect badges! ({n} more to go)', 'pet.legendNeed': 'Collect {n} badges from daily missions and send a pet home to pick this one!',
     'name.title': 'Name your pet', 'name.aria': 'Pet name', 'name.ok': 'That\'s the name!', 'name.back': 'Pick another egg',
     'st.new': 'Not yet', 'st.learn': 'Learning', 'st.weak': 'Tricky', 'st.star': 'Star!', 'map.reset': 'Erase all records', 'map.cleared': 'Records erased.',
@@ -1455,10 +1456,10 @@ const STR = {
     'pet.legendAria': 'でんせつのたまご、まだえらべない', 'pet.unknown': '？？？', 'pet.needBadges': 'バッジ {n}/{m}', 'pet.needBye': '1ぴき家にかえす', 'pet.canPick': 'えらべるよ', 'pet.soon': 'もうすぐ',
     'pet.alumni': '家に帰ったなかま（タップで会いに行けるよ）', 'alum.aria': '{name}に会いに行く', 'alum.sub': '{stage}・{home}にすんでいる', 'alum.back': 'よびもどす', 'alum.swap': '{cur}とこうたい',
     'alum.swapNote': '{cur}は{home}で休むよ。大きくなったところはそのままで、いつでもまたこうたいできるよ。', 'alum.backToast': '{name}がもどってきた！',
-    'care.title': 'おせわ（星くずをつかうと、ハートがふえるよ）', 'care.fav': '♥大すき', 'care.got': '{name}がよろこんでる！ハート +{n}', 'care.favT': '{name}の大すきなものだ！ハート +{n}', 'care.lack': '星くずがたりないよ。あと ★{n}', 'care.pat': '{name}をなでなで、ハート +1（1日の1回目）', 'care.patAria': '{name}をなでる',
-    'love.0': 'はじめまして', 'love.1': 'ともだち', 'love.2': 'なかよし', 'love.3': '大のなかよし', 'love.4': 'しんゆう', 'love.5': 'ずっとしんゆう', 'love.up': '{name}がもっとすきになってくれた！いまは「{t}」', 'love.aria': 'ハート {n}こ：{t}',
+    'care.title': 'おせわ（星くずをつかうと、ハートがふえるよ）', 'care.fav': '♥大すき', 'care.got': '{name}がよろこんでる！ハート +{n}', 'care.favT': '{name}の大すきなものだ！ハート +{n}', 'care.lack': '星くずがたりないよ。あと ★{n}', 'care.pat': '{name}をなでなで、ハート +1（今日はじめて）', 'care.patAria': '{name}をなでる',
+    'love.full': '♥', 'love.empty': '♡', 'love.0': 'はじめまして', 'love.1': 'ともだち', 'love.2': 'なかよし', 'love.3': '大のなかよし', 'love.4': 'しんゆう', 'love.5': 'ずっとしんゆう', 'love.up': '{name}がもっとすきになってくれた！いまは「{t}」', 'love.aria': 'ハート {n}こ：{t}',
     'food.cookie': 'クッキー', 'food.carrot': 'にんじん', 'food.fish': 'おさかな', 'food.melon': 'すいか', 'food.cake': 'ケーキ', 'food.candy': '星のあめ', 'food.ball': 'ボール', 'food.dance': 'ダンス',
-    'bbuy.go': '★{n}でバッジ1ことこうかん（1日1回）', 'bbuy.sure': 'こうかんする？もう一回おしてね（★{n}）', 'bbuy.done': '今日はもうこうかんしたよ。また明日ね', 'bbuy.lack': '星くずがたりないよ。あと ★{n}（ミッションでもバッジがもらえるよ）', 'bbuy.ok': 'バッジを1こもらった！いまは{n}こ',
+    'bbuy.go': '★{n}をバッジ1こにこうかん（1日1回）', 'bbuy.sure': 'こうかんする？もう一回おしてね（★{n}）', 'bbuy.done': '今日はもうこうかんしたよ（1日1回）', 'bbuy.lack': '星くずがたりないよ。あと ★{n}（ミッションでもバッジがもらえるよ）', 'bbuy.ok': 'バッジを1こもらった！いまは{n}こ',
     'gear.title': 'きせかえ（バッジが集まるとつけられる、1か所に1つずつ）', 'gear.badges': 'バッジ ×{n}', 'gear.mysteryAria': 'なぞのアイテム、バッジ ×{n}', 'gear.on': 'つけてる', 'gear.q': '？', 'gear.need': '毎日のミッションをクリアして、バッジを集めよう！（あと{n}こ）', 'pet.legendNeed': '毎日のミッションでバッジを{n}こ集めて、ペットを1ぴき家にかえすと、えらべるよ！',
     'name.title': '名前をつけてね', 'name.aria': 'ペットの名前', 'name.ok': 'この名前にする', 'name.back': 'ほかのたまごにする',
     'st.new': 'まだ', 'st.learn': 'れんしゅう', 'st.weak': 'にがて', 'st.star': '星', 'map.reset': '記ろくをぜんぶけす', 'map.cleared': '記ろくをけしたよ。',
@@ -1507,12 +1508,12 @@ const STR = {
     'help.bomb': '<li>ばくだんに「<b>7</b>」と書いてあったら、7のだんの答え（7、14、21…）をタップしよう。ぜんぶあるとはかぎらないから、あるものだけタップ。下に「みつけた 0 / 5」と出るよ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>ちがう数をタップすると<b>ばくはつ</b>！どうか線がもえつきても、ばくはつするよ。27や57みたいな、にている数に気をつけて！まちがえた数や見つけられなかった数は少し多めに出て、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回に5こ。<b>5こぜんぶかいじょ</b>したときだけタイムをくらべるよ。</li>',
     'help.map': '<li>1つの問題を3回以上<b>打って正かい</b>（×1の問題は1回でOK）して、速くてまちがえないと、<b>星になって光る</b>よ。マスをタップすると、その問題の記ろくが見られるよ。</li><li>赤くピカピカしているのは<b>にがて</b>な問題。できるようになるまで、ゲームでこっそり多めに出るよ。</li><li>たし算・ひき算を練習しているときは、星マップの上で<b>たし・ひき</b>にきりかえられるよ。1つのマスはたし算とそのひき算で、どちらもできると光るよ。</li>',
     'help.wrong': '<li>まちがえた問題がここにならぶよ。いちばんまちがえた問題が上。</li><li>できるようになると、かってにきえるよ。「けす」をおしてリセットもできるよ。</li>',
-    'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおしてね。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、きんメダル、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>ペットのページの下で<b>おせわ</b>ができるよ。星くずでおやつを買ったり、いっしょにあそんだりすると<b>ハート</b>がふえるよ。それぞれ<b>大すき</b>なおやつがあって、ハートが2ばいになるよ。</li><li>ペットをタップすると<b>なでなで</b>。1日の1回目は、ハートが少しふえるよ。ハートはふえるだけで、へらないよ。</li><li>星くずで<b>バッジとこうかん</b>もできるよ：★300でバッジ1こ、1日1回だけ。毎日のミッションのほうが早いよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
+    'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおしてね。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、きんメダル、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>ペットのページの下で<b>おせわ</b>ができるよ。星くずでおやつをあげたり、いっしょにあそんだりすると<b>ハート</b>がふえるよ。それぞれ<b>大すき</b>なおやつがあって、ハートが2ばいになるよ。</li><li>ペットをタップすると<b>なでなで</b>。1日の1回目は、ハートが少しふえるよ。ハートはふえるだけで、へらないよ。</li><li>星くずで<b>バッジとこうかん</b>もできるよ：★300でバッジ1こ、1日1回だけ。毎日のミッションのほうが早いよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
     'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
     'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li><li>新しいタブレットやスマホにかえるときは、大人の人に「せってい」の<b>きろくのバックアップ</b>でうつしてもらおう。</li>',
     'set.parents': 'おうちの人むけ', 'set.del': 'プレイヤーをけす', 'set.delD': '「{name}」の名前と記ろくをぜんぶけす（大人の人にきいてね）', 'set.delGo': 'けす', 'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（読みこみは大人の人にきいてね）', 'set.backupGo': 'ひらく', 'set.pet': 'ペットをけす', 'set.petD': '今のペットや家に帰ったなかまを、ずっとけす（大人の人にきいてね）', 'set.petGo': 'ひらく',
     'pdel.title': 'ペットをけす', 'pdel.p': 'けしたペットはもどってこないよ。星くずときせかえはのこるよ。', 'pdel.cur': '{stage}・今のなかま', 'pdel.go': 'けす', 'pdel.aria': '{name}をけす', 'pdel.why': '「{name}」を完全に消去します。大人の方がこの問題に答えてください。', 'pdel.done': '「{name}」をけしたよ',
-    'lock.trialN': 'おためし あと{n}回', 'lock.locked': 'おためしはおしまい', 'lock.title': '{name}のおためしはおしまい！', 'lock.p': 'おためしはおしまい。{m}、星マップ、ペットは、いつでもあそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった',
+    'lock.trialN': 'おためし{n}回', 'lock.locked': 'おためしはおしまい', 'lock.title': '{name}のおためしはおしまい！', 'lock.p': 'おためしはおしまい。{m}、星マップ、ペットは、いつでもあそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった',
     'trial.start': 'おためし！あと{n}回ためせるよ', 'trial.last': 'おためし！', 'nudge.title': 'ほかのゲームもあるよ！', 'nudge.p': '{games}は、ただでためせるよ。メニューでえらんでみてね！',
     'gate.buy': '購入やコードの入力には、大人の方がこの問題に答えてください。', 'buy.title': 'すべてのゲームを解除',
     'buy.list': '<li>{g}の4つのゲームが、いつでも遊べるようになります。</li><li><b>1回の購入でずっと使えます</b>：サブスクリプションではなく、広告もほかの課金もありません。</li><li>この端末のすべてのプレイヤーが遊べます。</li>',
@@ -3254,13 +3255,14 @@ function renderPet() {
   $('#pet-stage').innerHTML = petSVG(P_.kind, st, wearObj());
   $('#pet-stage').className = 'pet-stage' + (st === 0 && P_.dust >= FEED ? ' wobble' : '');
   $('#pet-name').innerHTML = `${esc(petName())}<small>${tx('stage.' + st)}</small>`;
-  renderLove(); renderCare(); $('#pet-stage').setAttribute('aria-label', tx('care.patAria', { name: petName() })); $('#pet-stage').setAttribute('role', 'button');
+  renderLove(); renderCare(); $('#pet-stage').setAttribute('aria-label', tx('care.patAria', { name: petName() })); $('#pet-stage').setAttribute('role', 'button'); $('#pet-stage').tabIndex = 0; $('#pet-love').setAttribute('role', 'img');
   if (next) { const from = PET_STAGES[st].at; $('#pet-bar').style.width = Math.round(clamp((P_.fed - from) / (next.at - from), 0, 1) * 100) + '%'; }
   else $('#pet-bar').style.width = '100%';
-  $('#pet-barwrap').hidden = !next; $('#pet-feed').hidden = !next;
+  const lock = !next && now() < byeLock, bw = $('#pet-barwrap'); bw.hidden = !next && !lock; bw.style.visibility = lock ? 'hidden' : '';   // 剛餵到究極的 1.5 秒：進度條先佔位，下面的照顧鈕才不會移上來被連點點到
+  $('#pet-feed').hidden = !next;
   $('#pet-feed').disabled = P_.dust < FEED;
   $('#pet-feed').textContent = P_.dust < FEED ? tx('pet.feedLack', { n: FEED, d: FEED - P_.dust }) : tx('pet.feed', { n: FEED });
-  const bye = $('#pet-bye'); bye.hidden = !!next || now() < byeLock;   // 究極才能放回家；剛餵到究極先藏 1.5 秒（餵食鈕原本在同一個位置，連點會點到）
+  const bye = $('#pet-bye'); bye.hidden = !!next; bye.style.visibility = !next && now() < byeLock ? 'hidden' : '';   // 究極才能放回家；剛餵到究極先藏 1.5 秒（餵食鈕原本在同一個位置，連點會點到）
   if (!next) bye.textContent = tx('pet.bye', { name: petName(), home: tx('home.' + P_.kind) });
   renderGear(); renderAlumni();
 }
@@ -3290,11 +3292,11 @@ function renderAlumni() {
 // 回家的夥伴超過兩行：只露出兩行（第三行露一點點，看得出下面還有），裡面上下滑
 function alumFit() {
   const L = $('#pet-alumni .alum-list'); if (!L || $('#pet-alumni').hidden) return;
-  L.classList.remove('scroll', 'end'); L.style.maxHeight = '';
+  L.classList.remove('scroll', 'atend'); L.style.maxHeight = '';
   const tops = [...new Set([...L.children].map(b => b.offsetTop))].sort((a, b) => a - b);
   if (tops.length > 2) { L.style.maxHeight = (tops[2] - tops[0] + 22) + 'px'; L.classList.add('scroll'); L.scrollTop = 0; }
 }
-$('#pet-alumni').addEventListener('scroll', e => { const L = e.target; if (L.classList && L.classList.contains('alum-list')) L.classList.toggle('end', L.scrollTop + L.clientHeight >= L.scrollHeight - 2); }, true);
+$('#pet-alumni').addEventListener('scroll', e => { const L = e.target; if (L.classList && L.classList.contains('alum-list')) L.classList.toggle('atend', L.scrollTop + L.clientHeight >= L.scrollHeight - 2); }, true);
 let alumIdx = -1;
 function openAlum(i) {
   const r = (DB.pet.released || [])[i]; if (byeing || !r || !PET_KINDS[r.kind]) return;
@@ -3387,11 +3389,11 @@ const FAV = { cute: 'carrot', cool: 'fish', funny: 'melon', legend: 'candy' };  
 const LOVE = [0, 10, 30, 60, 100, 160];   // 愛心 0～5 顆的門檻（只顯示顆數與稱號，不寫「還差多少」）
 const loveLv = v => LOVE.reduce((l, at, i) => v >= at ? i : l, 0);
 const BADGE_COST = 300;   // 星塵換徽章：每天 1 個、要 ★300（大約 3、4 局流星），每日任務仍是最快拿徽章的方法
-let bbArm = -1e9;   // 換徽章第一下的時間（performance.now 從 0 起算，初值不能是 0）
+let bbArm = -1e9, bbLast = -1e9;   // 換徽章第一下的時間（performance.now 從 0 起算，初值不能是 0）
 function renderLove() {
   const lv = loveLv(DB.pet.love || 0), t = tx('love.' + lv);
   const v = DB.pet.love || 0, pc = lv >= 5 ? 100 : Math.round((v - LOVE[lv]) / (LOVE[lv + 1] - LOVE[lv]) * 100);   // 下一顆愛心的小進度條（不寫數字）
-  $('#pet-love').innerHTML = `<i aria-hidden="true">${'♥'.repeat(lv)}${'♡'.repeat(5 - lv)}</i><span>${t}</span>${lv < 5 ? `<b class="lbar" aria-hidden="true"><i style="width:${pc}%"></i></b>` : ''}`;
+  $('#pet-love').innerHTML = `<i aria-hidden="true">${tx('love.full').repeat(lv)}${tx('love.empty').repeat(5 - lv)}</i><span>${t}</span>${lv < 5 ? `<b class="lbar" aria-hidden="true"><i style="width:${pc}%"></i></b>` : ''}`;
   $('#pet-love').setAttribute('aria-label', tx('love.aria', { n: lv, t }));
 }
 function renderCare() {
@@ -3404,12 +3406,13 @@ function loveUp(before) {
   setTimeout(() => { if (mode !== 'pet') return; toast(tx('love.up', { name: petName(), t: tx('love.' + lv) })); confetti(30 + lv * 12); SFX.milestone(Math.min(4, lv)); }, 900);
 }
 function petAnim(anim) { const st = $('#pet-stage'); st.classList.remove('pop', 'jump', 'dance', 'wobble'); void st.offsetWidth; st.classList.add(anim); }
-function careFx(b, x, msg) {
+let careLast = -1e9;
+function careFx(br, x, msg) {
   const st = $('#pet-stage'), r = st.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * 0.45;
   const go = () => { if (mode !== 'pet' || byeing) return; petAnim(x.anim || 'pop'); spark(cx, cy, 18, ['#ff7a9a', '#ffd23f', '#ffffff'], 180, 3, 0.7, 40); toast(msg); };
   SFX.ding();
-  if (RM || !b) return go();
-  const br = b.getBoundingClientRect(), f = document.createElement('span');   // 點心從按鈕飛到寵物嘴邊
+  if (RM || !br || !br.width) return go();
+  const f = document.createElement('span');   // 點心從按鈕飛到寵物嘴邊
   f.className = 'flyemo'; f.textContent = x.e; f.style.left = (br.left + br.width / 2 - 17) + 'px'; f.style.top = br.top + 'px'; document.body.appendChild(f);
   requestAnimationFrame(() => { f.style.transform = `translate(${cx - br.left - br.width / 2}px,${cy - br.top}px) scale(.6)`; f.style.opacity = '.2'; });
   setTimeout(() => { f.remove(); go(); }, 560);
@@ -3418,9 +3421,10 @@ $('#pet-care').addEventListener('click', e => {
   const b = e.target.closest('[data-care]'), P_ = DB.pet; if (!b || byeing || !PET_KINDS[P_.kind]) return;
   const x = FOODS.concat(PLAYS).find(x => x.id === b.dataset.care); if (!x) return;
   if (P_.dust < x.cost) { toast(tx('care.lack', { n: x.cost - P_.dust })); return; }
-  const fav = FAV[P_.kind] === x.id, gain = x.love * (fav ? 2 : 1), before = loveLv(P_.love || 0);
+  const t = now(); if (t < byeLock || t - careLast < 600) return; careLast = t;   // 剛餵到究極（鈕會移位）、連點：不理
+  const fav = FAV[P_.kind] === x.id, gain = x.love * (fav ? 2 : 1), before = loveLv(P_.love || 0), br = b.getBoundingClientRect();   // 位置要在重畫前量，不然按鈕已經不在 DOM 裡
   P_.dust -= x.cost; P_.love = (P_.love || 0) + gain; save(); renderPet();
-  careFx(b, x, tx(fav ? 'care.favT' : 'care.got', { name: petName(), n: gain })); loveUp(before);
+  careFx(br, x, tx(fav ? 'care.favT' : 'care.got', { name: petName(), n: gain })); loveUp(before);
 });
 // 點寵物＝摸摸：每天第一次 +1 愛心（免費），之後只是開心地動一下
 $('#pet-stage').addEventListener('click', () => {
@@ -3432,12 +3436,10 @@ $('#pet-stage').addEventListener('click', () => {
 });
 // 星塵換徽章：每天 1 次；第一下變成「再按一次」，0.6～3 秒內再按才換（孩子連點不會一次花掉 300）
 $('#pet-gear').addEventListener('click', e => {
-  if (!e.target.closest('#badge-buy')) return;
-  const P_ = DB.pet;
+  if (byeing || !e.target.closest('#badge-buy')) return;
+  const P_ = DB.pet, t = now(), gap = t - bbLast; bbLast = t; if (gap < 600) return;   // 狂點：每一下都不理，直到停下來
   if (P_.badgeDay === today()) { toast(tx('bbuy.done')); return; }
   if (P_.dust < BADGE_COST) { toast(tx('bbuy.lack', { n: BADGE_COST - P_.dust })); return; }
-  const t = now();
-  if (t - bbArm < 600) return;
   if (t - bbArm >= 3000) { bbArm = t; renderGear(); setTimeout(() => { if (mode === 'pet' && now() - bbArm >= 2900) renderGear(); }, 3000); return; }
   bbArm = -1e9; P_.dust -= BADGE_COST; P_.badgeDay = today(); const D = DB.daily; D.badges++; save();
   renderPet(); confetti(40); SFX.milestone(2); toast(tx('bbuy.ok', { n: D.badges }));
