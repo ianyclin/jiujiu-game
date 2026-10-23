@@ -425,6 +425,9 @@ html,body{overscroll-behavior:none}
 @keyframes petDance{20%{transform:rotate(-10deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(8deg)}}
 @keyframes petBye{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(.5);opacity:0}}
 .alumni{width:100%;max-width:470px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.alum-list{width:100%;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.alum-list.scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-bottom:4px;-webkit-mask-image:linear-gradient(#000 calc(100% - 26px),transparent);mask-image:linear-gradient(#000 calc(100% - 26px),transparent)}
+.alum-list.scroll.end{-webkit-mask-image:none;mask-image:none}
 .alum-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
 .alum{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:76px;min-height:44px;padding:6px 8px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--paper);font-weight:700;font-size:13px;cursor:pointer}
 .alum svg{width:46px;height:46px;overflow:visible}
@@ -2016,8 +2019,8 @@ function drawWorld(gy, dt) {
   let moonY = 112, moonX = W - 44;
   if (mode === 'menu') { const br = $('#s-menu .brand').getBoundingClientRect(); moonY = br.height ? br.top + Math.min(26, br.height * 0.28) : 112 + safeTop(); }
   else if (menuMoon) {
-    const hd = $(mode === 'map' ? '#s-map .map-head' : '#s-pet .map-head'); const hr = hd ? hd.getBoundingClientRect() : null;
-    if (hr && hr.height) { if (hr.top - safeTop() > 70) moonY = hr.top - 40; else { const bl = hd.querySelector('button').getBoundingClientRect(), rg = document.createRange(); rg.selectNodeContents(hd.querySelector('h2')); const h2 = rg.getBoundingClientRect(); moonY = hr.top + hr.height / 2; moonX = (bl.right + h2.left) / 2; if (h2.left - bl.right < 100) moonY = -200; } }   // 量標題「文字」的左邊不量 h2 的盒子（盒子在某些瀏覽器會撐滿）；矮螢幕：放在「主選單」鈕與標題之間，不壓到下面的格子；星塵位數多到塞不下就不畫
+    const sc = $(mode === 'map' ? '#s-map' : '#s-pet'), hd = sc.querySelector('.map-head'); const hr = hd ? hd.getBoundingClientRect() : null;
+    if (hr && hr.height) { if (hr.top + sc.scrollTop - safeTop() > 70) moonY = hr.top - 40; else { const bl = hd.querySelector('button').getBoundingClientRect(), rg = document.createRange(); rg.selectNodeContents(hd.querySelector('h2')); const h2 = rg.getBoundingClientRect(); moonY = hr.top + hr.height / 2; moonX = (bl.right + h2.left) / 2; if (h2.left - bl.right < 100) moonY = -200; } }   // 量標題「文字」的左邊不量 h2 的盒子（盒子在某些瀏覽器會撐滿）；矮螢幕：放在「主選單」鈕與標題之間，不壓到下面的格子；星塵位數多到塞不下就不畫
     else moonY = 112 + safeTop();
   }
   const mx = menuMoon ? moonX : W - 30, my = menuMoon ? moonY : safeTop() + 112, mr = menuMoon ? 16 : 18, mgr = menuMoon ? 64 : 72;   // 遊戲中：右上角、計時膠囊與 HUD 下面一點，小一號不擋題目
@@ -3214,12 +3217,12 @@ const PET_HEAD = {   // [hx, hy, hr, top, ny]：ny 是下巴（脖子）的高�
   legend: [[59.8, 94, 18.6, 71.1, 100], [59.8, 97, 17.2, 72.6, 105], [48, 84, 13.5, 58.8, 94], [60, 66.7, 15.1, 30.3, 80], [59.8, 61.1, 15.2, 20.7, 74]],
 };
 // 臉：眼睛中心 ex,ey、兩眼外緣的距離 ew（眼鏡）、帽子底緣 hb 與寬 hw（帽子）。頭圓推算的位置在青蛙（眼睛凸在頭頂、本來就戴帽子）、小龍、星狐上不準，
-// 所以量過的直接寫在 PET_FACE（null 用頭圓推算：蛋和毛毛的頭圓就是臉）。量法同 ny：寵物圖放大加 120 單位格線，目測眼睛與額頭
+// 所以量過的直接寫在 PET_FACE（null 用頭圓推算，只剩蛋；毛毛原本也用推算，幼體、究極的眼鏡偏高，2026-10 改成量過的值）。量法同 ny：寵物圖放大加 120 單位格線，目測眼睛與額頭
 const faceOf = (hx, hy, hr) => ({ ex: hx, ey: hy - hr * 0.22, ew: hr * 1.35, hb: hy - hr * 0.338, hw: hr * 1.59 });
 const PET_FACE = {
-  funny: [null, { ex: 60, ey: 86, ew: 34, hb: 84, hw: 24 }, { ex: 60, ey: 70, ew: 47, hb: 67, hw: 34 }, { ex: 60.5, ey: 57, ew: 57, hb: 49, hw: 40 }, { ex: 59.5, ey: 55, ew: 62, hb: 45, hw: 48 }],
-  cool: [null, { ex: 59, ey: 87.5, ew: 20, hb: 81, hw: 24 }, { ex: 56, ey: 73.5, ew: 25, hb: 67, hw: 30 }, { ex: 54, ey: 54, ew: 30, hb: 47, hw: 34 }, { ex: 57, ey: 46, ew: 28, hb: 40, hw: 34 }],
-  cute: [null, null, null, null, null],
+  funny: [null, { ex: 60, ey: 86, ew: 34, hb: 84, hw: 24 }, { ex: 60, ey: 71, ew: 47, hb: 67, hw: 34 }, { ex: 61, ey: 58.5, ew: 57, hb: 49, hw: 40 }, { ex: 58.5, ey: 54.5, ew: 62, hb: 45, hw: 48 }],
+  cool: [null, { ex: 59.5, ey: 88.5, ew: 21.5, hb: 81, hw: 24 }, { ex: 56, ey: 74, ew: 25, hb: 67, hw: 30 }, { ex: 56.7, ey: 57.5, ew: 26.5, hb: 48, hw: 34 }, { ex: 57.5, ey: 45, ew: 29, hb: 40, hw: 34 }],
+  cute: [null, { ex: 60, ey: 96.3, ew: 26.5, hb: 90.5, hw: 24.5 }, { ex: 59.7, ey: 85.6, ew: 35.5, hb: 79.5, hw: 43 }, { ex: 59.5, ey: 76.8, ew: 41, hb: 69.5, hw: 51 }, { ex: 59.8, ey: 70.7, ew: 47, hb: 62, hw: 56 }],
   legend: [null, { ex: 56, ey: 98, ew: 21, hb: 89, hw: 30 }, { ex: 47, ey: 87, ew: 22, hb: 76, hw: 28 }, { ex: 60, ey: 71, ew: 24, hb: 60, hw: 30 }, { ex: 60, ey: 63, ew: 21.4, hb: 52, hw: 28 }],
 };
 function petSVG(kind, st, wear = null) {   // wear：{ head, face, neck, side } 或 null（不戴）
@@ -3281,8 +3284,17 @@ function renderAlumni() {
   el.hidden = !R.length;
   const cur = PET_KINDS[DB.pet.kind] && !$('#pet-show').hidden;   // 養著寵物時放在餵食鈕下面、配件上面（放最下面要捲過整片配件才看得到，孩子找不到）；挑蛋時放在蛋下面
   if (cur) $('#pet-gear').before(el); else $('#pet-show').after(el);
-  if (R.length) el.innerHTML = `<div class="alum-t">${tx('pet.alumni')}</div>` + R.map(({ r, i }) => `<button type="button" class="alum" data-i="${i}" aria-label="${esc(tx('alum.aria', { name: alumName(r) }))}">${petSVG(r.kind, petStage(alumFed(r)))}<span>${esc(alumName(r))}</span><small>${tx('home.' + r.kind)}</small></button>`).join('');
+  if (R.length) el.innerHTML = `<div class="alum-t">${tx('pet.alumni')}</div><div class="alum-list">` + R.map(({ r, i }) => `<button type="button" class="alum" data-i="${i}" aria-label="${esc(tx('alum.aria', { name: alumName(r) }))}">${petSVG(r.kind, petStage(alumFed(r)))}<span>${esc(alumName(r))}</span><small>${tx('home.' + r.kind)}</small></button>`).join('') + '</div>';
+  alumFit();
 }
+// 回家的夥伴超過兩行：只露出兩行（第三行露一點點，看得出下面還有），裡面上下滑
+function alumFit() {
+  const L = $('#pet-alumni .alum-list'); if (!L || $('#pet-alumni').hidden) return;
+  L.classList.remove('scroll', 'end'); L.style.maxHeight = '';
+  const tops = [...new Set([...L.children].map(b => b.offsetTop))].sort((a, b) => a - b);
+  if (tops.length > 2) { L.style.maxHeight = (tops[2] - tops[0] + 22) + 'px'; L.classList.add('scroll'); L.scrollTop = 0; }
+}
+$('#pet-alumni').addEventListener('scroll', e => { const L = e.target; if (L.classList && L.classList.contains('alum-list')) L.classList.toggle('end', L.scrollTop + L.clientHeight >= L.scrollHeight - 2); }, true);
 let alumIdx = -1;
 function openAlum(i) {
   const r = (DB.pet.released || [])[i]; if (byeing || !r || !PET_KINDS[r.kind]) return;
@@ -3467,6 +3479,13 @@ function addStars() { let n = 0; for (let a = 2; a <= 9; a++) for (let b = 2; b 
 // 主選單的星星數、「點亮星星」任務跟著「要練什麼」：加減算加減星圖的格數、都練兩邊相加
 function starsNow() { return DB.set.what === 'add' ? addStars() : DB.set.what === 'both' ? starCount() + addStars() : starCount(); }
 function starsMax() { return DB.set.what === 'add' ? 64 : DB.set.what === 'both' ? MUL.length + 64 : MUL.length; }
+// 星圖固定從同一個高度開始（不照整頁內容置中）：切換乘法／加減、點格子換說明時，格子和月亮都不跳
+function placeMap() {
+  const sc = $('#s-map'), mi = sc.querySelector('.map-in'), note = $('#map-note'); if (sc.hidden) return;
+  mi.style.marginTop = '0px';
+  const g = $('#grid99'), h = mi.offsetHeight - $('#map-info').offsetHeight - (note.hidden ? 0 : note.offsetHeight + 10) - g.offsetHeight + g.offsetWidth + 150;   // 說明框當成固定 150 高、格子當成正方形（說明那行上邊距 −4，所以只多 10）；加減多的那行說明在格子下面，不算
+  mi.style.marginTop = Math.max(0, Math.round((sc.clientHeight - h) / 2)) + 'px';
+}
 function openMap() { mapTab = DB.set.what === 'add' ? 'add' : 'mul'; show('map'); renderMap(); resetArm = 0; $('#map-reset').textContent = tx('map.reset'); }
 function renderMap() {
   const tabs = hasAdd(), box = $('#map-tabs'); if (!tabs) mapTab = 'mul';
@@ -3482,7 +3501,7 @@ function renderMap() {
     for (let a = 2; a <= 9; a++) { h += `<div class="h">${a}</div>`; for (let b = 2; b <= 9; b++) h += `<button type="button" class="cell ${addState(a, b)}" data-a="${a}" data-b="${b}" aria-label="${tx('plusAria', { a, b })}">${a + b}</button>`; }
     grid.innerHTML = h; grid.className = 'grid99'; grid.style.gridTemplateColumns = 'repeat(9,minmax(0,1fr))';
     $('#map-count').textContent = `${addStars()}/64`;
-    mapInfoDefault(); return;
+    mapInfoDefault(); placeMap(); return;
   }
   let h = '<div class="h">×</div>';
   for (let b = 1; b <= cols(); b++) h += `<div class="h">${b}</div>`;
@@ -3493,7 +3512,7 @@ function renderMap() {
   }
   grid.innerHTML = h; grid.className = 'grid99' + (cols() > 9 ? ' wide' : ''); grid.style.gridTemplateColumns = `repeat(${cols() + 1},minmax(0,1fr))`;
   $('#map-count').textContent = `${starCount()}/${MUL.length}`;
-  mapInfoDefault();
+  mapInfoDefault(); placeMap();
 }
 $('#map-tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.dataset.tab === mapTab) return; mapTab = b.dataset.tab; renderMap(); SFX.ding(); });
 function mapInfoDefault() {
@@ -4224,7 +4243,7 @@ document.addEventListener('visibilitychange', () => {
   if (actx) { try { document.hidden ? actx.suspend() : actx.resume(); } catch (e) {} }
 });
 addEventListener('resize', resize);
-addEventListener('resize', () => { if (mode === 'menu') placeMenuPet(); });
+addEventListener('resize', () => { if (mode === 'menu') placeMenuPet(); if (mode === 'map') placeMap(); if (mode === 'pet') alumFit(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (mode === 'menu') placeMenuPet(); });   // 字型換好後鈕的寬度會變
 document.addEventListener('gesturestart', e => { if (mode === 'versus') e.preventDefault(); });   // iOS Safari 不理 user-scalable=no，拔河時擋掉雙指縮放
 const rotMQ = matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse)');
