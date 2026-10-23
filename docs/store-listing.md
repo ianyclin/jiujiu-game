@@ -18,7 +18,7 @@
 | 關鍵字（Apple Keywords） | 49／100 | 九九乘法,乘法表,背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,遊戲 |
 | 新功能（What's New） | 53／4000 | 1.3：熟練度改看「想出答案要多久」，手慢的孩子也公平；流星防衛戰免費，另外四種玩法可試玩後一次購買解鎖。 |
 
-**完整說明**（860／4000）
+**完整說明**（878／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
@@ -33,7 +33,7 @@
 【越玩越熟】
 ● 答錯的題目會悄悄更常出現，隔一陣子再考一次。孩子只覺得在玩遊戲。
 ● 星圖：每一題都有一顆星，答得又快又對就亮起來，一眼看出哪裡還不熟。
-● 每日任務、徽章、養寵物：用答對的題目換星塵餵寵物（毛毛、小龍、呱呱，還有一顆傳說蛋），再換上配件。
+● 每日任務、徽章、養寵物：用答對的題目換星塵餵寵物（毛毛、小龍、呱呱，還有一顆傳說蛋），再換上配件。買點心、陪牠玩，牠的愛心會越來越多。
 ● 沒有「寵物餓了」，也不會倒扣，不逼孩子。
 
 【給家長】
@@ -61,7 +61,7 @@
 | 關鍵字（Apple Keywords） | 98／100 | multiplication,multiply,math,kids,practice,grade 2,grade 3,learn,facts,school,education,drill,game |
 | 新功能（What's New） | 195／4000 | 1.3: Fluency now measures how long it takes to think of the answer, so slower typists aren't held back. Meteor Defense is free; the other four games can be tried, then unlocked with one purchase. |
 
-**完整說明**（2588／4000）
+**完整說明**（2640／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
@@ -76,7 +76,7 @@ FIVE GAMES (Meteor Defense is free; try each of the other four 3 times for free)
 THE MORE THEY PLAY, THE BETTER THEY KNOW IT
 ● Facts a child misses quietly show up more often, and come back for another try a little later. To the child, it just feels like playing.
 ● Star Map: every fact has a star. It lights up when the answer is fast and right, so you can see at a glance what still needs work.
-● Daily missions, badges and a pet to raise: answers earn stardust to feed the pet (Fuzzy, Draki or Croaky, plus a legendary egg, Nova) and unlock outfits.
+● Daily missions, badges and a pet to raise: answers earn stardust to feed the pet (Fuzzy, Draki or Croaky, plus a legendary egg, Nova) and unlock outfits. Buy treats and play together to fill up its hearts.
 ● No "your pet is hungry" and no penalties. Nothing pressures the child.
 
 FOR PARENTS
@@ -104,7 +104,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 | 關鍵字（Apple Keywords） | 41／100 | かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,ゲーム,学習,知育,計算 |
 | 新功能（What's New） | 73／4000 | 1.3：じゅくれん度を「答えを思いつくまでの時間」で見るようにしました。流星ディフェンスは無料、ほかの4つはお試しのあと1回の購入で解除できます。 |
 
-**完整說明**（1292／4000）
+**完整說明**（1323／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
@@ -119,7 +119,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 【遊ぶほど身につく】
 ● まちがえた問題は、こっそりよく出るようになり、少しあとでもう一度出ます。子どもには、ただ遊んでいるように感じられます。
 ● 星マップ：すべての問題に星が1つ。はやく正しく答えられると光るので、どこが苦手か一目でわかります。
-● 毎日のミッション、バッジ、ペット育成：正解すると星くずが貯まり、ペット（モフモフ、リュウ、ケロケロ、そして伝説のたまご ホシギツネ）にあげたり、きせかえを楽しんだりできます。
+● 毎日のミッション、バッジ、ペット育成：正解すると星くずが貯まり、ペット（モフモフ、リュウ、ケロケロ、そして伝説のたまご ホシギツネ）にあげたり、きせかえを楽しんだりできます。おやつをあげたり一緒に遊んだりすると、ハートがふえていきます。
 ● 「おなかがすいた」も、ペナルティもありません。子どもをせかしません。
 
 【保護者の方へ】
