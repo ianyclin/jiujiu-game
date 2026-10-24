@@ -97,7 +97,7 @@ html:not(.app) .app-only{display:none!important}
 .menu-in{padding-block:12px 14px}   /* 安全區由 :root 的 padding 處理，這裡不再加 */
 @media (max-height:960px){.menu-in{gap:clamp(8px,1.5vh,16px)}.mode{padding:10px 14px;row-gap:1px}.m-d{font-size:13px;line-height:1.35}.brand-mark{font-size:clamp(58px,15vw,96px)}.brand-sub small{margin-top:6px}}
 @media (max-height:740px){.m-d{display:none}.mode{padding:9px 14px;border-radius:18px}.mode svg{width:44px;height:44px;grid-row:auto}.brand-mark{font-size:clamp(52px,13vw,80px)}}
-@media (max-height:600px){.card{padding:16px 16px;gap:10px}.menu-in{gap:6px;padding-block:6px 8px}.mode{padding:7px 12px}.modes{gap:6px}.brand-mark{font-size:46px}.brand-sub span{font-size:26px}}
+@media (max-height:600px){.m-tag{top:-8px;font-size:11px;line-height:14px;padding:0 7px}.card{padding:16px 16px;gap:10px}.menu-in{gap:6px;padding-block:6px 8px}.mode{padding:7px 12px}.modes{gap:6px}.brand-mark{font-size:46px}.brand-sub span{font-size:26px}}
 #s-menu .menu-foot .chip{justify-content:center;padding-inline:6px;font-size:14px;white-space:nowrap;min-height:44px}
 #s-menu .menu-foot .chip b{font-size:14px}
 @media (max-width:360px){#s-menu .menu-foot .chip{flex-wrap:wrap;justify-content:center;row-gap:0;column-gap:5px;padding:5px 6px;font-size:14px;line-height:1.3}}   /* 320 寬：英日文放不下就把數字換到下一行 */
@@ -1266,7 +1266,7 @@ const STR = {
     'bomb.name': 'Bomb Squad', 'bomb.desc': 'Tap every answer in the table before it blows up!', 'bomb.descAdd': 'Tap every problem that makes the bomb\'s number!', 'bomb.descBoth': 'Find the answers the bomb wants before it blows up!',
     'meteor.tag': 'All skills', 'ghost.tag': 'Speed', 'versus.tag': 'Face off', 'cmp.tag': 'Compare', 'bomb.tag': 'Find facts', 'bomb.tagAdd': 'Find matches', 'bomb.tagBoth': 'Find them',
     'best.meteor': 'Best {n}', 'best.sudden': 'One-hit {n}', 'best.ghost': 'Best {s}s', 'best.cmp': 'Best {s}s', 'best.bomb': 'Best {s}s',
-    'range.to': '{a}\u2060–\u2060{b}', 'note.only': 'Only the {t} times tables', 'note.add': 'Practicing + and − within 20', 'note.both': 'Times tables plus + and −', 'note.plus': 'Plus the {t} times tables', 'map.only': 'Practicing only the {t} times tables', 'map.plus': 'Also practicing the {t} times tables',
+    'range.to': '{a}\u2060–\u2060{b}', 'note.only': 'Only the {t} times tables', 'note.add': '+ and − within 20', 'note.both': '×, + and − together', 'note.plus': 'Plus the {t} times tables', 'map.only': 'Practicing only the {t} times tables', 'map.plus': 'Also practicing the {t} times tables',
     'set.tableAria': '{n} times table', 'set.d.std': '1 to 9 are on: the classic times tables, {c} problems', 'set.d.plus': 'Classic tables plus {t}, up to {m} × {m}, {c} problems',
     'set.d.only': 'Only the {t} tables, {c} problems', 'set.d.onlyMax': 'Only the {t} tables, up to {m} × {m}, {c} problems', 'set.atLeast': 'Keep at least one table on',
     'seq.label': 'Count by {n}s',
@@ -1416,7 +1416,7 @@ const STR = {
     'bomb.name': 'ばくだんかいじょ', 'bomb.desc': 'ばくはつする前に、そのだんの答えをぜんぶタップ！', 'bomb.descAdd': 'ばくはつする前に、答えがその数になる式をぜんぶタップ！', 'bomb.descBoth': 'ばくはつする前に、ばくだんの数をさがしてタップ！',
     'meteor.tag': 'ぜんぶ練習', 'ghost.tag': 'スピード', 'versus.tag': 'たいせん', 'cmp.tag': '大小くらべ', 'bomb.tag': 'だんさがし', 'bomb.tagAdd': '式さがし', 'bomb.tagBoth': 'さがそう',
     'best.meteor': 'ベスト {n}', 'best.sudden': '一発 {n}', 'best.ghost': 'ベスト {s}秒', 'best.cmp': 'ベスト {s}秒', 'best.bomb': 'ベスト {s}秒',
-    'range.to': '{a}〜{b}', 'note.only': '{t}のだんだけ練習', 'note.add': '20までのたし算・ひき算を練習中', 'note.both': 'かけ算とたし算・ひき算をいっしょに', 'note.plus': '{t}のだんもプラス', 'map.only': 'いまは{t}のだんだけ練習中', 'map.plus': 'いまは{t}のだんもプラスして練習中',
+    'range.to': '{a}〜{b}', 'note.only': '{t}のだんだけ練習', 'note.add': 'たし算・ひき算を練習中', 'note.both': 'かけ算とたし算・ひき算', 'note.plus': '{t}のだんもプラス', 'map.only': 'いまは{t}のだんだけ練習中', 'map.plus': 'いまは{t}のだんもプラスして練習中',
     'set.tableAria': '{n}のだん', 'set.d.std': '1〜9がぜんぶオン：ふつうの九九、{c}問', 'set.d.plus': '九九に{t}のだんをプラス、いちばん大きいのは {m} × {m}、{c}問',
     'set.d.only': '{t}のだんだけ、{c}問', 'set.d.onlyMax': '{t}のだんだけ、いちばん大きいのは {m} × {m}、{c}問', 'set.atLeast': '1つはのこしてね',
     'seq.label': '{n}のだん',
