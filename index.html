@@ -1147,7 +1147,7 @@ const STR = {
     // 炸彈拆除
     'b.next': '下一顆炸彈', 'b.result': '看結果', 'b.prog': '第 {i} / {n} 顆', 'b.task': '點掉所有 <b>{n}</b> 的倍數<small>就是 {n} × 1 到 {n} × {c} 的答案</small>',
     'b.found': '找到 <b>{k}</b> / {n}', 'b.near': '{v} 不是 {n} 的倍數。{n} × {k} = {m}，差了 {d}', 'b.notIs': '{v} 不是 {n} 的倍數，它是 {a} × {b}', 'b.not': '{v} 不是 {n} 的倍數',
-    'b.boom': '碰！爆炸了', 'b.ok': '拆除成功！', 'b.fuse': '引線燒完了。還沒找到：{list}', 'b.fuseAdd': '引線燒完了。還沒找到：{list}',
+    'b.boom': '碰！爆炸了', 'b.ok': '拆除成功！', 'b.fuse': '引線燒完了。還沒找到：{list}', 'b.fuseAdd': '引線燒完了。黃色的是還沒找到的算式',
     'b.taskAdd': '點掉答案是 <b>{n}</b> 的算式<small>算一算，等於 {n} 就點</small>', 'b.nearAdd': '{e} = {v}，不是 {n}，差了 {d}', 'b.notAdd': '{e} = {v}，不是 {n}',
     'b.n.close': '差一顆就全拆了！5 顆全拆才比時間', 'b.n.more': '爆掉的那幾題，之後會比較常出現', 'b.n.first': '5 顆全拆！這個時間就是你的紀錄',
     'b.n.best': '新紀錄！比上次快 {s}', 'b.n.same': '全拆！跟紀錄一樣快', 'b.n.behind': '全拆！差紀錄 {s}，再一次！',
@@ -1199,10 +1199,10 @@ const STR = {
     'who.cleared': '{name}的紀錄清掉了', 'who.delWhy': '要刪除「{name}」的所有紀錄，請大人先回答這一題。',
     // 錯題本
     'w.p': '這些是最近常錯的題目，遊戲裡會比較常出現。學會了可以按「清除」，它就不會特別常出現。', 'w.clearAll': '全部清空', 'w.arm': '再按一次確認清空', 'w.clear': '清除',
-    'w.meta': '答錯 {w} 次・答過 {n} 次', 'w.metaSoft': '在炸彈或哪個大點錯過・答過 {n} 次', 'w.metaSoft0': '在炸彈或哪個大點錯過，還沒打過答案', 'w.empty': '目前沒有容易錯的題目，太厲害了！',
+    'w.meta': '答錯 {w} 次・答過 {n} 次', 'w.metaSoft': '在炸彈、哪個大或三數題錯過・答過 {n} 次', 'w.metaSoft0': '在炸彈、哪個大或三數題錯過，還沒打過答案', 'w.empty': '目前沒有容易錯的題目，太厲害了！',
     // 設定、關於、家長關卡
     'set.title': '設定', 'set.titleWho': '設定（{name}）', 'set.music': '音樂', 'set.musicD': '背景音樂', 'set.sound': '音效', 'set.soundD': '按鍵、打中、爆炸的聲音',
-    'set.what': '要練什麼', 'set.whatD': '加減是 20 以內，有進位、退位。炸彈和哪個大只出乘法，只練加減時會變暗', 'what.mul': '乘法', 'what.add': '加減', 'what.both': '都練', 'set.tables': '要練哪幾個乘法表',
+    'set.what': '要練什麼', 'set.whatD': '加減是 20 以內，有進位、退位。五個遊戲都能練', 'what.mul': '乘法', 'what.add': '加減', 'what.both': '都練', 'set.tables': '要練哪幾個乘法表',
     'set.seq': '數列題提示', 'set.seqD': '數列題上面會寫出是幾的倍數。關掉就要自己看出是幾的乘法表，比較難',
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': '保留所有權利。',
     'about.title': '關於<span class="brand-t">九九流星隊</span>', 'about.what': '這是什麼', 'about.parents': '給家長', 'about.made': '製作',
@@ -1304,8 +1304,8 @@ const STR = {
     'c.t.perfect': 'Sharp eyes!', 'c.t.good': 'Nice work!', 'c.l.perfect': 'sec · all 10 right', 'c.l.ok': 'right out of {n}', 'c.r.best': 'Best time',
     'b.next': 'Next bomb', 'b.result': 'See results', 'b.prog': 'Bomb {i} / {n}', 'b.task': 'Tap the <b>{n}</b>× answers<small>{n} × 1 up to {n} × {c}</small>',
     'b.found': 'Found <b>{k}</b> / {n}', 'b.near': '{v} isn\'t in the {n} times table. {n} × {k} = {m}, off by {d}', 'b.notIs': '{v} isn\'t in the {n} times table. It\'s {a} × {b}', 'b.not': '{v} isn\'t in the {n} times table',
-    'b.boom': 'BOOM! It blew up', 'b.ok': 'Defused!', 'b.fuse': 'The fuse burned out. Still hidden: {list}', 'b.fuseAdd': 'The fuse burned out. Still hidden: {list}',
-    'b.taskAdd': 'Tap every problem that makes <b>{n}</b><small>Work it out. If it equals {n}, tap it</small>', 'b.nearAdd': '{e} = {v}, not {n}. Off by {d}', 'b.notAdd': '{e} = {v}, not {n}',
+    'b.boom': 'BOOM! It blew up', 'b.ok': 'Defused!', 'b.fuse': 'The fuse burned out. Still hidden: {list}', 'b.fuseAdd': 'The fuse burned out. The yellow ones were left',
+    'b.taskAdd': 'Tap problems = <b>{n}</b><small>If it equals {n}, tap it</small>', 'b.nearAdd': '{e} = {v}, not {n}. Off by {d}', 'b.notAdd': '{e} = {v}, not {n}',
     'b.n.close': 'One short! Defuse all 5 to set a time', 'b.n.more': 'The ones that blew up will come up more', 'b.n.first': 'All 5 defused! This is your record',
     'b.n.best': 'New record! {s} faster', 'b.n.same': 'All defused! Same as your record', 'b.n.behind': 'All defused! {s} off your record. Again!',
     'b.t.all': 'Bomb expert!', 'b.t.close': 'Almost!', 'b.l.all': 'sec · all 5 defused', 'b.l.some': 'defused out of {n}', 'b.r.done': 'Defused', 'b.r.best': 'Best time',
@@ -1351,9 +1351,9 @@ const STR = {
     'who.turn': '{name}, it\'s your turn!', 'who.need': 'Type a name first', 'who.taken': 'That name is taken', 'who.welcome': 'Welcome, {name}!', 'who.hi': 'Hi, {name}!',
     'who.cleared': '{name}\'s records are erased', 'who.delWhy': 'This deletes all of {name}\'s records. A grown-up needs to answer this first.',
     'w.p': 'These are the problems you\'ve missed most lately. They come up more often in the games. Once you know one, tap "Clear" and it goes back to normal.', 'w.clearAll': 'Clear all', 'w.arm': 'Tap again to clear all', 'w.clear': 'Clear',
-    'w.meta': 'Wrong {w}× · answered {n}×', 'w.metaSoft': 'Missed in Bomb Squad or Biggest · answered {n}×', 'w.metaSoft0': 'Missed in Bomb Squad or Biggest, not typed yet', 'w.empty': 'Nothing tricky right now. Amazing!',
+    'w.meta': 'Wrong {w}× · answered {n}×', 'w.metaSoft': 'Missed in Bomb Squad, Biggest or a 3-number sum · answered {n}×', 'w.metaSoft0': 'Missed in Bomb Squad, Biggest or a 3-number sum, not typed yet', 'w.empty': 'Nothing tricky right now. Amazing!',
     'set.title': 'Settings', 'set.titleWho': 'Settings ({name})', 'set.music': 'Music', 'set.musicD': 'Background music', 'set.sound': 'Sound', 'set.soundD': 'Keys, hits and explosions',
-    'set.what': 'What to practice', 'set.whatD': 'Adding and subtracting within 20, with regrouping. Bomb Squad and Biggest? Smallest? are times tables only, so they dim when you pick + and −', 'what.mul': 'Times', 'what.add': '+ and −', 'what.both': 'Both', 'set.tables': 'Which times tables',
+    'set.what': 'What to practice', 'set.whatD': 'Adding and subtracting within 20, with regrouping. All five games work with it', 'what.mul': 'Times', 'what.add': '+ and −', 'what.both': 'Both', 'set.tables': 'Which times tables',
     'set.seq': 'Pattern hints', 'set.seqD': 'Number patterns say which table they count by. Turn off to figure it out yourself (harder)',
     author: '指數三寶飯', 'legal.id': ' (ianyclin) ', 'legal.rights': 'All rights reserved.',
     'about.title': 'About <span class="brand-t">9×9 Meteors</span>', 'about.what': 'What is this?', 'about.parents': 'For parents', 'about.made': 'Credits',
@@ -1453,8 +1453,8 @@ const STR = {
     'c.t.perfect': 'するどい目！', 'c.t.good': 'いいかんじ！', 'c.l.perfect': '秒・10問ぜんぶ正かい', 'c.l.ok': '正かい / {n}問', 'c.r.best': 'ベスト',
     'b.next': '次のばくだん', 'b.result': 'けっかを見る', 'b.prog': '{i} / {n}こ目', 'b.task': '<b>{n}</b>のだんをタップ<small>{n} × 1 から {n} × {c} の答え</small>',
     'b.found': 'みつけた <b>{k}</b> / {n}', 'b.near': '{v} は{n}のだんの答えじゃないよ。{n} × {k} = {m}、{d}ちがう', 'b.notIs': '{v} は{n}のだんの答えじゃないよ。{a} × {b} の答えだよ', 'b.not': '{v} は{n}のだんの答えじゃないよ',
-    'b.boom': 'ドカーン！ばくはつした', 'b.ok': 'かいじょできた！', 'b.fuse': 'どうか線がもえつきた。まだ見つけていない数：{list}', 'b.fuseAdd': 'どうか線がもえつきた。まだ見つけていない式：{list}',
-    'b.taskAdd': '答えが <b>{n}</b> になる式をタップ<small>計算して、{n} になったらタップ</small>', 'b.nearAdd': '{e} = {v}。{n} じゃないよ、{d}ちがう', 'b.notAdd': '{e} = {v}。{n} じゃないよ',
+    'b.boom': 'ドカーン！ばくはつした', 'b.ok': 'かいじょできた！', 'b.fuse': 'どうか線がもえつきた。まだ見つけていない数：{list}', 'b.fuseAdd': 'どうか線がもえつきた。黄色が見つけていない式だよ',
+    'b.taskAdd': '答えが<b>{n}</b>の式をタップ<small>計算して {n} ならタップ</small>', 'b.nearAdd': '{e} = {v}。{n} じゃないよ、{d}ちがう', 'b.notAdd': '{e} = {v}。{n} じゃないよ',
     'b.n.close': 'あと1こでぜんぶかいじょ！5こぜんぶでタイム勝負', 'b.n.more': 'ばくはつした問題は、これから多めに出るよ', 'b.n.first': '5こぜんぶかいじょ！このタイムが記ろくだよ',
     'b.n.best': '新記ろく！前より {s} 速い', 'b.n.same': 'ぜんぶかいじょ！記ろくと同じ速さ', 'b.n.behind': 'ぜんぶかいじょ！記ろくまであと {s}、もう一回！',
     'b.t.all': 'ばくだんのプロ！', 'b.t.close': 'おしい！', 'b.l.all': '秒・5こぜんぶかいじょ', 'b.l.some': 'かいじょ / {n}こ', 'b.r.done': 'かいじょ', 'b.r.best': 'ベスト',
@@ -1500,9 +1500,9 @@ const STR = {
     'who.turn': '{name}、きみの番だよ！', 'who.need': '先に名前を打ってね', 'who.taken': 'その名前はもうあるよ', 'who.welcome': '{name}、ようこそ！', 'who.hi': '{name}、こんにちは！',
     'who.cleared': '{name}の記ろくをけしたよ', 'who.delWhy': '「{name}」の記録をすべて消去します。大人の方がこの問題に答えてください。',
     'w.p': 'さいきんよくまちがえる問題だよ。ゲームで多めに出るよ。おぼえたら「けす」をおすと、ふつうにもどるよ。', 'w.clearAll': 'ぜんぶけす', 'w.arm': 'もう一回おすと、ぜんぶけすよ', 'w.clear': 'けす',
-    'w.meta': 'まちがい {w}回・答えた {n}回', 'w.metaSoft': 'ばくだんか「どれが大きい？」でまちがえた・答えた {n}回', 'w.metaSoft0': 'ばくだんか「どれが大きい？」でまちがえた、まだ答えを打っていない', 'w.empty': 'いまはにがてな問題がないよ。すごい！',
+    'w.meta': 'まちがい {w}回・答えた {n}回', 'w.metaSoft': 'ばくだん・「どれが大きい？」・3つの数のたし算でまちがえた・答えた {n}回', 'w.metaSoft0': 'ばくだん・「どれが大きい？」・3つの数のたし算でまちがえた、まだ答えを打っていない', 'w.empty': 'いまはにがてな問題がないよ。すごい！',
     'set.title': 'せってい', 'set.titleWho': 'せってい（{name}）', 'set.music': '音楽', 'set.musicD': 'ゲーム中の音楽', 'set.sound': 'こうか音', 'set.soundD': 'ボタン・命中・ばくはつの音',
-    'set.what': '何を練習する？', 'set.whatD': 'たし算・ひき算は 20 まで（くり上がり・くり下がりあり）。ばくだんかいじょ と どれが大きい？ はかけ算だけなので、たし・ひきのときはうすくなるよ', 'what.mul': 'かけ算', 'what.add': 'たし・ひき', 'what.both': 'りょうほう', 'set.tables': '練習するだん',
+    'set.what': '何を練習する？', 'set.whatD': 'たし算・ひき算は 20 まで（くり上がり・くり下がりあり）。5つのゲームぜんぶで練習できるよ', 'what.mul': 'かけ算', 'what.add': 'たし・ひき', 'what.both': 'りょうほう', 'set.tables': '練習するだん',
     'set.seq': '数のならびのヒント', 'set.seqD': '数のならびの問題に、何のだんかを出すよ。オフにすると自分で見つけるから、むずかしくなる',
     author: '指數三寶飯', 'legal.id': '（ianyclin）', 'legal.rights': 'All rights reserved.',
     'about.title': '<span class="brand-t">九九流星隊</span>について', 'about.what': 'これは何？', 'about.parents': 'おうちの方へ', 'about.made': '制作',
@@ -2302,7 +2302,7 @@ function impact(m) {
     if (m.boss) { M.boss = null; M.waveIn = 0.9; }
     hud(); bar(); return;
   }
-  if (m.tStart && !m.revealed) { M.tot++; record(m.q.k, false, 0, m.q.tri ? 0.1 : 0); M.wrongs.push(m.q); }
+  if (m.tStart && !m.revealed) { M.tot++; triMiss(m.q); record(m.q.k, false, 0, m.q.tri ? 0.1 : 0); M.wrongs.push(m.q); }
   spark(m.x, y, 46, ['#ffae57', '#ff6161', '#ffd23f'], 300, 4, 0.9, 260);
   rocks(m.x, y, 10, '#5b4a5f'); ring(m.x, y, 120, 'rgba(255,120,90,.9)', 6);
   M.hearts -= 1; if (!shieldSave(m.x, y - 100)) M.combo = 0; M.waveMiss++;   // 魔王落地也只扣 1 顆：扣 2 顆再立刻下一波對小二是懸崖
@@ -2472,9 +2472,10 @@ function shieldSave(x, y) {
   M.shield = 0; ftxt(x, y, tx('m.shieldSave'), '#9fdcff', 26); ring(x, y, 100, '#9fdcff', 5); SFX.ding();
   return true;
 }
+const triMiss = q => { if (q.tri) { ensureDaily(); DB.daily.wrong = (DB.daily.wrong || 0) + 1; } };   // 三數題答錯是輕量記錄（不會自己算進今天錯幾題），這裡補上
 const STUDY = 3;   // 加減答錯、有算法可以教時，時間停 3 秒讓孩子看（流星、幽靈；拔河不停，對手還在答）
 function miss(m) {
-  if (!m.revealed) { M.tot++; record(m.q.k, false, 0, m.q.tri ? 0.1 : 0); M.wrongs.push(m.q); if (howTo(m.q).length) { M.study = STUDY; M.studyM = m; } }
+  if (!m.revealed) { M.tot++; triMiss(m.q); record(m.q.k, false, 0, m.q.tri ? 0.1 : 0); M.wrongs.push(m.q); if (howTo(m.q).length) { M.study = STUDY; M.studyM = m; } }
   m.revealed = true; m.flash = 0.6; if (!shieldSave(m.x, m.y - m.r - 30)) M.combo = 0; M.waveMiss++;
   tHurt = 0.35; SFX.wrong();
   const el = $('#m-answer'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
@@ -2687,7 +2688,6 @@ function pause(on) {
 
 /* ================= 幽靈競速 ================= */
 let G = null;
-// 炸彈、哪個大只出乘法：只練加減時變暗，點了說明怎麼打開（不用 disabled，點不到就沒辦法說明）
 const goGhost = () => paid('ghost', startGhost), goCmp = () => paid('cmp', startCmp), goBomb = () => paid('bomb', startBomb), goVersus = () => paid('versus', startVersus);
 function startGhost() {
   show('ghost');
@@ -2923,10 +2923,10 @@ function updateCmp() {
 }
 // 目標題走錯題加權；另外兩題從「答案落在目標 ±w 內」抽，三個答案互不相同（不會有兩個一樣大）、最大最小差 ≤ w。
 // 乘法 w 20（連對 3 題以上縮到 12），加減 3（連對縮到 2）；候選不夠就放寬。與目標共用數字的題目權重降低，免得只比一個數不用算。
-// 加減大多三題同一種（都是加法或都是減法），五題裡大約一題加減混在一起：只在答案範圍重疊時混（減法答案 2～9、加法 4～18），不然一看就知道
+// 加減大多三題同一種（都是加法或都是減法），五題裡大約一題加減混在一起（抽 0.3，答案範圍不重疊的不混，實際約兩成）：只在答案範圍重疊時混（減法答案 2～9、加法 4～18），不然一看就知道
 function cmpQ() {
   const P = practicePool(true), add = P === ADDSUB, t = pickFact(P);
-  const mix = add && Math.random() < 0.2 && (t.op === '−' ? t.ans >= 4 : t.ans <= 11);
+  const mix = add && Math.random() < 0.3 && (t.op === '−' ? t.ans >= 4 : t.ans <= 11);
   const same = add && !mix ? P.filter(f => f.op === t.op) : P, other = mix ? P.filter(f => f.op !== t.op) : same;
   const w0 = add ? (C.streak >= 3 ? 2 : 3) : (C.streak >= 3 ? 12 : 20), step = add ? 2 : 8, wMax = add ? 16 : 80;
   const shares = f => f.a === t.a || f.a === t.b || f.b === t.a || f.b === t.b;
@@ -3051,21 +3051,26 @@ function bombBoard(n) {
 // 加減版：炸彈上是 N，12 格是算式，4～6 個答案等於 N（錯題優先；N ≤ 9 加法減法都有，N ≥ 10 只有加法）。
 // 干擾：答案 N ± 1（進位、退位算錯最常差 1）最多，再來 ± 2；跟正確算式用了同一個數的（8 + 5 旁邊放 8 + 4）加重；
 // 還有「看得到 N」的減法（N = 13 放 13 − 4），只看數字不算的孩子會點
-const ADD_NS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];   // 至少 4 個算式等於 N
+const ADD_NS = [5, 6, 7, 8, 9, 10, 11, 12, 13];   // 至少 6 個算式等於 N（14 只有 5 個、15 只有 4 個，抽 4～6 個會抽空）
 const addN = n => ADDSUB.filter(f => f.ans === n);
 const addNW = n => { const fs = addN(n); return fs.reduce((t, f) => t + weightOf(f), 0) / fs.length; };   // 用平均：N = 9 有 14 個算式，加總會一直出 9
 function bombBoardAdd(n) {
-  const pool = addN(n), got = [], want = ri(4, 6);
+  const pool = addN(n), got = [], want = Math.min(ri(4, 6), pool.length);
   while (got.length < want) { const f = wpick(pool, weightOf); pool.splice(pool.indexOf(f), 1); got.push(f); }
   const nums = new Set(got.flatMap(f => [f.a, f.b]));
   const cand = ADDSUB.filter(f => f.ans !== n).map(f => {
     const d = Math.abs(f.ans - n);
-    let w = d === 1 ? 3 : d === 2 ? 1.5 : (f.op === '−' && f.a === n) ? 2 : 0;
+    let w = d === 1 ? 3 : d === 2 ? 1.5 : (f.op === '−' && f.a === n) ? (n >= 10 ? 1 : 2) : 0;   // N ≥ 10 時減法一定不對，看得到 N 的減法少放一點，不然孩子學到「減法都跳過」
     if (w && (nums.has(f.a) || nums.has(f.b))) w *= 1.5;
     return { f, w };
   }).filter(c => c.w > 0);
   const tiles = got.slice();
-  while (tiles.length < 12 && cand.length) { const c = wpick(cand, c => c.w); cand.splice(cand.indexOf(c), 1); tiles.push(c.f); }
+  let seeN = 0;
+  while (tiles.length < 12 && cand.length) {
+    const c = wpick(cand, c => c.w); cand.splice(cand.indexOf(c), 1);
+    if (c.f.op === '−' && c.f.a === n) { if (seeN) continue; seeN++; }   // 看得到 N 的減法最多一個
+    tiles.push(c.f);
+  }
   for (let i = tiles.length - 1; i > 0; i--) { const j = ri(0, i); [tiles[i], tiles[j]] = [tiles[j], tiles[i]]; }
   return { n, tiles, count: got.length };
 }
@@ -3182,7 +3187,7 @@ function updateBomb() {
   if (left < 5 && Math.ceil(left) !== r.sec) { r.sec = Math.ceil(left); if (r.sec > 0) SFX.tick(); }
   if (left <= 0) {
     const missed = r.tiles.filter((v, i) => bombOk(r, i) && !r.got.has(i));
-    if (r.add) explode(tx('b.fuseAdd', { list: missed.map(eqText).join(tx('sep')) }), r.got.size ? missed : [], null, 0.05);
+    if (r.add) explode(tx('b.fuseAdd'), r.got.size ? missed : [], null, 0.05);   // 算式清單太長（320 寬會把「下一顆」擠出畫面），格子已經用黃色標出來
     else {
       missed.sort((a, b) => a - b);
       explode(tx('b.fuse', { list: missed.join(tx('sep')) }), r.got.size ? missed.map(m => factNK(r.n, m / r.n)) : [], null, 0.05);
