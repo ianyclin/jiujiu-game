@@ -1730,7 +1730,17 @@ function weightOf(f) {
   return w;
 }
 // 「要練什麼」set.what：乘法／加減／都練。都練時哪一邊比較弱（平均權重高）就多出那一邊，每邊至少 15%（乘法用不含 ×1 的平均：×1 權重打了折，算進去會讓加減一開始就偏多）
-const addShare = () => { const ex = P => P.reduce((t, f) => t + Math.max(0, weightOf(f) - 1), 0) / P.length, a = ex(ADDSUB), m = ex(MUL2.length ? MUL2 : MUL); return a + m < 0.05 ? 0.5 : clamp(a / (a + m), 0.15, 0.85); };   // 比「超出 1 的權重」：熟的題權重是 1，用平均的話兩邊永遠接近一半；每邊至少 15%
+// 沒打過的題算「超出 1.5」：用 weightOf 的 1.6（超出 0.6）的話，先玩加減再切都練，玩過但還不夠快的加減題（超出 2 上下）會比完全沒碰過的乘法還「弱」，加減佔到七、八成
+const UNSEEN_EX = 1.5;
+const addShare = () => { const ex = P => P.reduce((t, f) => { const s = DB.facts[f.k], e = weightOf(f) - 1; return t + (s && s.n ? Math.max(0, e) : Math.max(UNSEEN_EX, e)); }, 0) / P.length, a = ex(ADDSUB), m = ex(MUL2.length ? MUL2 : MUL); return a + m < 0.05 ? 0.5 : clamp(a / (a + m), 0.15, 0.85); };   // 比「超出 1 的權重」：熟的題權重是 1，用平均的話兩邊永遠接近一半；每邊至少 15%
+// 哪個大（10 題）、炸彈（5 顆）題數少，都練時照比例先排好哪幾題出加減、打亂順序，兩種一定都會出（每題各自擲骰子，炸彈常常整局都是同一種）
+function mixPlan(n, lo, hi) {
+  if (DB.set.what !== 'both') return null;
+  const k = clamp(Math.round(n * addShare()), lo, hi), a = Array.from({ length: n }, (_, i) => i < k);
+  for (let i = a.length - 1; i > 0; i--) { const j = ri(0, i); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+const planPool = (plan, i) => plan ? (plan[i] ? ADDSUB : MUL2) : practicePool(true);
 const practicePool = no1 => DB.set.what === 'add' ? ADDSUB : (DB.set.what === 'both' && Math.random() < addShare()) ? ADDSUB : (no1 ? MUL2 : MUL);
 // no1：不出 ×1（幽靈競速、拔河用；流星防衛戰留著當緩衝）
 function pickFact(pool, no1) {
@@ -2911,7 +2921,7 @@ const CMP_ICON = {
 };
 function startCmp() {
   show('cmp');
-  C = { i: 0, n: 10, ok: 0, streak: 0, wrongs: [], q: null, lock: true, done: false, t0: 0, end: 0 };
+  C = { i: 0, n: 10, ok: 0, streak: 0, wrongs: [], q: null, lock: true, done: false, t0: 0, end: 0, plan: mixPlan(10, 2, 8) };
   $('#c-ask').innerHTML = ''; $('#c-ask').className = 'cmp-ask'; $('#c-opts').innerHTML = ''; $('#c-hint').textContent = ''; $('#c-streak').textContent = '';
   $('#c-time').textContent = '0.0'; $('#c-timer').classList.remove('off'); $('#c-prog').textContent = tx('ready');
   countdown(() => { if (C) { C.t0 = now(); nextCmp(); } });
@@ -2925,7 +2935,7 @@ function updateCmp() {
 // 乘法 w 20（連對 3 題以上縮到 12），加減 3（連對縮到 2）；候選不夠就放寬。與目標共用數字的題目權重降低，免得只比一個數不用算。
 // 加減大多三題同一種（都是加法或都是減法），五題裡大約一題加減混在一起（抽 0.3，答案範圍不重疊的不混，實際約兩成）：只在答案範圍重疊時混（減法答案 2～9、加法 4～18），不然一看就知道
 function cmpQ() {
-  const P = practicePool(true), add = P === ADDSUB, t = pickFact(P);
+  const P = planPool(C.plan, C.i), add = P === ADDSUB, t = pickFact(P);
   const mix = add && Math.random() < 0.3 && (t.op === '−' ? t.ans >= 4 : t.ans <= 11);
   const same = add && !mix ? P.filter(f => f.op === t.op) : P, other = mix ? P.filter(f => f.op !== t.op) : same;
   const w0 = add ? (C.streak >= 3 ? 2 : 3) : (C.streak >= 3 ? 12 : 20), step = add ? 2 : 8, wMax = add ? 16 : 80;
@@ -3078,7 +3088,7 @@ const bombOk = (r, i) => r.add ? r.tiles[i].ans === r.n : r.tiles[i] % r.n === 0
 const eqText = f => `${f.a} ${f.op} ${f.b}`;
 function startBomb() {
   show('bomb');
-  BM = { i: 0, n: 5, done: 0, wrongs: [], t0: 0, end: 0, round: null, over: false, lastN: 0 };
+  BM = { i: 0, n: 5, done: 0, wrongs: [], t0: 0, end: 0, round: null, over: false, lastN: 0, plan: mixPlan(5, 1, 4) };
   ['#bm-tiles', '#bm-task'].forEach(s => { $(s).innerHTML = ''; });
   ['#bm-msg', '#bm-why', '#bm-found'].forEach(s => { $(s).textContent = ''; });
   $('#bm-next').hidden = true; $('#bm-time').textContent = '0.0'; $('#bm-prog').textContent = tx('ready');
@@ -3106,7 +3116,7 @@ function bombFuse(frac) {
   $('#bm-spark').setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) scale(${(0.85 + Math.sin(T * 38) * 0.25).toFixed(2)})`);
 }
 function nextBomb() {
-  const add = practicePool(true) === ADDSUB;   // 都練時每一顆隨機：乘法找倍數、加減找算式
+  const add = planPool(BM.plan, BM.i) === ADDSUB;   // 都練時照 mixPlan：乘法找倍數、加減找算式，兩種都會出
   let n;
   if (add) { n = wpick(ADD_NS.filter(v => v !== BM.lastN), addNW); }
   else { const ts = tables().filter(t => t >= 2), pick = ts.length > 1 ? ts.filter(t => t !== BM.lastN) : ts; n = wpick(pick, tableW); }   // 只勾一個表就允許連續
