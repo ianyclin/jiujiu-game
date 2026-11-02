@@ -1729,10 +1729,10 @@ function weightOf(f) {
   if (f.op === '×' && (f.a === 1 || f.b === 1)) w *= 0.25;
   return w;
 }
-// 「要練什麼」set.what：乘法／加減／都練。都練時哪一邊比較弱（平均權重高）就多出那一邊，每邊至少 15%（乘法用不含 ×1 的平均：×1 權重打了折，算進去會讓加減一開始就偏多）
+// 「要練什麼」set.what：乘法／加減／都練。都練時哪一邊比較弱（平均權重高）就多出那一邊，只在 4:6 到 6:4 之間（真的很熟一邊的話大人會直接選另一種練；選都練就是兩種都要）（乘法用不含 ×1 的平均：×1 權重打了折，算進去會讓加減一開始就偏多）
 // 沒打過的題算「超出 1.5」：用 weightOf 的 1.6（超出 0.6）的話，先玩加減再切都練，玩過但還不夠快的加減題（超出 2 上下）會比完全沒碰過的乘法還「弱」，加減佔到七、八成
 const UNSEEN_EX = 1.5;
-const addShare = () => { const ex = P => P.reduce((t, f) => { const s = DB.facts[f.k], e = weightOf(f) - 1; return t + (s && s.n ? Math.max(0, e) : Math.max(UNSEEN_EX, e)); }, 0) / P.length, a = ex(ADDSUB), m = ex(MUL2.length ? MUL2 : MUL); return a + m < 0.05 ? 0.5 : clamp(a / (a + m), 0.15, 0.85); };   // 比「超出 1 的權重」：熟的題權重是 1，用平均的話兩邊永遠接近一半；每邊至少 15%
+const addShare = () => { const ex = P => P.reduce((t, f) => { const s = DB.facts[f.k], e = weightOf(f) - 1; return t + (s && s.n ? Math.max(0, e) : Math.max(UNSEEN_EX, e)); }, 0) / P.length, a = ex(ADDSUB), m = ex(MUL2.length ? MUL2 : MUL); return a + m < 0.05 ? 0.5 : clamp(a / (a + m), 0.4, 0.6); };   // 比「超出 1 的權重」：熟的題權重是 1，用平均的話兩邊永遠接近一半；夾在 40%～60%
 // 哪個大（10 題）、炸彈（5 顆）題數少，都練時照比例先排好哪幾題出加減、打亂順序，兩種一定都會出（每題各自擲骰子，炸彈常常整局都是同一種）
 function mixPlan(n, lo, hi) {
   if (DB.set.what !== 'both') return null;
@@ -2921,7 +2921,7 @@ const CMP_ICON = {
 };
 function startCmp() {
   show('cmp');
-  C = { i: 0, n: 10, ok: 0, streak: 0, wrongs: [], q: null, lock: true, done: false, t0: 0, end: 0, plan: mixPlan(10, 2, 8) };
+  C = { i: 0, n: 10, ok: 0, streak: 0, wrongs: [], q: null, lock: true, done: false, t0: 0, end: 0, plan: mixPlan(10, 4, 6) };
   $('#c-ask').innerHTML = ''; $('#c-ask').className = 'cmp-ask'; $('#c-opts').innerHTML = ''; $('#c-hint').textContent = ''; $('#c-streak').textContent = '';
   $('#c-time').textContent = '0.0'; $('#c-timer').classList.remove('off'); $('#c-prog').textContent = tx('ready');
   countdown(() => { if (C) { C.t0 = now(); nextCmp(); } });
@@ -3088,7 +3088,7 @@ const bombOk = (r, i) => r.add ? r.tiles[i].ans === r.n : r.tiles[i] % r.n === 0
 const eqText = f => `${f.a} ${f.op} ${f.b}`;
 function startBomb() {
   show('bomb');
-  BM = { i: 0, n: 5, done: 0, wrongs: [], t0: 0, end: 0, round: null, over: false, lastN: 0, plan: mixPlan(5, 1, 4) };
+  BM = { i: 0, n: 5, done: 0, wrongs: [], t0: 0, end: 0, round: null, over: false, lastN: 0, plan: mixPlan(5, 2, 3) };
   ['#bm-tiles', '#bm-task'].forEach(s => { $(s).innerHTML = ''; });
   ['#bm-msg', '#bm-why', '#bm-found'].forEach(s => { $(s).textContent = ''; });
   $('#bm-next').hidden = true; $('#bm-time').textContent = '0.0'; $('#bm-prog').textContent = tx('ready');
