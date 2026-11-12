@@ -202,6 +202,7 @@ html:not(.app) .app-only{display:none!important}
 .rotate{display:none;position:fixed;inset:0;z-index:30;background:var(--ink);place-items:center;text-align:center;font-weight:900;font-size:22px;color:var(--paper)}
 @media (orientation:landscape) and (max-height:500px) and (pointer:coarse) and (min-aspect-ratio:3/2){.rotate{display:grid}}
 img,svg,canvas{-webkit-touch-callout:none}
+#s-menu,#s-map,#s-pet,.card,.alum-list.scroll{overscroll-behavior:none}   /* iPhone 捲到頂再往下拉不要橡皮筋回彈（說明卡被拉下來、標題列跟著跑、右上冒出捲動條） */
 html,body{overscroll-behavior:none}
 .help .hver{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px}
 #help-s:not([hidden]),#help-f:not([hidden]){display:contents}
