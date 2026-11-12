@@ -195,22 +195,29 @@
 **A4. 把專案下載到 Mac（git clone）**
 - 在終端機一行一行貼：
   ```
-  cd ~/Documents
+  mkdir -p ~/Projects
+  cd ~/Projects
   git clone https://github.com/ianyclin/jiujiu-game.git
   ```
-- 如果跳出「需要安裝命令列開發者工具」：按「安裝」，裝完再貼一次第二行。
-- 做完會怎樣：「文件」資料夾裡多一個 `jiujiu-game` 資料夾。
+- 如果跳出「需要安裝命令列開發者工具」：按「安裝」，裝完再貼一次最後一行。
+- 做完會怎樣：家目錄的 `Projects` 資料夾裡多一個 `jiujiu-game`。**Ian 的 Mac 已經在 `~/Projects/jiujiu-game`（2026-11-12 下載），不用再做這步。**
 
 ### B. 每次打包都要做
 
 **B1. 拿最新的版本、準備好檔案**
 - 在終端機一行一行貼：
   ```
-  cd ~/Documents/jiujiu-game
+  cd ~/Projects/jiujiu-game
+  git stash
+  git switch main
   git pull
   npm ci
   npm run sync
+  grep -c help-ver ios/App/App/public/index.html
   ```
+  - `git stash`：把上次在 Xcode 選 Team 時改到的東西先收起來，不然 `git pull` 會卡住。收起來沒關係，B3 重選 Team 就好。
+  - `git switch main`：一律用 main（上架 session 合併好的版本）打包，不要用其他分支。
+  - 最後一行是檢查用：出現 **1 以上的數字**才代表 App 裡是最新的遊戲；是 0 就代表 `npm run sync` 沒跑到，截圖給我。
   - `git pull`：拿 GitHub 上最新的遊戲。顯示 `Already up to date.` 也是正常的。
   - `npm ci`：裝打包用的套件（第一次要一兩分鐘）。最後出現 `added … packages` 就是好了；有 `warn` 黃字沒關係，有 `ERR!` 紅字就截圖給我。
   - `npm run sync`：把遊戲複製進 iPhone 專案。最後出現 `Sync finished` 就是好了。
@@ -223,7 +230,7 @@
   ```
 - 做完會怎樣：Xcode 打開一個叫 **App** 的專案。第一次打開，左下或上面會寫「Resolving Packages」（下載套件），等它跑完再往下做（幾分鐘）。
 
-**B3. 選 Team、確認 Bundle ID（第一次做，之後 Xcode 會記得）**
+**B3. 選 Team、確認 Bundle ID（B1 用了 `git stash`，所以每次都要重選 Team）**
 - 左邊最上面點藍色的 **App**（專案圖示）→ 中間 **TARGETS** 底下點 **App** → 上面分頁點 **Signing & Capabilities**。
 - **Automatically manage signing**（自動管理簽名）：**打勾**。
 - **Team**：選 **YEN CHU LIN**。如果有兩個，選**沒有寫「(Personal Team)」**的那個（Personal Team 是免費帳號，不能上架）。
