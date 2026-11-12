@@ -283,7 +283,7 @@ Hidden outfits (unlocked at 40 and 50 badges), the legendary egg and trading sta
 
 ## 四、截圖與圖形
 
-腳本：`node tools/store-screenshots.cjs`（需 `npm i --no-save playwright` 與系統 Chromium；`--feature` 產生 Google 主圖）。用真的遊戲（`index.html` 不改），種一份「玩了幾週」的存檔，固定亂數；流星那張由機器人打題目，每次略有不同。五張順序：**1 主選單、2 流星防衛戰、3 星圖、4 寵物、5 雙人拔河**（對機器人）。三種語言各一套，輸出在 `store/screenshots/<裝置>/<語言>/`，JPEG（沒有透明度，Apple 不收有透明的圖）。
+腳本：`node tools/store-screenshots.cjs`（需 `npm i --no-save playwright` 與系統 Chromium；`--feature` 產生 Google 主圖）。用真的遊戲（`index.html` 不改），種一份「玩了幾週」的存檔，固定亂數；流星那張由機器人打題目，每次略有不同。六張順序：**1 主選單、2 流星防衛戰、3 星圖、4 寵物、5 雙人拔河**（對機器人）、**6 加減星圖**（讓家長看得出也能練 20 以內加減）。主選單用 App 模式截（Apple 版假裝 iOS、Google 版假裝 Android），四個付費遊戲帶「免費試玩」牌子（Apple 2.3.2：截圖要看得出哪些要另外買）。三種語言各一套，輸出在 `store/screenshots/<裝置>/<語言>/`，JPEG（沒有透明度，Apple 不收有透明的圖）。
 
 | 資料夾 | 像素 | 用在 | 備註 |
 |---|---|---|---|
