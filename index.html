@@ -1266,7 +1266,7 @@ const STR = {
     'buy.noProd': '現在讀不到商店的商品，請稍後再試。', 'buy.codeOld': '這台裝置不能在 App 裡兌換，請到 App Store 的帳號頁面兌換代碼。', 'buy.pending': '付款還在處理中，完成後就會解鎖。', 'buy.fail': '購買沒有完成，可以再試一次。', 'buy.none': '這個帳號沒有找到購買紀錄。', 'buy.offline': '連不上商店，等一下再試。',
     'set.unlock': '解鎖全部遊戲', 'set.unlockD': '流星防衛戰免費，另外四個遊戲一次購買解鎖（要請大人）', 'set.unlockOk': '四個遊戲都解鎖了', 'set.unlockGo': '看看',
     'help.unlockT': '解鎖遊戲', 'help.unlock': '<li>{m}、星圖、寵物和每日任務，都可以一直玩。</li><li>另外四個遊戲，<b>每一種都可以免費玩 3 次</b>。之後要不要解鎖，由大人決定。</li><li>還沒解鎖時，每日任務只會出你玩得到的遊戲。</li>',
-    'about.buyT': '費用', 'about.buyL': '<li>{m}、星圖、寵物與每日任務免費；另外四個遊戲各可試玩 3 次，在「設定 → 家長區」<b>一次購買</b>就全部解鎖（不是訂閱），這台裝置的每個玩家都能玩。</li><li>付款由 App Store／Google Play 處理，我們收不到任何付款或帳號資料。購買和優惠碼都要先請大人解一題。</li>',
+    'about.buyT': '費用', 'about.storeI': 'App Store', 'about.storeA': 'Google Play', 'about.storeW': 'App Store／Google Play', 'about.buyL': '<li>{m}、星圖、寵物與每日任務免費；另外四個遊戲各可試玩 3 次，在「設定 → 家長區」<b>一次購買</b>就全部解鎖（不是訂閱），這台裝置的每個玩家都能玩。</li><li>付款由 {s} 處理，我們收不到任何付款或帳號資料。購買和優惠碼都要先請大人解一題。</li>',
     'bk.again': '可以了，再按一次「{b}」。', 'bk.exWhy': '要把紀錄傳到 App 外面，請大人先回答這一題。', 'bk.why': '匯入會取代這台裝置上所有人的紀錄，請大人先回答這一題。', 'bk.title': '備份紀錄',
     'bk.p': '備份包含這台裝置上所有人的星圖、紀錄、寵物和設定。網頁版和 App 版的紀錄是分開存的，要靠備份搬過去；也可以存起來以防萬一。',
     'bk.exportT': '匯出', 'bk.file': '存成備份檔', 'bk.copy': '複製備份碼', 'bk.saved': '備份檔已經產生。',
@@ -1417,7 +1417,7 @@ const STR = {
     'buy.noProd': "The store item isn't available right now. Please try again later.", 'buy.codeOld': "This device can't redeem codes in the app. Please redeem it from your account page in the App Store.", 'buy.pending': 'The payment is still processing. The games unlock when it goes through.', 'buy.fail': 'The purchase did not go through. You can try again.', 'buy.none': 'No purchase found for this account.', 'buy.offline': 'Cannot reach the store. Try again later.',
     'set.unlock': 'Unlock all games', 'set.unlockD': 'Meteor Defense is free. One purchase unlocks the other four (ask a grown-up)', 'set.unlockOk': 'All four games are unlocked', 'set.unlockGo': 'View',
     'help.unlockT': 'Unlocking games', 'help.unlock': '<li>{m}, the Star Map, your pet and daily missions are always free.</li><li>You can <b>try each of the other four games 3 times for free</b>. After that, unlocking them is up to a grown-up.</li><li>Until then, daily missions only use games you can play.</li>',
-    'about.buyT': 'Price', 'about.buyL': '<li>{m}, the Star Map, pets and daily missions are free. Each of the other four games can be tried 3 times, and <b>one purchase</b> in Settings → For grown-ups unlocks them all (not a subscription) for every player on this device.</li><li>Payment is handled by the App Store / Google Play. We never receive any payment or account details. Buying and promo codes are behind a grown-up check.</li>',
+    'about.buyT': 'Price', 'about.storeI': 'the App Store', 'about.storeA': 'Google Play', 'about.storeW': 'the App Store / Google Play', 'about.buyL': '<li>{m}, the Star Map, pets and daily missions are free. Each of the other four games can be tried 3 times, and <b>one purchase</b> in Settings → For grown-ups unlocks them all (not a subscription) for every player on this device.</li><li>Payment is handled by {s}. We never receive any payment or account details. Buying and promo codes are behind a grown-up check.</li>',
     'bk.again': 'OK. Tap “{b}” again.', 'bk.exWhy': 'To send records out of the app, a grown-up needs to answer this first.', 'bk.why': 'Importing replaces every player\'s records on this device. A grown-up needs to answer this first.', 'bk.title': 'Back up records',
     'bk.p': 'A backup holds every player\'s star map, records, pet and settings on this device. The website and the app keep separate records, so use a backup to move them. You can also keep one just in case.',
     'bk.exportT': 'Export', 'bk.file': 'Save backup file', 'bk.copy': 'Copy backup code', 'bk.saved': 'Backup file created.',
@@ -1567,7 +1567,7 @@ const STR = {
     'buy.noProd': 'いまストアの商品を読み込めません。しばらくしてからお試しください。', 'buy.codeOld': 'この端末ではアプリ内でコードを使えません。App Store のアカウントページから引き換えてください。', 'buy.pending': 'お支払いを処理中です。完了するとゲームが解除されます。', 'buy.fail': '購入が完了しませんでした。もう一度お試しください。', 'buy.none': 'このアカウントの購入履歴が見つかりません。', 'buy.offline': 'ストアに接続できません。しばらくしてからお試しください。',
     'set.unlock': 'ぜんぶのゲームをひらく', 'set.unlockD': '流星ディフェンスはむりょう。ほかの4つは1回の購入でひらくよ（大人の人にきいてね）', 'set.unlockOk': '4つのゲームがぜんぶあそべるよ', 'set.unlockGo': 'みる',
     'help.unlockT': 'ゲームをひらく', 'help.unlock': '<li>{m}、星マップ、ペット、毎日のミッションは、いつでもあそべるよ。</li><li>ほかの4つのゲームは、<b>3回ずつただであそべる</b>よ。そのあとどうするかは、おうちの人がきめるよ。</li><li>ひらくまでは、毎日のミッションはあそべるゲームからだけ出るよ。</li>',
-    'about.buyT': '料金', 'about.buyL': '<li>{m}・星マップ・ペット・毎日のミッションは無料です。ほかの4つのゲームはそれぞれ3回お試しでき、「設定 → おうちの人むけ」で<b>1回購入</b>するとすべて解除されます（サブスクリプションではありません）。この端末のすべてのプレイヤーが遊べます。</li><li>お支払いは App Store／Google Play が行い、支払い情報やアカウント情報が私たちに届くことはありません。購入とコードの入力には、大人向けの確認問題があります。</li>',
+    'about.buyT': '料金', 'about.storeI': 'App Store', 'about.storeA': 'Google Play', 'about.storeW': 'App Store／Google Play', 'about.buyL': '<li>{m}・星マップ・ペット・毎日のミッションは無料です。ほかの4つのゲームはそれぞれ3回お試しでき、「設定 → おうちの人むけ」で<b>1回購入</b>するとすべて解除されます（サブスクリプションではありません）。この端末のすべてのプレイヤーが遊べます。</li><li>お支払いは {s} が行い、支払い情報やアカウント情報が私たちに届くことはありません。購入とコードの入力には、大人向けの確認問題があります。</li>',
     'bk.again': 'OK です。もう一度「{b}」をおしてください。', 'bk.exWhy': '記録をアプリの外に送るには、大人の方がこの問題に答えてください。', 'bk.why': '読み込むと、この端末の全員の記録が置き換わります。大人の方がこの問題に答えてください。', 'bk.title': '記録のバックアップ',
     'bk.p': 'この端末にいる全員の星マップ・記録・ペット・設定をまとめて保存します。Web版とアプリ版の記録は別々に保存されるため、移すときはバックアップを使ってください。念のための保存にも使えます。',
     'bk.exportT': '書き出し', 'bk.file': 'バックアップファイルを保存', 'bk.copy': 'バックアップコードをコピー', 'bk.saved': 'バックアップファイルを作成しました。',
@@ -1598,7 +1598,8 @@ function applyStr() {
   $$('[data-tp]').forEach(e => e.setAttribute('placeholder', tx(e.dataset.tp)));
   $$('.name-in').forEach(e => { e.maxLength = nameMax(); });
   const m = { m: tx('meteor.name') };
-  $$('.help-unlock').forEach(e => { e.innerHTML = tx('help.unlock', m); }); $('#about-buy').innerHTML = tx('about.buyL', m);
+  $$('.help-unlock').forEach(e => { e.innerHTML = tx('help.unlock', m); }); const cp = window.Capacitor, plat = cp && cp.isNativePlatform && cp.isNativePlatform() && cp.getPlatform ? cp.getPlatform() : '';   // iPhone 版只寫 App Store（Apple 2.3.10 不能提別的商店）
+  $('#about-buy').innerHTML = tx('about.buyL', Object.assign({ s: tx(plat === 'ios' ? 'about.storeI' : plat === 'android' ? 'about.storeA' : 'about.storeW') }, m));
   renderLocks(); renderSetUnlock();
 }
 // 依目前的人的設定（沒設就看裝置）換語言；載入、換人、在設定頁切換時呼叫
@@ -3998,7 +3999,7 @@ makePad($('#v-top [data-pad]'), d => vKey(1, d));
 const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
 // target 是網址（答對後出現「前往」鈕，用 click 開才不會被 iOS 擋）或函式（答對直接執行，例如清除紀錄）
-let gateWait = 0;
+let gateWait = 0, gateMiss = 0;   // gateMiss 跨開卡累計：取消、關掉再開都不歸零，答對或被鎖 30 秒後才歸零
 function gateExpr(hard) {
   let expr, ans;
   do {
@@ -4011,7 +4012,7 @@ function openGate(target, why, hard = typeof target === 'function') {   // hard�
   // 題目是混合運算（先乘除、後加減）：孩子在練的正是乘法，純乘法擋不住他們；「5 + 2 × 13」要記得先乘，沒學過運算順序的孩子會從左算到右而答錯
   // hard（清除紀錄、刪人這種不可逆的）：兩個乘法一加一減，答案至少 10
   if (now() < gateWait) { toast(tx('gate.wait')); return; }   // 連錯 3 次後 30 秒內不給再試（亂按猜不出來）
-  gate = Object.assign(gateExpr(hard), { buf: '', target, hard, miss: 0 });
+  gate = Object.assign(gateExpr(hard), { buf: '', target, hard });
   $('#gate-why').textContent = why || tx('gate.why');
   $('#gate-q').innerHTML = `${gate.expr} = ${slots(String(gate.ans).length, '')}`; $('#gate-hint').textContent = ''; $('#gate-go').hidden = true; $('#gate-pad').hidden = false;
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();   // 不然按 Enter 會重開關卡
@@ -4027,8 +4028,8 @@ function gateKey(d) {
       if (typeof t === 'function') { gate = null; $('#o-gate').hidden = true; t(); return; }
       gate.buf = ''; gate.ok = true; SFX.ding(); $('#gate-hint').textContent = tx('gate.ok'); $('#gate-pad').hidden = true; $('#gate-go').hidden = false; return;
     }
-    SFX.wrong(); gate.miss++;
-    if (gate.miss >= 3) { gate = null; $('#o-gate').hidden = true; gateWait = now() + 30000; toast(tx('gate.wait')); return; }   // 連錯 3 次：關掉、30 秒後再來
+    SFX.wrong(); gateMiss++;
+    if (gateMiss >= 3) { gateMiss = 0; gate = null; $('#o-gate').hidden = true; gateWait = now() + 30000; toast(tx('gate.wait')); return; }   // 連錯 3 次：關掉、30 秒後再來
     Object.assign(gate, gateExpr(gate.hard), { buf: '' });   // 答錯就換一題（同一題不能一直猜）
     $('#gate-hint').textContent = tx('gate.no'); const c = $('#gate-q'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
     $('#gate-q').innerHTML = `${gate.expr} = ${slots(String(gate.ans).length, '')}`; return;
