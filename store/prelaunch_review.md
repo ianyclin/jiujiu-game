@@ -462,3 +462,26 @@ Hidden outfits (unlocked at 40 and 50 badges), the legendary egg and trading sta
 **其他**
 14. repo 根目錄 12 張 `shot24-*`、`shot25-*.png` 移掉（GitHub Pages 會公開）。
 15. 支援頁 `support/` 三語加一句「沒有聲音請先檢查 iPhone 側邊的靜音鍵與音量」（C7）。
+
+### J3. 給「上架 session」：Bundle ID／套件名稱改成 `com.sanbaofang.jiujiu`（2026-11-12 Ian 決定）
+
+**新名字**：`com.sanbaofang.jiujiu`（iOS Bundle ID 與 Android applicationId 都用這個）。舊的 `io.github.ianyclin.jiujiumeteor` 全部換掉。Ian 擁有 `sanbaofang.com`，但這件事**不需要任何 DNS／Cloudflare 設定**，網站也不搬。Ian 會自己在 Apple Developer 登記這個 Bundle ID（`docs/launch-easy.md` 第 7 步）。
+
+**要改的地方**（`git grep -n "io.github.ianyclin"` 應該只剩文件裡說明「舊名字」的句子）：
+1. `capacitor.config.json:2` 的 `appId`。**只改 `appId`**；同檔的 `server.hostname`／`scheme` **絕對不能改**（`CLAUDE.md`：改了 origin，localStorage 就看不到舊紀錄）。
+2. `ios/App/App.xcodeproj/project.pbxproj:337`、`358` 的 `PRODUCT_BUNDLE_IDENTIFIER`（Debug、Release 兩處）。
+3. `android/app/build.gradle:4` 的 `namespace` 與 `:7` 的 `applicationId`。
+4. `android/app/src/main/java/io/github/ianyclin/jiujiumeteor/MainActivity.java`：搬到 `android/app/src/main/java/com/sanbaofang/jiujiu/MainActivity.java`，第一行改成 `package com.sanbaofang.jiujiu;`，刪掉舊的空資料夾。
+5. `android/app/src/main/res/values/strings.xml:6`、`:7` 的 `package_name` 與 `custom_url_scheme`。
+6. **`.github/workflows/android-apk.yml:83` 權限白名單**裡的 `io.github.ianyclin.jiujiumeteor.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` → `com.sanbaofang.jiujiu.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`。**漏改 CI 會失敗**（這個權限名稱跟著套件名稱）。
+7. 文件：`docs/launch-easy.md:59`、`61`、`68`、`157`；`docs/native-build.md:5`、`79`；`docs/store-checklist.md:75`、`163`（決定紀錄改成「2026-11-12 改為 `com.sanbaofang.jiujiu`」並寫原因：名字跟著自己的網域、不綁 GitHub 帳號）；`CLAUDE.md` 若有提到也一併改。
+
+**不用改的**：商品代號 `unlock_all`、`capacitor.config.json` 的 hostname／scheme、存檔的 localStorage key、GitHub Pages 網址（隱私權政策、支援頁、網頁版都不動）。
+
+**對已經裝了測試 APK 的 Android 手機**：新 APK 是另一個 App，不會覆蓋舊的，兩個並排、紀錄各自獨立。請在 `docs/launch-easy.md` 第 1 步與 Release 說明（workflow 的 release body）加一句：「2026-11 起 App 換了內部名稱，新版會變成另一個 App。舊 App 的紀錄請先用『設定 → 家長區 → 備份紀錄』匯出，再到新 App 匯入；搬好再刪舊的。」網頁版不受影響。
+
+**驗證**：
+- `npm run sync` 成功。
+- push 後 Android Actions 綠燈，用 `aapt2 dump badging` 確認套件是 `com.sanbaofang.jiujiu`、權限白名單通過。
+- iOS 那邊等 macOS 打包時，確認上傳到 App Store Connect 的 Bundle ID 是 `com.sanbaofang.jiujiu`，跟 Apple 後台登記的一致。
+- commit 訊息用繁體中文，例如「Bundle ID／套件名稱改為 com.sanbaofang.jiujiu」。
