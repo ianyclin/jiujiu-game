@@ -2,7 +2,7 @@
 
 遊戲本體仍是單檔 `index.html` + `assets/`，**原封不動**包進 app。`tools/make-www.mjs` 把它們複製到 `www/`（產物、不進版控；只少放一個商店用的 `icon-1024.png`），`cap sync` 再複製進 `ios/`、`android/`。網頁版（GitHub Pages）不受影響。
 
-- `appId`：`io.github.ianyclin.jiujiumeteor`（**請確認**：Google Play 的套件名稱上架後永遠不能改；Apple 的 Bundle ID 也很難改。若你有自己的網域，改成反向網域，一次要改 `capacitor.config.json`、`android/app/build.gradle` 的 `namespace`／`applicationId`、`android/.../MainActivity.java` 的 package 與路徑、`strings.xml`、`ios/App/App.xcodeproj/project.pbxproj` 的 `PRODUCT_BUNDLE_IDENTIFIER`）。
+- `appId`：`com.sanbaofang.jiujiu`（2026-11-12 從 `io.github.ianyclin.jiujiumeteor` 改成自己網域的反向網域。Google Play 的套件名稱上架後永遠不能改；Apple 的 Bundle ID 也很難改。要再改的話，一次要改 `capacitor.config.json`、`android/app/build.gradle` 的 `namespace`／`applicationId`、`android/.../MainActivity.java` 的 package 與路徑、`strings.xml`、`ios/App/App.xcodeproj/project.pbxproj` 的 `PRODUCT_BUNDLE_IDENTIFIER`）。
 - 外掛：**一個**，`@capgo/native-purchases` 8.9.5（App 內購買；免費開源 MPL-2.0，iOS 用 StoreKit 2、Android 用 Google Play Billing 9.1.0）。讀過原始碼：外掛自己不連網、不加權限、iOS 沒用到 required-reason API，所以 `NSPrivacyAccessedAPITypes` 仍為空。遊戲沒有 bundler，直接用 Capacitor 橋接的 `Capacitor.nativePromise('NativePurchases', 方法, 參數)` 呼叫（兩個平台都有）。沒有廣告、分析等第三方 SDK。
 
 ## 指令
@@ -76,7 +76,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 
 **已驗證（2026-10-14，在 Linux 上實際建置）**
 - `gradle assembleDebug` 與 `gradle bundleRelease` 都成功：`app-debug.apk` 約 6.9 MB、`app-release.aab`（未簽署）約 5.8 MB。環境：JDK 21、Android SDK 36（platforms;android-36、build-tools;36.0.0）、Gradle 8.14.3。
-- 用 `aapt2` 檢查成品：套件 `io.github.ianyclin.jiujiumeteor`、versionName 1.2、minSdk 24、targetSdk 36；當時**沒有 `INTERNET` 權限**（1.3 加了購買後，Google 付款程式庫帶進 `INTERNET`／`ACCESS_NETWORK_STATE`，見上面「權限」）；`allowBackup=false`、`screenOrientation=portrait`；桌面名稱英文「9×9 Meteor」、`zh`／`zh-TW`／`zh-HK`／`ja` 都是「九九流星隊」；APK 內的 `assets/public/index.html` 與 repo 的 `index.html` 逐位元相同，20 張寵物圖都在。
+- 用 `aapt2` 檢查成品：套件 `io.github.ianyclin.jiujiumeteor`（當時的名字，2026-11-12 改為 `com.sanbaofang.jiujiu`）、versionName 1.2、minSdk 24、targetSdk 36；當時**沒有 `INTERNET` 權限**（1.3 加了購買後，Google 付款程式庫帶進 `INTERNET`／`ACCESS_NETWORK_STATE`，見上面「權限」）；`allowBackup=false`、`screenOrientation=portrait`；桌面名稱英文「9×9 Meteor」、`zh`／`zh-TW`／`zh-HK`／`ja` 都是「九九流星隊」；APK 內的 `assets/public/index.html` 與 repo 的 `index.html` 逐位元相同，20 張寵物圖都在。
 - 建置抓到並修掉兩個資源問題：`colors.xml` 註解裡的 `--`（XML 不允許），以及繁中地區（zh-TW、zh-HK）會落回英文名稱（加了 `values-zh-rTW`、`values-zh-rHK`）。
 
 **沒驗證到**

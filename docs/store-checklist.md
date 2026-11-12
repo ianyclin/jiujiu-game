@@ -72,7 +72,8 @@
 - **家長關卡**：選了方案 E（你提的）——混合運算、先乘後加，例如 `5 + 2 × 13 =`；不可逆操作用 `a + b × c − d × e`。已在 [#53](https://github.com/ianyclin/jiujiu-game/pull/53) 實作。仍是「大人比較會」的題目，不是安全機制；真人觀察再看。
 - **聯絡 email**：`gigigagagogogege@gmail.com`，已寫進三份隱私權政策與三語支援頁（`support/`，給 Apple 的 Support URL）。公開在網頁上，之後可能收到垃圾信。
 - **帳號類型**：個人帳號（「指數三寶飯」不是登記的公司，組織帳號要 D-U-N-S）。商店的開發者欄會顯示本名；遊戲內 © 仍是指數三寶飯。
-- **Bundle ID／套件名稱**：沿用 `io.github.ianyclin.jiujiumeteor`（上架後不能改）。
+- **Bundle ID／套件名稱**：`com.sanbaofang.jiujiu`（上架後不能改）。2026-11-12 從原本的 `io.github.ianyclin.jiujiumeteor` 改過來：名字跟著自己的網域 `sanbaofang.com`，不綁 GitHub 帳號；不需要任何 DNS 設定。已經裝了舊測試 APK 的 Android 手機，新版會是另一個 App，紀錄要用「備份紀錄」搬。
+- **iOS 第一版打包**（2026-11-12）：在 Ian 自己的 Mac（M2 Pro、Xcode 已裝）用 Xcode 打包上傳 TestFlight，步驟在 `docs/launch-easy.md` 附錄。GitHub Actions 的 iOS 自動打包延後。
 - **iPad 方向**：四個方向都支援、不鎖直向（iPadOS 26 起 `UIRequiresFullScreen` 已過時，Apple 要求 iPad app 支援所有方向）。iPhone 維持直向。
 - **年齡層**：Apple Kids 6–8 ＋ 9–11；Google 目標年齡 6–8、9–12。不勾 5 歲以下。
 - **截圖**：第一版用遊戲原圖，不加標語與外框（誠實、省事；之後要做行銷圖再說）。
@@ -160,7 +161,7 @@
 2. **確認網址打得開**：`https://ianyclin.github.io/jiujiu-game/privacy/`、`…/support/`。
 3. **請母語者看英日文**：隱私權政策、支援頁、商店文案（`store/listing.json`）、遊戲介面。
 4. **價格已定**（見決定紀錄）：免費下載＋內購 `unlock_all` US$2.99。商品代號 `unlock_all` 寫在程式裡，兩家商店都要用**一模一樣**的代號，建立後不能改。
-5. **Google Play**：註冊開發者帳號（個人、約 US$25、身分驗證）→ 建立應用程式（套件名稱 `io.github.ianyclin.jiujiumeteor`）→ 產生 **upload key**（金鑰檔與密碼自己保管，不要進 repo）→ 建簽署的 AAB（`android/` 用 Android Studio 的 Build → Generate Signed Bundle，或把 key 告訴我怎麼放在本機、我補 `signingConfigs`）→ 上傳到**封閉測試**、找 **12 位測試者連續 14 天** → 填商店資料（`docs/store-listing.md`：文案、截圖、主圖、圖示 `assets/icon/icon-512.png`、類別、目標年齡、內容分級問卷、Data safety、隱私權政策網址）→ 申請正式版。
+5. **Google Play**：註冊開發者帳號（個人、約 US$25、身分驗證）→ 建立應用程式（套件名稱 `com.sanbaofang.jiujiu`）→ 產生 **upload key**（金鑰檔與密碼自己保管，不要進 repo）→ 建簽署的 AAB（`android/` 用 Android Studio 的 Build → Generate Signed Bundle，或把 key 告訴我怎麼放在本機、我補 `signingConfigs`）→ 上傳到**封閉測試**、找 **12 位測試者連續 14 天** → 填商店資料（`docs/store-listing.md`：文案、截圖、主圖、圖示 `assets/icon/icon-512.png`、類別、目標年齡、內容分級問卷、Data safety、隱私權政策網址）→ 申請正式版。
    - **內購設定**：先設好**付款資料**（Play Console → 設定 → 付款資料，商家帳戶與稅務）→ 先上傳一個含付款程式庫的版本到測試軌道（Google 的說明：設定商品前要先上傳 APK／AAB，app 要有 BILLING 權限；我們的版本已經有）→ 「營利 → 產品 → 一次性產品」建立 `unlock_all`（名稱、說明三語、價格 US$2.99，其他國家用自動換算）→ 啟用。
    - **測試者免付錢**：設定 → **授權測試**，把 12 位測試者的 Gmail 加進去，他們買的時候用測試卡，不會真的扣款。
    - **送朋友優惠碼**：營利 → 促銷代碼，一次性產品每季最多 500 組，季末沒用的會失效；朋友在 Google Play 付款畫面或 Play 商店「兌換代碼」輸入。

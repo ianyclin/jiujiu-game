@@ -17,6 +17,7 @@
 - 手機會說「不明來源」，按允許。
 - 玩看看：流星、幽靈（試玩 3 次後會出現鎖）、設定、備份紀錄。
 - 這個版本**還不能真的買**（商店裡還沒有商品），按「購買」失敗是正常的。
+- **2026-11 起 App 換了內部名稱**（`com.sanbaofang.jiujiu`），新版會變成**另一個 App**，不會覆蓋舊的。舊 App 的紀錄請先用「設定 → 家長區 → 備份紀錄」匯出，再到新 App 匯入；搬好再刪舊的。網頁版不受影響。
 - 做完會怎樣：遊戲正常開、能玩、有聲音。
 
 **2. 確認兩個網頁打得開**
@@ -56,16 +57,16 @@
 **7. 登記 App 的身分證（Bundle ID）**
 - `developer.apple.com` → Account → 憑證、識別碼與描述檔（Certificates, Identifiers & Profiles）→ 識別碼（Identifiers）→ ＋。
 - 選 **App IDs** → **App** → 繼續。
-- 說明：`jiujiu meteor`；Bundle ID 選「明確」（Explicit），填 `io.github.ianyclin.jiujiumeteor`（**一個字都不能錯，上架後不能改**）。
+- 說明：`jiujiu meteor`；Bundle ID 選「明確」（Explicit），填 `com.sanbaofang.jiujiu`（**一個字都不能錯，上架後不能改**）。
 - 下面的功能清單不用勾（App 內購買本來就開著）→ 繼續 → 註冊。
-- 做完會怎樣：識別碼清單裡多一行 `io.github.ianyclin.jiujiumeteor`。
+- 做完會怎樣：識別碼清單裡多一行 `com.sanbaofang.jiujiu`。
 
 **8. 建立 App**
 - App Store Connect → App → ＋ → 新 App。
   - 平台：iOS
   - 名稱：`九九流星隊：九九乘法表練習`
   - 主要語言：繁體中文
-  - 套件 ID：選剛剛那個 `io.github.ianyclin.jiujiumeteor`
+  - 套件 ID：選剛剛那個 `com.sanbaofang.jiujiu`
   - SKU：`jiujiu-meteor`（自己看的代號，隨便填）
 - 進去以後 → **價格與銷售地區**：
   - 價格：**免費**。
@@ -90,11 +91,11 @@
   - **家人共享：打開**（已決定；打開後不能關）。
 - 做完會怎樣：商品狀態是「缺少元數據」或「準備送出」。都正常。
 
-**10. 打包上傳 → 跟我說**
-- iPhone 版要在 Mac 上打包。兩種做法，選一種跟我說：
-  - **你有 Mac**：裝 Xcode，我一步一步帶你按。
-  - **你沒有 Mac**：我可以設定 GitHub 幫我們用它的 Mac 打包上傳（不用另外花錢）。你只要在 App Store Connect 建一把「API 金鑰」給它，我會教你怎麼建、怎麼放（金鑰不要貼給我或貼在對話裡）。
-- 做完會怎樣：App Store Connect → TestFlight 裡看得到一個版本。
+**10. 在 Mac 上用 Xcode 打包上傳**
+- 第一版在你自己的 Mac 打包（2026-11-12 決定）；GitHub 自動打包之後再做。
+- 要先做完**第 7、8 步**（Bundle ID 登記好、App Store Connect 裡建好 App），不然上傳會失敗。
+- 照下面的「**附錄：在 Mac 上用 Xcode 打包上傳**」一步一步做。
+- 做完會怎樣：App Store Connect → TestFlight 裡看得到一個版本，你的 iPhone 的 TestFlight 收得到。
 
 **11. 用 TestFlight 自己先玩**
 - 在 iPhone 裝 TestFlight（App Store 搜尋），App Store Connect → TestFlight → 加自己和家人。
@@ -154,6 +155,119 @@
 
 ## 你只需要記住三件事
 
-1. 商品代號是 `unlock_all`，Bundle ID 是 `io.github.ianyclin.jiujiumeteor`，一個字都不能錯。
+1. 商品代號是 `unlock_all`，Bundle ID 是 `com.sanbaofang.jiujiu`，一個字都不能錯。
 2. Apple 的銷售地區要取消中國大陸和歐盟 27 國。
 3. 卡住就截圖給我。
+
+---
+
+## 附錄：在 Mac 上用 Xcode 打包上傳
+
+給第 10 步用。從零開始，大概 1 小時（第一次比較久）。每一段後面寫了「做完會怎樣」，看到就代表成功；看到紅字或跟這裡寫的不一樣，就截圖給我。
+
+> 「終端機」：按 ⌘ + 空白鍵，打 `終端機`（或 `Terminal`），按 Enter。下面灰底的指令，**一次複製一行**貼進去、按 Enter，等它跑完（出現新的一行、可以再打字）再貼下一行。
+
+### A. 第一次才要做：準備工具
+
+**A1. 確認 Xcode 已經裝好、打開過一次**
+- 第一次打開 Xcode 會問要不要裝元件，**iOS** 要勾。
+- 做完會怎樣：看得到「Welcome to Xcode」視窗（可以關掉）。
+
+**A2. 在 Xcode 登入你的開發者帳號**
+- Xcode 選單 **Xcode → Settings（設定）→ Accounts（帳號）→ 左下 ＋ → Apple ID** → 登入（跟 App Store Connect 同一個帳號）。
+- 做完會怎樣：清單裡出現你的 Apple ID，右邊 Team 寫 **YEN CHU LIN**，角色是 Account Holder（帳號持有人）。
+
+**A3. 裝 Node.js（打包要用的小工具）**
+- 打開 `https://nodejs.org` → 下載 **LTS** 版（標著 LTS 的那個按鈕，macOS 安裝檔 `.pkg`）→ 打開 → 一直按「繼續」裝完。版本要 **22 以上**。
+- 打開終端機，貼：
+  ```
+  node -v
+  ```
+- 做完會怎樣：出現 `v22.…` 或更大的數字（例如 `v24.11.0`）。
+
+**A4. 把專案下載到 Mac（git clone）**
+- 在終端機一行一行貼：
+  ```
+  cd ~/Documents
+  git clone https://github.com/ianyclin/jiujiu-game.git
+  ```
+- 如果跳出「需要安裝命令列開發者工具」：按「安裝」，裝完再貼一次第二行。
+- 做完會怎樣：「文件」資料夾裡多一個 `jiujiu-game` 資料夾。
+
+### B. 每次打包都要做
+
+**B1. 拿最新的版本、準備好檔案**
+- 在終端機一行一行貼：
+  ```
+  cd ~/Documents/jiujiu-game
+  git pull
+  npm ci
+  npm run sync
+  ```
+  - `git pull`：拿 GitHub 上最新的遊戲。顯示 `Already up to date.` 也是正常的。
+  - `npm ci`：裝打包用的套件（第一次要一兩分鐘）。最後出現 `added … packages` 就是好了；有 `warn` 黃字沒關係，有 `ERR!` 紅字就截圖給我。
+  - `npm run sync`：把遊戲複製進 iPhone 專案。最後出現 `Sync finished` 就是好了。
+- **一定要跑 `npm run sync`**，不然 App 裡是空的或是舊的遊戲。
+
+**B2. 用 Xcode 打開 iPhone 專案**
+- 貼：
+  ```
+  npx cap open ios
+  ```
+- 做完會怎樣：Xcode 打開一個叫 **App** 的專案。第一次打開，左下或上面會寫「Resolving Packages」（下載套件），等它跑完再往下做（幾分鐘）。
+
+**B3. 選 Team、確認 Bundle ID（第一次做，之後 Xcode 會記得）**
+- 左邊最上面點藍色的 **App**（專案圖示）→ 中間 **TARGETS** 底下點 **App** → 上面分頁點 **Signing & Capabilities**。
+- **Automatically manage signing**（自動管理簽名）：**打勾**。
+- **Team**：選 **YEN CHU LIN**。如果有兩個，選**沒有寫「(Personal Team)」**的那個（Personal Team 是免費帳號，不能上架）。
+- **Bundle Identifier**：要是 `com.sanbaofang.jiujiu`，**一個字都不能錯**。不是的話**不要自己改**，截圖給我。
+- 做完會怎樣：下面「Signing Certificate」那幾行沒有紅字。出現紅字（例如找不到 Bundle ID）就截圖給我：多半是第 7 步還沒做。
+- 不用按「+ Capability」加東西（App 內購買本來就開著）。
+
+**B4. 確認版本號與 build 號**
+- 同一個畫面，上面分頁改點 **General** → **Identity** 那一區：
+  - **Version**（版本號）：`1.4`。這是商店上給大家看的版本，要跟遊戲「關於」頁寫的一樣，**不要自己改**；發新版時我會在專案裡一起改好。
+  - **Build**（build 號）：第一次上傳是 `1`。
+- **build 號的規則**：同一個版本號每上傳一次，build 號就要**比上次大**（1 → 2 → 3）。上傳失敗、要重傳，或修了東西再傳一次，都要先把 Build 改大一號（直接在這個欄位改）。改了以後跟我說改成幾，我把專案裡的也改成一樣，下次 `git pull` 才不會打架。
+- 換新版本號（例如 1.5）時 build 號可以從 1 重新開始。
+
+**B5. 打包（Archive）**
+- Xcode 視窗最上面中間，▶ 按鈕右邊有一個選裝置的地方，點它，選 **Any iOS Device (arm64)**（「任何 iOS 裝置」）。**不能選模擬器**（iPhone 17 這種寫 Simulator 的），選了模擬器 Archive 會是灰的。
+- 選單 **Product → Archive**。
+- 等它跑（幾分鐘，上面進度條跑完）。
+- 做完會怎樣：自動跳出 **Organizer** 視窗，清單最上面是剛剛那一包（App 1.4 (1)）。
+- 中途失敗（上面出現紅色 ✕）：點左邊紅色的錯誤，整個視窗截圖給我。
+
+**B6. 上傳到 App Store Connect（Distribute App）**
+- 在 Organizer 選剛剛那一包 → 右邊按 **Distribute App**。
+- 選上傳到 App Store Connect 的那個選項（叫 **App Store Connect** 或 **TestFlight & App Store**，看你的 Xcode 版本）→ Next。
+  - 如果有 **TestFlight Internal Only**（只給內部測試）：**不要選**，這種版本之後不能拿去送審。
+- 後面幾頁照預設一直按 **Next**／**Upload**（簽名選「自動」Automatically manage signing）。
+- 做完會怎樣：最後一頁寫 **Upload Successful**（或「已上傳」）。
+- 卡住、出現英文錯誤：整個視窗截圖給我，**不要一直重按**（重傳要先把 build 號改大，見 B4）。
+
+**B7. 等 Apple 處理**
+- 上傳完 App Store Connect 要「處理」一下，通常十幾分鐘到一兩個小時，會寄信說處理好了。
+- App Store Connect → App → 九九流星隊 → **TestFlight** 分頁，看得到 `1.4 (1)`。
+- 如果它問「出口合規」（加密）：專案已經設定好「沒有用加密」，正常不會問；真的問了，截圖給我。
+
+### C. 把自己加成內部測試員（第一次才要做）
+
+**C1. 建一個內部測試群組**
+- App Store Connect → App → 九九流星隊 → **TestFlight** 分頁。
+- 左邊 **內部測試**（Internal Testing）旁邊的 **＋** → 名字打 `自己人` → 勾 **啟用自動發佈**（Enable automatic distribution：之後每次上傳都會自動送給群組裡的人）→ **建立**（Create）。
+
+**C2. 把自己加進去**
+- 左邊點剛建的 `自己人` → 右邊 **邀請測試員**（Invite Testers）→ 勾你自己 → **新增**（Add）。
+- 家人要一起測的話：他們要先是 App Store Connect 的使用者（使用者和存取權限 → ＋ 邀請），才能加成內部測試員；不想這麼麻煩就先只加自己。
+
+**C3. 第一次上傳的那一包，手動加進群組**
+- 如果群組是在上傳之後才建的：點 `自己人` → **新增建置版本**（Add Builds）→ 選 `1.4 (1)` → 下一步 → 「要測試的內容」打 `第一版` → 新增。
+
+**C4. 在 iPhone 上裝**
+- iPhone 到 App Store 搜尋 **TestFlight**，裝起來。
+- 你的 email 會收到邀請信，點「View in TestFlight」或在 TestFlight 裡直接看到九九流星隊 → **安裝**。
+- 做完會怎樣：iPhone 桌面多一個九九流星隊（圖示旁邊有一個小橘點，代表是測試版）。接著做第 11 步。
+
+### 之後改版要做什麼
+只要做 **B1 → B4（Build 改大一號）→ B5 → B6**。A 和 C 只有第一次要做。
