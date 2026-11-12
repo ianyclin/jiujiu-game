@@ -438,6 +438,8 @@
 5. `whatsNew` 三語從 1.3 改成 1.4 的內容（第一版不會用到，但先改好）。
 6. 關鍵字拿掉跟名稱、副標重複的字（中文「九九乘法、乘法表、遊戲」、英文 `game`、日文「ゲーム」），換成新詞。
 
+7a. **關鍵字加上加減**（Ian 2026-11-12 提出：1.4 起有 20 以內加減，說明已寫但關鍵字沒有）：在拿掉重複字之後，中文加「加減法、20以內加減、進位、退位、湊十」，英文加「addition,subtraction,math facts」，日文加「たし算,ひき算,くり上がり,くり下がり」；跑 `tools/make-listing.py` 確認不超過 100 字。名稱、副標、完整說明不改（說明三語已有加減那段）。
+
 **審核備註**（英文，A6）——在現有版本上補：
 ```text
 Parental gate: solve the arithmetic shown, e.g. 5 + 2 × 13 = 31 (multiply first). Three wrong answers lock it for 30 seconds.
@@ -450,6 +452,7 @@ Hidden outfits (unlocked at 40 and 50 badges), the legendary egg and trading sta
 
 **截圖**（A10）
 7. `tools/store-screenshots.cjs:49`：幽靈紀錄改成**累計**時間（例如每題約 2.5 秒、第 20 個約 50 秒），現在主選單顯示「最佳 2.2 秒」。
+8a. 五張截圖裡換一張成**加減**：流星防衛戰選「加減」、答錯後出現湊十／雙倍算法的畫面（或主選單副標顯示練加減），讓家長看得出不只練乘法。
 8. 用 App 模式（注入假 `window.Capacitor`）截主選單，讓四張付費卡帶「免費試玩」牌子（2.3.2）。等主開發 session 改完再一起重截全部。
 
 **iOS 打包（GitHub Actions macOS）**（B 節）
