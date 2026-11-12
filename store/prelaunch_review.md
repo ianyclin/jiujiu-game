@@ -378,3 +378,87 @@
 - 100 連擊、傳說蛋實際解鎖、隱藏配件現身。
 
 測試腳本與截圖在這次 session 的暫存區，**沒有進 repo**，session 結束後就不在了。
+
+---
+
+## J. 交辦清單（2026-11-12 整理，直接複製給對應的 session）
+
+> 兩份都假設下面三件事照建議決定；Ian 若決定不同，請照他說的改：
+> 1. App 與 `unlock_all` 的銷售地區**再排除越南**（共排除中國大陸、歐盟 27 國、越南）。
+> 2. **進 Kids 類別、年齡層只選 6–8**（核准後不能改、不能退出）。
+> 3. 美國州法第一版不接 Declared Age Range；台灣遊戲分級由 Ian 自己去登錄。
+>
+> 依據都在 `store/prelaunch_review.md`（分支 `claude/prelaunch-review`），括號是節次。
+
+### J1. 給「主開發 session」（改遊戲程式，`index.html`）
+
+照 `CLAUDE.md` 的慣例做：介面文字三語都改、改了文字重跑 `tools/make-fonts.py`、改規則同步遊戲說明、最後 `npm run sync`。每項做完用 Playwright 驗證。
+
+**送審前一定要改**
+1. **家長關卡連錯 3 次鎖 30 秒可用「取消」繞過**（A5）：`index.html:3976` 每次開卡 `miss: 0`、`index.html:4122` 取消只做 `gate = null`。把錯誤次數改成跟 `gateWait` 一樣的模組變數，取消不歸零，答對或鎖滿 30 秒才歸零。驗證：錯 2 次＋取消重複幾輪，第 3 次錯就要鎖。
+2. **iOS 不能出現「Google Play」**（A2，Apple 2.3.10）：關於頁 `about.buyL`（三語，`index.html:1243`、`1393`、`1542`）的「付款由 App Store／Google Play 處理」改成依平台顯示（iOS 只寫 App Store、Android 只寫 Google Play、網頁版兩個都寫或都不寫）。全文再搜一次 `Google`，確認 iOS 上看得到的地方都沒有。
+
+**送審前建議改**
+3. **買完後購買卡按鈕還寫「之後再說」**（C2）：解鎖後改成「好」（三語）。
+4. **320 寬購買卡的「之後再說」被切在卡外**（C3）：320×568 三語都要不用捲就看得到全部按鈕（iPad 分割畫面最窄一格也是這個寬度）。
+5. **商店回空商品時不會重試**（C5）：`iapNoProd` 時 2～3 秒後自動再問一次 `getProducts`。
+6. **「購買前詢問」送出後還能再按購買**（C4，`index.html:4067`）：記一個待核准狀態，期間購買鈕停用、只留恢復購買。
+7. **第一局的引導只停 1.15 秒**（D1，`index.html:2161`、`2102`）：改成固定在鍵盤上方，按下第一個數字才消失。
+8. **試玩一進去就扣**（D2）：倒數中退出也算一局。改成倒數結束（或答了第 1 題）才 `UL.trial[m]++`，toast 也跟著移。
+9. **任務全完成寫「明天再來」**（D3，三語）：拿掉，跟 `CLAUDE.md`「不催孩子回來」一致。
+10. **鎖卡主次按鈕**（D4）：「好」當主要（黃色、上面），「給大人看」次要；標題與內文別重複「試玩用完／結束」。
+11. **魔王進場時蓋住分數與血條、飛彈提示被發射鈕壓到**（C1）。
+12. **iOS 被來電打斷後音樂可能不回來**（C6，`index.html:1854`）：`actx.state !== 'running'` 就 `resume()`。
+13. **iPad 台前調度的「請轉直」**（C8，`index.html:202`、`4332`）與 **Android 鍵盤把畫面擠矮誤判橫向**（C9）：CSS 與 `rotMQ` 兩處都加 `and (min-aspect-ratio: 3/2)`。
+14. `help.wrong` 說「歸零」但實際是降到熟悉中（D6），改說明。
+
+**之後的版本（不擋送審）**
+- Android 付款中回前景卡死（C10）：回前景檢查加 `&& !iapBusy`、購買加 90 秒逾時。
+- 匯入備份寫入順序（C11）、E 節排版小問題、F 節英日文、非遊戲畫面降到 30fps。
+
+改完後請：更新版本（若要改號，照 `CLAUDE.md`「發版要改」那幾處）、`npm run sync`、告訴上架 session 要重截截圖。
+
+### J2. 給「上架 session」（文件、商店資料、打包）
+
+**文件要改**（A1、A4、A7、H）
+1. `docs/launch-easy.md`：
+   - 第 8、9 步與「記住三件事」：銷售地區再取消**越南**（少 29 個）。
+   - 第 12 步：Kids 年齡層**只選 6–8**，加註「核准後不能改、不能退出 Kids」。
+   - 第 5 步：付費協議之外，**銀行、稅表（W-8BEN）也要完成**；全部生效後才送審（官方：協議沒生效，審核時內購不會動）。加一步「申請小型企業計畫（15%）」。
+   - 第 10 步：API 金鑰要先由帳號持有人按 Request Access；建議 Admin 角色的 Team key。
+   - 第 11 步加：TestFlight 打開購買卡**確認看得到價錢**，看到才可以送審。
+2. `docs/store-listing.md`：
+   - 第二節 Kids 年齡層改「6–8（只能選一個）」；分級問卷那列刪掉「問到 App 內購買就照實回答有」（Apple 問卷沒有這題），改寫 A7 的答法：Contests、Loot Boxes、暴力都答「無」，In-App Controls、社群、Shared Location、Dating 都答沒有。
+   - 截圖表：必填是 iPhone 1206×2622 與 iPad 13"；6.9" 選填；2027 年 4 月起要 iPhone Duo。
+   - 審核備註換成下面第 4 點的版本。
+3. `docs/store-checklist.md`：同步上面幾點；Google API 36 的延期已過；抽成要自己申請小型企業計畫、台灣商店標準抽成 2026-10-31 起 26%；補「美國州法」「越南許可」「台灣遊戲分級」三條決定紀錄。`docs/native-build.md` 的 1.3／1.2 改 1.4，第 46 行備份已完成。
+
+**商店文案**（`store/listing.json` → `python3 tools/make-listing.py`）
+4. **Apple 版說明不能有「Google Play」**（2.3.10）：拆成 Apple 版與 Google 版（或在 JSON 加 `description_apple`），Apple 版只寫「付款由 App Store 處理」，三語。
+5. `whatsNew` 三語從 1.3 改成 1.4 的內容（第一版不會用到，但先改好）。
+6. 關鍵字拿掉跟名稱、副標重複的字（中文「九九乘法、乘法表、遊戲」、英文 `game`、日文「ゲーム」），換成新詞。
+
+**審核備註**（英文，A6）——在現有版本上補：
+```text
+Parental gate: solve the arithmetic shown, e.g. 5 + 2 × 13 = 31 (multiply first). Three wrong answers lock it for 30 seconds.
+Fastest path to the purchase screen on a fresh install: close the name card (✕) → Settings → For grown-ups → Unlock all games → solve the gate → purchase card (price, Buy, Restore Purchase, Use a promo code).
+Each of the four paid games can also be tried 3 times; after that a card appears with "Show a grown-up", which leads to the same gate.
+The in-app purchase is not sold in China mainland, the EU or Vietnam, matching the app's availability.
+Hidden outfits (unlocked at 40 and 50 badges), the legendary egg and trading stardust for a badge are gameplay rewards earned by playing; none can be bought.
+```
+（不要提網頁版免費，A11。）
+
+**截圖**（A10）
+7. `tools/store-screenshots.cjs:49`：幽靈紀錄改成**累計**時間（例如每題約 2.5 秒、第 20 個約 50 秒），現在主選單顯示「最佳 2.2 秒」。
+8. 用 App 模式（注入假 `window.Capacitor`）截主選單，讓四張付費卡帶「免費試玩」牌子（2.3.2）。等主開發 session 改完再一起重截全部。
+
+**iOS 打包（GitHub Actions macOS）**（B 節）
+9. 先 `npm ci && npm run sync`（`ios/App/App/public`、`capacitor.config.json` 不在版控）。
+10. 簽章：帶 Team ID 與 API 金鑰、`-allowProvisioningUpdates`；不要全域加 `PROVISIONING_PROFILE_SPECIFIER`。
+11. `CURRENT_PROJECT_VERSION=$GITHUB_RUN_NUMBER`（`project.pbxproj:328` 寫死 1）。
+12. 用 runner 預設的最新 Xcode（至少 Xcode 26），或明確設 `DEVELOPER_DIR`。
+13. 第一次建置後看 Capacitor xcframework 的簽章欄位（A12）。
+
+**其他**
+14. repo 根目錄 12 張 `shot24-*`、`shot25-*.png` 移掉（GitHub Pages 會公開）。
+15. 支援頁 `support/` 三語加一句「沒有聲音請先檢查 iPhone 側邊的靜音鍵與音量」（C7）。
