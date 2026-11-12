@@ -618,3 +618,18 @@ Hidden outfits (unlocked at 40 and 50 badges), the legendary egg and trading sta
 - **手感**：流星答對的回饋、炸彈爆炸後的說明（「2 × 9 = 18，差了 1」）、幽靈輸了下一局自動放慢、哪個大的節奏。
 - **無障礙**：沒有只靠聲音傳達的資訊；減少動態處理完整；寶箱稀有度不只靠顏色；觸控目標夠大。
 - **留存**：連續天數斷了不罰也不提醒；換徽章 ★300 的定價合理；難度在第 12 波左右封頂，高手仍有空間。
+
+---
+
+## L. Ian 的待辦（2026-11-12 起，做完就打勾）
+
+### 優惠碼（`unlock_all`）
+遊戲已經有「使用優惠碼」按鈕（購買卡，家長關卡後面；`index.html:4082`），兌換後會自動解鎖。**碼要自己在 App Store Connect 建**：App → 內購 → `unlock_all` → Offer Codes → Create Offer。建好不能改，要改就另建一個。依據：[Create offer codes for In-App Purchases](https://developer.apple.com/help/app-store-connect/manage-in-app-purchases/create-offer-codes-for-in-app-purchases/)【官方】。
+
+- [ ] **TestFlight 時**：建一批**沙盒碼**（10～10,000 個，App 還沒上架也能建），用沙盒測試帳號在 iPhone 實測「購買卡 → 使用優惠碼 → 輸入 → 自動解鎖」。順便確認 iOS 16.3 以前會提示改去 App Store 帳號頁兌換。
+- [ ] **上架、內購審核通過後**：建一個**免費**的優惠活動（Free Offer）。
+  - 送親友、老師、粉專活動：用**自訂碼**（自己取名，例如 `JIUJIU2026`），設兌換次數上限與到期日（最長 6 個月）。
+  - 要一人一碼：用**一次性碼**（一批 500～25,000 個，一定要設到期日）。
+  - 資格可限定「從沒買過」的人；地區跟 App 一樣（不含中國大陸、歐盟、越南）。
+  - 一個 App 同時最多 10 個有效活動；每季最多 100 萬個碼。
+- [ ] Android 上架時：Google Play 的優惠碼另外在 Play Console 建；遊戲裡沒有輸入框，要在 Play 付款畫面選「兌換代碼」，回到遊戲會自己檢查（3 天內要確認，遊戲已處理）。
