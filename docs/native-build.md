@@ -35,7 +35,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 | 備份 | Android `allowBackup="false"`：孩子的紀錄不進 Google 備份，跟隱私權政策「只存本機」一致。iOS 的整機備份系統會帶走 app 資料，無法關，已寫進隱私權政策第 6 節 |
 | 出口合規 | `ITSAppUsesNonExemptEncryption = false` |
 | Privacy Manifest | `ios/App/App/PrivacyInfo.xcprivacy`：不追蹤、不收集、無 required-reason API |
-| 版本 | `MARKETING_VERSION` 1.3、`versionName` 1.3（與關於頁一致；改版時三處一起改：`index.html` 的 `about.ver` ×3 語言、pbxproj、`build.gradle`） |
+| 版本 | `MARKETING_VERSION` 1.4、`versionName` 1.4（與關於頁一致；改版時三處一起改：`index.html` 的 `about.ver` ×3 語言、pbxproj、`build.gradle`） |
 
 ## localStorage 在 App 裡的保存
 
@@ -43,7 +43,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
 - Android WebView 的 localStorage 在 app 私有資料夾，只有使用者主動清除 app 資料或解除安裝才會消失。
 - iOS WKWebView 的資料在 `Library/WebKit`。「7 天不使用就清除」的 ITP 規則針對 Safari 瀏覽，不含 app 內的 WKWebView；但 Capacitor 官方文件仍提醒：系統在儲存空間吃緊時**理論上**可以清掉 WebView 儲存。
 - **我刻意沒有加「鏡像到原生儲存」**（Capacitor Preferences 外掛，`save()` 同步寫一份、WebView 資料被清空時還原）。原因：(1) 沒有 Mac／實機，這個還原流程（偵測空資料 → 非同步取回 → 重載）無法在這裡測，在兒童 app 上放沒測過的資料還原有「蓋掉資料」的風險；(2) 要多一個外掛與 Privacy Manifest 的 UserDefaults 宣告；(3) 實務上很少發生。**建議**：先用 TestFlight／Play 內部測試觀察；若真有人回報紀錄不見，再做。需要時我可以做，要你決定。
-- 紀錄匯出／匯入（家長關卡後手動備份）是另一個選項，同樣留待之後決定。
+- 紀錄匯出／匯入已經做了：設定 → 家長區 → 備份紀錄（見 `CLAUDE.md`「備份紀錄」）。
 
 ## iOS 27（2026 年 9 月推出）
 
@@ -61,7 +61,7 @@ npx cap open ios                   # 在 Xcode 選 Team、Product → Archive
   https://github.com/ianyclin/jiujiu-game/releases/download/android-latest/jiujiu-meteor.apk
   （GitHub 的 Releases 頁「Android 測試版（最新）」，標成 pre-release；每次換新、網址不變。**任何人都能下載這個測試版**。）
 - **下載（每一次 run、含 PR）**：Actions 頁面點進那次 run，最下面 **Artifacts** 的 `jiujiu-meteor-apk-<編號>`（zip，解開是 APK），保留 30 天，要登入 GitHub。
-- **版本號**：`versionCode` 用 run 編號（`CI_VERSION_CODE`），越新越大；`versionName` 是 1.3（iOS 的 MARKETING_VERSION 也是 1.3）。
+- **版本號**：`versionCode` 用 run 編號（`CI_VERSION_CODE`），越新越大；`versionName` 是 1.4（iOS 的 MARKETING_VERSION 也是 1.4；iOS 的 build 號 `CURRENT_PROJECT_VERSION` 每次上傳 TestFlight 要加 1，在 Xcode 的 General → Build 改，改了請同步回 repo）。
 - **簽名固定**：`android/app/debug.keystore` 是進版控的**測試用** debug 金鑰（密碼 `android`）。每次建的 APK 簽名相同，手機上可以**直接覆蓋安裝，紀錄保留**。這把金鑰公開無妨，Google Play 不收 debug 簽署的檔案；上架用的 upload key 是另一把，絕不進版控。
   - 2026-10-14 之前我在對話裡傳的那個 APK 是用別的金鑰簽的，換成 CI 建的版本時要先解除安裝一次（**先用設定裡的「備份紀錄」備份**）。
 - **建置後自動檢查**：套件名稱、版本、權限白名單（BILLING、Google 付款程式庫的兩個網路權限、androidx 內部權限；多一個就失敗，少了 BILLING 也失敗）、APK 裡的 `index.html` 與 repo 逐位元相同；任何一項不對就失敗。

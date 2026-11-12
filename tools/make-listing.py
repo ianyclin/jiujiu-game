@@ -6,10 +6,18 @@ root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 L = json.load(open(os.path.join(root, 'store', 'listing.json'), encoding='utf-8'))
 LIM = {'name': 30, 'subtitle': 30, 'promo': 170, 'short': 80, 'keywords': 100, 'whatsNew': 4000, 'description': 4000}
 NAMES = {'zh-Hant': '繁體中文（zh-Hant／台灣）', 'en': 'English（en-US）', 'ja': '日本語（ja）'}
+def desc(d, store):   # description 裡的 {store} 換成該商店的名字
+    return d['description'].replace('{store}', d['stores'][store])
 bad = []
 for lang, d in L.items():
     for k, m in LIM.items():
+        if k == 'description': continue
         if len(d[k]) > m: bad.append(f'{lang}.{k}: {len(d[k])} > {m}')
+    for st in ('apple', 'google'):
+        t = desc(d, st)
+        if len(t) > LIM['description']: bad.append(f'{lang}.description({st}): {len(t)} > {LIM["description"]}')
+        if '{' in t: bad.append(f'{lang}.description({st}): 還有沒換掉的 {{…}}')
+    if 'Google Play' in desc(d, 'apple'): bad.append(f'{lang}.description(apple): 不能出現 Google Play（Apple 2.3.10）')
 if bad: sys.exit('超過字數上限：\n' + '\n'.join(bad))
 
 o = []
@@ -21,7 +29,7 @@ w('''# 商店文案與截圖
 
 ## 一、各語言文案
 
-兩家商店共用同一份完整說明（description）。Apple 的「名稱」與 Google 的「應用程式名稱」相同。
+完整說明分 **Apple 版**與 **Google 版**，只差付款那句的商店名稱：Apple 2.3.10 規定 App 與商店資料不能出現別的平台或商店的名字，所以 Apple 版只寫 App Store。Apple 的「名稱」與 Google 的「應用程式名稱」相同。
 ''')
 for lang, d in L.items():
     w(f'### {NAMES[lang]}\n')
@@ -30,8 +38,10 @@ for lang, d in L.items():
             ('簡短說明（Google Short description）', 'short'), ('關鍵字（Apple Keywords）', 'keywords'), ('新功能（What\'s New）', 'whatsNew')]
     for label, k in rows:
         w(f'| {label} | {len(d[k])}／{LIM[k]} | {d[k]} |')
-    w(f'\n**完整說明**（{len(d["description"])}／{LIM["description"]}）\n')
-    w('```text\n' + d['description'] + '\n```\n')
+    for st, label in (('apple', 'Apple 版（App Store Connect）'), ('google', 'Google 版（Play Console）')):
+        t = desc(d, st)
+        w(f'\n**完整說明：{label}**（{len(t)}／{LIM["description"]}）\n')
+        w('```text\n' + t + '\n```\n')
 w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己索引）；不要放競品或商標名稱。
 > 說明中沒有宣稱成效（如「保證進步」），也沒有宣稱「手繪」（寵物與配件插畫是 AI 生成，見 `CLAUDE.md`）。
 
@@ -40,8 +50,8 @@ w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己�
 | 項目 | 建議 |
 |---|---|
 | Apple 主要類別／次要類別 | 教育（Education）／遊戲（Games → Educational） |
-| Apple Kids 類別 | 勾選，年齡層 **6–8 ＋ 9–11**（不勾 5 歲以下） |
-| Apple 年齡分級問卷 | 照實填：暴力、使用者產生內容、動態消息、不受限網頁存取、賭博都「無」；問到 App 內購買就照實回答「有」（一次性解鎖）→ 預期 4+ |
+| Apple Kids 類別 | 勾選，年齡層**只能選一個**：建議 **6–8**（主要對象是小二、小三）。**核准後不能改、也不能退出 Kids**，之後每一版都要守 Kids 規則（不能加第三方分析、廣告，外部連結與購買要家長關卡）。來源：developer.apple.com/app-store/categories/、App Store Connect 說明「Set an app age rating」 |
+| Apple 年齡分級問卷 | 照實填，全部答「無／沒有」：暴力（卡通或幻想暴力也答無）、**Contests（競賽）答無**（沒有線上排行、不跟別的玩家比；答 Frequent 會變 13+、進不了 Kids）、**Loot Boxes 答無**（定義是「可購買的隨機虛擬物品」，遊戲的寶箱不能買）、使用者產生內容、社群媒體、In-App Controls、Shared Location、Dating、不受限網頁存取、賭博 → 預期 4+。問卷**沒有**「App 內購買」這一題。來源：App Store Connect 說明「Age ratings values and definitions」 |
 | Google 類別 | 教育（Education）；Families：目標年齡 6–8、9–12 |
 | Google 內容分級（IARC） | 「數位購買」答「是」（有 `unlock_all` 內購），其他全部「否」；預期全年齡 |
 | 價格 | App 本身**免費**＋一個**非消耗型**內購 `unlock_all`（建議 US$2.99，解鎖幽靈競速、雙人拔河、哪個大、炸彈拆除）；無廣告（Play Console「包含廣告」選「否」）。Apple 要在商品設定打開「家人共享」 |
@@ -69,7 +79,14 @@ In-app purchase: Meteor Defense, the Star Map, the pet and daily missions are fr
 The only links that leave the app are the author's Facebook page and the privacy policy. Both are behind the same parental gate, as required for the Kids Category.
 Stardust (the in-game currency used to feed the pet, buy it treats and trade for badges) is earned only by answering questions and cannot be bought; the only in-app purchase is unlock_all.
 No login is needed. To see the pet and star map screens quickly, tap "Star Map" or "Pet" on the main menu.
+Parental gate: solve the arithmetic shown, e.g. 5 + 2 × 13 = 31 (multiply first). Three wrong answers lock it for 30 seconds.
+Fastest path to the purchase screen on a fresh install: close the name card (✕) → Settings → For grown-ups → Unlock all games → solve the gate → purchase card (price, Buy, Restore Purchase, Use a promo code).
+Each of the four paid games can also be tried 3 times; after that a card appears with "Show a grown-up", which leads to the same gate.
+The in-app purchase is not sold in China mainland, the EU or Vietnam, matching the app's availability.
+Hidden outfits (unlocked at 40 and 50 badges), the legendary egg and trading stardust for a badge are gameplay rewards earned by playing; none can be bought.
 ```
+
+> 不要在備註裡提「網頁版免費」（4.2 最低功能的風險）。審核前付費協議、銀行、稅表要全部「有效」，不然審核員看到「讀不到商品」會退件（2.1(b)）。
 
 ## 四、截圖與圖形
 
@@ -77,9 +94,9 @@ No login is needed. To see the pet and star map screens quickly, tap "Star Map" 
 
 | 資料夾 | 像素 | 用在 | 備註 |
 |---|---|---|---|
-| `apple-iphone-6.9` | 1320 × 2868 | App Store iPhone 6.9" | 最大的 iPhone 尺寸，Apple 會縮給小的 |
-| `apple-iphone-6.3` | 1206 × 2622 | App Store iPhone（Dynamic Island） | Apple 說明頁列的必填尺寸之一 |
-| `apple-ipad-13` | 2064 × 2752 | App Store iPad 13" | 專案有支援 iPad 才需要 |
+| `apple-iphone-6.9` | 1320 × 2868 | App Store iPhone 6.9" | **選填** |
+| `apple-iphone-6.3` | 1206 × 2622 | App Store iPhone（Dynamic Island） | **必填** |
+| `apple-ipad-13` | 2064 × 2752 | App Store iPad 13" | **必填**（專案支援 iPad）。2027 年 4 月起還要 iPhone Duo 尺寸 |
 | `google-phone` | 1080 × 2160 | Play 手機截圖 | 2:1，Play 長短邊比上限 |
 | `google-tablet-10` | 1600 × 2560 | Play 10 吋平板截圖 | 選填，有平板排名／推薦才需要 |
 | `google-feature` | 1024 × 500 | Play 主圖（Feature graphic） | 必填；用圖示加標語畫的，**請你看過** |
