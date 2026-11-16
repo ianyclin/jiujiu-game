@@ -78,6 +78,7 @@ html{overflow-x:hidden}   /* 流星的波數橫幅放大時不撐出橫向捲動
 .mode .m-lock svg{width:14px;height:14px;grid-row:auto}
 html:not(.app) .app-only{display:none!important}
 .buy-msg{min-height:1.4em;color:var(--ice);font-size:14px;text-align:center}
+@media (max-height:600px){#o-buy .card{gap:8px;padding:16px}#o-buy .card>p{display:none}#o-buy .btn{padding:9px 14px;font-size:16px;min-height:44px}#o-buy .rules{font-size:13px;line-height:1.45;gap:2px}#o-buy .buy-msg:empty{display:none}}   /* 320×568（iPhone SE 一代）：「之後再說」不用捲就看得到；「謝謝支持」那句省掉 */
 .pick{display:grid;gap:10px}
 .pick button{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;text-align:left;padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;box-shadow:0 5px 0 var(--keyEdge);transition:transform .06s,box-shadow .06s}
 .pick button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--keyEdge)}
@@ -199,9 +200,12 @@ html:not(.app) .app-only{display:none!important}
 .brand-t{color:var(--sun);text-shadow:0 2px 0 #a87a00}
 .help h4{margin:8px 0 0;font-size:15px;color:var(--sun);letter-spacing:.08em}
 .rotate{display:none;position:fixed;inset:0;z-index:30;background:var(--ink);place-items:center;text-align:center;font-weight:900;font-size:22px;color:var(--paper)}
-@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){.rotate{display:grid}}
+@media (orientation:landscape) and (max-height:500px) and (pointer:coarse) and (min-aspect-ratio:3/2){.rotate{display:grid}}
 img,svg,canvas{-webkit-touch-callout:none}
+#s-menu,#s-map,#s-pet,.card,.alum-list.scroll{overscroll-behavior:none}   /* iPhone 捲到頂再往下拉不要橡皮筋回彈（說明卡被拉下來、標題列跟著跑、右上冒出捲動條） */
 html,body{overscroll-behavior:none}
+.help .hver{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px}
+#help-s:not([hidden]),#help-f:not([hidden]){display:contents}
 .help .hgrp{margin:14px 0 -2px;font-size:12px;letter-spacing:.3em;color:var(--muted);text-align:center}
 .stage{flex:1;position:relative;pointer-events:none;min-height:0}
 .banner{position:absolute;left:0;right:0;top:28%;text-align:center;font-weight:900;font-size:clamp(34px,9vw,60px);opacity:0;color:var(--paper);text-shadow:0 5px 0 rgba(0,0,0,.4)}
@@ -213,6 +217,7 @@ html,body{overscroll-behavior:none}
 .answer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:82px;padding-block:8px 6px}
 .answer.pop{animation:pop .32s ease}
 /* 發射鈕浮在舞台右下角（鍵盤正上方），不佔版面，題目不會被擠偏 */
+.ftip{position:absolute;left:12px;right:12px;margin:0 auto;width:fit-content;bottom:92px;padding:8px 14px;border-radius:14px;background:rgba(8,17,31,.88);border:1px solid rgba(159,220,255,.5);color:var(--ice);font-weight:900;font-size:17px;text-align:center;text-wrap:balance;pointer-events:none}
 .fire-big{position:absolute;right:0;bottom:10px;pointer-events:auto;height:clamp(46px,7.2vh,66px);padding:0 14px;border-radius:16px;border:0;background:linear-gradient(#ff9a4a,#d85a1a);color:#fff;font-weight:900;font-size:17px;box-shadow:0 5px 0 #7a2e08;display:flex;align-items:center;gap:6px;cursor:pointer;touch-action:manipulation;white-space:nowrap;animation:firepulse .6s ease-in-out infinite}
 .fire-big svg{width:26px;height:26px}
 .fire-big:active{transform:translateY(4px);box-shadow:0 1px 0 #7a2e08;animation:none}
@@ -444,6 +449,8 @@ html,body{overscroll-behavior:none}
 .btn{border:0;border-radius:16px;padding:14px 18px;font-weight:900;font-size:18px;cursor:pointer;background:var(--sun);color:#2a1d00;box-shadow:0 5px 0 #a87a00;transition:transform .06s,box-shadow .06s}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 #a87a00}
 .btn.alt{background:transparent;color:var(--paper);box-shadow:none;border:1px solid var(--line)}
+.btn:disabled{background:#3a4658;color:#9aa6b8;box-shadow:none;transform:none;cursor:default;opacity:.7}   /* 停用（例如讀不到商品的購買鈕）要看得出按不了，不然大人以為壞掉 */
+.btn.alt:disabled{background:transparent;color:var(--muted)}
 .btn-col{display:grid;gap:10px}
 .res-stars{font-size:42px;letter-spacing:.12em;color:var(--sun);line-height:1}
 .res-stars span{color:rgba(255,255,255,.15)}
@@ -521,7 +528,8 @@ html,body{overscroll-behavior:none}
 .count span.go{font-family:var(--f-zh);font-weight:900;font-size:clamp(56px,16vw,96px)}
 @keyframes cnt{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(.85);opacity:0}}
 .card h3,.btn,.link-btn,.danger,.opt button,.pick small,.pdel small,.pet-card small,.q-row span,.wmeta,.pet-intro,.gear-t,.gear button,.who-hint,.hint,.bm-why,.bm-task,.cmp-ask,.res-note,.lane-label,.m-d,.alum-t{text-wrap:balance}
-.rules li,.info,.setrow small,.card p{text-wrap:pretty}
+.info,.setrow small,.card p{text-wrap:pretty}
+.rules li{text-wrap:wrap}   /* 不用 pretty：iPhone Safari 會把整段重排，中文段落有的行只到三分之二就換行 */
 .rules li{overflow-wrap:anywhere}
 :lang(ja) .m-t{font-size:18px} :lang(ja) .m-t em{font-size:13px}   /* 日文模式名比較長（流星ディフェンス），小一號才放得下名字加最高分 */
 :lang(ja) body{line-height:1.35}   /* Zen Maru Gothic 預設行高 1.45、Chiron 1.35：統一成 1.35，日文版面的高度才跟中文一樣 */
@@ -613,6 +621,7 @@ html,body{overscroll-behavior:none}
     <div class="stage">
       <div class="banner" id="banner"></div>
       <button class="fire-big" id="m-fire2" type="button" hidden data-ta="m.fireAria"></button>
+      <div class="ftip" id="m-tip" hidden data-t="m.firstTip"></div>
     </div>
     <div class="dock" id="m-dock">
       <div class="answer" id="m-answer"></div>
@@ -932,7 +941,7 @@ html,body{overscroll-behavior:none}
     <div class="card">
       <h3 id="lock-title"></h3>
       <p id="lock-p"></p>
-      <div class="btn-col"><button class="btn" type="button" id="lock-ask" data-t="lock.ask"></button><button class="btn alt" type="button" id="lock-ok" data-t="lock.ok"></button></div>
+      <div class="btn-col"><button class="btn" type="button" id="lock-ok" data-t="lock.ok"></button><button class="btn alt" type="button" id="lock-ask" data-t="lock.ask"></button></div>
     </div>
   </div>
 
@@ -1022,7 +1031,26 @@ html,body{overscroll-behavior:none}
 
   <div class="overlay" id="o-help" hidden>
     <div class="card help">
-      <div class="hhead"><h3 data-t="menu.help"></h3><button class="icon-btn xbtn" type="button" id="h-close2" data-ta="close">✕</button></div>
+      <div class="hhead"><h3 data-t="menu.help"></h3><button class="icon-btn xbtn" type="button" id="h-close2" data-ta="close">✕</button>
+        <div class="langs hver" id="help-ver" role="group" data-ta="menu.help"><button type="button" data-v="s" data-t="help.simple"></button><button type="button" data-v="f" data-t="help.full"></button></div></div>
+      <div id="help-s">
+      <div class="hgrp" data-t="help.games"></div>
+      <h4 data-t="meteor.name"></h4>
+      <ul class="rules" data-th="hs.meteor"></ul>
+      <h4 data-t="ghost.name"></h4>
+      <ul class="rules" data-th="hs.ghost"></ul>
+      <h4 data-t="versus.name"></h4>
+      <ul class="rules" data-th="hs.versus"></ul>
+      <h4 data-t="cmp.name"></h4>
+      <ul class="rules" data-th="hs.cmp"></ul>
+      <h4 data-t="bomb.name"></h4>
+      <ul class="rules" data-th="hs.bomb"></ul>
+      <h4 class="app-only" data-t="help.unlockT"></h4>
+      <ul class="rules app-only help-unlock"></ul>
+      <div class="hgrp" data-t="help.other"></div>
+      <ul class="rules" data-th="hs.other"></ul>
+      </div>
+      <div id="help-f" hidden>
       <div class="hgrp" data-t="help.games"></div>
       <h4 data-t="meteor.name"></h4>
       <ul class="rules" data-th="help.meteor"></ul>
@@ -1031,7 +1059,7 @@ html,body{overscroll-behavior:none}
       <h4 data-t="help.comboT"></h4>
       <ul class="rules" data-th="help.combo"></ul>
       <h4 class="app-only" data-t="help.unlockT"></h4>
-      <ul class="rules app-only" id="help-unlock"></ul>
+      <ul class="rules app-only help-unlock"></ul>
       <h4 data-t="ghost.name"></h4>
       <ul class="rules" data-th="help.ghost"></ul>
       <h4 data-t="versus.name"></h4>
@@ -1055,6 +1083,7 @@ html,body{overscroll-behavior:none}
       <ul class="rules" data-th="help.tables"></ul>
       <h4 data-t="help.addT"></h4>
       <ul class="rules" data-th="help.add"></ul>
+      </div>
     </div>
   </div>
 
@@ -1187,7 +1216,7 @@ const STR = {
     'q.answers': '答對 {n} 題（哪個遊戲都算）', 'q.combo': '流星防衛戰連擊 {n}', 'q.wave': '流星防衛戰打到第 {n} 波', 'q.boss': '打倒 1 隻錯題魔王', 'q.chest': '開 {n} 個寶箱',
     'q.ghost': '幽靈競速跑完 1 次', 'q.ghostwin': '幽靈競速追過幽靈', 'q.cmp': '哪個大？哪個小？玩 1 局', 'q.cmpperfect': '哪個大？哪個小？10 題全對',
     'q.bomb': '拆掉 {n} 顆炸彈', 'q.bomball': '炸彈拆除 5 顆全拆', 'q.versus': '雙人拔河玩 1 局', 'q.stars': '點亮 {n} 顆新星星',
-    'q.done': '完成', 'q.allDone': '今天全部完成！明天再來', 'q.meta': '徽章 <em>×{b}</em>', 'q.metaStreak': '徽章 <em>×{b}</em>・連續 <em>{s}</em> 天',
+    'q.done': '完成', 'q.allDone': '今天全部完成！', 'q.meta': '徽章 <em>×{b}</em>', 'q.metaStreak': '徽章 <em>×{b}</em>・連續 <em>{s}</em> 天',
     'q.toast': '任務完成：{t}　星塵 +10', 'q.gear': '寵物可以戴{g}了！到寵物頁給牠戴上', 'q.gearHidden': '神祕配件出現了：{g}！到寵物頁看看',
     'q.all': '今天的任務全部完成！徽章 +1', 'q.allStreak': '今天的任務全部完成！徽章 +1，連續 {s} 天',
     // 誰在玩
@@ -1216,6 +1245,7 @@ const STR = {
     'gate.title': '請大人來一下', 'gate.why': '要打開外面的網頁，請大人先回答這一題。', 'gate.go': '前往', 'gate.ok': '答對了！', 'gate.wait': '答錯太多次了，30 秒後再試。', 'gate.no': '不對喔，換一題',
     rotate: '請把手機轉直',
     // 遊戲說明（每段是一串 <li>）
+    'help.simple': '簡單版', 'help.full': '完整版', 'hs.meteor': '<li>流星上有算式，打出答案就能打掉它。</li><li>答錯了，流星會亮出答案，照著再打一次。流星掉到小鎮會扣 1 顆心，心沒了就結束。</li><li>每 5 波有<b>魔王</b>，要一次就答對才打得到它。</li>', 'hs.ghost': '<li>20 題，跟「<b>最快的你</b>」賽跑。</li><li>比它先答完，就是新紀錄！</li>', 'hs.versus': '<li>兩個人面對面搶答，答對就把星星拉過來一格。</li><li>先拉到底的人贏。沒有人陪你？可以選<b>機器人</b>。</li>', 'hs.cmp': '<li>有三個算式。問「<b>最大</b>」就點答案最大的，問「<b>最小</b>」就點答案最小的。</li><li>一局 10 題，全對才會記下時間。</li>', 'hs.bomb': '<li>炸彈上寫 7，就把 7 的乘法表答案都點掉。練加減時，點<b>答案是那個數的算式</b>。</li><li>點錯或引線燒完會爆炸。5 顆全拆就贏了！</li>', 'hs.other': '<li><b>星圖</b>：答對又快的題目，會亮成星星。</li><li><b>寵物</b>：答對會得到星塵，拿去餵寵物，牠就會長大。</li><li><b>每日任務</b>：每天 3 個，全部完成拿一個徽章。</li>',
     'help.games': '五個遊戲', 'help.addT': '練加減', 'help.add': '<li>大人可以在「設定」的「要練什麼」選<b>乘法</b>、<b>加減</b>或<b>都練</b>。</li><li>加減是 20 以內，像 <b>8 + 7</b>、<b>15 − 8</b>，有時候是 <b>7 + ? = 15</b>。</li><li>答錯了會教你怎麼算：<b>雙倍</b>（7 + 8 想成 7 + 7 再加 1）、<b>湊十</b>（8 + 7 想成 8 + 2 = 10，再加 5）、<b>湊十的好朋友</b>（4 和 6）、<b>想加法</b>（15 − 8 想成 8 + 7 = 15）。</li><li>有教你怎麼算的時候，流星和幽靈會<b>停 3 秒</b>。照著答案打完就繼續。</li><li>選「都練」時，比較不熟的那一種會出比較多。</li><li>三個數相加（<b>6 + 5 + 4</b>）時，先找<b>湊十的好朋友</b>（6 和 4），再加剩下的。</li><li>哪個大也會出加減。炸彈拆除會變成找<b>答案是炸彈上那個數的算式</b>，像 13 就點 8 + 5、6 + 7。</li><li>星圖上面可以切到<b>加減</b>，看每一題熟不熟。</li>', 'help.other': '其他', 'help.chestT': '寶箱流星', 'help.comboT': '連擊', 'help.whoT': '誰在玩', 'help.questT': '每日任務',
     'help.meteor': '<li>流星上有算式，打出答案，砲台就會發射雷射打掉它。砲台會一直瞄準<b>同一顆</b>直到打掉；有別顆快掉到地上了，才會先轉過去打它，這時下面的題目會跳一下。</li><li>答錯了流星會亮出答案，<b>照著再打一次</b>就能打掉。加減題還會教你怎麼算，像 7 + 8：<b>雙倍</b> 7 + 7 = 14，再加 1；或<b>湊十</b> 8 + 2 = 10，10 + 5 = 15。有教你怎麼算的時候，流星會<b>停 3 秒</b>，讓你看清楚。</li><li>練乘法時，有時候流星上寫「7 的倍數」加一串數字「7、14、?、28」，<b>打出問號的數字</b>就好。幽靈競速和拔河也會遇到。</li><li>流星掉到小鎮會<b>扣 1 顆心</b>。一整波都沒失誤 +50 分。</li><li>每 5 波出現<b>錯題魔王</b>，專出你常錯或還不熟的題目。要<b>一次就答對</b>才算打中一下，打中 6 下以上才打得倒，波數越高血越多。魔王來的時候沒有小流星，專心打牠就好。打倒 +200 分、<b>必掉寶箱</b>。</li><li>魔王掉到小鎮也是<b>扣 1 顆心</b>，然後下一波就開始了。</li><li>補心只靠寶箱，心最多 3 顆。</li><li><b>一擊即死</b>：只有 1 顆心，最高分另計。</li>',
     'help.chest': '<li>第 2 波起，<b>? × 7 = 56</b>、<b>7 + ? = 15</b> 這種反過來問的流星，還有 <b>6 + 5 + 4</b> 這種三個數相加的，會帶著寶箱。<b>一次就答對</b>打掉它，就會掉一樣東西。</li><li>寶箱有三種：<b>銀色</b>常見、<b>金色</b>少見、<b>彩虹色</b>稀有，越稀有開起來越熱鬧。</li><li>銀色：+30 分、時間凍結、<b>連擊護盾</b>。金色：雙倍得分 10 秒、無敵 10 秒、<b>追蹤飛彈</b>。</li><li>連擊護盾：右上角的連擊數字會罩在一顆亮亮的泡泡裡。答錯或流星掉到小鎮時幫你擋一次，<b>連擊不會歸零</b>，泡泡就破了。已經有泡泡了，再拿到就變成 +50 分。</li><li>追蹤飛彈最多存 3 枚（滿了再拿到就變成 +50 分），左上角會顯示你有幾枚。魔王出現時，鍵盤上面會跳出一顆閃閃的<b>「發射」鈕</b>，按一下射一枚，每枚扣魔王 1 滴血，但最後 1 滴要自己打。</li><li>彩虹色：<b>超新星</b>把正在掉的小流星全部清掉（你正在打的那顆和魔王除外）、<b>無敵 20 秒</b>、<b>補一顆心</b>（心已經 3 顆、或一擊即死模式，就變成 +100 分）。</li>',
@@ -1225,13 +1255,13 @@ const STR = {
     'help.cmp': '<li>一次有三個算式。題目問<b>最大</b>，就點答案最大的；問<b>最小</b>，就點答案最小的。點對不會點亮星星（要打出答案才算）。</li><li>三個答案都很接近，要先算出來再點。連對 3 題，答案會變得更接近。</li><li>點錯了，三個答案會亮出來，<b>點對的那個</b>就能繼續。點錯時，正確的那題和你點的那題，以後都會更常出現，你點的那題下次玩流星或幽靈時也會再考你一次。</li><li>一局 10 題。<b>10 題全對</b>才比誰最快；錯一題，這局就不比時間。</li>',
     'help.bomb': '<li>炸彈上寫「<b>7 的倍數</b>」，就是 7 的乘法表的答案：7、14、21……。格子裡不一定每個都有，有幾個就點幾個，下面會寫「找到 0 / 5」。點對不會點亮星星（要打出答案才算）。</li><li>點到不是的數字會<b>爆炸</b>，引線燒完也會爆炸。小心 27、57 這種長得很像的數字！點錯的、沒找到的，以後會多出現一點，下次玩流星或幽靈時也會再考你一次。</li><li>練加減時，炸彈上是一個數，像 <b>13</b>，就點<b>答案是 13 的算式</b>：8 + 5、6 + 7……。小心 8 + 4、9 + 5 這種差一點的！</li><li>一局 5 顆炸彈。<b>5 顆全拆</b>才比誰最快。</li>',
     'help.map': '<li>每一題<b>打對</b> 3 次以上（×1 的題 1 次就好）、又快又穩，就會<b>點亮成一顆星</b>。點任一格可以看這題的紀錄。</li><li>紅色一閃一閃的是<b>容易錯</b>的題目，遊戲裡會偷偷更常出現，直到你把它練熟。</li><li>練加減的時候，星圖上面可以切到<b>加減</b>。每一格是加法和它的減法，兩題都熟才會亮。</li>',
-    'help.wrong': '<li>答錯過的題目都列在這裡，最常錯的排最前面。</li><li>練熟了它會自己消失；也可以按「清除」把那題的紀錄歸零。</li>',
+    'help.wrong': '<li>答錯過的題目都列在這裡，最常錯的排最前面。</li><li>練熟了它會自己消失；也可以按「清除」把那題拿掉，之後再答對一次才會亮星。</li>',
     'help.pet': '<li>答對題目會掉<b>星塵</b>（主選單「寵物」旁邊的數字）。打倒魔王、完成任務會多給。</li><li>到寵物頁按「餵星塵」，餵夠了牠就長大：<b>蛋 → 幼體 → 少年 → 成體 → 究極</b>。</li><li>每日任務的<b>徽章</b>集到幾個，寵物就能戴新配件（徽章不會用掉），一共十樣：蝴蝶結、金牌、墨鏡、氣球、棒球帽、圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。還有兩樣<b>神祕配件</b>，徽章夠多才會出現。</li><li>頭頂、臉、脖子、旁邊、背後五個位置可以<b>同時各戴一樣</b>，在寵物頁點一下就戴上，再點一下脫掉。</li><li>養到究極，可以<b>放牠回家</b>（山上、海裡或叢林），然後再養一顆新蛋。回家的夥伴會記在寵物頁。</li><li>點寵物頁下面回家的夥伴，可以去看牠，也可以<b>請牠回來</b>。現在的寵物會先回家休息，長大的進度都會留著，隨時可以再換回來。</li><li>還有一顆<b>傳說蛋</b>：徽章集滿 30 個、而且送過一隻回家，才能選牠。</li><li>寵物頁下面可以<b>照顧牠</b>：用星塵換點心、陪牠玩，<b>愛心</b>就會變多。每隻都有<b>最愛</b>的點心，愛心加倍。</li><li>點一下寵物就是<b>摸摸牠</b>，每天第一次摸，愛心會多一點點。愛心只會變多，不會變少。</li><li>星塵也可以<b>換徽章</b>：★300 換 1 個，每天只能換 1 次。做每日任務拿徽章還是比較快喔。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'help.quest': '<li>主選單每天有 <b>3 個小任務</b>，做到了會自動打勾。三個都完成拿一個<b>徽章</b>。</li><li>連續好幾天都完成，會顯示連續幾天。明天會換新的任務。</li>',
     'help.who': '<li>主選單最上面的小人頭可以<b>換人</b>。每個人有自己的星圖、紀錄和寵物，最多 4 個人。</li><li>換新的平板或手機時，請大人在「設定」用<b>備份紀錄</b>把紀錄搬過去。</li>',
     'set.parents': '家長區', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄（要請大人）', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用（匯入要請大人）', 'set.backupGo': '打開', 'set.pet': '刪除寵物', 'set.petD': '把現在的寵物或回家的夥伴永遠刪掉（要請大人）', 'set.petGo': '打開',
     'pdel.title': '刪除寵物', 'pdel.p': '刪掉的寵物不會回來。星塵和配件會留著。', 'pdel.cur': '{stage}・現在的夥伴', 'pdel.go': '刪除', 'pdel.aria': '刪除{name}', 'pdel.why': '要永遠刪除「{name}」，請大人先回答這一題。', 'pdel.done': '「{name}」刪掉了',
-    'lock.trialN': '免費試玩 {n} 次', 'lock.locked': '試玩用完了', 'lock.title': '{name}的試玩用完囉！', 'lock.p': '試玩結束了。{m}、星圖和寵物都可以一直玩喔！', 'lock.ask': '給大人看', 'lock.ok': '好',
+    'lock.trialN': '免費試玩 {n} 次', 'lock.locked': '試玩用完了', 'lock.title': '{name}的試玩用完囉！', 'lock.p': '{m}、星圖和寵物都可以一直玩喔！', 'lock.ask': '給大人看', 'lock.ok': '好',
     'trial.start': '免費試玩！還可以再試玩 {n} 次', 'trial.last': '免費試玩！', 'nudge.title': '還有別的遊戲喔！', 'nudge.p': '{games}都可以免費試玩。在主選單點點看！',
     'gate.buy': '要購買或使用優惠碼，請大人先回答這一題。', 'buy.title': '解鎖全部遊戲',
     'buy.list': '<li>{g}，四個遊戲都可以一直玩。</li><li><b>一次購買，永久使用</b>：不是訂閱，沒有廣告，也沒有其他要買的東西。</li><li>這台裝置上的每個玩家都能玩。</li>',
@@ -1240,7 +1270,7 @@ const STR = {
     'buy.noProd': '現在讀不到商店的商品，請稍後再試。', 'buy.codeOld': '這台裝置不能在 App 裡兌換，請到 App Store 的帳號頁面兌換代碼。', 'buy.pending': '付款還在處理中，完成後就會解鎖。', 'buy.fail': '購買沒有完成，可以再試一次。', 'buy.none': '這個帳號沒有找到購買紀錄。', 'buy.offline': '連不上商店，等一下再試。',
     'set.unlock': '解鎖全部遊戲', 'set.unlockD': '流星防衛戰免費，另外四個遊戲一次購買解鎖（要請大人）', 'set.unlockOk': '四個遊戲都解鎖了', 'set.unlockGo': '看看',
     'help.unlockT': '解鎖遊戲', 'help.unlock': '<li>{m}、星圖、寵物和每日任務，都可以一直玩。</li><li>另外四個遊戲，<b>每一種都可以免費玩 3 次</b>。之後要不要解鎖，由大人決定。</li><li>還沒解鎖時，每日任務只會出你玩得到的遊戲。</li>',
-    'about.buyT': '費用', 'about.buyL': '<li>{m}、星圖、寵物與每日任務免費；另外四個遊戲各可試玩 3 次，在「設定 → 家長區」<b>一次購買</b>就全部解鎖（不是訂閱），這台裝置的每個玩家都能玩。</li><li>付款由 App Store／Google Play 處理，我們收不到任何付款或帳號資料。購買和優惠碼都要先請大人解一題。</li>',
+    'about.buyT': '費用', 'about.storeI': 'App Store', 'about.storeA': 'Google Play', 'about.storeW': 'App Store／Google Play', 'about.buyL': '<li>{m}、星圖、寵物與每日任務免費；另外四個遊戲各可試玩 3 次，在「設定 → 家長區」<b>一次購買</b>就全部解鎖（不是訂閱），這台裝置的每個玩家都能玩。</li><li>付款由 {s} 處理，我們收不到任何付款或帳號資料。購買和優惠碼都要先請大人解一題。</li>',
     'bk.again': '可以了，再按一次「{b}」。', 'bk.exWhy': '要把紀錄傳到 App 外面，請大人先回答這一題。', 'bk.why': '匯入會取代這台裝置上所有人的紀錄，請大人先回答這一題。', 'bk.title': '備份紀錄',
     'bk.p': '備份包含這台裝置上所有人的星圖、紀錄、寵物和設定。網頁版和 App 版的紀錄是分開存的，要靠備份搬過去；也可以存起來以防萬一。',
     'bk.exportT': '匯出', 'bk.file': '存成備份檔', 'bk.copy': '複製備份碼', 'bk.saved': '備份檔已經產生。',
@@ -1341,7 +1371,7 @@ const STR = {
     'q.answers': 'Get {n} right (any game)', 'q.combo': 'Meteor Defense: {n} combo', 'q.wave': 'Meteor Defense: reach wave {n}', 'q.boss': 'Beat 1 Mistake Boss', 'q.chest': 'Open {n} chests',
     'q.ghost': 'Finish 1 Ghost Race', 'q.ghostwin': 'Beat the ghost in Ghost Race', 'q.cmp': 'Play 1 round of Biggest? Smallest?', 'q.cmpperfect': 'Biggest? Smallest?: all 10 right',
     'q.bomb': 'Defuse {n} bombs', 'q.bomball': 'Bomb Squad: defuse all 5', 'q.versus': 'Play 1 Tug of War', 'q.stars': 'Light up {n} new stars',
-    'q.done': 'Done', 'q.allDone': 'All done today! See you tomorrow', 'q.meta': 'Badges <em>×{b}</em>', 'q.metaStreak': 'Badges <em>×{b}</em> · <em>{s}</em> days in a row',
+    'q.done': 'Done', 'q.allDone': 'All done today!', 'q.meta': 'Badges <em>×{b}</em>', 'q.metaStreak': 'Badges <em>×{b}</em> · <em>{s}</em> days in a row',
     'q.toast': 'Mission done: {t}  Stardust +10', 'q.gear': 'Your pet can wear the {g} now! Visit the pet page', 'q.gearHidden': 'A mystery item appeared: {g}! Visit the pet page',
     'q.all': 'All of today\'s missions done! Badge +1', 'q.allStreak': 'All of today\'s missions done! Badge +1, {s} days in a row',
     'who.switch': 'Switch player', 'who.title': 'Who\'s playing?', 'who.p': 'Everyone gets their own star map, records and pet.', 'who.ph': 'Name (max 10)', 'who.inAria': 'Name',
@@ -1366,6 +1396,7 @@ const STR = {
     'about.ver': 'Version 1.4. © 2026 指數三寶飯. All rights reserved.', 'about.env': '  Screen {w}×{h}, canvas {cw}×{ch} @{d}',
     'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.wait': 'Too many tries. Wait 30 seconds and try again.', 'gate.no': 'Not quite. Try a new one.',
     rotate: 'Please turn your phone upright',
+    'help.simple': 'Simple', 'help.full': 'Full', 'hs.meteor': '<li>Each meteor has a math problem. Type the answer to zap it.</li><li>Wrong answer? The meteor shows the answer. Type it in. A meteor that hits the town costs 1 heart. No hearts left, game over.</li><li>Every 5 waves a <b>boss</b> comes. Get it right on the first try to hit it.</li>', 'hs.ghost': '<li>Answer 20 problems and race <b>the fastest you</b>.</li><li>Finish first for a new record!</li>', 'hs.versus': '<li>Two players face each other. Each right answer pulls the star one step toward you.</li><li>Pull it all the way to win. No one to play with? Pick the <b>Robot</b>.</li>', 'hs.cmp': '<li>You see three problems. Tap the one with the <b>biggest</b> answer, or the <b>smallest</b>, as asked.</li><li>A round is 10 questions. Get all 10 right to save your time.</li>', 'hs.bomb': '<li>If the bomb says 7, tap every answer in the 7 times table. With + and −, tap the <b>problems that equal the number</b>.</li><li>A wrong tap or a burned-out fuse makes it explode. Defuse all 5 bombs to win!</li>', 'hs.other': '<li><b>Star Map</b>: problems you answer right and fast light up as stars.</li><li><b>Pet</b>: right answers give stardust. Feed it to your pet and it grows.</li><li><b>Daily missions</b>: 3 a day. Finish all 3 for a badge.</li>',
     'help.games': 'Five games', 'help.addT': 'Adding and subtracting', 'help.add': '<li>A grown-up can pick <b>Times</b>, <b>+ and −</b> or <b>Both</b> under What to practice in Settings.</li><li>Adding and subtracting go up to 20, like <b>8 + 7</b> and <b>15 − 8</b>, and sometimes <b>7 + ? = 15</b>.</li><li>Miss one and it shows you a trick: <b>double</b> (7 + 8 is 7 + 7, plus 1), <b>make 10</b> (8 + 7 is 8 + 2 = 10, plus 5), <b>pairs that make 10</b> (4 and 6), or <b>think plus</b> (15 − 8: 8 + 7 = 15).</li><li>When a trick shows up, the meteors and the ghost <b>stop for 3 seconds</b>. Type the answer and you keep going.</li><li>With Both, the kind you know less comes up more.</li><li>When three numbers are added (<b>6 + 5 + 4</b>), find the <b>pair that makes 10</b> first (6 and 4), then add the last one.</li><li>Biggest? Smallest? uses + and − too. In Bomb Squad, find every <b>problem that equals the bomb\'s number</b>. For 13, tap 8 + 5 and 6 + 7.</li><li>Switch the Star Map to <b>+ and −</b> at the top to see how well you know each one.</li>', 'help.other': 'More', 'help.chestT': 'Treasure meteors', 'help.comboT': 'Combos', 'help.whoT': 'Who\'s playing', 'help.questT': 'Daily missions',
     'help.meteor': '<li>Each meteor has a math problem. Type the answer and the cannon zaps it with a laser. The cannon keeps aiming at <b>the same meteor</b> until it\'s gone. It only turns to another one that\'s about to hit the ground, and then the problem below gives a little hop.</li><li>If you answer wrong, the meteor shows the answer. <b>Type it in</b> to knock it down. For + and −, it also shows a trick, like 7 + 8: <b>double</b> 7 + 7 = 14, plus 1; or <b>make 10</b>: 8 + 2 = 10, 10 + 5 = 15. When a trick shows up, the meteors <b>stop for 3 seconds</b> so you can read it.</li><li>In times tables, sometimes a meteor says "Count by 7s" with numbers like "7, 14, ?, 28". Just <b>type the missing number</b>. You\'ll see these in Ghost Race and Tug of War too.</li><li>A meteor that hits the town <b>costs 1 heart</b>. A whole wave with no misses: +50 points.</li><li>Every 5 waves the <b>Mistake Boss</b> shows up with problems you often miss or don\'t know well yet. Only answers <b>right on the first try</b> count as hits. It takes 6 or more hits, and more in later waves. No small meteors come with the boss, so just focus on it. Beat it for +200 points and a <b>chest every time</b>.</li><li>If the boss hits the town, that\'s also <b>1 heart</b>, and the next wave starts.</li><li>Hearts only come from chests. You can have up to 3.</li><li><b>One Hit</b>: only 1 heart, with its own high score.</li>',
     'help.chest': '<li>From wave 2, meteors that ask backwards, like <b>? × 7 = 56</b> or <b>7 + ? = 15</b>, and ones that add three numbers, like <b>6 + 5 + 4</b>, carry a chest. Knock one down <b>right on the first try</b> and it drops something.</li><li>There are three kinds of chests: <b>silver</b> (common), <b>gold</b> (not so common) and <b>rainbow</b> (rare). Rarer chests open with a bigger party.</li><li>Silver: +30 points, time freeze, <b>combo shield</b>. Gold: double points for 10 seconds, invincible for 10 seconds, <b>homing missile</b>.</li><li>Combo shield: your combo number (top right) sits in a shiny bubble. If you answer wrong or a meteor hits the town, it protects you once: <b>your combo stays</b> and the bubble pops. Getting another while you have one gives +50 points.</li><li>You can store up to 3 homing missiles (more give +50 points). The top left shows how many you have. When the boss appears, a flashing <b>"Fire" button</b> pops up above the keypad. Each tap fires one missile and takes 1 hit off the boss, but the last hit is up to you.</li><li>Rainbow: <b>Supernova</b> clears all the small falling meteors (except the one you\'re answering and the boss), <b>invincible for 20 seconds</b>, or <b>an extra heart</b> (+100 points if you already have 3 or are playing One Hit).</li>',
@@ -1375,13 +1406,13 @@ const STR = {
     'help.cmp': '<li>You get three problems. If it asks for the <b>biggest</b>, tap the one with the biggest answer. If it asks for the <b>smallest</b>, tap the smallest. Tapping doesn\'t light up stars (only typed answers do).</li><li>The answers are close, so work them out before you tap. After 3 right in a row, they get even closer.</li><li>If you tap the wrong one, all three answers show. Tap <b>the right one</b> to go on. Both the right problem and the one you tapped will come up more often, and the one you tapped comes back next time you play Meteor Defense or Ghost Race.</li><li>A round is 10 questions. Only <b>all 10 right</b> counts for a best time. One mistake and that round isn\'t timed.</li>',
     'help.bomb': '<li>If the bomb says <b>7</b>, tap the answers in the 7 times table: 7, 14, 21… Not all of them are on the board, so tap the ones you find. Below, it says "Found 0 / 5". Tapping doesn\'t light up stars (only typed answers do).</li><li>Tap a number that doesn\'t belong and the bomb <b>explodes</b>. It also explodes when the fuse burns out. Watch out for look-alikes like 27 and 57! Numbers you tapped wrong or didn\'t find come up a bit more, and come back next time you play Meteor Defense or Ghost Race.</li><li>With + and −, the bomb shows a number like <b>13</b>. Tap every <b>problem that equals 13</b>: 8 + 5, 6 + 7… Watch out for close ones like 8 + 4 and 9 + 5!</li><li>A round is 5 bombs. Only <b>all 5 defused</b> counts for a best time.</li>',
     'help.map': '<li>Type a problem right 3 or more times (×1 problems just once), fast and steady, and it <b>lights up as a star</b>. Tap any square to see its record.</li><li>Flashing red squares are <b>tricky</b> problems. They secretly come up more often in the games until you\'ve got them.</li><li>When you practice + and −, switch the Star Map to <b>+ and −</b> at the top. Each square is an addition and its subtraction. Both need to be solid to light up.</li>',
-    'help.wrong': '<li>Problems you got wrong are listed here, most missed first.</li><li>Once you know one, it disappears by itself. You can also tap "Clear" to reset it.</li>',
+    'help.wrong': '<li>Problems you got wrong are listed here, most missed first.</li><li>Once you know one, it disappears by itself. You can also tap "Clear" to take it off the list. Get it right once more to light up its star.</li>',
     'help.pet': '<li>Right answers drop <b>stardust</b> (the number next to "Pet" on the menu). Beating bosses and finishing missions give extra.</li><li>On the pet page, tap "Feed stardust". Feed enough and it grows: <b>Egg → Baby → Kid → Grown-up → Ultimate</b>.</li><li>Collect <b>badges</b> from daily missions to unlock outfits (badges never get used up). There are ten: bow, medal, sunglasses, balloon, cap, round glasses, bow tie, star clip, wizard hat and rainbow halo. Two <b>mystery items</b> appear when you have lots of badges.</li><li>Head, face, neck, side and back: you can <b>wear one thing in each spot</b> at the same time. Tap to put it on, tap again to take it off.</li><li>When your pet is Ultimate, you can <b>let it go home</b> (to the mountains, the sea or the jungle) and raise a new egg. Pets that went home are listed on the pet page.</li><li>Tap a pet that went home to visit it, or <b>bring it back</b>. Your current pet goes home to rest and keeps its progress, so you can swap back anytime.</li><li>There\'s also a <b>legendary egg</b>: collect 30 badges and send one pet home to unlock it.</li><li>At the bottom of the pet page you can <b>take care</b> of it: spend stardust on treats and games to fill up its <b>hearts</b>. Each pet has a <b>favorite</b> treat that gives double.</li><li>Tap your pet to <b>pet it</b>. The first pat each day adds a little to its hearts. Hearts only go up, never down.</li><li>You can also <b>trade stardust for a badge</b>: ★300 for 1 badge, once a day. Daily missions are still faster.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
     'help.quest': '<li>There are <b>3 small missions</b> every day. They check off by themselves. Finish all three for a <b>badge</b>.</li><li>Finish several days in a row and you\'ll see your streak. New missions come tomorrow.</li>',
     'help.who': '<li>Tap the little person at the top of the menu to <b>switch players</b>. Everyone gets their own star map, records and pet. Up to 4 players.</li><li>Getting a new tablet or phone? A grown-up can move your records with <b>Back up records</b> in Settings.</li>',
     'set.parents': 'For grown-ups', 'set.del': 'Delete player', 'set.delD': 'Delete {name} and all of their records (ask a grown-up)', 'set.delGo': 'Delete', 'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app (importing needs a grown-up)', 'set.backupGo': 'Open', 'set.pet': 'Delete pets', 'set.petD': 'Remove your pet or a pet back home for good (ask a grown-up)', 'set.petGo': 'Open',
     'pdel.title': 'Delete pets', 'pdel.p': 'A deleted pet can\'t come back. Your stardust and outfits stay.', 'pdel.cur': '{stage} · your pet now', 'pdel.go': 'Delete', 'pdel.aria': 'Delete {name}', 'pdel.why': 'This deletes {name} for good. A grown-up needs to answer this first.', 'pdel.done': '{name} was deleted',
-    'lock.trialN': v => `${v.n} free ${v.n === 1 ? 'try' : 'tries'}`, 'lock.locked': 'No free tries left', 'lock.title': 'No more free tries of {name}!', 'lock.p': 'The free tries are over. You can always play {m}, the Star Map and your pet!', 'lock.ask': 'For grown-ups', 'lock.ok': 'OK',
+    'lock.trialN': v => `${v.n} free ${v.n === 1 ? 'try' : 'tries'}`, 'lock.locked': 'No free tries left', 'lock.title': 'No more free tries of {name}!', 'lock.p': 'You can always play {m}, the Star Map and your pet!', 'lock.ask': 'For grown-ups', 'lock.ok': 'OK',
     'trial.start': v => `Free try! ${v.n} more ${v.n === 1 ? 'try' : 'tries'} left`, 'trial.last': 'Free try!', 'nudge.title': 'There are more games!', 'nudge.p': '{games}: you can try them for free. Tap one on the menu!',
     'gate.buy': 'To buy or use a promo code, a grown-up needs to answer this first.', 'buy.title': 'Unlock all games',
     'buy.list': '<li>Play all four games ({g}) as much as you like.</li><li><b>One purchase, yours to keep</b>: no subscription, no ads, nothing else to buy.</li><li>Every player on this device can play.</li>',
@@ -1390,7 +1421,7 @@ const STR = {
     'buy.noProd': "The store item isn't available right now. Please try again later.", 'buy.codeOld': "This device can't redeem codes in the app. Please redeem it from your account page in the App Store.", 'buy.pending': 'The payment is still processing. The games unlock when it goes through.', 'buy.fail': 'The purchase did not go through. You can try again.', 'buy.none': 'No purchase found for this account.', 'buy.offline': 'Cannot reach the store. Try again later.',
     'set.unlock': 'Unlock all games', 'set.unlockD': 'Meteor Defense is free. One purchase unlocks the other four (ask a grown-up)', 'set.unlockOk': 'All four games are unlocked', 'set.unlockGo': 'View',
     'help.unlockT': 'Unlocking games', 'help.unlock': '<li>{m}, the Star Map, your pet and daily missions are always free.</li><li>You can <b>try each of the other four games 3 times for free</b>. After that, unlocking them is up to a grown-up.</li><li>Until then, daily missions only use games you can play.</li>',
-    'about.buyT': 'Price', 'about.buyL': '<li>{m}, the Star Map, pets and daily missions are free. Each of the other four games can be tried 3 times, and <b>one purchase</b> in Settings → For grown-ups unlocks them all (not a subscription) for every player on this device.</li><li>Payment is handled by the App Store / Google Play. We never receive any payment or account details. Buying and promo codes are behind a grown-up check.</li>',
+    'about.buyT': 'Price', 'about.storeI': 'the App Store', 'about.storeA': 'Google Play', 'about.storeW': 'the App Store / Google Play', 'about.buyL': '<li>{m}, the Star Map, pets and daily missions are free. Each of the other four games can be tried 3 times, and <b>one purchase</b> in Settings → For grown-ups unlocks them all (not a subscription) for every player on this device.</li><li>Payment is handled by {s}. We never receive any payment or account details. Buying and promo codes are behind a grown-up check.</li>',
     'bk.again': 'OK. Tap “{b}” again.', 'bk.exWhy': 'To send records out of the app, a grown-up needs to answer this first.', 'bk.why': 'Importing replaces every player\'s records on this device. A grown-up needs to answer this first.', 'bk.title': 'Back up records',
     'bk.p': 'A backup holds every player\'s star map, records, pet and settings on this device. The website and the app keep separate records, so use a backup to move them. You can also keep one just in case.',
     'bk.exportT': 'Export', 'bk.file': 'Save backup file', 'bk.copy': 'Copy backup code', 'bk.saved': 'Backup file created.',
@@ -1490,7 +1521,7 @@ const STR = {
     'q.answers': '{n}問正かいする（どのゲームでもOK）', 'q.combo': '流星ディフェンスで{n}コンボ', 'q.wave': '流星ディフェンスでウェーブ{n}まで行く', 'q.boss': 'まちがいボスを1回たおす', 'q.chest': 'たからばこを{n}こあける',
     'q.ghost': 'ゴーストレースを1回走る', 'q.ghostwin': 'ゴーストレースでゴーストに勝つ', 'q.cmp': '「どれが大きい？」を1回あそぶ', 'q.cmpperfect': '「どれが大きい？」で10問ぜんぶ正かい',
     'q.bomb': 'ばくだんを{n}こかいじょ', 'q.bomball': 'ばくだんを5こぜんぶかいじょ', 'q.versus': 'つなひきバトルを1回あそぶ', 'q.stars': '新しい星を{n}こともす',
-    'q.done': 'クリア', 'q.allDone': '今日はぜんぶクリア！また明日ね', 'q.meta': 'バッジ <em>×{b}</em>', 'q.metaStreak': 'バッジ <em>×{b}</em>・<em>{s}</em>日れんぞく',
+    'q.done': 'クリア', 'q.allDone': '今日はぜんぶクリア！', 'q.meta': 'バッジ <em>×{b}</em>', 'q.metaStreak': 'バッジ <em>×{b}</em>・<em>{s}</em>日れんぞく',
     'q.toast': 'ミッションクリア：{t}　星くず +10', 'q.gear': 'ペットが{g}をつけられるようになったよ！ペットのページへ', 'q.gearHidden': 'なぞのアイテムが出てきた：{g}！ペットのページを見てみよう',
     'q.all': '今日のミッションぜんぶクリア！バッジ +1', 'q.allStreak': '今日のミッションぜんぶクリア！バッジ +1、{s}日れんぞく',
     'who.switch': '人をかえる', 'who.title': 'だれがあそぶ？', 'who.p': 'ひとりひとりに、星マップ・記ろく・ペットがあるよ。', 'who.ph': '名前（6文字まで）', 'who.inAria': '名前',
@@ -1515,6 +1546,7 @@ const STR = {
     'about.ver': 'バージョン 1.4。© 2026 指數三寶飯 All rights reserved.', 'about.env': '　画面 {w}×{h}、キャンバス {cw}×{ch} @{d}',
     'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.wait': 'まちがいが多いので、30秒たってからもう一度どうぞ。', 'gate.no': 'ちがいます。べつの問題をどうぞ',
     rotate: 'スマホをたてにしてね',
+    'help.simple': 'かんたん', 'help.full': 'くわしく', 'hs.meteor': '<li>流星に計算の問題がのっているよ。答えを打つと、うちおとせるよ。</li><li>まちがえると答えが出るから、そのまま打ってね。流星が町に落ちるとハートが1つへって、なくなったらおしまい。</li><li>5ウェーブごとに<b>ボス</b>が来るよ。1回で正かいすると、こうげきできるよ。</li>', 'hs.ghost': '<li>20問で、<b>いちばん速いきみ</b>ときょうそうするよ。</li><li>先に答えおわったら、新記ろく！</li>', 'hs.versus': '<li>2人でむかい合って、早く答えよう。正かいすると星を1マス引っぱれるよ。</li><li>さいごまで引っぱったら勝ち。あいてがいないときは<b>ロボット</b>をえらんでね。</li>', 'hs.cmp': '<li>3つの式から、答えが<b>いちばん大きい</b>もの（または<b>いちばん小さい</b>もの）をタップしよう。</li><li>1回10問。ぜんぶ正かいすると、タイムが記ろくされるよ。</li>', 'hs.bomb': '<li>ばくだんに「7」と書いてあったら、7のだんの答えをぜんぶタップ。たし算・ひき算のときは、<b>答えがその数になる式</b>をタップ。</li><li>まちがえたり、どうか線がもえつきたりすると、ばくはつ！5こぜんぶかいじょできたらクリア！</li>', 'hs.other': '<li><b>星マップ</b>：速く正かいできた問題が、星になって光るよ。</li><li><b>ペット</b>：正かいすると星くずがもらえるよ。あげると大きくなるよ。</li><li><b>毎日のミッション</b>：毎日3つ。ぜんぶクリアでバッジ1こ。</li>',
     'help.games': '5つのゲーム', 'help.addT': 'たし算・ひき算', 'help.add': '<li>大人の人が「せってい」の「何を練習する？」で<b>かけ算</b>・<b>たし・ひき</b>・<b>りょうほう</b>をえらべるよ。</li><li>たし算・ひき算は20まで。<b>8 + 7</b>、<b>15 − 8</b>、ときどき <b>7 + ? = 15</b> も出るよ。</li><li>まちがえると、とき方が出るよ：<b>おなじ数</b>（7 + 8 は 7 + 7 に 1 たす）、<b>10をつくる</b>（8 + 7 は 8 + 2 = 10、あと 5）、<b>10になるなかま</b>（4 と 6）、<b>たし算で考える</b>（15 − 8 は 8 + 7 = 15）。</li><li>とき方が出たときは、流星とゴーストが<b>3びょう止まる</b>よ。答えを打てばつづきから。</li><li>「りょうほう」のときは、にがてなほうが多めに出るよ。</li><li>3つの数をたすとき（<b>6 + 5 + 4</b>）は、さきに<b>10になるなかま</b>（6 と 4）を見つけて、のこりをたそう。</li><li>どれが大きい？ にもたし算・ひき算が出るよ。ばくだんかいじょは、<b>答えがばくだんの数になる式</b>をさがすよ。13 なら 8 + 5 や 6 + 7。</li><li>星マップの上で<b>たし・ひき</b>にきりかえると、1問ずつのできぐあいが見られるよ。</li>', 'help.other': 'そのほか', 'help.chestT': 'たからばこ流星', 'help.comboT': 'コンボ', 'help.whoT': 'だれがあそぶ？', 'help.questT': '毎日のミッション',
     'help.meteor': '<li>流星には計算の問題がのっているよ。答えを打つと、ほう台がレーザーでうちおとすよ。ほう台は<b>同じ流星</b>をずっとねらっていて、ほかの流星が地面にぶつかりそうなときだけ、そっちをねらうよ。そのとき下の問題がピョンとはねるよ。</li><li>まちがえると流星に答えが出るよ。<b>そのまま打てば</b>うちおとせるよ。たし算・ひき算は、とき方も出るよ。7 + 8 なら <b>おなじ数</b> 7 + 7 = 14 に 1 たす、または <b>10をつくる</b> 8 + 2 = 10、10 + 5 = 15。とき方が出たときは、流星が<b>3びょう止まる</b>から、よく見てね。</li><li>かけ算のときは、流星に「7のだん」と「7、14、?、28」のような数がならぶことがあるよ。<b>？の数</b>を打てばOK。ゴーストレースとつなひきでも出るよ。</li><li>流星が町に落ちると<b>ハートが1つへる</b>よ。1ウェーブのあいだミスなしなら +50点。</li><li>5ウェーブごとに<b>まちがいボス</b>が出るよ。きみがよくまちがえる問題や、まだなれていない問題を出してくるよ。<b>1回で正かい</b>しないとダメージにならないよ。6回以上当てるとたおせて、ウェーブが進むほどライフがふえるよ。ボスのときは小さい流星は来ないから、ボスに集中しよう。たおすと +200点、<b>かならずたからばこ</b>が出るよ。</li><li>ボスが町に落ちても<b>ハートが1つへって</b>、次のウェーブが始まるよ。</li><li>ハートがふえるのはたからばこだけ。ハートは3つまで。</li><li><b>一発アウト</b>：ハートは1つだけ。ハイスコアはべつに記ろくされるよ。</li>',
     'help.chest': '<li>ウェーブ2から、<b>? × 7 = 56</b> や <b>7 + ? = 15</b> みたいに反対から聞く流星と、<b>6 + 5 + 4</b> みたいに3つの数をたす流星が、たからばこを持っているよ。<b>1回で正かい</b>してうちおとすと、アイテムが出るよ。</li><li>たからばこは3しゅるい：<b>銀</b>はよく出る、<b>金</b>はときどき、<b>にじ色</b>はレア。レアほどにぎやかにひらくよ。</li><li>銀：+30点、時間ストップ、<b>コンボシールド</b>。金：点数2ばい10秒、むてき10秒、<b>ホーミングミサイル</b>。</li><li>コンボシールド：右上のコンボの数字が、キラキラのあわにつつまれるよ。まちがえたり流星が町に落ちたりしたとき1回だけ守ってくれて、<b>コンボが0にならない</b>よ。そのときあわはわれるよ。もうあわがあるときにまたもらうと +50点。</li><li>ホーミングミサイルは3こまでためられるよ（いっぱいのときは +50点）。左上にいくつあるか出るよ。ボスが出ると、キーボードの上にピカピカの<b>「はっしゃ」ボタン</b>が出るよ。1回おすと1ぱつ、ボスのライフを1へらすよ。でもさいごの1回は自分で当ててね。</li><li>にじ色：<b>スーパーノヴァ</b>で落ちてくる小さい流星をぜんぶけす（いま答えている流星とボスはのこる）、<b>むてき20秒</b>、<b>ハート+1</b>（ハートが3つあるときや一発アウトのときは +100点）。</li>',
@@ -1524,13 +1556,13 @@ const STR = {
     'help.cmp': '<li>3つの式が出るよ。<b>いちばん大きい</b>と聞かれたら答えがいちばん大きいものを、<b>いちばん小さい</b>と聞かれたらいちばん小さいものをタップ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>3つの答えはとても近いから、計算してからタップしよう。3問れんぞく正かいすると、もっと近くなるよ。</li><li>まちがえると3つの答えが出るよ。<b>正しいもの</b>をタップすると次に進むよ。まちがえたときは、正しい問題とタップした問題がこれから多めに出て、タップした問題は、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>1回10問。<b>10問ぜんぶ正かい</b>のときだけタイムをくらべるよ。1問でもまちがえたら、その回はタイムなし。</li>',
     'help.bomb': '<li>ばくだんに「<b>7</b>」と書いてあったら、7のだんの答え（7、14、21…）をタップしよう。ぜんぶあるとはかぎらないから、あるものだけタップ。下に「みつけた 0 / 5」と出るよ。タップで正かいしても星はともらないよ（答えを打ったときだけ）。</li><li>ちがう数をタップすると<b>ばくはつ</b>！どうか線がもえつきても、ばくはつするよ。27や57みたいな、にている数に気をつけて！まちがえた数や見つけられなかった数は少し多めに出て、次に流星やゴーストであそぶときにもう一度出るよ。</li><li>たし算・ひき算のときは、ばくだんに <b>13</b> のような数が書いてあるよ。<b>答えが 13 になる式</b>をタップしよう：8 + 5、6 + 7…。8 + 4 や 9 + 5 みたいな、おしい式に気をつけて！</li><li>1回に5こ。<b>5こぜんぶかいじょ</b>したときだけタイムをくらべるよ。</li>',
     'help.map': '<li>1つの問題を3回以上<b>打って正かい</b>（×1の問題は1回でOK）して、速くてまちがえないと、<b>星になって光る</b>よ。マスをタップすると、その問題の記ろくが見られるよ。</li><li>赤くピカピカしているのは<b>にがて</b>な問題。できるようになるまで、ゲームでこっそり多めに出るよ。</li><li>たし算・ひき算を練習しているときは、星マップの上で<b>たし・ひき</b>にきりかえられるよ。1つのマスはたし算とそのひき算で、どちらもできると光るよ。</li>',
-    'help.wrong': '<li>まちがえた問題がここにならぶよ。いちばんまちがえた問題が上。</li><li>できるようになると、かってにきえるよ。「けす」をおしてリセットもできるよ。</li>',
+    'help.wrong': '<li>まちがえた問題がここにならぶよ。いちばんまちがえた問題が上。</li><li>できるようになると、かってにきえるよ。「けす」をおすとリストからけせるよ。もう一回正かいすると星が光るよ。</li>',
     'help.pet': '<li>正かいすると<b>星くず</b>がもらえるよ（メニューの「ペット」のとなりの数字）。ボスをたおしたり、ミッションをクリアしたりすると多めにもらえるよ。</li><li>ペットのページで「星くずをあげる」をおしてね。たくさんあげると大きくなるよ：<b>たまご → あかちゃん → こども → おとな → きゅうきょく</b>。</li><li>毎日のミッションで<b>バッジ</b>を集めると、ペットが新しいきせかえをつけられるよ（バッジはへらないよ）。ぜんぶで10こ：リボン、きんメダル、サングラス、ふうせん、キャップ、まるメガネ、ちょうネクタイ、星のヘアピン、まほうのぼうし、にじのわっか。さらに<b>なぞのアイテム</b>が2つ、バッジがたくさんたまると出てくるよ。</li><li>頭・顔・首・よこ・せなかの5か所に、<b>1つずつ同時に</b>つけられるよ。ペットのページでタップするとつけて、もう一回タップではずすよ。</li><li>きゅうきょくまで育てたら、<b>家にかえして</b>あげられるよ（山・海・ジャングル）。そのあと新しいたまごを育てよう。帰ったなかまはペットのページにのこるよ。</li><li>ペットのページの下で、帰ったなかまをタップすると会いに行けるよ。<b>よびもどす</b>こともできるよ。いまのペットは家で休んで、大きくなったところはそのまま。いつでもまたこうたいできるよ。</li><li><b>でんせつのたまご</b>もあるよ：バッジを30こ集めて、1ぴき家にかえすとえらべるよ。</li><li>ペットのページの下で<b>おせわ</b>ができるよ。星くずでおやつをあげたり、いっしょにあそんだりすると<b>ハート</b>がふえるよ。それぞれ<b>大すき</b>なおやつがあって、ハートが2ばいになるよ。</li><li>ペットをタップすると<b>なでなで</b>。1日の1回目は、ハートが少しふえるよ。ハートはふえるだけで、へらないよ。</li><li>星くずで<b>バッジとこうかん</b>もできるよ：★300でバッジ1こ、1日1回だけ。毎日のミッションのほうが早いよ。</li><li>星くずをあげなくても大じょうぶ。ちゃんとまっていてくれるよ。</li>',
     'help.quest': '<li>メニューで毎日<b>3つのミッション</b>が出るよ。できたら自動でチェックがつくよ。3つぜんぶクリアで<b>バッジ</b>1こ。</li><li>何日もつづけてクリアすると、何日れんぞくか出るよ。明日は新しいミッションになるよ。</li>',
     'help.who': '<li>メニューのいちばん上の人のマークで、<b>あそぶ人をかえられる</b>よ。ひとりひとりに星マップ・記ろく・ペットがあって、4人まで。</li><li>新しいタブレットやスマホにかえるときは、大人の人に「せってい」の<b>きろくのバックアップ</b>でうつしてもらおう。</li>',
     'set.parents': 'おうちの人むけ', 'set.del': 'プレイヤーをけす', 'set.delD': '「{name}」の名前と記ろくをぜんぶけす（大人の人にきいてね）', 'set.delGo': 'けす', 'set.backup': 'きろくのバックアップ', 'set.backupD': 'ほかのタブレットやアプリにうつすときに使うよ（読みこみは大人の人にきいてね）', 'set.backupGo': 'ひらく', 'set.pet': 'ペットをけす', 'set.petD': '今のペットや家に帰ったなかまを、ずっとけす（大人の人にきいてね）', 'set.petGo': 'ひらく',
     'pdel.title': 'ペットをけす', 'pdel.p': 'けしたペットはもどってこないよ。星くずときせかえはのこるよ。', 'pdel.cur': '{stage}・今のなかま', 'pdel.go': 'けす', 'pdel.aria': '{name}をけす', 'pdel.why': '「{name}」を完全に消去します。大人の方がこの問題に答えてください。', 'pdel.done': '「{name}」をけしたよ',
-    'lock.trialN': 'おためし{n}回', 'lock.locked': 'おためしはおしまい', 'lock.title': '{name}のおためしはおしまい！', 'lock.p': 'おためしはおしまい。{m}、星マップ、ペットは、いつでもあそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった',
+    'lock.trialN': 'おためし{n}回', 'lock.locked': 'おためしはおしまい', 'lock.title': '{name}のおためしはおしまい！', 'lock.p': '{m}、星マップ、ペットは、いつでもあそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった',
     'trial.start': 'おためし！あと{n}回ためせるよ', 'trial.last': 'おためし！', 'nudge.title': 'ほかのゲームもあるよ！', 'nudge.p': '{games}は、ただでためせるよ。メニューでえらんでみてね！',
     'gate.buy': '購入やコードの入力には、大人の方がこの問題に答えてください。', 'buy.title': 'すべてのゲームを解除',
     'buy.list': '<li>{g}の4つのゲームが、いつでも遊べるようになります。</li><li><b>1回の購入でずっと使えます</b>：サブスクリプションではなく、広告もほかの課金もありません。</li><li>この端末のすべてのプレイヤーが遊べます。</li>',
@@ -1539,7 +1571,7 @@ const STR = {
     'buy.noProd': 'いまストアの商品を読み込めません。しばらくしてからお試しください。', 'buy.codeOld': 'この端末ではアプリ内でコードを使えません。App Store のアカウントページから引き換えてください。', 'buy.pending': 'お支払いを処理中です。完了するとゲームが解除されます。', 'buy.fail': '購入が完了しませんでした。もう一度お試しください。', 'buy.none': 'このアカウントの購入履歴が見つかりません。', 'buy.offline': 'ストアに接続できません。しばらくしてからお試しください。',
     'set.unlock': 'ぜんぶのゲームをひらく', 'set.unlockD': '流星ディフェンスはむりょう。ほかの4つは1回の購入でひらくよ（大人の人にきいてね）', 'set.unlockOk': '4つのゲームがぜんぶあそべるよ', 'set.unlockGo': 'みる',
     'help.unlockT': 'ゲームをひらく', 'help.unlock': '<li>{m}、星マップ、ペット、毎日のミッションは、いつでもあそべるよ。</li><li>ほかの4つのゲームは、<b>3回ずつただであそべる</b>よ。そのあとどうするかは、おうちの人がきめるよ。</li><li>ひらくまでは、毎日のミッションはあそべるゲームからだけ出るよ。</li>',
-    'about.buyT': '料金', 'about.buyL': '<li>{m}・星マップ・ペット・毎日のミッションは無料です。ほかの4つのゲームはそれぞれ3回お試しでき、「設定 → おうちの人むけ」で<b>1回購入</b>するとすべて解除されます（サブスクリプションではありません）。この端末のすべてのプレイヤーが遊べます。</li><li>お支払いは App Store／Google Play が行い、支払い情報やアカウント情報が私たちに届くことはありません。購入とコードの入力には、大人向けの確認問題があります。</li>',
+    'about.buyT': '料金', 'about.storeI': 'App Store', 'about.storeA': 'Google Play', 'about.storeW': 'App Store／Google Play', 'about.buyL': '<li>{m}・星マップ・ペット・毎日のミッションは無料です。ほかの4つのゲームはそれぞれ3回お試しでき、「設定 → おうちの人むけ」で<b>1回購入</b>するとすべて解除されます（サブスクリプションではありません）。この端末のすべてのプレイヤーが遊べます。</li><li>お支払いは {s} が行い、支払い情報やアカウント情報が私たちに届くことはありません。購入とコードの入力には、大人向けの確認問題があります。</li>',
     'bk.again': 'OK です。もう一度「{b}」をおしてください。', 'bk.exWhy': '記録をアプリの外に送るには、大人の方がこの問題に答えてください。', 'bk.why': '読み込むと、この端末の全員の記録が置き換わります。大人の方がこの問題に答えてください。', 'bk.title': '記録のバックアップ',
     'bk.p': 'この端末にいる全員の星マップ・記録・ペット・設定をまとめて保存します。Web版とアプリ版の記録は別々に保存されるため、移すときはバックアップを使ってください。念のための保存にも使えます。',
     'bk.exportT': '書き出し', 'bk.file': 'バックアップファイルを保存', 'bk.copy': 'バックアップコードをコピー', 'bk.saved': 'バックアップファイルを作成しました。',
@@ -1570,7 +1602,8 @@ function applyStr() {
   $$('[data-tp]').forEach(e => e.setAttribute('placeholder', tx(e.dataset.tp)));
   $$('.name-in').forEach(e => { e.maxLength = nameMax(); });
   const m = { m: tx('meteor.name') };
-  $('#help-unlock').innerHTML = tx('help.unlock', m); $('#about-buy').innerHTML = tx('about.buyL', m);
+  $$('.help-unlock').forEach(e => { e.innerHTML = tx('help.unlock', m); }); const cp = window.Capacitor, plat = cp && cp.isNativePlatform && cp.isNativePlatform() && cp.getPlatform ? cp.getPlatform() : '';   // iPhone 版只寫 App Store（Apple 2.3.10 不能提別的商店）
+  $('#about-buy').innerHTML = tx('about.buyL', Object.assign({ s: tx(plat === 'ios' ? 'about.storeI' : plat === 'android' ? 'about.storeA' : 'about.storeW') }, m));
   renderLocks(); renderSetUnlock();
 }
 // 依目前的人的設定（沒設就看裝置）換語言；載入、換人、在設定頁切換時呼叫
@@ -1596,7 +1629,7 @@ KEY = keyFor(WHO.cur);
 const TMODE = 1;   // 時間量法的版本（1：題目出現到按下第一個數字）；存檔的 tm 不同就換算舊紀錄，每日紀錄也記著，換量法後不跟舊紀錄比快慢
 const BEST0 = () => ({ meteor: 0, sudden: 0, ghost: null, cmpT: null, bomb: null, ghostLoss: 0 });
 let recent = [], retest = [], draws = 0, lastRetest = -9, retestPick = '';   // retest：答錯的題 6～12 題後一定再考一次（延遲重測比立刻照抄有效）；兩次重測至少隔 2 題；存檔存 key（DB.retest），關掉再開也會考
-const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], tm: TMODE, set: { what: 'mul', sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice(), lang: '' },
+const fresh = () => mkDB({ facts: {}, bests: {}, retest: [], tm: TMODE, set: { what: 'mul', sound: true, music: true, sudden: false, seqLabel: true, tables: STD_TABLES.slice(), lang: '', help: 's' },
   daily: { date: '', tasks: [], badges: 0, streak: 0, lastDone: '', starBase: 0, ans: 0, wrong: 0, log: {} },
   pet: { kind: '', name: '', dust: 0, fed: 0, love: 0, pat: '', badgeDay: '', wear: { head: '', face: '', neck: '', side: '', back: '' }, released: [], sent: 0 } });
 // 最佳紀錄依乘法表範圍分開存（bests[rangeKey]），DB.best 永遠指向目前範圍那一份；getter 不可列舉所以不會存進 JSON
@@ -1623,7 +1656,7 @@ function cleanFacts(fc) {
 function cleanRest(D) {
   Object.keys(D.bests).forEach(k => { const b = D.bests[k]; if (!/^(add|(b:)?(std|\d+(,\d+)*))$/.test(k) || !b || typeof b !== 'object') { delete D.bests[k]; return; } b.meteor = clamp(num(b.meteor), 0, 1e7); b.sudden = clamp(num(b.sudden), 0, 1e7); b.cmpT = num(b.cmpT, 0) > 0 ? Math.min(num(b.cmpT), 36e5) : null; b.ghostLoss = clamp(Math.round(num(b.ghostLoss)), 0, 99); b.bomb = num(b.bomb, 0) > 0 ? Math.min(num(b.bomb), 36e5) : null; if (!(Array.isArray(b.ghost) && b.ghost.length === 20 && b.ghost.every(v => typeof v === 'number' && Number.isFinite(v)))) b.ghost = null; });
   ['sound', 'music', 'sudden', 'seqLabel'].forEach(k => { D.set[k] = D.set[k] === true || D.set[k] === 'true' || D.set[k] === 1; });   // 字串 'false' 不能當 true
-  const P = D.pet; P.dust = Math.max(0, Math.round(num(P.dust))); P.fed = Math.max(0, Math.round(num(P.fed))); P.name = String(P.name || '').slice(0, 10); if (!LANGS.includes(D.set.lang)) D.set.lang = ''; if (typeof P.kind !== 'string') P.kind = '';
+  const P = D.pet; P.dust = Math.max(0, Math.round(num(P.dust))); P.fed = Math.max(0, Math.round(num(P.fed))); P.name = String(P.name || '').slice(0, 10); if (!LANGS.includes(D.set.lang)) D.set.lang = ''; if (D.set.help !== 'f') D.set.help = 's'; if (typeof P.kind !== 'string') P.kind = '';
   P.released = (Array.isArray(P.released) ? P.released : []).filter(r => r && typeof r.kind === 'string').map(r => Object.assign({ kind: r.kind, name: String(r.name || '').slice(0, 10), date: typeof r.date === 'string' ? r.date : '' }, Number.isFinite(r.fed) ? { fed: clamp(Math.round(r.fed), 0, 1e6) } : {}, Number.isFinite(r.love) ? { love: clamp(Math.round(r.love), 0, 1e6) } : {}));
   P.love = clamp(Math.round(num(P.love)), 0, 1e6); if (typeof P.pat !== 'string') P.pat = ''; if (typeof P.badgeDay !== 'string') P.badgeDay = '';   // 愛心、今天摸過沒、今天換過徽章沒
   P.sent = Math.max(Math.round(num(P.sent)), P.released.filter(r => !('fed' in r) || r.fed >= 500).length);   // 送回家（究極）過幾次：傳說蛋看這個，請夥伴回來不會又鎖回去；舊存檔用名單裡的究極補
@@ -1851,7 +1884,7 @@ let actx = null;
 function ctx() {
   try {
     if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-    if (actx.state === 'suspended' && !document.hidden) actx.resume();
+    if (actx.state !== 'running' && actx.state !== 'closed' && !document.hidden) { const r = actx.resume(); if (r && r.catch) r.catch(() => {}); }   // iOS 被來電打斷是 'interrupted'，不只 'suspended'
   } catch (e) { return null; }
   return actx;
 }
@@ -2158,7 +2191,7 @@ function startMeteor() {
   $('#m-freeze').hidden = true; $('#m-dbl').hidden = true; $('#m-inv').hidden = true;
   const me = M;
   requestAnimationFrame(() => { if (M !== me) return; measure(); nextWave(); hud(); bar(); });
-  if (!Object.keys(DB.facts).length) setTimeout(() => { if (M === me && !M.over) ftxt(W / 2, GY - 150, tx('m.firstTip'), '#9fdcff', 24); }, 2200);   // 第一次玩的提示
+  $('#m-tip').hidden = true; if (!Object.keys(DB.facts).length) setTimeout(() => { if (M === me && !M.over && !M.typed) $('#m-tip').hidden = false; }, 2200);   // 第一次玩的提示：固定在鍵盤上方，按下第一個數字才消失（原本是 1 秒就飄走的浮字）
 }
 function nextWave() {
   const perfect = M.wave > 0 && M.waveMiss === 0;
@@ -2207,7 +2240,7 @@ const hudBottom = () => { const e = $('#s-meteor .hud'); const b = e && e.getBou
 function bossSeen() {
   const b = M.boss; if (!b || b.dead || b.seen || b.y < hudBottom()) return;
   b.seen = true; hud();
-  if (M.missiles > 0) { ftxt(W / 2, GY - 60, tx('m.haveMissile'), '#ffae57', 26); SFX.ding(); }
+  if (M.missiles > 0) { const fb = $('#m-fire2').getBoundingClientRect(); ftxt(W / 2, (fb.height ? fb.top : GY - 76) - 30, tx('m.haveMissile'), '#ffae57', 26); SFX.ding(); }   // 放在發射鈕上面，不被它壓到
 }
 // 飛彈手動發射：點 HUD 的飛彈圖示或按空白鍵／Enter，一次一枚
 function launchMissile() {
@@ -2420,7 +2453,7 @@ function meteorKey(d) {
   if (!M.buf && now() - M.switchT < 250) return;   // 剛換目標，這一下八成是打給上一顆的
   if (d === 'back') { M.buf = M.buf.slice(0, -1); if (!M.buf) M.lock = null; bar(); return; }
   if (!M.buf) tg.fk = now() - (tg.tStart || now());   // 想出答案的時間（到第一個數字）
-  M.buf += d; M.lock = tg; SFX.key();
+  M.buf += d; M.lock = tg; SFX.key(); if (!M.typed) { M.typed = true; $('#m-tip').hidden = true; }
   if (M.buf.length >= String(tg.q.ans).length) {
     const v = parseInt(M.buf, 10);
     M.buf = ''; M.lock = null;
@@ -2562,8 +2595,10 @@ function drawBeams(dt) {
   g.globalCompositeOperation = 'source-over';
 }
 function drawRock(m, tgt) {
-  const r = m.r, fr = M.freeze > 0;
-  g.save(); g.translate(m.x, m.y);
+  const r = m.r, fr = M.freeze > 0, hb = m.boss ? hudBottom() : 0;
+  g.save();
+  if (m.boss) { g.beginPath(); g.rect(0, hb, W, H); g.clip(); }   // 魔王從 HUD 下緣「冒出來」，不蓋住分數與心
+  g.translate(m.x, m.y);
   const hg = g.createRadialGradient(0, 0, r * 0.5, 0, 0, r * 1.75);
   const loot = (m.q.rev || m.q.tri) && !m.boss;
   hg.addColorStop(0, fr ? 'rgba(159,220,255,.38)' : (m.boss ? 'rgba(255,80,80,.5)' : loot ? 'rgba(255,220,80,.55)' : 'rgba(255,150,70,.4)'));
@@ -2599,8 +2634,6 @@ function drawRock(m, tgt) {
       g.fillStyle = '#1a0610'; g.beginPath(); g.arc(s * r * 0.3 + Math.sin(T * 2) * 2, -r * 0.44, r * 0.055, 0, 6.283); g.fill();
       g.strokeStyle = '#ff6161'; g.lineWidth = 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(s * r * 0.48, -r * 0.66); g.lineTo(s * r * 0.14, -r * 0.56); g.stroke();
     }
-    const pw = Math.min(16, r * 1.5 / m.hpMax - 3), py = Math.max(-r - 22, hudBottom() + 6 - m.y);   // 血條：魔王還在上面時貼著 HUD 下緣，不跑到畫面外
-    for (let i = 0; i < m.hpMax; i++) { g.fillStyle = i < m.hp ? '#ff6161' : 'rgba(255,255,255,.18)'; rr(-m.hpMax * (pw + 3) / 2 + i * (pw + 3), py, pw, 8, 3); g.fill(); }
   }
   const parts = m.q.text.split(' = ');
   const L = m.q.lines ? m.q.lines.slice() : parts.length === 2 ? [parts[0], '= ' + parts[1]] : [parts[0]];
@@ -2616,6 +2649,12 @@ function drawRock(m, tgt) {
     g.lineWidth = 4; g.strokeStyle = 'rgba(6,12,24,.9)'; g.strokeText(s, 0, y0 + i * lh + 1);
     g.fillStyle = isAns ? '#ff9a9a' : isLab ? '#9fdcff' : '#ffffff'; g.fillText(s, 0, y0 + i * lh + 1);
   });
+  if (m.boss) {   // 血條畫在題目框後面（上層）：魔王還在上面時貼著 HUD 下緣；會壓到題目框就改放題目框下面
+    const pw = Math.min(16, r * 1.5 / m.hpMax - 3), tTop = y0 - lh / 2 - 2, tBot = tTop + lh * L.length + 4;
+    let py = Math.max(-r - 22, hb + 6 - m.y);
+    if (py + 8 > tTop - 3 && py < tBot + 3) py = tBot + 6;
+    for (let i = 0; i < m.hpMax; i++) { g.fillStyle = i < m.hp ? '#ff6161' : 'rgba(255,255,255,.18)'; rr(-m.hpMax * (pw + 3) / 2 + i * (pw + 3), py, pw, 8, 3); g.fill(); }
+  }
   if (tgt) {
     const R = r + 13 + Math.sin(T * 6) * 2;
     g.rotate(T * 1.5);
@@ -3846,7 +3885,17 @@ function milestone(n) {
 }
 
 /* ================= 遊戲說明 ================= */
-$('#go-help').addEventListener('click', () => { $('#o-help').hidden = false; });
+// 簡單版／完整版：每個人記住自己選的（DB.set.help，預設簡單版）
+function renderHelp() {
+  const f = DB.set.help === 'f';
+  $('#help-s').hidden = f; $('#help-f').hidden = !f;
+  $$('#help-ver button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === DB.set.help)));
+}
+$('#go-help').addEventListener('click', () => { renderHelp(); $('#o-help').hidden = false; $('#o-help .card').scrollTop = 0; });
+$('#help-ver').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || b.dataset.v === DB.set.help) return;
+  DB.set.help = b.dataset.v; save(); renderHelp(); $('#o-help .card').scrollTop = 0; SFX.ding();
+});
 $('#go-set').addEventListener('click', () => { refreshMenu(); $('#o-set').hidden = false; });
 $('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 function pickMode() {
@@ -3884,7 +3933,7 @@ function countdown(cb) {
     if (tok !== cdTok || mode !== m0) return;   // 舊倒數不要碰共用的元素（新倒數可能已經在用）
     if (covered() || (mode === 'versus' && V && V.paused)) { setTimeout(step, 250); return; }   // 切背景／轉橫／拔河暫停時倒數停住，回來再繼續
     if (n > 0) { el.innerHTML = `<span>${n}</span>`; SFX.tick(); n--; setTimeout(step, 700); }
-    else { el.innerHTML = `<span class="go">${tx('go')}</span>`; SFX.go(); setTimeout(() => { if (tok === cdTok) el.hidden = true; }, 600); cb(); }
+    else { el.innerHTML = `<span class="go">${tx('go')}</span>`; SFX.go(); setTimeout(() => { if (tok === cdTok) el.hidden = true; }, 600); useTrial(m0); cb(); }
   };
   step();
 }
@@ -3960,7 +4009,7 @@ makePad($('#v-top [data-pad]'), d => vKey(1, d));
 const FB_URL = 'https://www.facebook.com/profile.php?id=100084000897269';   // 指數三寶飯粉絲專頁（不帶追蹤參數）
 let gate = null;
 // target 是網址（答對後出現「前往」鈕，用 click 開才不會被 iOS 擋）或函式（答對直接執行，例如清除紀錄）
-let gateWait = 0;
+let gateWait = 0, gateMiss = 0;   // gateMiss 跨開卡累計：取消、關掉再開都不歸零，答對或被鎖 30 秒後才歸零
 function gateExpr(hard) {
   let expr, ans;
   do {
@@ -3973,7 +4022,7 @@ function openGate(target, why, hard = typeof target === 'function') {   // hard�
   // 題目是混合運算（先乘除、後加減）：孩子在練的正是乘法，純乘法擋不住他們；「5 + 2 × 13」要記得先乘，沒學過運算順序的孩子會從左算到右而答錯
   // hard（清除紀錄、刪人這種不可逆的）：兩個乘法一加一減，答案至少 10
   if (now() < gateWait) { toast(tx('gate.wait')); return; }   // 連錯 3 次後 30 秒內不給再試（亂按猜不出來）
-  gate = Object.assign(gateExpr(hard), { buf: '', target, hard, miss: 0 });
+  gate = Object.assign(gateExpr(hard), { buf: '', target, hard });
   $('#gate-why').textContent = why || tx('gate.why');
   $('#gate-q').innerHTML = `${gate.expr} = ${slots(String(gate.ans).length, '')}`; $('#gate-hint').textContent = ''; $('#gate-go').hidden = true; $('#gate-pad').hidden = false;
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();   // 不然按 Enter 會重開關卡
@@ -3989,8 +4038,8 @@ function gateKey(d) {
       if (typeof t === 'function') { gate = null; $('#o-gate').hidden = true; t(); return; }
       gate.buf = ''; gate.ok = true; SFX.ding(); $('#gate-hint').textContent = tx('gate.ok'); $('#gate-pad').hidden = true; $('#gate-go').hidden = false; return;
     }
-    SFX.wrong(); gate.miss++;
-    if (gate.miss >= 3) { gate = null; $('#o-gate').hidden = true; gateWait = now() + 30000; toast(tx('gate.wait')); return; }   // 連錯 3 次：關掉、30 秒後再來
+    SFX.wrong(); gateMiss++;
+    if (gateMiss >= 3) { gateMiss = 0; gate = null; $('#o-gate').hidden = true; gateWait = now() + 30000; toast(tx('gate.wait')); return; }   // 連錯 3 次：關掉、30 秒後再來
     Object.assign(gate, gateExpr(gate.hard), { buf: '' });   // 答錯就換一題（同一題不能一直猜）
     $('#gate-hint').textContent = tx('gate.no'); const c = $('#gate-q'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
     $('#gate-q').innerHTML = `${gate.expr} = ${slots(String(gate.ans).length, '')}`; return;
@@ -4006,7 +4055,14 @@ document.addEventListener('click', e => { if (e.target.closest && e.target.close
 function paid(m, fn) {
   if (!PAID.includes(m) || unlocked()) return fn();
   if (!trialLeft(m)) return openLock(m);
-  UL.trial[m] = (UL.trial[m] || 0) + 1; saveUL(); renderLocks(); fn(); const n = trialLeft(m); toast(n ? tx('trial.start', { n }) : tx('trial.last'));
+  trialPend = m; fn();   // 倒數結束才算用掉一次（countdown() 呼叫 useTrial）：倒數中退出、誤點不扣
+}
+let trialPend = '';
+function useTrial(m) {
+  if (trialPend !== m) return;
+  trialPend = '';
+  if (!PAID.includes(m) || unlocked()) return;
+  UL.trial[m] = (UL.trial[m] || 0) + 1; saveUL(); renderLocks(); const n = trialLeft(m); toast(n ? tx('trial.start', { n }) : tx('trial.last'));
 }
 function openLock(m) {
   $('#lock-title').textContent = tx('lock.title', { name: tx(m + '.name') });
@@ -4016,21 +4072,30 @@ function openLock(m) {
 const askBuy = () => openGate(openBuy, tx('gate.buy'), false);   // 購買用簡單的那種（a + b × c）：Apple 1.3 一定要家長關卡，但題目太難大人會放棄
 const paidNames = () => PAID.map(m => tx(m + '.name')).join(tx('sep'));
 const IAP = APP && CAP.nativePromise ? (m, o) => CAP.nativePromise('NativePurchases', m, o || {}) : null;
-let iapPrice = '', iapBusy = false, iapNoProd = false;   // iapNoProd：問過商店但沒有這個商品（或連不上）→ 購買鈕停用
+let iapPrice = '', iapBusy = false, iapNoProd = false, iapPend = false;   // iapPend：送出「購買前詢問」／付款處理中，等核准（家長會收到好幾個請求）   // iapNoProd：問過商店但沒有這個商品（或連不上）→ 購買鈕停用
 const buyMsg = t => { $('#buy-msg').textContent = t || ''; };
 function renderBuy() {
   const ok = unlocked();
   $('#buy-list').innerHTML = tx('buy.list', { g: paidNames() });
   $('#buy-go').textContent = iapPrice ? tx('buy.go', { p: iapPrice }) : tx('buy.goNoP');
   ['#buy-go', '#buy-restore', '#buy-code'].forEach(id => { $(id).hidden = ok; $(id).disabled = iapBusy; });
-  if (!ok && iapNoProd && !iapPrice) { $('#buy-go').disabled = true; if (!iapBusy) buyMsg(tx('buy.noProd')); }   // 商店沒有這個商品／連不上：不讓人按了才失敗
+  if (!ok && iapNoProd && !iapPrice) { $('#buy-go').disabled = true; if (!iapBusy) buyMsg(tx('buy.noProd')); }
+  if (!ok && iapPend) { $('#buy-go').disabled = true; if (!iapBusy) buyMsg(tx('buy.pending')); }   // 商店沒有這個商品／連不上：不讓人按了才失敗
   if (ok) buyMsg(tx('buy.owned'));
+  $('#buy-close').textContent = tx(ok ? 'lock.ok' : 'buy.later');   // 買完了還寫「之後再說」很怪
 }
+let buyTok = 0;
 function openBuy() {
   buyMsg(''); renderBuy(); $('#o-buy').hidden = false;
-  if (IAP && !iapPrice) IAP('getProducts', { productIdentifiers: [IAP_ID], productType: 'inapp' }).then(r => {
-    const p = r && r.products && r.products[0]; if (p && p.priceString) { iapPrice = String(p.priceString); iapNoProd = false; } else iapNoProd = true; renderBuy();
-  }).catch(() => { iapNoProd = true; renderBuy(); });
+  loadProd(++buyTok, 1);
+}
+// 問商店價錢；讀不到（網路慢、商店剛設定好）時卡片還開著就 2.5 秒後自動再問一次，審核員才不會看到按不下去的鈕
+function loadProd(tok, retry) {
+  if (!IAP || iapPrice) return;
+  const fail = () => { iapNoProd = true; renderBuy(); if (retry && tok === buyTok) setTimeout(() => { if (tok === buyTok && !$('#o-buy').hidden) loadProd(tok, retry - 1); }, 2500); };
+  IAP('getProducts', { productIdentifiers: [IAP_ID], productType: 'inapp' }).then(r => {
+    const p = r && r.products && r.products[0]; if (p && p.priceString) { iapPrice = String(p.priceString); iapNoProd = false; renderBuy(); if (!unlocked() && !iapBusy && !iapPend) buyMsg(''); } else fail();
+  }).catch(fail);
 }
 function setUnlocked(quiet) {
   if (UL.ok) return;
@@ -4059,12 +4124,12 @@ async function iapBuy() {
       if (!IOS && t.isAcknowledged === false && t.purchaseToken) IAP('acknowledgePurchase', { purchaseToken: t.purchaseToken }).catch(() => {});   // 外掛自己也會確認，但可能被關連線搶先；再確認一次無害（3 天沒確認 Google 會退款）
       setUnlocked(); buyMsg(tx('buy.owned'));
     }
-    else if (t && t.purchaseState === '2') buyMsg(tx('buy.pending'));
+    else if (t && t.purchaseState === '2') { iapPend = true; buyMsg(tx('buy.pending')); }
     else if (await iapCheck()) buyMsg(tx('buy.owned')); else buyMsg(tx('buy.fail'));
   } catch (e) {
     const m = String((e && (e.code || e.message)) || e);
     if (cancelled(e)) buyMsg('');
-    else if (/pending/i.test(m)) buyMsg(tx('buy.pending'));   // 「購買前詢問」、付款處理中：外掛用 reject 回來，不是失敗；核准後由 transactionUpdated／回前景的檢查解鎖
+    else if (/pending/i.test(m)) { iapPend = true; buyMsg(tx('buy.pending')); }   // 「購買前詢問」、付款處理中：外掛用 reject 回來，不是失敗；核准後由 transactionUpdated／回前景的檢查解鎖
     else buyMsg((await iapCheck()) ? tx('buy.owned') : tx('buy.fail'));   // 已經買過（ITEM_ALREADY_OWNED）也會 reject：再問一次商店
   }
   iapBusy = false; renderBuy();
@@ -4329,7 +4394,7 @@ addEventListener('resize', resize);
 addEventListener('resize', () => { if (mode === 'menu') placeMenuPet(); if (mode === 'map') placeMap(); if (mode === 'pet') alumFit(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (mode === 'menu') placeMenuPet(); });   // 字型換好後鈕的寬度會變
 document.addEventListener('gesturestart', e => { if (mode === 'versus') e.preventDefault(); });   // iOS Safari 不理 user-scalable=no，拔河時擋掉雙指縮放
-const rotMQ = matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse)');
+const rotMQ = matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse) and (min-aspect-ratio:3/2)');   // 寬高比條件：iPad 台前調度的矮視窗、Android 鍵盤擠矮畫面（360×316）不算橫拿
 rotMQ.addEventListener('change', () => { if (rotMQ.matches) pauseGames(); });   // 轉橫：頁面還在前景，計時由 frame() 逐幀凍結
 
 /* ================= 主迴圈 ================= */

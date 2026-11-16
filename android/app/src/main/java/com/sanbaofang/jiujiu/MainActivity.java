@@ -1,4 +1,4 @@
-package io.github.ianyclin.jiujiumeteor;
+package com.sanbaofang.jiujiu;
 
 import com.getcapacitor.BridgeActivity;
 

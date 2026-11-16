@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "io.github.ianyclin.jiujiumeteor"
+    namespace = "com.sanbaofang.jiujiu"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "io.github.ianyclin.jiujiumeteor"
+        applicationId "com.sanbaofang.jiujiu"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // CI（GitHub Actions）每次建置用 run 編號當 versionCode，手機上新版才能直接覆蓋安裝；本機建置是 1

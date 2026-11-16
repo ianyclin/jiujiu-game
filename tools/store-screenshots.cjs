@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // 商店截圖：用 Playwright 開真的遊戲（index.html 原封不動），種一份好看的存檔，依各商店的尺寸截出五張：
-// 主選單、流星防衛戰、星圖、寵物、拔河。三種語言各一套。輸出 store/screenshots/<裝置>/<語言>/<n>-<名>.jpg
+// 主選單、流星防衛戰、星圖、寵物、拔河、加減星圖。三種語言各一套。主選單用 App 模式（假的 window.Capacitor），四個付費遊戲帶「免費試玩」牌子（Apple 2.3.2）。輸出 store/screenshots/<裝置>/<語言>/<n>-<名>.jpg
 // （JPEG：Apple 不收有透明度的圖，JPEG 沒有 alpha；檔案也小。）
 //
 // 用法：
@@ -27,14 +27,14 @@ const LANGS = {
   en:        { who: 'Star', pet: 'Mochi' },
   ja:        { who: 'ほし', pet: 'もち' },
 };
-const SHOTS = ['menu', 'meteor', 'map', 'pet', 'versus'];
+const SHOTS = ['menu', 'meteor', 'map', 'pet', 'versus', 'addmap'];
 
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i < 0 ? d : (process.argv[i + 1] || '').split(','); };
 const devices = arg('device', Object.keys(DEVICES)), langs = arg('lang', Object.keys(LANGS)), shots = arg('shot', SHOTS);
 const outRoot = path.join(root, 'store', 'screenshots');
 
 // 種存檔：一個玩了幾個禮拜的孩子——大部分星星亮了、幾題還在練、寵物是成體、戴了幾樣配件
-function seed(lang) {
+function seed(lang, name) {
   const hard = new Set(['6x7', '7x6', '6x8', '8x6', '7x8', '8x7', '7x9', '9x7', '8x9', '9x8', '6x9', '9x6', '7x7', '8x8']);
   const weak = new Set(['7x8', '8x7', '6x8', '8x6', '7x9', '9x7']);
   const fresh = new Set(['9x9', '8x9', '9x8', '6x9', '9x6', '4x9', '3x9']);
@@ -46,13 +46,24 @@ function seed(lang) {
     else if (hard.has(k) || h === 3) facts[k] = { n: 3, err: 0.2, t: 3900, w: 1 };
     else facts[k] = { n: 4 + h, err: 0.02, t: 1500 + h * 130 };
   }
-  const ghost = Array.from({ length: 20 }, (_, i) => 2100 + ((i * 337) % 900));
+  let acc = 0; const ghost = Array.from({ length: 20 }, (_, i) => (acc += 2100 + ((i * 337) % 900)));   // 遊戲存的是「累計」時間（第 20 個 ≈ 51 秒），不是每題時間
+  if (name === 'addmap') {   // 加減星圖：大部分亮了、進位退位的幾題還在練
+    for (let a = 2; a <= 9; a++) for (let b = 2; b <= 9; b++) {
+      const c = a + b, h = (a * 5 + b * 11) % 10, carry = c > 10;
+      for (const k of [a + '+' + b, c + '-' + b]) {
+        if (carry && (h === 1 || h === 4)) facts[k] = { n: 4, err: 0.5, t: 4800, w: 2 };
+        else if (carry && h === 7) continue;
+        else if (carry && h % 3 === 0) facts[k] = { n: 3, err: 0.2, t: 3600, w: 1 };
+        else facts[k] = { n: 4 + h, err: 0.02, t: 1300 + h * 110 };
+      }
+    }
+  }
   return {
     who: { cur: '', list: [{ id: '', name: LANGS[lang].who }], asked: true },
     save: {
       facts, retest: [],
       bests: { std: { meteor: 1840, sudden: 920, ghost, cmpT: 27800, bomb: 58200, ghostLoss: 0 } },
-      set: { what: 'mul', sound: false, music: false, sudden: false, seqLabel: true, tables: [1, 2, 3, 4, 5, 6, 7, 8, 9], lang },
+      set: { what: name === 'addmap' ? 'add' : 'mul', sound: false, music: false, sudden: false, seqLabel: true, tables: [1, 2, 3, 4, 5, 6, 7, 8, 9], lang },
       daily: { date: '', tasks: [], badges: 15, streak: 4, lastDone: '', starBase: 40, ans: 38, wrong: 3, log: {} },
       pet: { kind: 'cute', name: LANGS[lang].pet, dust: 126, fed: 380, wear: { head: 'star', face: 'glasses', neck: 'bowtie', side: 'balloon', back: '' }, released: [], sent: 0 },
     },
@@ -69,9 +80,13 @@ function serve() {   // 小型靜態伺服器：不用 file://（字型與 local
   return new Promise(r => srv.listen(0, '127.0.0.1', () => r(srv)));
 }
 
-async function newPage(browser, dev, lang, base) {
+async function newPage(browser, dev, lang, base, name, plat) {
   const ctx = await browser.newContext({ viewport: { width: dev.w, height: dev.h }, deviceScaleFactor: dev.s, isMobile: dev.mobile, hasTouch: true, reducedMotion: 'no-preference' });
-  const page = await ctx.newPage(); const sd = seed(lang);
+  const page = await ctx.newPage(); const sd = seed(lang, name);
+  if (name === 'menu') await page.addInitScript(([pl]) => {   // App 模式：付費遊戲顯示「免費試玩 N 次」（幽靈已經試玩過 1 次）
+    window.Capacitor = { isNativePlatform: () => true, getPlatform: () => pl, nativePromise: (n, m) => m === 'getPurchases' ? Promise.resolve({ purchases: [] }) : Promise.resolve({}) };
+    localStorage.setItem('jiujiu-meteor-unlock', JSON.stringify({ ok: false, trial: { ghost: 1 }, runs: 1, nudged: 0 }));
+  }, [plat]);
   page.on('pageerror', e => console.error('  [pageerror]', e.message));
   await page.addInitScript(([sd]) => {
     localStorage.setItem('jiujiu-meteor-who', JSON.stringify(sd.who));
@@ -135,7 +150,8 @@ async function shotVersus(page, f) {
   }
   await snap(page, f);
 }
-const SHOTFN = { menu: shotMenu, meteor: shotMeteor, map: shotMap, pet: shotPet, versus: shotVersus };
+async function shotAddMap(page, f) { await page.click('#go-map'); await page.waitForTimeout(800); const t = await page.$('#map-tabs [data-tab="add"], #map-tabs button:last-child'); if (t && !(await t.getAttribute('aria-pressed') === 'true')) await t.click().catch(() => {}); await page.waitForTimeout(500); await snap(page, f); }
+const SHOTFN = { menu: shotMenu, meteor: shotMeteor, map: shotMap, pet: shotPet, versus: shotVersus, addmap: shotAddMap };
 
 async function feature(browser, base) {
   const L = JSON.parse(fs.readFileSync(path.join(root, 'store', 'listing.json'), 'utf8'));
@@ -176,7 +192,7 @@ async function feature(browser, base) {
   try {
     if (process.argv.includes('--feature')) { await feature(browser, base); return; }
     for (const dn of devices) for (const lang of langs) for (const name of shots) {
-      const { ctx, page } = await newPage(browser, DEVICES[dn], lang, base);
+      const { ctx, page } = await newPage(browser, DEVICES[dn], lang, base, name, dn.startsWith('apple') ? 'ios' : 'android');
       const n = SHOTS.indexOf(name) + 1;
       try { await SHOTFN[name](page, out(dn, lang, n, name)); console.log(dn, lang, name); }
       catch (e) { console.error('FAIL', dn, lang, name, e.message); process.exitCode = 1; }
