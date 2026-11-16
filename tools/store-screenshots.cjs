@@ -115,7 +115,7 @@ async function meteorBot(page, until) {
   return n;
 }
 
-async function shotMenu(page, f) { await page.waitForTimeout(1500); await snap(page, f); }
+async function shotMenu(page, f) { await page.waitForTimeout(2600); await snap(page, f); }   // 開場動畫（.intro）3 秒才拿掉，等它播完再截
 async function shotMeteor(page, f) {
   // 數畫面上有幾顆流星：流星的算式是用 canvas fillText 畫的，記下最近 60ms 內畫過的不同算式
   await page.evaluate(() => {
