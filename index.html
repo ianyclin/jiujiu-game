@@ -68,6 +68,34 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 :root:lang(ja) body{line-break:strict}   /* 日文不讓小字（ァ、ュ）跑到行首 */
 html{overflow-x:hidden}   /* 流星的波數橫幅放大時不撐出橫向捲動（平板） */
 .modes{display:grid;gap:12px;width:100%;max-width:470px}
+/* 開場動畫（.intro，約 1.5 秒，只在打開 App 那一次）：一顆寫著 9 × 9 的流星掉到標題的位置、雷射從下面打中、炸開變成標題，五張卡依序升上來。
+   用算式不用文字，三種語言都一樣（示範玩法：算式掉下來，把它打掉）。--ix／--iy 是標題字的中心、--il／--ia 是雷射的長度與角度，introStart() 量好才加 .intro。
+   只動 opacity／transform，動的是 .brand 的子元素（月亮、寵物走道量的位置不變）；不擋點擊，碰一下螢幕、按鍵或 2 秒後拿掉 .intro；減少動態時不播 */
+@keyframes inMet{from{opacity:0;transform:translate(calc(-50% - 110px),calc(-50% - 300px)) scale(.7)}12%{opacity:1}86%{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(1.9)}}
+@keyframes inLaser{from{opacity:0;transform:rotate(var(--ia)) scaleX(.3)}30%{opacity:1;transform:rotate(var(--ia)) scaleX(1.6)}to{opacity:0;transform:rotate(var(--ia)) scaleX(.2)}}
+@keyframes inRing{from{opacity:0;transform:translate(-50%,-50%) scale(.2)}2%{opacity:.95;transform:translate(-50%,-50%) scale(.2)}to{opacity:0;transform:translate(-50%,-50%) scale(3)}}
+@keyframes inSpark{from{opacity:0;transform:translate(-50%,-50%) scale(.15) rotate(0)}2%{opacity:1;transform:translate(-50%,-50%) scale(.15) rotate(0)}to{opacity:0;transform:translate(-50%,-50%) scale(1.25) rotate(40deg)}}
+@keyframes inMark{from{opacity:0;transform:rotate(-5deg) scale(.25)}55%{opacity:1;transform:rotate(-5deg) scale(1.14)}to{opacity:1;transform:rotate(-5deg)}}
+@keyframes inSub{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes inUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes inFade{from{opacity:0}to{opacity:1}}
+.intro-fx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1;display:none}
+.intro .intro-fx{display:block}
+.intro-fx i{position:absolute;left:var(--ix);top:var(--iy);opacity:0}
+.intro-met{width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffd7a8,#ff8f4d 46%,#b3401f 100%);box-shadow:0 0 26px rgba(255,150,80,.75),inset -6px -8px 0 rgba(0,0,0,.14);display:grid;place-items:center;font:400 24px/1 var(--f-num);font-style:normal;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35);white-space:nowrap}
+.intro-met::before{content:"";position:absolute;right:58%;bottom:58%;width:150px;height:22px;border-radius:22px;background:linear-gradient(90deg,transparent,rgba(255,174,87,.75));transform-origin:100% 50%;transform:rotate(70deg);z-index:-1}
+.intro-laser{width:6px;height:var(--il);margin-left:-3px;border-radius:6px;background:linear-gradient(#fff,#5ff2d0 30%,rgba(95,242,208,.35));box-shadow:0 0 16px #5ff2d0;transform-origin:50% 0}
+.intro-ring{width:90px;height:90px;border-radius:50%;border:5px solid #ffd23f;box-shadow:0 0 22px rgba(255,210,63,.8)}
+.intro-spark{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 -92px 0 #ffd23f,66px -64px 0 #fff,94px 4px 0 #ffae57,62px 70px 0 #ffd23f,-6px 96px 0 #fff,-70px 62px 0 #ffae57,-96px -6px 0 #ffd23f,-62px -70px 0 #fff,30px -40px 0 2px #ffd23f,-36px 30px 0 2px #ffae57}
+.intro .intro-met{animation:inMet .58s cubic-bezier(.3,0,.75,.85) both}
+.intro .intro-laser{animation:inLaser .2s ease-out .4s both}
+.intro .intro-ring{animation:inRing .5s ease-out .5s both}
+.intro .intro-spark{animation:inSpark .6s cubic-bezier(.1,.7,.3,1) .5s both}
+.intro .brand-mark{animation:inMark .5s cubic-bezier(.2,.9,.3,1.2) .5s both}
+.intro .brand-sub{animation:inSub .4s ease-out .78s both}
+.intro .mode{animation:inUp .4s cubic-bezier(.2,.8,.3,1) both}
+.intro .mode:nth-child(1){animation-delay:.86s}.intro .mode:nth-child(2){animation-delay:.93s}.intro .mode:nth-child(3){animation-delay:1s}.intro .mode:nth-child(4){animation-delay:1.07s}.intro .mode:nth-child(5){animation-delay:1.14s}
+.intro .menu-foot,.intro .who,.intro .menu-pet{animation:inFade .35s ease-out 1.25s both}
 .mode{display:grid;grid-template-columns:62px 1fr;column-gap:14px;row-gap:3px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;transition:transform .08s,box-shadow .08s}
 .mode:active{transform:translateY(4px);box-shadow:0 2px 0 var(--keyEdge)}
 .mode{position:relative}
@@ -131,6 +159,9 @@ html:not(.app) .app-only{display:none!important}
 .name-in{width:100%;font:inherit;font-size:24px;font-weight:900;text-align:center;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--paper)}
 .name-in:focus{outline:2px solid var(--mint);border-color:var(--mint)}
 .name-sug{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+#who-sug{display:grid;grid-template-columns:repeat(4,auto)}#who-sug button{white-space:nowrap;padding-inline:10px}   /* 四顆建議名字：中文一排；英日文放不下就 2×2 等寬，不要 3＋1 */
+:root:lang(en) #who-sug,:root:lang(ja) #who-sug{grid-template-columns:repeat(2,minmax(0,1fr));max-width:300px;margin:0 auto;width:100%}
+#o-who p,#who-hint{text-wrap:balance}   /* 日文「…ペッ／トがあるよ」不要只掉幾個字到下一行 */
 .name-sug button{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:11px 14px;min-height:44px;font-weight:700;font-size:14px;cursor:pointer;color:var(--paper)}
 .toast{position:fixed;left:50%;width:max-content;top:calc(env(safe-area-inset-top,0px) + 68px);transform:translate(-50%,-30px);z-index:9;background:linear-gradient(180deg,#152a45,#0e1d31);border:1px solid var(--mint);border-radius:999px;padding:10px 18px;font-weight:900;font-size:15px;color:var(--mint);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;white-space:normal;text-align:center;max-width:92vw;border-radius:18px;line-height:1.3}
 .toast.on{transform:translate(-50%,0);opacity:1}
@@ -550,6 +581,7 @@ html,body{overscroll-behavior:none}
 
   <section class="screen" id="s-menu">
     <button class="menu-pet" id="menu-pet" type="button" data-ta="menu.pet" tabindex="-1" hidden><span id="menu-pet-img"></span></button>
+    <div class="intro-fx" aria-hidden="true"><i class="intro-laser"></i><i class="intro-ring"></i><i class="intro-spark"></i><i class="intro-met">9 × 9</i></div>
     <div class="menu-in">
       <button class="who" type="button" id="go-who" data-ta="who.switch"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="currentColor"/></svg><span id="who-name"></span></button>
       <header class="brand">
@@ -4430,6 +4462,18 @@ function frame(t) {
   requestAnimationFrame(frame);
 }
 resize(); refreshMenu();
+// 開場動畫（CSS 的 .intro）：量標題字的中心當流星的落點、算雷射（從螢幕下緣中間射上來）的長度與角度，再加 .intro。
+// 只在載入時播一次；碰一下螢幕、按鍵或 2 秒後結束。減少動態、量不到位置（畫面被蓋住）時不播
+(function introStart() {
+  if (RM) return;
+  const sm = $('#s-menu'), mk = $('#s-menu .brand-mark'); if (!sm || !mk) return;
+  const sr = sm.getBoundingClientRect(), r = mk.getBoundingClientRect(); if (!r.width || !sr.height) return;
+  const x = r.left + r.width / 2 - sr.left, y = r.top + r.height / 2 - sr.top + sm.scrollTop, dx = sr.width / 2 - x, dy = sr.height - y;
+  const fx = $('#s-menu .intro-fx').style;
+  fx.setProperty('--ix', x + 'px'); fx.setProperty('--iy', y + 'px'); fx.setProperty('--il', Math.hypot(dx, dy) + 'px'); fx.setProperty('--ia', (-Math.atan2(dx, dy) * 180 / Math.PI) + 'deg');
+  const root = document.documentElement, end = () => { root.classList.remove('intro'); removeEventListener('pointerdown', end, true); removeEventListener('keydown', end, true); };
+  root.classList.add('intro'); addEventListener('pointerdown', end, true); addEventListener('keydown', end, true); setTimeout(end, 2000);
+})();
 requestAnimationFrame(frame);
 })();
 </script>
