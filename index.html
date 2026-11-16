@@ -68,9 +68,9 @@ button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 :root:lang(ja) body{line-break:strict}   /* 日文不讓小字（ァ、ュ）跑到行首 */
 html{overflow-x:hidden}   /* 流星的波數橫幅放大時不撐出橫向捲動（平板） */
 .modes{display:grid;gap:12px;width:100%;max-width:470px}
-/* 開場動畫（.intro，約 1.5 秒，只在打開 App 那一次）：一顆寫著 9 × 9 的流星掉到標題的位置、雷射從下面打中、炸開變成標題，五張卡依序升上來。
+/* 開場動畫（.intro，約 2.6 秒，只在打開 App 那一次）：一顆寫著 9 × 9 的流星掉到標題的位置、雷射從下面打中、炸開變成標題，五張卡依序升上來。
    用算式不用文字，三種語言都一樣（示範玩法：算式掉下來，把它打掉）。--ix／--iy 是標題字的中心、--il／--ia 是雷射的長度與角度，introStart() 量好才加 .intro。
-   只動 opacity／transform，動的是 .brand 的子元素（月亮、寵物走道量的位置不變）；不擋點擊，碰一下螢幕、按鍵或 2 秒後拿掉 .intro；減少動態時不播 */
+   只動 opacity／transform，動的是 .brand 的子元素（月亮、寵物走道量的位置不變）；不擋點擊，碰一下螢幕、按鍵或 3 秒後拿掉 .intro；減少動態時不播 */
 @keyframes inMet{from{opacity:0;transform:translate(calc(-50% - 110px),calc(-50% - 300px)) scale(.7)}12%{opacity:1}86%{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(1.9)}}
 @keyframes inLaser{from{opacity:0;transform:rotate(var(--ia)) scaleX(.3)}30%{opacity:1;transform:rotate(var(--ia)) scaleX(1.6)}to{opacity:0;transform:rotate(var(--ia)) scaleX(.2)}}
 @keyframes inRing{from{opacity:0;transform:translate(-50%,-50%) scale(.2)}2%{opacity:.95;transform:translate(-50%,-50%) scale(.2)}to{opacity:0;transform:translate(-50%,-50%) scale(3)}}
@@ -87,15 +87,15 @@ html{overflow-x:hidden}   /* 流星的波數橫幅放大時不撐出橫向捲動
 .intro-laser{width:6px;height:var(--il);margin-left:-3px;border-radius:6px;background:linear-gradient(#fff,#5ff2d0 30%,rgba(95,242,208,.35));box-shadow:0 0 16px #5ff2d0;transform-origin:50% 0}
 .intro-ring{width:90px;height:90px;border-radius:50%;border:5px solid #ffd23f;box-shadow:0 0 22px rgba(255,210,63,.8)}
 .intro-spark{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 -92px 0 #ffd23f,66px -64px 0 #fff,94px 4px 0 #ffae57,62px 70px 0 #ffd23f,-6px 96px 0 #fff,-70px 62px 0 #ffae57,-96px -6px 0 #ffd23f,-62px -70px 0 #fff,30px -40px 0 2px #ffd23f,-36px 30px 0 2px #ffae57}
-.intro .intro-met{animation:inMet .58s cubic-bezier(.3,0,.75,.85) both}
-.intro .intro-laser{animation:inLaser .2s ease-out .4s both}
-.intro .intro-ring{animation:inRing .5s ease-out .5s both}
-.intro .intro-spark{animation:inSpark .6s cubic-bezier(.1,.7,.3,1) .5s both}
-.intro .brand-mark{animation:inMark .5s cubic-bezier(.2,.9,.3,1.2) .5s both}
-.intro .brand-sub{animation:inSub .4s ease-out .78s both}
-.intro .mode{animation:inUp .4s cubic-bezier(.2,.8,.3,1) both}
-.intro .mode:nth-child(1){animation-delay:.86s}.intro .mode:nth-child(2){animation-delay:.93s}.intro .mode:nth-child(3){animation-delay:1s}.intro .mode:nth-child(4){animation-delay:1.07s}.intro .mode:nth-child(5){animation-delay:1.14s}
-.intro .menu-foot,.intro .who,.intro .menu-pet{animation:inFade .35s ease-out 1.25s both}
+.intro .intro-met{animation:inMet .95s cubic-bezier(.3,0,.75,.85) both}
+.intro .intro-laser{animation:inLaser .28s ease-out .68s both}
+.intro .intro-ring{animation:inRing .7s ease-out .82s both}
+.intro .intro-spark{animation:inSpark .85s cubic-bezier(.1,.7,.3,1) .82s both}
+.intro .brand-mark{animation:inMark .65s cubic-bezier(.2,.9,.3,1.2) .82s both}
+.intro .brand-sub{animation:inSub .5s ease-out 1.3s both}
+.intro .mode{animation:inUp .5s cubic-bezier(.2,.8,.3,1) both}
+.intro .mode:nth-child(1){animation-delay:1.5s}.intro .mode:nth-child(2){animation-delay:1.62s}.intro .mode:nth-child(3){animation-delay:1.74s}.intro .mode:nth-child(4){animation-delay:1.86s}.intro .mode:nth-child(5){animation-delay:1.98s}
+.intro .menu-foot,.intro .who,.intro .menu-pet{animation:inFade .45s ease-out 2.2s both}
 .mode{display:grid;grid-template-columns:62px 1fr;column-gap:14px;row-gap:3px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:22px;background:var(--panel);box-shadow:0 6px 0 var(--keyEdge);cursor:pointer;transition:transform .08s,box-shadow .08s}
 .mode:active{transform:translateY(4px);box-shadow:0 2px 0 var(--keyEdge)}
 .mode{position:relative}
@@ -4463,7 +4463,7 @@ function frame(t) {
 }
 resize(); refreshMenu();
 // 開場動畫（CSS 的 .intro）：量標題字的中心當流星的落點、算雷射（從螢幕下緣中間射上來）的長度與角度，再加 .intro。
-// 只在載入時播一次；碰一下螢幕、按鍵或 2 秒後結束。減少動態、量不到位置（畫面被蓋住）時不播
+// 只在載入時播一次；碰一下螢幕、按鍵或 3 秒後結束。減少動態、量不到位置（畫面被蓋住）時不播
 (function introStart() {
   if (RM) return;
   const sm = $('#s-menu'), mk = $('#s-menu .brand-mark'); if (!sm || !mk) return;
@@ -4472,7 +4472,7 @@ resize(); refreshMenu();
   const fx = $('#s-menu .intro-fx').style;
   fx.setProperty('--ix', x + 'px'); fx.setProperty('--iy', y + 'px'); fx.setProperty('--il', Math.hypot(dx, dy) + 'px'); fx.setProperty('--ia', (-Math.atan2(dx, dy) * 180 / Math.PI) + 'deg');
   const root = document.documentElement, end = () => { root.classList.remove('intro'); removeEventListener('pointerdown', end, true); removeEventListener('keydown', end, true); };
-  root.classList.add('intro'); addEventListener('pointerdown', end, true); addEventListener('keydown', end, true); setTimeout(end, 2000);
+  root.classList.add('intro'); addEventListener('pointerdown', end, true); addEventListener('keydown', end, true); setTimeout(end, 3000);
 })();
 requestAnimationFrame(frame);
 })();
