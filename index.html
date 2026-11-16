@@ -464,6 +464,7 @@ html,body{overscroll-behavior:none}
 .wrongs-t{font-size:13px;color:var(--muted);font-weight:700}
 .wrongs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .wrongs i{font-style:normal;font-family:var(--f-num);background:rgba(255,97,97,.14);color:#ffbcbc;border-radius:10px;padding:4px 10px;font-size:17px}
+.card .about-ded{margin:18px 0 4px;font-size:13px;line-height:1.6;color:var(--muted);text-align:center;text-wrap:balance}   /* 獻詞：關於頁最後，小字置中 */
 .legal{margin:0;font-size:11px;line-height:1.5;color:rgba(147,169,192,.7);text-align:center}
 .legal a,.about-fb,.about-priv{color:var(--ice);text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:12px 6px;margin:-12px -6px}   /* 觸控範圍 ≥ 44px，版面不變 */
 #gate-pad{margin-block:4px}
@@ -866,6 +867,7 @@ html,body{overscroll-behavior:none}
   <div class="overlay" id="o-who" hidden>
     <div class="card">
       <div class="hhead"><h3 data-t="who.title"></h3><button class="icon-btn xbtn" type="button" id="who-close" data-ta="close">✕</button></div>
+      <div id="who-langbox" hidden><div class="langs" id="who-lang" role="group" data-ta="set.lang"></div></div>
       <p data-t="who.p"></p>
       <div class="who-list" id="who-list"></div>
       <small class="who-hint" id="who-hint"></small>
@@ -934,6 +936,7 @@ html,body{overscroll-behavior:none}
         <li data-t="about.credits"></li>
         <li><span data-t="about.ver"></span><span id="about-env" style="color:var(--muted)"></span></li>
       </ul>
+      <p class="about-ded" data-th="about.ded"></p>
     </div>
   </div>
 
@@ -1241,7 +1244,7 @@ const STR = {
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（就是一個三寶爸）。',
     privacy: '隱私權政策', 'about.priv': '<a href="#" class="about-priv">隱私權政策</a>：我們不收集任何資料（要大人解一題才會打開）。',
     'about.credits': '寵物與配件插畫由 AI 生成。字型是 Chiron GoRound TC、Zen Maru Gothic 與 Lilita One（SIL 開源字型授權），跟遊戲放在一起，不會連到外面。音樂和音效都是程式即時合成的。',
-    'about.ver': '版本 1.4。© 2026 指數三寶飯 保留所有權利。', 'about.env': '　畫面 {w}×{h}，畫布 {cw}×{ch} @{d}',
+    'about.ver': '版本 1.4。© 2026 指數三寶飯 保留所有權利。', 'about.ded': '獻給一直支持我的老婆和三個寶貝', 'about.env': '　畫面 {w}×{h}，畫布 {cw}×{ch} @{d}',
     'gate.title': '請大人來一下', 'gate.why': '要打開外面的網頁，請大人先回答這一題。', 'gate.go': '前往', 'gate.ok': '答對了！', 'gate.wait': '答錯太多次了，30 秒後再試。', 'gate.no': '不對喔，換一題',
     rotate: '請把手機轉直',
     // 遊戲說明（每段是一串 <li>）
@@ -1393,7 +1396,7 @@ const STR = {
     'about.author': 'Made by <a href="#" class="about-fb">指數三寶飯</a> (a dad of three).',
     privacy: 'Privacy Policy', 'about.priv': '<a href="#" class="about-priv">Privacy Policy</a>: we collect no data at all (a grown-up solves a problem first to open it).',
     'about.credits': 'Pet and outfit art is AI-generated. Fonts are Chiron GoRound TC, Zen Maru Gothic and Lilita One (SIL Open Font License), bundled with the game, so nothing loads from outside. Music and sound effects are synthesized live in code.',
-    'about.ver': 'Version 1.4. © 2026 指數三寶飯. All rights reserved.', 'about.env': '  Screen {w}×{h}, canvas {cw}×{ch} @{d}',
+    'about.ver': 'Version 1.4. © 2026 指數三寶飯. All rights reserved.', 'about.ded': 'For my wife and our three kids, who always cheer me on.', 'about.env': '  Screen {w}×{h}, canvas {cw}×{ch} @{d}',
     'gate.title': 'Grown-up check', 'gate.why': 'To open an outside web page, a grown-up needs to answer this first.', 'gate.go': 'Open', 'gate.ok': 'Correct!', 'gate.wait': 'Too many tries. Wait 30 seconds and try again.', 'gate.no': 'Not quite. Try a new one.',
     rotate: 'Please turn your phone upright',
     'help.simple': 'Simple', 'help.full': 'Full', 'hs.meteor': '<li>Each meteor has a math problem. Type the answer to zap it.</li><li>Wrong answer? The meteor shows the answer. Type it in. A meteor that hits the town costs 1 heart. No hearts left, game over.</li><li>Every 5 waves a <b>boss</b> comes. Get it right on the first try to hit it.</li>', 'hs.ghost': '<li>Answer 20 problems and race <b>the fastest you</b>.</li><li>Finish first for a new record!</li>', 'hs.versus': '<li>Two players face each other. Each right answer pulls the star one step toward you.</li><li>Pull it all the way to win. No one to play with? Pick the <b>Robot</b>.</li>', 'hs.cmp': '<li>You see three problems. Tap the one with the <b>biggest</b> answer, or the <b>smallest</b>, as asked.</li><li>A round is 10 questions. Get all 10 right to save your time.</li>', 'hs.bomb': '<li>If the bomb says 7, tap every answer in the 7 times table. With + and −, tap the <b>problems that equal the number</b>.</li><li>A wrong tap or a burned-out fuse makes it explode. Defuse all 5 bombs to win!</li>', 'hs.other': '<li><b>Star Map</b>: problems you answer right and fast light up as stars.</li><li><b>Pet</b>: right answers give stardust. Feed it to your pet and it grows.</li><li><b>Daily missions</b>: 3 a day. Finish all 3 for a badge.</li>',
@@ -1543,7 +1546,7 @@ const STR = {
     'about.author': '作者：<a href="#" class="about-fb">指數三寶飯</a>（3人の子のパパです）。',
     privacy: 'プライバシーポリシー', 'about.priv': '<a href="#" class="about-priv">プライバシーポリシー</a>：データはいっさい集めません（大人が問題を1問解くと開きます）。',
     'about.credits': 'ペットときせかえのイラストはAIで生成しています。フォントは Zen Maru Gothic、Chiron GoRound TC、Lilita One（SIL Open Font License）で、ゲームといっしょに配布しているため外部には接続しません。音楽と効果音はプログラムでリアルタイムに合成しています。',
-    'about.ver': 'バージョン 1.4。© 2026 指數三寶飯 All rights reserved.', 'about.env': '　画面 {w}×{h}、キャンバス {cw}×{ch} @{d}',
+    'about.ver': 'バージョン 1.4。© 2026 指數三寶飯 All rights reserved.', 'about.ded': 'いつも応援してくれる妻と、<br>3人の子どもたちへ', 'about.env': '　画面 {w}×{h}、キャンバス {cw}×{ch} @{d}',
     'gate.title': 'おうちの人をよんでね', 'gate.why': '外部のウェブページを開くには、大人の方がこの問題に答えてください。', 'gate.go': 'ひらく', 'gate.ok': '正解です！', 'gate.wait': 'まちがいが多いので、30秒たってからもう一度どうぞ。', 'gate.no': 'ちがいます。べつの問題をどうぞ',
     rotate: 'スマホをたてにしてね',
     'help.simple': 'かんたん', 'help.full': 'くわしく', 'hs.meteor': '<li>流星に計算の問題がのっているよ。答えを打つと、うちおとせるよ。</li><li>まちがえると答えが出るから、そのまま打ってね。流星が町に落ちるとハートが1つへって、なくなったらおしまい。</li><li>5ウェーブごとに<b>ボス</b>が来るよ。1回で正かいすると、こうげきできるよ。</li>', 'hs.ghost': '<li>20問で、<b>いちばん速いきみ</b>ときょうそうするよ。</li><li>先に答えおわったら、新記ろく！</li>', 'hs.versus': '<li>2人でむかい合って、早く答えよう。正かいすると星を1マス引っぱれるよ。</li><li>さいごまで引っぱったら勝ち。あいてがいないときは<b>ロボット</b>をえらんでね。</li>', 'hs.cmp': '<li>3つの式から、答えが<b>いちばん大きい</b>もの（または<b>いちばん小さい</b>もの）をタップしよう。</li><li>1回10問。ぜんぶ正かいすると、タイムが記ろくされるよ。</li>', 'hs.bomb': '<li>ばくだんに「7」と書いてあったら、7のだんの答えをぜんぶタップ。たし算・ひき算のときは、<b>答えがその数になる式</b>をタップ。</li><li>まちがえたり、どうか線がもえつきたりすると、ばくはつ！5こぜんぶかいじょできたらクリア！</li>', 'hs.other': '<li><b>星マップ</b>：速く正かいできた問題が、星になって光るよ。</li><li><b>ペット</b>：正かいすると星くずがもらえるよ。あげると大きくなるよ。</li><li><b>毎日のミッション</b>：毎日3つ。ぜんぶクリアでバッジ1こ。</li>',
@@ -3772,12 +3775,12 @@ function switchWho(id) {
   DB.set.music ? musStart() : musStop();
 }
 const whoTaken = name => WHO.list.some(x => x.name === name);
-$('#go-who').addEventListener('click', () => { renderWho(); $('#who-in').value = ''; $('#o-who').hidden = false; });
+$('#go-who').addEventListener('click', () => { $('#who-langbox').hidden = true; renderWho(); $('#who-in').value = ''; $('#o-who').hidden = false; });
 $('#who-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) $('#who-in').value = b.dataset.n; });
 // 第一次打開（只有一個人、還沒取名、也還沒玩過）就先問名字
 if (!WHO.asked && WHO.list.length === 1 && !WHO.list[0].name && !Object.keys(DB.facts).length) setTimeout(() => {   // 只問一次，而且真的問到才算
   if (mode !== 'menu' || $$('.overlay').some(o => !o.hidden && o.offsetParent)) return;   // 有別的視窗開著就先不問（#v-setup 在隱藏的畫面裡，用 offsetParent 判斷）
-  WHO.asked = true; saveWho(); renderWho(); $('#o-who').hidden = false;
+  WHO.asked = true; saveWho(); renderWho(); renderLangs(); $('#who-langbox').hidden = false; $('#o-who').hidden = false;   // 第一次才給語言切換：手機設英文的台灣家庭要能馬上換
 }, 700);
 $('#who-close').addEventListener('click', () => { $('#o-who').hidden = true; $('#who-in').blur(); });
 $('#who-list').addEventListener('click', e => { const b = e.target.closest('[data-who]'); if (!b) return; switchWho(b.dataset.who); $('#o-who').hidden = true; SFX.ding(); toast(tx('who.turn', { name: whoLabel(whoCur()) })); });
@@ -4327,15 +4330,17 @@ $('#set-what').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || b.dataset.what === DB.set.what) return;
   DB.set.what = b.dataset.what; DB.daily.starBase = starsNow(); save(); rebuildPool(); renderLocks(); refreshMenu(); SFX.ding();   // 換練習後「新星星」任務從現在算
 });
-function renderLangs() {
-  const box = $('#set-lang');
-  if (!box.children.length) LANGS.forEach(l => { const b = document.createElement('button'); b.type = 'button'; b.dataset.lang = l; b.lang = STR[l].htmlLang; b.textContent = STR[l].langName; box.appendChild(b); });
-  $$('#set-lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+function renderLangs() {   // 設定頁與第一次取名卡共用
+  ['#set-lang', '#who-lang'].forEach(sel => {
+    const box = $(sel);
+    if (!box.children.length) LANGS.forEach(l => { const b = document.createElement('button'); b.type = 'button'; b.dataset.lang = l; b.lang = STR[l].htmlLang; b.textContent = STR[l].langName; box.appendChild(b); });
+  });
+  $$('#set-lang button, #who-lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
 }
-$('#set-lang').addEventListener('click', e => {
+['#set-lang', '#who-lang'].forEach(sel => $(sel).addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || b.dataset.lang === LANG) return;
-  DB.set.lang = b.dataset.lang; save(); setLang(); refreshMenu(); SFX.ding();
-});
+  DB.set.lang = b.dataset.lang; save(); setLang(); refreshMenu(); renderLangs(); if (!$('#o-who').hidden) renderWho(); SFX.ding();
+}));
 $('#set-tables').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   const n = +b.dataset.t, t = tables().slice();

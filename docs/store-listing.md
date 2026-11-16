@@ -18,17 +18,17 @@
 | 關鍵字（Apple Keywords） | 57／100 | 背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,加減法,20以內加減,進位,退位,湊十 |
 | 新功能（What's New） | 67／4000 | 1.4：可以改練 20 以內加減（答錯會教湊十、雙倍）；寵物可以照顧，星塵能換徽章；四種付費玩法各可試玩 3 次；遊戲說明多了簡單版。 |
 
-**完整說明：Apple 版（App Store Connect）**（896／4000）
+**完整說明：Apple 版（App Store Connect）**（1042／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
 
-【五種玩法】（流星防衛戰免費，另外四種各可免費試玩 3 次）
-● 流星防衛戰：算出答案就發射雷射，打下往小鎮掉的流星。每 5 波有錯題魔王，還有寶箱和追蹤飛彈。
-● 幽靈競速：20 題計時賽，追過上次的自己。
-● 雙人拔河：面對面搶答，可以跟大人比，也能跟機器人比。
-● 哪個大？哪個小？：三個算式，點出答案最大（或最小）的那個。
-● 炸彈拆除：引線燒完前，點掉炸彈上那個數的倍數。
+【五種玩法，各練不同的能力】（流星防衛戰免費，另外四種各可免費試玩 3 次）
+● 流星防衛戰（全部都練）：算出答案就發射雷射，打下往小鎮掉的流星。答錯的題會換個方式再考：反過來問（? × 7 = 56）、數列（7、14、?、28），還有每 5 波的錯題魔王。也有寶箱和追蹤飛彈。
+● 幽靈競速（練速度）：20 題計時賽，追過上次的自己。把會的題練到不用想。
+● 雙人拔河（一起比）：面對面搶答，跟大人比，或跟會配合孩子速度的機器人比，有輸有贏。
+● 哪個大？哪個小？（比大小）：三個算式，不一定要算出來，用估的找出最大或最小，練數感與估算。
+● 炸彈拆除（找倍數）：在一堆數字裡認出某個乘法表的倍數，為之後學因數、倍數打底。練加減時則是找出答案等於某個數的算式，練數的分解。
 
 【越玩越熟】
 ● 答錯的題目會悄悄更常出現，隔一陣子再考一次。孩子只覺得在玩遊戲。
@@ -51,17 +51,17 @@
 ```
 
 
-**完整說明：Google 版（Play Console）**（898／4000）
+**完整說明：Google 版（Play Console）**（1044／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
 
-【五種玩法】（流星防衛戰免費，另外四種各可免費試玩 3 次）
-● 流星防衛戰：算出答案就發射雷射，打下往小鎮掉的流星。每 5 波有錯題魔王，還有寶箱和追蹤飛彈。
-● 幽靈競速：20 題計時賽，追過上次的自己。
-● 雙人拔河：面對面搶答，可以跟大人比，也能跟機器人比。
-● 哪個大？哪個小？：三個算式，點出答案最大（或最小）的那個。
-● 炸彈拆除：引線燒完前，點掉炸彈上那個數的倍數。
+【五種玩法，各練不同的能力】（流星防衛戰免費，另外四種各可免費試玩 3 次）
+● 流星防衛戰（全部都練）：算出答案就發射雷射，打下往小鎮掉的流星。答錯的題會換個方式再考：反過來問（? × 7 = 56）、數列（7、14、?、28），還有每 5 波的錯題魔王。也有寶箱和追蹤飛彈。
+● 幽靈競速（練速度）：20 題計時賽，追過上次的自己。把會的題練到不用想。
+● 雙人拔河（一起比）：面對面搶答，跟大人比，或跟會配合孩子速度的機器人比，有輸有贏。
+● 哪個大？哪個小？（比大小）：三個算式，不一定要算出來，用估的找出最大或最小，練數感與估算。
+● 炸彈拆除（找倍數）：在一堆數字裡認出某個乘法表的倍數，為之後學因數、倍數打底。練加減時則是找出答案等於某個數的算式，練數的分解。
 
 【越玩越熟】
 ● 答錯的題目會悄悄更常出現，隔一陣子再考一次。孩子只覺得在玩遊戲。
@@ -94,17 +94,17 @@
 | 關鍵字（Apple Keywords） | 100／100 | multiplication,math,kids,practice,grade 2,grade 3,learn,school,drill,addition,subtraction,math facts |
 | 新功能（What's New） | 229／4000 | 1.4: Practice adding and subtracting within 20, with make-10 and doubles tips when you miss. Care for your pet and trade stardust for badges. Each of the four paid games can be tried 3 times. How to Play now has a simple version. |
 
-**完整說明：Apple 版（App Store Connect）**（2736／4000）
+**完整說明：Apple 版（App Store Connect）**（3186／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
 
-FIVE GAMES (Meteor Defense is free; try each of the other four 3 times for free)
-● Meteor Defense: type the answer to fire a laser and shoot down meteors falling on the little town. Every 5 waves a boss made of the facts you miss, plus treasure chests and homing missiles.
-● Ghost Race: 20 questions against the clock. Beat your own last run.
-● Tug of War: face-to-face for two players. Play a grown-up, or play the robot.
-● Biggest? Smallest?: three problems. Tap the one with the biggest (or smallest) answer.
-● Bomb Squad: before the fuse burns out, tap every multiple of the number on the bomb.
+FIVE GAMES, EACH BUILDS A DIFFERENT SKILL (Meteor Defense is free; try each of the other four 3 times for free)
+● Meteor Defense (all skills): type the answer to fire a laser and shoot down meteors falling on the little town. Missed facts come back in new forms: asked backwards (? × 7 = 56), as a pattern (7, 14, ?, 28), and as a boss every 5 waves. Plus treasure chests and homing missiles.
+● Ghost Race (speed): 20 questions against the clock. Beat your own last run, until known facts come without thinking.
+● Tug of War (face off): face-to-face for two players. Play a grown-up, or a robot that matches your child's pace, so they win some and lose some.
+● Biggest? Smallest? (compare): three problems. No need to work every one out: estimate to find the biggest or smallest. Builds number sense.
+● Bomb Squad (find facts): spot the multiples of one times table in a grid of numbers, a head start on factors and multiples. When practicing addition and subtraction, find the problems that equal the number on the bomb, which builds number bonds.
 
 THE MORE THEY PLAY, THE BETTER THEY KNOW IT
 ● Facts a child misses quietly show up more often, and come back for another try a little later. To the child, it just feels like playing.
@@ -127,17 +127,17 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（2734／4000）
+**完整說明：Google 版（Play Console）**（3184／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
 
-FIVE GAMES (Meteor Defense is free; try each of the other four 3 times for free)
-● Meteor Defense: type the answer to fire a laser and shoot down meteors falling on the little town. Every 5 waves a boss made of the facts you miss, plus treasure chests and homing missiles.
-● Ghost Race: 20 questions against the clock. Beat your own last run.
-● Tug of War: face-to-face for two players. Play a grown-up, or play the robot.
-● Biggest? Smallest?: three problems. Tap the one with the biggest (or smallest) answer.
-● Bomb Squad: before the fuse burns out, tap every multiple of the number on the bomb.
+FIVE GAMES, EACH BUILDS A DIFFERENT SKILL (Meteor Defense is free; try each of the other four 3 times for free)
+● Meteor Defense (all skills): type the answer to fire a laser and shoot down meteors falling on the little town. Missed facts come back in new forms: asked backwards (? × 7 = 56), as a pattern (7, 14, ?, 28), and as a boss every 5 waves. Plus treasure chests and homing missiles.
+● Ghost Race (speed): 20 questions against the clock. Beat your own last run, until known facts come without thinking.
+● Tug of War (face off): face-to-face for two players. Play a grown-up, or a robot that matches your child's pace, so they win some and lose some.
+● Biggest? Smallest? (compare): three problems. No need to work every one out: estimate to find the biggest or smallest. Builds number sense.
+● Bomb Squad (find facts): spot the multiples of one times table in a grid of numbers, a head start on factors and multiples. When practicing addition and subtraction, find the problems that equal the number on the bomb, which builds number bonds.
 
 THE MORE THEY PLAY, THE BETTER THEY KNOW IT
 ● Facts a child misses quietly show up more often, and come back for another try a little later. To the child, it just feels like playing.
@@ -170,17 +170,17 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 | 關鍵字（Apple Keywords） | 57／100 | かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,学習,知育,計算,たし算,ひき算,くり上がり,くり下がり |
 | 新功能（What's New） | 114／4000 | 1.4：20までのたし算・ひき算も練習できるようになりました（まちがえると「10をつくる」「おなじ数」のヒントが出ます）。ペットのお世話、星くずとバッジの交換、有料の4つのゲームのお試し3回、かんたんな遊び方説明を追加しました。 |
 
-**完整說明：Apple 版（App Store Connect）**（1352／4000）
+**完整說明：Apple 版（App Store Connect）**（1584／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
 
-【5つの遊び】（流星ディフェンスは無料、ほかの4つは3回ずつ無料でお試しできます）
-● 流星ディフェンス：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。5ウェーブごとに、まちがえやすい問題のボスが登場。宝箱や追いかけミサイルもあります。
-● ゴーストレース：20問のタイムレース。前回の自分を追いこそう。
-● つなひきバトル：向かい合って早押し。大人とも、ロボットとも対戦できます。
-● どれが大きい？：3つの式から、答えがいちばん大きい（小さい）ものを選びます。
-● ばくだんかいじょ：導火線がもえきる前に、ばくだんの数の倍数をタップします。
+【5つの遊び、それぞれ練習できること】（流星ディフェンスは無料、ほかの4つは3回ずつ無料でお試しできます）
+● 流星ディフェンス（ぜんぶ練習）：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。まちがえた問題は形を変えてまた出ます：逆から聞く（? × 7 = 56）、数の並び（7、14、?、28）、5ウェーブごとのボス。宝箱や追いかけミサイルもあります。
+● ゴーストレース（スピード）：20問のタイムレース。前回の自分を追いこして、わかっている問題を考えなくても答えられるようにします。
+● つなひきバトル（たいせん）：向かい合って早押し。大人とも、お子さまの速さに合わせるロボットとも対戦でき、勝ったり負けたりします。
+● どれが大きい？（大小くらべ）：3つの式から、答えがいちばん大きい（小さい）ものを選びます。全部計算しなくても見当をつけて選べるので、数の感覚と見積もりの練習になります。
+● ばくだんかいじょ（だんさがし）：たくさんの数の中から、ある段の答え（倍数）を見つけます。あとで習う約数・倍数の土台になります。たし算・ひき算の練習では、答えがその数になる式を見つけて、数の分け方を練習します。
 
 【遊ぶほど身につく】
 ● まちがえた問題は、こっそりよく出るようになり、少しあとでもう一度出ます。子どもには、ただ遊んでいるように感じられます。
@@ -203,17 +203,17 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（1354／4000）
+**完整說明：Google 版（Play Console）**（1586／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
 
-【5つの遊び】（流星ディフェンスは無料、ほかの4つは3回ずつ無料でお試しできます）
-● 流星ディフェンス：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。5ウェーブごとに、まちがえやすい問題のボスが登場。宝箱や追いかけミサイルもあります。
-● ゴーストレース：20問のタイムレース。前回の自分を追いこそう。
-● つなひきバトル：向かい合って早押し。大人とも、ロボットとも対戦できます。
-● どれが大きい？：3つの式から、答えがいちばん大きい（小さい）ものを選びます。
-● ばくだんかいじょ：導火線がもえきる前に、ばくだんの数の倍数をタップします。
+【5つの遊び、それぞれ練習できること】（流星ディフェンスは無料、ほかの4つは3回ずつ無料でお試しできます）
+● 流星ディフェンス（ぜんぶ練習）：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。まちがえた問題は形を変えてまた出ます：逆から聞く（? × 7 = 56）、数の並び（7、14、?、28）、5ウェーブごとのボス。宝箱や追いかけミサイルもあります。
+● ゴーストレース（スピード）：20問のタイムレース。前回の自分を追いこして、わかっている問題を考えなくても答えられるようにします。
+● つなひきバトル（たいせん）：向かい合って早押し。大人とも、お子さまの速さに合わせるロボットとも対戦でき、勝ったり負けたりします。
+● どれが大きい？（大小くらべ）：3つの式から、答えがいちばん大きい（小さい）ものを選びます。全部計算しなくても見当をつけて選べるので、数の感覚と見積もりの練習になります。
+● ばくだんかいじょ（だんさがし）：たくさんの数の中から、ある段の答え（倍数）を見つけます。あとで習う約数・倍数の土台になります。たし算・ひき算の練習では、答えがその数になる式を見つけて、数の分け方を練習します。
 
 【遊ぶほど身につく】
 ● まちがえた問題は、こっそりよく出るようになり、少しあとでもう一度出ます。子どもには、ただ遊んでいるように感じられます。
