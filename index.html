@@ -245,6 +245,9 @@ html,body{overscroll-behavior:none}
 .banner.good{color:var(--mint)}
 @keyframes ban{0%{opacity:0;transform:scale(.5)}14%{opacity:1;transform:scale(1.1)}24%{transform:scale(1)}78%{opacity:1}100%{opacity:0;transform:translateY(-24px) scale(1.05)}}
 .dock{padding-block:2px 12px}
+/* 摺疊機的內螢幕直拿（iPhone Duo 約 669 寬、接近方形）：折線在螢幕正中間，把鍵盤區做成剛好下半個螢幕，流星防衛戰的地平線（#m-dock 的上緣＝GY）就落在折線上，
+   半折立在桌上時上半是天空、下半是鍵盤。不靠折線 API（Safari 27.1 還在功能旗標後面、內嵌網頁拿不拿得到不明），只看螢幕形狀；一般手機沒有這麼寬、平板走 700 以上的版面，都不受影響 */
+@media (min-width:560px) and (max-width:699px) and (min-aspect-ratio:13/20) and (orientation:portrait){#m-dock{box-sizing:border-box;min-height:calc(50dvh - env(safe-area-inset-bottom));display:flex;flex-direction:column;justify-content:center}}
 .answer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:82px;padding-block:8px 6px}
 .answer.pop{animation:pop .32s ease}
 /* 發射鈕浮在舞台右下角（鍵盤正上方），不佔版面，題目不會被擠偏 */
