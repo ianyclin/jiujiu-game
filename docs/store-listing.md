@@ -18,7 +18,7 @@
 | 關鍵字（Apple Keywords） | 57／100 | 背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,加減法,20以內加減,進位,退位,湊十 |
 | 新功能（What's New） | 67／4000 | 1.4：可以改練 20 以內加減（答錯會教湊十、雙倍）；寵物可以照顧，星塵能換徽章；四種付費玩法各可試玩 3 次；遊戲說明多了簡單版。 |
 
-**完整說明：Apple 版（App Store Connect）**（1264／4000）
+**完整說明：Apple 版（App Store Connect）**（1255／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
@@ -57,11 +57,11 @@
 ● 要連到外部網頁之前，需要大人回答一題。
 ● 介面有繁體中文、English、日本語。
 
-隱私權政策：https://ianyclin.github.io/jiujiu-game/privacy/
+隱私權政策：https://jiujiu.sanbaofang.com/privacy/
 ```
 
 
-**完整說明：Google 版（Play Console）**（1266／4000）
+**完整說明：Google 版（Play Console）**（1257／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
@@ -100,7 +100,7 @@
 ● 要連到外部網頁之前，需要大人回答一題。
 ● 介面有繁體中文、English、日本語。
 
-隱私權政策：https://ianyclin.github.io/jiujiu-game/privacy/
+隱私權政策：https://jiujiu.sanbaofang.com/privacy/
 ```
 
 ### English（en-US）
@@ -114,7 +114,7 @@
 | 關鍵字（Apple Keywords） | 100／100 | multiplication,math,kids,practice,grade 2,grade 3,learn,school,drill,addition,subtraction,math facts |
 | 新功能（What's New） | 229／4000 | 1.4: Practice adding and subtracting within 20, with make-10 and doubles tips when you miss. Care for your pet and trade stardust for badges. Each of the four paid games can be tried 3 times. How to Play now has a simple version. |
 
-**完整說明：Apple 版（App Store Connect）**（3945／4000）
+**完整說明：Apple 版（App Store Connect）**（3936／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
@@ -153,11 +153,11 @@ FOR PARENTS
 ● A grown-up has to answer a question before any link opens outside the game.
 ● Available in English, Traditional Chinese and Japanese.
 
-Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
+Privacy policy: https://jiujiu.sanbaofang.com/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（3943／4000）
+**完整說明：Google 版（Play Console）**（3934／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
@@ -196,7 +196,7 @@ FOR PARENTS
 ● A grown-up has to answer a question before any link opens outside the game.
 ● Available in English, Traditional Chinese and Japanese.
 
-Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
+Privacy policy: https://jiujiu.sanbaofang.com/privacy/en.html
 ```
 
 ### 日本語（ja）
@@ -210,7 +210,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 | 關鍵字（Apple Keywords） | 57／100 | かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,学習,知育,計算,たし算,ひき算,くり上がり,くり下がり |
 | 新功能（What's New） | 114／4000 | 1.4：20までのたし算・ひき算も練習できるようになりました（まちがえると「10をつくる」「おなじ数」のヒントが出ます）。ペットのお世話、星くずとバッジの交換、有料の4つのゲームのお試し3回、かんたんな遊び方説明を追加しました。 |
 
-**完整說明：Apple 版（App Store Connect）**（1914／4000）
+**完整說明：Apple 版（App Store Connect）**（1905／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
@@ -249,11 +249,11 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ● ゲームの外のページを開く前に、大人の方が問題に答える必要があります。
 ● 画面は日本語・繁体字中国語・英語に対応しています。
 
-プライバシーポリシー：https://ianyclin.github.io/jiujiu-game/privacy/ja.html
+プライバシーポリシー：https://jiujiu.sanbaofang.com/privacy/ja.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（1916／4000）
+**完整說明：Google 版（Play Console）**（1907／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
@@ -292,7 +292,7 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ● ゲームの外のページを開く前に、大人の方が問題に答える必要があります。
 ● 画面は日本語・繁体字中国語・英語に対応しています。
 
-プライバシーポリシー：https://ianyclin.github.io/jiujiu-game/privacy/ja.html
+プライバシーポリシー：https://jiujiu.sanbaofang.com/privacy/ja.html
 ```
 
 > 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己索引）；不要放競品或商標名稱。
@@ -315,8 +315,8 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 | 商店欄位 | 填法 | 依據 |
 |---|---|---|
 | Apple App Privacy | **Data Not Collected**（不收集資料）；不追蹤 | 遊戲本身沒有網路請求；購買走 StoreKit，Apple 的說明頁寫「You are not responsible for disclosing data collected by Apple」，付款資料在 app 外輸入、開發者拿不到也不算收集；`PrivacyInfo.xcprivacy` 一致 |
-| Apple Privacy Policy URL | `https://ianyclin.github.io/jiujiu-game/privacy/`（各語言版可填 `…/privacy/en.html`、`…/privacy/ja.html`） | merge 後要先在瀏覽器確認打得開 |
-| Apple Support URL | `https://ianyclin.github.io/jiujiu-game/support/`（三語支援頁，內含聯絡 email 與常見問題；在 #48 的分支） | merge 後先在瀏覽器確認打得開 |
+| Apple Privacy Policy URL | `https://jiujiu.sanbaofang.com/privacy/`（各語言版可填 `…/privacy/en.html`、`…/privacy/ja.html`） | merge 後要先在瀏覽器確認打得開 |
+| Apple Support URL | `https://jiujiu.sanbaofang.com/support/`（三語支援頁，內含聯絡 email 與常見問題；在 #48 的分支） | merge 後先在瀏覽器確認打得開 |
 | 聯絡 email（Apple／Google 開發者資料） | `gigigagagogogege@gmail.com` | 會公開顯示 |
 | Google Data safety | 預計填「此應用程式不會收集或分享任何使用者資料」，**但上架前要在 Play Console 的說明再確認一次**：Google 付款程式庫（billing 9.1.0）會帶進 Google 自己的記錄元件（`datatransport`，也是 `INTERNET`／`ACCESS_NETWORK_STATE` 權限的來源），Google 的說明把付款程式庫列為「財務資訊」的例子，但沒有講清楚只用它解鎖、不存購買紀錄的 app 要不要申報；查不到官方答案就問 Play 支援 | 遊戲程式本身不連網；我們沒有伺服器、收不到購買紀錄 |
 | Google 廣告 ID 宣告 | 不使用 | — |

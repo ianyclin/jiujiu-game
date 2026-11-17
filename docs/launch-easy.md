@@ -21,8 +21,8 @@
 - 做完會怎樣：遊戲正常開、能玩、有聲音。
 
 **2. 確認兩個網頁打得開**
-- `https://ianyclin.github.io/jiujiu-game/privacy/`（隱私權政策）
-- `https://ianyclin.github.io/jiujiu-game/support/`（支援頁）
+- `https://jiujiu.sanbaofang.com/privacy/`（隱私權政策）
+- `https://jiujiu.sanbaofang.com/support/`（支援頁）
 - 做完會怎樣：兩頁都看得到字。
 
 **3. 請朋友看英文、日文**
