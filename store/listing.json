@@ -1,7 +1,7 @@
 {
   "zh-Hant": {
     "name": "九九流星隊：九九乘法表練習",
-    "subtitle": "打流星、點亮星圖，錯題自動多練",
+    "subtitle": "打流星練心算，錯題自動多練，也能練加減",
     "promo": "打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告、不用網路、不收集任何資料。",
     "short": "打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告，也不用網路。",
     "keywords": "背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,加減法,20以內加減,進位,退位,湊十",
@@ -19,7 +19,7 @@
   },
   "en": {
     "name": "9×9 Meteor Squad: Times Tables",
-    "subtitle": "Zap meteors, master every fact",
+    "subtitle": "Multiply, add & subtract game",
     "promo": "Shoot down meteors, light up the star map, and get your times tables fast and right. No ads, plays offline, collects no data.",
     "short": "Shoot down meteors and light up the star map. Master times tables. No ads.",
     "keywords": "multiplication,math,kids,practice,grade 2,grade 3,learn,school,drill,addition,subtraction,math facts",
@@ -37,7 +37,7 @@
   },
   "ja": {
     "name": "九九流星隊：九九れんしゅう",
-    "subtitle": "まちがえた問題をゲームで復習",
+    "subtitle": "九九とたし算ひき算、まちがいを自動で復習",
     "promo": "流星をうって、星マップをひからせよう。九九を「はやく、まちがえずに」言えるように。広告なし、オフラインOK、データは集めません。",
     "short": "流星をうって星マップを光らせよう。九九を楽しくれんしゅう。広告なし・オフラインOK。",
     "keywords": "かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,学習,知育,計算,たし算,ひき算,くり上がり,くり下がり",

@@ -12,7 +12,7 @@
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 13／30 | 九九流星隊：九九乘法表練習 |
-| 副標題（Apple Subtitle） | 15／30 | 打流星、點亮星圖，錯題自動多練 |
+| 副標題（Apple Subtitle） | 19／30 | 打流星練心算，錯題自動多練，也能練加減 |
 | 宣傳文字（Apple Promotional Text） | 42／170 | 打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告、不用網路、不收集任何資料。 |
 | 簡短說明（Google Short description） | 35／80 | 打下流星、點亮星圖，把九九乘法練到又快又不會錯。沒有廣告，也不用網路。 |
 | 關鍵字（Apple Keywords） | 57／100 | 背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,加減法,20以內加減,進位,退位,湊十 |
@@ -108,7 +108,7 @@
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 30／30 | 9×9 Meteor Squad: Times Tables |
-| 副標題（Apple Subtitle） | 30／30 | Zap meteors, master every fact |
+| 副標題（Apple Subtitle） | 29／30 | Multiply, add & subtract game |
 | 宣傳文字（Apple Promotional Text） | 125／170 | Shoot down meteors, light up the star map, and get your times tables fast and right. No ads, plays offline, collects no data. |
 | 簡短說明（Google Short description） | 74／80 | Shoot down meteors and light up the star map. Master times tables. No ads. |
 | 關鍵字（Apple Keywords） | 100／100 | multiplication,math,kids,practice,grade 2,grade 3,learn,school,drill,addition,subtraction,math facts |
@@ -204,7 +204,7 @@ Privacy policy: https://jiujiu.sanbaofang.com/privacy/en.html
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 13／30 | 九九流星隊：九九れんしゅう |
-| 副標題（Apple Subtitle） | 14／30 | まちがえた問題をゲームで復習 |
+| 副標題（Apple Subtitle） | 20／30 | 九九とたし算ひき算、まちがいを自動で復習 |
 | 宣傳文字（Apple Promotional Text） | 64／170 | 流星をうって、星マップをひからせよう。九九を「はやく、まちがえずに」言えるように。広告なし、オフラインOK、データは集めません。 |
 | 簡短說明（Google Short description） | 42／80 | 流星をうって星マップを光らせよう。九九を楽しくれんしゅう。広告なし・オフラインOK。 |
 | 關鍵字（Apple Keywords） | 57／100 | かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,学習,知育,計算,たし算,ひき算,くり上がり,くり下がり |
