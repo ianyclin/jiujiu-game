@@ -96,7 +96,9 @@ Hidden outfits (unlocked at 40 and 50 badges), the legendary egg and trading sta
 |---|---|---|---|
 | `apple-iphone-6.9` | 1320 × 2868 | App Store iPhone 6.9" | **選填** |
 | `apple-iphone-6.3` | 1206 × 2622 | App Store iPhone（Dynamic Island） | **必填** |
-| `apple-ipad-13` | 2064 × 2752 | App Store iPad 13" | **必填**（專案支援 iPad）。2027 年 4 月起還要 iPhone Duo 尺寸 |
+| `apple-ipad-13` | 2064 × 2752 | App Store iPad 13" | **必填**（專案支援 iPad） |
+| `apple-duo-outer` | 1398 × 2034 | App Store iPhone Duo（外螢幕） | 選填，傳了商店頁會有「Made for iPhone Duo」徽章；2027 年 4 月起必填 |
+| `apple-duo-inner` | 2007 × 2853 | App Store iPhone Duo（內螢幕，直向） | 同上 |
 | `google-phone` | 1080 × 2160 | Play 手機截圖 | 2:1，Play 長短邊比上限 |
 | `google-tablet-10` | 1600 × 2560 | Play 10 吋平板截圖 | 選填，有平板排名／推薦才需要 |
 | `google-feature` | 1024 × 500 | Play 主圖（Feature graphic） | 必填；用圖示加標語畫的，**請你看過** |

@@ -1,0 +1,55 @@
+<!doctype html><meta charset="utf-8">
+<!-- App Store「標題和搜尋結果」素材的原稿：5244 × 2950。用 node tools/make-header.cjs 轉成 PNG。
+     主角（大流星、雷射、三隻寵物）放在正中偏上的安全區內；四周的星空、小流星、小鎮被裁掉也沒關係。 -->
+<style>
+@font-face{font-family:'Lilita One';src:url(../../assets/fonts/lilita.woff2) format('woff2')}
+html,body{margin:0}
+#c{position:relative;width:5244px;height:2950px;overflow:hidden;background:
+  radial-gradient(1800px 1100px at 50% 44%,rgba(95,242,208,.10),transparent 70%),
+  radial-gradient(2600px 1500px at 50% 108%,#3a2a55 0%,rgba(58,42,85,0) 70%),
+  linear-gradient(#060d1b 0%,#0c1a2c 38%,#16294a 72%,#24305c 100%)}
+.star{position:absolute;border-radius:50%;background:#fff}
+.moon{position:absolute;left:3760px;top:330px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle at 38% 34%,#fff8d8,#ffe69a 55%,#f1c860);box-shadow:0 0 160px 50px rgba(255,226,140,.28)}
+.moon::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 68% 30%,rgba(200,150,60,.25) 0 9%,transparent 10%),radial-gradient(circle at 34% 66%,rgba(200,150,60,.2) 0 13%,transparent 14%),radial-gradient(circle at 72% 72%,rgba(200,150,60,.18) 0 7%,transparent 8%)}
+.met{position:absolute;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffd7a8,#ff8f4d 46%,#b3401f 100%);box-shadow:0 0 calc(var(--s)*.32) rgba(255,150,80,.75),inset calc(var(--s)*-.07) calc(var(--s)*-.09) 0 rgba(0,0,0,.14);width:var(--s);height:var(--s);display:grid;place-items:center;font:400 calc(var(--s)*.30)/1 'Lilita One',sans-serif;color:#fff;text-shadow:0 calc(var(--s)*.02) 0 rgba(120,40,10,.7);white-space:nowrap}
+.met::before{content:"";position:absolute;right:56%;bottom:56%;width:calc(var(--s)*2.1);height:calc(var(--s)*.34);border-radius:999px;background:linear-gradient(90deg,transparent,rgba(255,174,87,.8));transform-origin:100% 50%;transform:rotate(var(--a,52deg));z-index:-1}
+.met{isolation:isolate}
+.laser{position:absolute;left:2622px;top:1290px;width:26px;height:300px;margin-left:-13px;border-radius:26px;background:linear-gradient(#fff,#5ff2d0 30%,rgba(95,242,208,.45));box-shadow:0 0 70px 14px rgba(95,242,208,.75)}
+.ring{position:absolute;left:2622px;top:1085px;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;border:16px solid rgba(255,210,63,.85);box-shadow:0 0 90px rgba(255,210,63,.7),inset 0 0 90px rgba(255,210,63,.35)}
+.spark{position:absolute;left:2622px;top:1085px;transform:scale(.85);width:30px;height:30px;margin:-15px;border-radius:50%;background:#fff;box-shadow:0 -410px 0 6px #ffd23f,300px -290px 0 2px #fff,420px 20px 0 8px #ffae57,280px 310px 0 2px #ffd23f,-290px 300px 0 6px #ffae57,-420px -10px 0 4px #ffd23f,-300px -300px 0 2px #fff,150px -190px 0 -2px #ffd23f,-170px -170px 0 -4px #fff}
+.hill{position:absolute;left:-200px;right:-200px;bottom:-1500px;height:2400px;border-radius:50%;background:linear-gradient(#1b3152,#0f2038 30%)}
+.hill.b{left:700px;right:700px;bottom:-1000px;height:2350px;background:linear-gradient(#27456e,#16294a 26%)}
+.pet{position:absolute;width:420px;height:420px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.45))}
+.gun{position:absolute;left:2622px;top:1560px;width:150px;height:170px;margin-left:-75px}
+.gun i{position:absolute;left:50%;top:0;width:54px;height:120px;margin-left:-27px;border-radius:20px 20px 6px 6px;background:linear-gradient(90deg,#4fd9bb,#9ffbe6 50%,#3cb89c)}
+.gun b{position:absolute;left:0;right:0;bottom:0;height:86px;border-radius:75px 75px 18px 18px;background:linear-gradient(#35608c,#223f61)}
+.town{position:absolute;left:0;right:0;bottom:0;height:520px}
+.b1{position:absolute;bottom:0;background:#0a1626}
+.b1::after{content:"";position:absolute;inset:40px 34px 0;background:linear-gradient(#ffd98a,#ffd98a) 0 0/28px 36px repeat;-webkit-mask:repeating-linear-gradient(90deg,#000 0 28px,transparent 28px 70px),linear-gradient(#000,#000);mask:repeating-linear-gradient(90deg,#000 0 28px,transparent 28px 70px);background:repeating-linear-gradient(#ffd98a 0 36px,transparent 36px 92px);opacity:.6}
+</style>
+<div id="c">
+  <div class="moon"></div>
+  <div class="hill"></div><div class="hill b"></div>
+  <div class="town" id="town"></div>
+  <div class="met" style="--s:230px;left:560px;top:520px">7 × 8</div>
+  <div class="met" style="--s:190px;left:1260px;top:1120px">6 × 7</div>
+  <div class="met" style="--s:170px;left:1500px;top:330px">3 × 9</div>
+  <div class="met" style="--s:210px;left:4320px;top:980px;--a:128deg">8 × 4</div>
+  <div class="met" style="--s:180px;left:3560px;top:1230px;--a:128deg">5 + 8</div>
+  <div class="met" style="--s:160px;left:4700px;top:420px;--a:128deg">9 × 6</div>
+  <div class="laser"></div>
+  <div class="ring"></div><div class="spark"></div>
+  <div class="met" style="--s:380px;left:2432px;top:895px">9 × 9</div>
+  <div class="gun"><i></i><b></b></div>
+  <img class="pet" src="../../assets/pets/cool-3.png" style="left:1960px;top:1400px">
+  <img class="pet" src="../../assets/pets/cute-3.png" style="left:2860px;top:1400px">
+  <img class="pet" src="../../assets/pets/funny-2.png" style="left:1590px;top:1560px;width:340px;height:340px">
+  <img class="pet" src="../../assets/pets/legend-3.png" style="left:3300px;top:1520px;width:380px;height:380px">
+</div>
+<script>
+let s = 20261117; const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+const c = document.getElementById('c');
+for (let i = 0; i < 420; i++) { const d = document.createElement('i'); d.className = 'star'; const z = 3 + r() * r() * 14; d.style.cssText = `left:${r() * 5244}px;top:${r() * r() * 2100}px;width:${z}px;height:${z}px;opacity:${.35 + r() * .65};box-shadow:0 0 ${z * 2}px rgba(255,255,255,.6)`; c.insertBefore(d, c.firstChild); }
+const t = document.getElementById('town'); let x = -40;
+while (x < 5300) { const w = 150 + r() * 210, h = 150 + r() * 330, near = Math.abs(x + w / 2 - 2622) < 1250; const b = document.createElement('div'); b.className = 'b1'; b.style.cssText = `left:${x}px;width:${w}px;height:${near ? h * .35 : h}px;border-radius:${r() < .3 ? '60px 60px 0 0' : '10px 10px 0 0'}`; t.appendChild(b); x += w + 14 + r() * 40; }
+</script>
