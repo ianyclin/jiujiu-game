@@ -18,10 +18,20 @@
 | 關鍵字（Apple Keywords） | 57／100 | 背九九,乘法遊戲,小學,國小,數學,二年級,三年級,心算,速算,學習,教育,加減法,20以內加減,進位,退位,湊十 |
 | 新功能（What's New） | 67／4000 | 1.4：可以改練 20 以內加減（答錯會教湊十、雙倍）；寵物可以照顧，星塵能換徽章；四種付費玩法各可試玩 3 次；遊戲說明多了簡單版。 |
 
-**完整說明：Apple 版（App Store Connect）**（1042／4000）
+**完整說明：Apple 版（App Store Connect）**（1264／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
+
+【作者的話】
+我是三個孩子的爸爸，家裡有個小三生。
+我發現孩子的九九乘法雖然背過了，卻不夠熟；連需要進位的加法，有時候也會算錯。
+
+所以我做了這個練習乘法（和進位加減）心算的遊戲，希望孩子能在好玩的環境裡把心算練熟。
+
+我家孩子很喜歡，算得也比以前熟練了。希望它也能幫到你和你的孩子。
+
+免費的「流星防衛戰」就能體驗幾乎完整的練習功能。如果想要更多不一樣的練習方式（介紹在下面），可以解鎖全部遊戲，就當請三寶爸喝杯咖啡，謝謝你的支持與鼓勵。
 
 【五種玩法，各練不同的能力】（流星防衛戰免費，另外四種各可免費試玩 3 次）
 ● 流星防衛戰（全部都練）：算出答案就發射雷射，打下往小鎮掉的流星。答錯的題會換個方式再考：反過來問（? × 7 = 56）、數列（7、14、?、28），還有每 5 波的錯題魔王。也有寶箱和追蹤飛彈。
@@ -51,10 +61,20 @@
 ```
 
 
-**完整說明：Google 版（Play Console）**（1044／4000）
+**完整說明：Google 版（Play Console）**（1266／4000）
 
 ```text
 九九流星隊是給小學生（約二、三年級）練九九乘法的遊戲。目標不是「學會」，而是把「都會，但偶爾會背錯」練到又快又不會錯。
+
+【作者的話】
+我是三個孩子的爸爸，家裡有個小三生。
+我發現孩子的九九乘法雖然背過了，卻不夠熟；連需要進位的加法，有時候也會算錯。
+
+所以我做了這個練習乘法（和進位加減）心算的遊戲，希望孩子能在好玩的環境裡把心算練熟。
+
+我家孩子很喜歡，算得也比以前熟練了。希望它也能幫到你和你的孩子。
+
+免費的「流星防衛戰」就能體驗幾乎完整的練習功能。如果想要更多不一樣的練習方式（介紹在下面），可以解鎖全部遊戲，就當請三寶爸喝杯咖啡，謝謝你的支持與鼓勵。
 
 【五種玩法，各練不同的能力】（流星防衛戰免費，另外四種各可免費試玩 3 次）
 ● 流星防衛戰（全部都練）：算出答案就發射雷射，打下往小鎮掉的流星。答錯的題會換個方式再考：反過來問（? × 7 = 56）、數列（7、14、?、28），還有每 5 波的錯題魔王。也有寶箱和追蹤飛彈。
@@ -94,10 +114,20 @@
 | 關鍵字（Apple Keywords） | 100／100 | multiplication,math,kids,practice,grade 2,grade 3,learn,school,drill,addition,subtraction,math facts |
 | 新功能（What's New） | 229／4000 | 1.4: Practice adding and subtracting within 20, with make-10 and doubles tips when you miss. Care for your pet and trade stardust for badges. Each of the four paid games can be tried 3 times. How to Play now has a simple version. |
 
-**完整說明：Apple 版（App Store Connect）**（3186／4000）
+**完整說明：Apple 版（App Store Connect）**（3945／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
+
+A NOTE FROM THE AUTHOR
+I'm a dad of three, and one of my kids is in third grade.
+I noticed that even though my child had memorized the times tables, the facts weren't really solid. Even addition with carrying sometimes went wrong.
+
+So I made this game for practicing mental multiplication (plus addition and subtraction with carrying and borrowing), hoping kids could build those skills while having fun.
+
+My own kid loves it and has gotten noticeably more fluent. I hope it helps you and your child too.
+
+The free game, Meteor Defense, already gives you almost the full practice experience. If you'd like more ways to practice (described below), you can unlock all games. Think of it as buying this dad of three a cup of coffee. Thank you for your support!
 
 FIVE GAMES, EACH BUILDS A DIFFERENT SKILL (Meteor Defense is free; try each of the other four 3 times for free)
 ● Meteor Defense (all skills): type the answer to fire a laser and shoot down meteors falling on the little town. Missed facts come back in new forms: asked backwards (? × 7 = 56), as a pattern (7, 14, ?, 28), and as a boss every 5 waves. Plus treasure chests and homing missiles.
@@ -127,10 +157,20 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（3184／4000）
+**完整說明：Google 版（Play Console）**（3943／4000）
 
 ```text
 9×9 Meteor Squad is a times-tables practice game for kids in about 2nd to 3rd grade. The goal isn't just "learning" the facts. It's turning "I know it, but I sometimes slip" into fast and correct, even when it feels rushed.
+
+A NOTE FROM THE AUTHOR
+I'm a dad of three, and one of my kids is in third grade.
+I noticed that even though my child had memorized the times tables, the facts weren't really solid. Even addition with carrying sometimes went wrong.
+
+So I made this game for practicing mental multiplication (plus addition and subtraction with carrying and borrowing), hoping kids could build those skills while having fun.
+
+My own kid loves it and has gotten noticeably more fluent. I hope it helps you and your child too.
+
+The free game, Meteor Defense, already gives you almost the full practice experience. If you'd like more ways to practice (described below), you can unlock all games. Think of it as buying this dad of three a cup of coffee. Thank you for your support!
 
 FIVE GAMES, EACH BUILDS A DIFFERENT SKILL (Meteor Defense is free; try each of the other four 3 times for free)
 ● Meteor Defense (all skills): type the answer to fire a laser and shoot down meteors falling on the little town. Missed facts come back in new forms: asked backwards (? × 7 = 56), as a pattern (7, 14, ?, 28), and as a boss every 5 waves. Plus treasure chests and homing missiles.
@@ -170,10 +210,20 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 | 關鍵字（Apple Keywords） | 57／100 | かけ算,九九表,算数,小学生,2年生,3年生,練習,暗記,学習,知育,計算,たし算,ひき算,くり上がり,くり下がり |
 | 新功能（What's New） | 114／4000 | 1.4：20までのたし算・ひき算も練習できるようになりました（まちがえると「10をつくる」「おなじ数」のヒントが出ます）。ペットのお世話、星くずとバッジの交換、有料の4つのゲームのお試し3回、かんたんな遊び方説明を追加しました。 |
 
-**完整說明：Apple 版（App Store Connect）**（1584／4000）
+**完整說明：Apple 版（App Store Connect）**（1914／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
+
+【作者より】
+私は3人の子どもの父親で、うちには小学3年生がいます。
+九九は覚えたはずなのに、まだしっかり身についておらず、くり上がりのあるたし算もときどきまちがえることに気づきました。
+
+そこで、かけ算（とくり上がり・くり下がりのあるたし算・ひき算）の暗算を、楽しく練習できるゲームを作りました。
+
+うちの子はとても気に入って、計算も前よりスムーズになりました。みなさんのご家庭でもお役に立てばうれしいです。
+
+無料の「流星ディフェンス」だけで、練習機能のほとんどを体験できます。ほかの練習方法（下でご紹介します）も試したくなったら、すべてのゲームを解除できます。3児の父にコーヒーを1杯ごちそうするつもりで応援していただけたら、とてもはげみになります。
 
 【5つの遊び、それぞれ練習できること】（流星ディフェンスは無料、ほかの4つは3回ずつ無料でお試しできます）
 ● 流星ディフェンス（ぜんぶ練習）：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。まちがえた問題は形を変えてまた出ます：逆から聞く（? × 7 = 56）、数の並び（7、14、?、28）、5ウェーブごとのボス。宝箱や追いかけミサイルもあります。
@@ -203,10 +253,20 @@ Privacy policy: https://ianyclin.github.io/jiujiu-game/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（1586／4000）
+**完整說明：Google 版（Play Console）**（1916／4000）
 
 ```text
 九九流星隊は、小学生（2〜3年生くらい）が九九をれんしゅうするゲームです。ねらいは「おぼえる」ことだけではなく、「わかっているのに、ときどきまちがえる」を、はやく、まちがえずに答えられるまで練習することです。
+
+【作者より】
+私は3人の子どもの父親で、うちには小学3年生がいます。
+九九は覚えたはずなのに、まだしっかり身についておらず、くり上がりのあるたし算もときどきまちがえることに気づきました。
+
+そこで、かけ算（とくり上がり・くり下がりのあるたし算・ひき算）の暗算を、楽しく練習できるゲームを作りました。
+
+うちの子はとても気に入って、計算も前よりスムーズになりました。みなさんのご家庭でもお役に立てばうれしいです。
+
+無料の「流星ディフェンス」だけで、練習機能のほとんどを体験できます。ほかの練習方法（下でご紹介します）も試したくなったら、すべてのゲームを解除できます。3児の父にコーヒーを1杯ごちそうするつもりで応援していただけたら、とてもはげみになります。
 
 【5つの遊び、それぞれ練習できること】（流星ディフェンスは無料、ほかの4つは3回ずつ無料でお試しできます）
 ● 流星ディフェンス（ぜんぶ練習）：答えを入力するとレーザーが発射され、町に落ちてくる流星をうち落とします。まちがえた問題は形を変えてまた出ます：逆から聞く（? × 7 = 56）、数の並び（7、14、?、28）、5ウェーブごとのボス。宝箱や追いかけミサイルもあります。
