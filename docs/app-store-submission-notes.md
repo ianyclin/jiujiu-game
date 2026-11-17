@@ -48,5 +48,5 @@ App Store Connect 在 2026 年秋天改版過，畫面跟舊教學不一樣。�
 ## 多個 session 一起做時
 
 - 本機 session 在使用者的電腦上開了分支沒切回 main，使用者照文件 `git pull` 就失敗。做完事要切回 main。
-- 不要叫使用者 `git stash`：會把 Xcode 選的 Team 收走。直接 `git switch main && git pull` 就好。
+- `git stash` 會把 Xcode 選的 Team 收走，只拿素材時不需要：直接 `git switch main && git pull`。只有遠端也改了 `project.pbxproj`（例如改 build 號）、`git pull` 被擋下來時才需要 stash，之後在 Xcode 重選 Team。
 - 文字的唯一來源放在一個檔（這裡是 `store/listing.json`），改了就重新產生文件，使用者永遠從同一個網址複製。
