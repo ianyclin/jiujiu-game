@@ -62,8 +62,8 @@ w('''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己�
 | 商店欄位 | 填法 | 依據 |
 |---|---|---|
 | Apple App Privacy | **Data Not Collected**（不收集資料）；不追蹤 | 遊戲本身沒有網路請求；購買走 StoreKit，Apple 的說明頁寫「You are not responsible for disclosing data collected by Apple」，付款資料在 app 外輸入、開發者拿不到也不算收集；`PrivacyInfo.xcprivacy` 一致 |
-| Apple Privacy Policy URL | `https://ianyclin.github.io/jiujiu-game/privacy/`（各語言版可填 `…/privacy/en.html`、`…/privacy/ja.html`） | merge 後要先在瀏覽器確認打得開 |
-| Apple Support URL | `https://ianyclin.github.io/jiujiu-game/support/`（三語支援頁，內含聯絡 email 與常見問題；在 #48 的分支） | merge 後先在瀏覽器確認打得開 |
+| Apple Privacy Policy URL | `https://jiujiu.sanbaofang.com/privacy/`（各語言版可填 `…/privacy/en.html`、`…/privacy/ja.html`） | merge 後要先在瀏覽器確認打得開 |
+| Apple Support URL | `https://jiujiu.sanbaofang.com/support/`（三語支援頁，內含聯絡 email 與常見問題；在 #48 的分支） | merge 後先在瀏覽器確認打得開 |
 | 聯絡 email（Apple／Google 開發者資料） | `gigigagagogogege@gmail.com` | 會公開顯示 |
 | Google Data safety | 預計填「此應用程式不會收集或分享任何使用者資料」，**但上架前要在 Play Console 的說明再確認一次**：Google 付款程式庫（billing 9.1.0）會帶進 Google 自己的記錄元件（`datatransport`，也是 `INTERNET`／`ACCESS_NETWORK_STATE` 權限的來源），Google 的說明把付款程式庫列為「財務資訊」的例子，但沒有講清楚只用它解鎖、不存購買紀錄的 app 要不要申報；查不到官方答案就問 Play 支援 | 遊戲程式本身不連網；我們沒有伺服器、收不到購買紀錄 |
 | Google 廣告 ID 宣告 | 不使用 | — |

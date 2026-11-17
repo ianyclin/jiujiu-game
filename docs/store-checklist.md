@@ -165,7 +165,7 @@
 
 **B. 你要做的**
 1. **在 Android 手機裝 APK 試玩**（GitHub → Actions → Android APK → 最新一次 → Artifacts）。看：載入、觸控、音效、狀態列與手勢列有沒有擋到畫面、粉專與隱私權政策連結（過家長關卡後）會不會開瀏覽器、備份紀錄能不能用。
-2. **確認網址打得開**：`https://ianyclin.github.io/jiujiu-game/privacy/`、`…/support/`。
+2. **確認網址打得開**：`https://jiujiu.sanbaofang.com/privacy/`、`…/support/`。
 3. **請母語者看英日文**：隱私權政策、支援頁、商店文案（`store/listing.json`）、遊戲介面。
 4. **價格已定**（見決定紀錄）：免費下載＋內購 `unlock_all` US$2.99。商品代號 `unlock_all` 寫在程式裡，兩家商店都要用**一模一樣**的代號，建立後不能改。
 5. **Google Play**：註冊開發者帳號（個人、約 US$25、身分驗證）→ 建立應用程式（套件名稱 `com.sanbaofang.jiujiu`）→ 產生 **upload key**（金鑰檔與密碼自己保管，不要進 repo）→ 建簽署的 AAB（`android/` 用 Android Studio 的 Build → Generate Signed Bundle，或把 key 告訴我怎麼放在本機、我補 `signingConfigs`）→ 上傳到**封閉測試**、找 **12 位測試者連續 14 天** → 填商店資料（`docs/store-listing.md`：文案、截圖、主圖、圖示 `assets/icon/icon-512.png`、類別、目標年齡、內容分級問卷、Data safety、隱私權政策網址）→ 申請正式版。

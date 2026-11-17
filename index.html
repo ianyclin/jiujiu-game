@@ -4235,7 +4235,7 @@ if (IAP) {
 }
 renderSetUnlock();
 // 隱私權政策（GitHub Pages，privacy/ 底下三種語言各一頁）：app 內也要連得到，同樣走家長關卡
-const PRIVACY_URL = { 'zh-Hant': 'https://ianyclin.github.io/jiujiu-game/privacy/', en: 'https://ianyclin.github.io/jiujiu-game/privacy/en.html', ja: 'https://ianyclin.github.io/jiujiu-game/privacy/ja.html' };
+const PRIVACY_URL = { 'zh-Hant': 'https://jiujiu.sanbaofang.com/privacy/', en: 'https://jiujiu.sanbaofang.com/privacy/en.html', ja: 'https://jiujiu.sanbaofang.com/privacy/ja.html' };
 document.addEventListener('click', e => { if (e.target.closest && e.target.closest('.legal-priv, .about-priv')) { e.preventDefault(); openGate(PRIVACY_URL[LANG] || PRIVACY_URL.en); } });   // 委派：applyStr() 重填 innerHTML 之後連結也要走家長關卡
 $('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; $('#about-env').textContent = tx('about.env', { w: innerWidth, h: innerHeight, cw: W, ch: H, d: (window.devicePixelRatio || 1).toFixed(1) }); });   // 回報問題時好判斷是哪種裝置、畫布有沒有量錯
 $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; refreshMenu(); $('#o-set').hidden = false; });   // 從設定打開的，關掉回到設定
