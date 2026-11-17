@@ -29,7 +29,7 @@ const LANGS = {
   en:        { who: 'Star', pet: 'Mochi' },
   ja:        { who: 'ほし', pet: 'もち' },
 };
-const SHOTS = ['menu', 'meteor', 'map', 'pet', 'versus', 'addmap'];
+const SHOTS = ['menu', 'meteor', 'bomb', 'ghost', 'versus', 'cmp', 'pet', 'map', 'addmap'];   // 五個遊戲都要出現；搜尋結果只顯示前三張，遊戲畫面排前面
 
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i < 0 ? d : (process.argv[i + 1] || '').split(','); };
 const devices = arg('device', Object.keys(DEVICES)), langs = arg('lang', Object.keys(LANGS)), shots = arg('shot', SHOTS);
@@ -49,7 +49,7 @@ function seed(lang, name) {
     else facts[k] = { n: 4 + h, err: 0.02, t: 1500 + h * 130 };
   }
   let acc = 0; const ghost = Array.from({ length: 20 }, (_, i) => (acc += 2100 + ((i * 337) % 900)));   // 遊戲存的是「累計」時間（第 20 個 ≈ 51 秒），不是每題時間
-  if (name === 'addmap') {   // 加減星圖：大部分亮了、進位退位的幾題還在練
+  if (name === 'addmap' || name === 'cmp') {   // 加減星圖、哪個大（用加減題，讓人看得出可以練加減）：大部分亮了、進位退位的幾題還在練
     for (let a = 2; a <= 9; a++) for (let b = 2; b <= 9; b++) {
       const c = a + b, h = (a * 5 + b * 11) % 10, carry = c > 10;
       for (const k of [a + '+' + b, c + '-' + b]) {
@@ -65,7 +65,7 @@ function seed(lang, name) {
     save: {
       facts, retest: [],
       bests: { std: { meteor: 1840, sudden: 920, ghost, cmpT: 27800, bomb: 58200, ghostLoss: 0 } },
-      set: { what: name === 'addmap' ? 'add' : 'mul', sound: false, music: false, sudden: false, seqLabel: true, tables: [1, 2, 3, 4, 5, 6, 7, 8, 9], lang },
+      set: { what: name === 'addmap' || name === 'cmp' ? 'add' : 'mul', sound: false, music: false, sudden: false, seqLabel: true, tables: [1, 2, 3, 4, 5, 6, 7, 8, 9], lang },
       daily: { date: '', tasks: [], badges: 15, streak: 4, lastDone: '', starBase: 40, ans: 38, wrong: 3, log: {} },
       pet: { kind: 'cute', name: LANGS[lang].pet, dust: 126, fed: 380, wear: { head: 'star', face: 'glasses', neck: 'bowtie', side: 'balloon', back: '' }, released: [], sent: 0 },
     },
@@ -153,7 +153,43 @@ async function shotVersus(page, f) {
   await snap(page, f);
 }
 async function shotAddMap(page, f) { await page.click('#go-map'); await page.waitForTimeout(800); const t = await page.$('#map-tabs [data-tab="add"], #map-tabs button:last-child'); if (t && !(await t.getAttribute('aria-pressed') === 'true')) await t.click().catch(() => {}); await page.waitForTimeout(500); await snap(page, f); }
-const SHOTFN = { menu: shotMenu, meteor: shotMeteor, map: shotMap, pet: shotPet, versus: shotVersus, addmap: shotAddMap };
+// 幽靈競速：答幾題讓自己領先幽靈，再打下一題的第一個數字
+function solveQ(t) {
+  t = (t || '').replace(/\s+/g, ' ').trim(); let m;
+  if ((m = /^(\d+) × (\d+) =/.exec(t))) return +m[1] * +m[2];
+  if ((m = /(\d+) × (\d+) = \D*$/.exec(t))) return +m[1] * +m[2];
+  if ((m = /× (\d+) = (\d+)/.exec(t)) && !/^\d+ ×/.test(t)) return +m[2] / +m[1];
+  if ((m = /^(\d+) × .*= (\d+)/.exec(t))) return +m[2] / +m[1];
+  const nums = t.split(/[、,]/).map(x => x.trim()); const k = nums.findIndex(x => !/^\d+$/.test(x));
+  if (nums.length >= 4 && k >= 0) { const v = nums.map(Number), d = k >= 2 ? v[1] - v[0] : v[3] - v[2]; return k > 0 ? v[k - 1] + d : v[1] - d; }
+  return null;
+}
+async function shotGhost(page, f) {
+  await page.click('#go-ghost'); await page.waitForTimeout(3600);
+  for (let i = 0; i < 9; i++) {
+    const t = await page.evaluate(() => { const q = document.querySelector('#g-q'); return [...q.childNodes].map(n => n.nodeType === 3 ? n.textContent : (n.classList && n.classList.contains('qlab') ? '' : (/^\d+$/.test(n.textContent.trim()) || /[×=、,]/.test(n.textContent) ? n.textContent : ' _ '))).join(' '); });
+    const a = solveQ(t.replace(/_+/g, '_').replace(/ _ /g, ' ? '));
+    if (a == null || !Number.isFinite(a)) { console.error('  [ghost] 看不懂題目：', t); break; }
+    const digits = String(a);
+    if (i === 8) { if (digits.length > 1) { await page.keyboard.press(digits[0]); await page.waitForTimeout(150); } break; }
+    for (const ch of digits) { await page.keyboard.press(ch); await page.waitForTimeout(110); }
+    await page.waitForTimeout(650 + (i % 3) * 250);
+  }
+  await snap(page, f);
+}
+// 炸彈拆除：點掉兩個倍數（引線燒到一半、找到 2 個）
+async function shotBomb(page, f) {
+  await page.click('#go-bomb'); await page.waitForTimeout(3600);
+  const n = +(await page.textContent('#bm-n'));
+  const idx = await page.evaluate(n => [...document.querySelectorAll('#bm-tiles button')].map((b, i) => [+b.textContent, i]).filter(x => x[0] % n === 0).map(x => x[1]), n);
+  await page.waitForTimeout(2500);
+  for (const i of idx.slice(0, 2)) { await page.click(`#bm-tiles button >> nth=${i}`); await page.waitForTimeout(1400); }
+  await page.waitForTimeout(1500);
+  await snap(page, f);
+}
+// 哪個大？哪個小？：加減題，第一題還沒作答
+async function shotCmp(page, f) { await page.click('#go-cmp'); await page.waitForTimeout(3600 + 1200); await snap(page, f); }
+const SHOTFN = { menu: shotMenu, meteor: shotMeteor, map: shotMap, pet: shotPet, versus: shotVersus, addmap: shotAddMap, ghost: shotGhost, bomb: shotBomb, cmp: shotCmp };
 
 async function feature(browser, base) {
   const L = JSON.parse(fs.readFileSync(path.join(root, 'store', 'listing.json'), 'utf8'));
