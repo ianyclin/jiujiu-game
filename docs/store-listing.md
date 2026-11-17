@@ -395,6 +395,198 @@ Privacy policy: https://jiujiu.sanbaofang.com/privacy/en.html
 プライバシーポリシー：https://jiujiu.sanbaofang.com/privacy/ja.html
 ```
 
+### 한국어（ko）
+
+| 欄位 | 字數／上限 | 內容 |
+|---|---|---|
+| 名稱（Apple Name／Google 標題） | 17／30 | 구구 유성대: 구구단 연습 게임 |
+| 副標題（Apple Subtitle） | 14／30 | 곱셈·덧셈·뺄셈 수학 놀이 |
+| 宣傳文字（Apple Promotional Text） | 66／170 | 유성을 쏘아 떨어뜨리고 별 지도를 밝히며, 구구단을 빠르고 정확하게! 광고 없음, 오프라인 플레이, 데이터 수집 없음. |
+| 簡短說明（Google Short description） | 34／80 | 유성을 쏘고 별 지도를 밝히며 구구단을 완벽하게. 광고 없음. |
+| 關鍵字（Apple Keywords） | 52／100 | 초등,2학년,3학년,어린이,연산,암산,받아올림,받아내림,학습,공부,초등수학,수학게임,교육,두뇌 |
+| 新功能（What's New） | 138／4000 | 1.4: 20까지의 덧셈·뺄셈을 연습할 수 있어요. 틀리면 10 만들기, 두 배 같은 요령을 알려 줍니다. 펫을 돌봐 주고 별가루를 배지로 바꿀 수 있어요. 유료 게임 네 개는 각각 3번씩 체험할 수 있습니다. 게임 방법에 간단한 버전이 생겼어요. |
+
+**完整說明：Apple 版（App Store Connect）**（2156／4000）
+
+```text
+구구 유성대는 초등학교 2~3학년 무렵 아이를 위한 구구단 연습 게임입니다. 목표는 단순히 '외우는 것'이 아닙니다. "알긴 아는데 가끔 틀리는" 상태를, 서두르는 상황에서도 빠르고 정확하게 답하는 수준으로 끌어올리는 것입니다.
+
+제작자의 말
+저는 세 아이의 아빠이고, 그중 한 아이가 초등학교 3학년입니다.
+아이가 구구단을 다 외웠는데도 정작 탄탄하게 익히지는 못했다는 걸 알게 되었습니다. 받아올림이 있는 덧셈도 가끔 틀리곤 했고요.
+
+그래서 아이들이 즐겁게 놀면서 실력을 쌓을 수 있기를 바라며, 곱셈 암산(그리고 받아올림·받아내림이 있는 덧셈과 뺄셈)을 연습하는 이 게임을 만들었습니다.
+
+우리 아이는 이 게임을 정말 좋아하고, 눈에 띄게 능숙해졌습니다. 여러분과 아이에게도 도움이 되기를 바랍니다.
+
+무료 게임인 유성 방어전만으로도 거의 모든 연습을 경험할 수 있습니다. 더 다양한 방법으로 연습하고 싶으시다면(아래 설명 참고) 모든 게임을 열 수 있습니다. 세 아이 아빠에게 커피 한 잔 사 준다고 생각해 주세요. 응원해 주셔서 감사합니다!
+
+다섯 가지 게임, 게임마다 다른 능력을 길러요 (유성 방어전은 무료, 나머지 네 게임은 각각 3번 무료 체험)
+● 유성 방어전 (모두 연습): 답을 입력하면 레이저가 발사되어 작은 마을로 떨어지는 유성을 맞힙니다. 틀린 문제는 새로운 형태로 다시 나옵니다. 거꾸로 묻기(? × 7 = 56), 수 패턴(7, 14, ?, 28), 그리고 5웨이브마다 나오는 보스. 보물상자와 유도 미사일도 있습니다.
+● 유령 레이스 (빠르게): 20문제 시간 경주. 지난번의 나를 이기며, 아는 문제가 생각하지 않아도 떠오를 때까지 연습합니다.
+● 줄다리기 (대결): 두 사람이 마주 보고 겨룹니다. 어른과 하거나, 아이의 속도에 맞춰 주는 로봇과 해서 이기기도 하고 지기도 합니다.
+● 크다 작다 (크기 비교): 문제 세 개 중에서 가장 큰 것이나 가장 작은 것을 찾습니다. 하나하나 다 계산하지 않아도 어림으로 찾을 수 있어, 수 감각을 기릅니다.
+● 폭탄 해체반 (배수 찾기): 숫자판에서 한 단의 배수를 찾아내며 약수와 배수의 기초를 미리 다집니다. 덧셈·뺄셈을 연습할 때는 폭탄의 수가 되는 식을 찾으며 수 가르기와 모으기를 익힙니다.
+
+할수록 더 탄탄해져요
+● 아이가 틀린 문제는 조용히 더 자주 나오고, 조금 뒤에 다시 한 번 확인합니다. 아이에게는 그냥 게임처럼 느껴집니다.
+● 별 지도: 문제마다 별이 하나씩 있습니다. 빠르고 정확하게 답하면 별이 켜져서, 아직 연습이 필요한 문제를 한눈에 볼 수 있습니다.
+● 오늘의 미션, 배지, 키우는 펫: 답을 맞히면 별가루가 생겨 펫(복실이, 용용이, 개굴이, 그리고 전설의 알 노바)을 키우고 꾸미기 아이템을 열 수 있습니다. 별가루로 간식과 놀이를 해 주면 펫의 하트가 찹니다. 별가루는 문제를 풀어야만 얻을 수 있으며, 판매하지 않습니다.
+● "펫이 배고파요" 같은 알림도, 벌칙도 없습니다. 아이를 재촉하는 요소가 없습니다.
+
+부모님께
+● 무료 다운로드: 유성 방어전, 별 지도, 오늘의 미션, 펫은 무료입니다. 나머지 네 게임은 각각 3번 체험할 수 있으며, 한 번의 구매로 모두 열립니다(구독 아님, 기기의 모든 아이가 이용 가능).
+● 구매는 보호자 확인 뒤에 있어 아이가 실수로 구매할 수 없습니다. 결제는 App Store에서 처리합니다.
+● 광고 없음, 로그인 없음, 개인정보 수집 없음.
+● 완전히 오프라인으로 플레이할 수 있습니다(구매할 때만 스토어에 연결). 기록은 이 기기에만 저장되며, 저희는 볼 수 없습니다.
+● 새 휴대폰이나 태블릿으로 바꾸시나요? 설정의 "기록 백업"에서 백업 파일이나 코드로 기록을 옮길 수 있습니다. 백업은 원하는 곳에 보관하시면 되고, 게임은 이를 업로드하지 않습니다.
+● 최대 4명의 아이가 각자 기록을 가질 수 있습니다. 설정에서 연습할 단(1~12단)을 고를 수 있습니다.
+● 20까지의 덧셈·뺄셈(받아올림·받아내림 포함)으로 바꾸거나 함께 연습할 수도 있습니다. 다섯 게임 모두 덧셈·뺄셈을 지원하며, 틀린 문제에는 10 만들기, 두 배 같은 요령을 보여 줍니다.
+● 게임 밖으로 나가는 링크는 어른이 문제를 풀어야 열립니다.
+● 한국어, 영어, 번체 중국어, 일본어, 스페인어를 지원합니다.
+
+개인정보 처리방침: https://jiujiu.sanbaofang.com/privacy/ko.html
+```
+
+
+**完整說明：Google 版（Play Console）**（2158／4000）
+
+```text
+구구 유성대는 초등학교 2~3학년 무렵 아이를 위한 구구단 연습 게임입니다. 목표는 단순히 '외우는 것'이 아닙니다. "알긴 아는데 가끔 틀리는" 상태를, 서두르는 상황에서도 빠르고 정확하게 답하는 수준으로 끌어올리는 것입니다.
+
+제작자의 말
+저는 세 아이의 아빠이고, 그중 한 아이가 초등학교 3학년입니다.
+아이가 구구단을 다 외웠는데도 정작 탄탄하게 익히지는 못했다는 걸 알게 되었습니다. 받아올림이 있는 덧셈도 가끔 틀리곤 했고요.
+
+그래서 아이들이 즐겁게 놀면서 실력을 쌓을 수 있기를 바라며, 곱셈 암산(그리고 받아올림·받아내림이 있는 덧셈과 뺄셈)을 연습하는 이 게임을 만들었습니다.
+
+우리 아이는 이 게임을 정말 좋아하고, 눈에 띄게 능숙해졌습니다. 여러분과 아이에게도 도움이 되기를 바랍니다.
+
+무료 게임인 유성 방어전만으로도 거의 모든 연습을 경험할 수 있습니다. 더 다양한 방법으로 연습하고 싶으시다면(아래 설명 참고) 모든 게임을 열 수 있습니다. 세 아이 아빠에게 커피 한 잔 사 준다고 생각해 주세요. 응원해 주셔서 감사합니다!
+
+다섯 가지 게임, 게임마다 다른 능력을 길러요 (유성 방어전은 무료, 나머지 네 게임은 각각 3번 무료 체험)
+● 유성 방어전 (모두 연습): 답을 입력하면 레이저가 발사되어 작은 마을로 떨어지는 유성을 맞힙니다. 틀린 문제는 새로운 형태로 다시 나옵니다. 거꾸로 묻기(? × 7 = 56), 수 패턴(7, 14, ?, 28), 그리고 5웨이브마다 나오는 보스. 보물상자와 유도 미사일도 있습니다.
+● 유령 레이스 (빠르게): 20문제 시간 경주. 지난번의 나를 이기며, 아는 문제가 생각하지 않아도 떠오를 때까지 연습합니다.
+● 줄다리기 (대결): 두 사람이 마주 보고 겨룹니다. 어른과 하거나, 아이의 속도에 맞춰 주는 로봇과 해서 이기기도 하고 지기도 합니다.
+● 크다 작다 (크기 비교): 문제 세 개 중에서 가장 큰 것이나 가장 작은 것을 찾습니다. 하나하나 다 계산하지 않아도 어림으로 찾을 수 있어, 수 감각을 기릅니다.
+● 폭탄 해체반 (배수 찾기): 숫자판에서 한 단의 배수를 찾아내며 약수와 배수의 기초를 미리 다집니다. 덧셈·뺄셈을 연습할 때는 폭탄의 수가 되는 식을 찾으며 수 가르기와 모으기를 익힙니다.
+
+할수록 더 탄탄해져요
+● 아이가 틀린 문제는 조용히 더 자주 나오고, 조금 뒤에 다시 한 번 확인합니다. 아이에게는 그냥 게임처럼 느껴집니다.
+● 별 지도: 문제마다 별이 하나씩 있습니다. 빠르고 정확하게 답하면 별이 켜져서, 아직 연습이 필요한 문제를 한눈에 볼 수 있습니다.
+● 오늘의 미션, 배지, 키우는 펫: 답을 맞히면 별가루가 생겨 펫(복실이, 용용이, 개굴이, 그리고 전설의 알 노바)을 키우고 꾸미기 아이템을 열 수 있습니다. 별가루로 간식과 놀이를 해 주면 펫의 하트가 찹니다. 별가루는 문제를 풀어야만 얻을 수 있으며, 판매하지 않습니다.
+● "펫이 배고파요" 같은 알림도, 벌칙도 없습니다. 아이를 재촉하는 요소가 없습니다.
+
+부모님께
+● 무료 다운로드: 유성 방어전, 별 지도, 오늘의 미션, 펫은 무료입니다. 나머지 네 게임은 각각 3번 체험할 수 있으며, 한 번의 구매로 모두 열립니다(구독 아님, 기기의 모든 아이가 이용 가능).
+● 구매는 보호자 확인 뒤에 있어 아이가 실수로 구매할 수 없습니다. 결제는 Google Play에서 처리합니다.
+● 광고 없음, 로그인 없음, 개인정보 수집 없음.
+● 완전히 오프라인으로 플레이할 수 있습니다(구매할 때만 스토어에 연결). 기록은 이 기기에만 저장되며, 저희는 볼 수 없습니다.
+● 새 휴대폰이나 태블릿으로 바꾸시나요? 설정의 "기록 백업"에서 백업 파일이나 코드로 기록을 옮길 수 있습니다. 백업은 원하는 곳에 보관하시면 되고, 게임은 이를 업로드하지 않습니다.
+● 최대 4명의 아이가 각자 기록을 가질 수 있습니다. 설정에서 연습할 단(1~12단)을 고를 수 있습니다.
+● 20까지의 덧셈·뺄셈(받아올림·받아내림 포함)으로 바꾸거나 함께 연습할 수도 있습니다. 다섯 게임 모두 덧셈·뺄셈을 지원하며, 틀린 문제에는 10 만들기, 두 배 같은 요령을 보여 줍니다.
+● 게임 밖으로 나가는 링크는 어른이 문제를 풀어야 열립니다.
+● 한국어, 영어, 번체 중국어, 일본어, 스페인어를 지원합니다.
+
+개인정보 처리방침: https://jiujiu.sanbaofang.com/privacy/ko.html
+```
+
+### Español（es-MX／中南美，App Store 選「Spanish (Mexico)」）
+
+| 欄位 | 字數／上限 | 內容 |
+|---|---|---|
+| 名稱（Apple Name／Google 標題） | 29／30 | Escuadrón Meteoro: Tablas 9×9 |
+| 副標題（Apple Subtitle） | 24／30 | Multiplica, suma y resta |
+| 宣傳文字（Apple Promotional Text） | 156／170 | Derriba meteoros, enciende el mapa estelar y domina las tablas de multiplicar rápido y sin errores. Sin anuncios, funciona sin conexión y no recopila datos. |
+| 簡短說明（Google Short description） | 77／80 | Derriba meteoros y enciende el mapa estelar. Domina las tablas. Sin anuncios. |
+| 關鍵字（Apple Keywords） | 95／100 | multiplicar,matemáticas,niños,práctica,segundo grado,tercer grado,aprender,escuela,sumas,restas |
+| 新功能（What's New） | 246／4000 | 1.4: Practica sumas y restas hasta 20, con trucos de hacer 10 y dobles cuando fallas. Cuida a tu mascota y cambia polvo estelar por insignias. Los cuatro juegos de pago se pueden probar 3 veces cada uno. Cómo jugar ahora tiene una versión simple. |
+
+**完整說明：Apple 版（App Store Connect）**（3984／4000）
+
+```text
+Escuadrón Meteoro 9×9 es un juego para practicar las tablas de multiplicar, para niños de 2.º a 3.º grado, aproximadamente. La meta no es solo "aprenderlas", sino pasar del "me las sé, pero a veces me equivoco" a responder rápido y bien, incluso con prisa.
+
+UNA NOTA DEL AUTOR
+Soy papá de tres, y uno de mis hijos está en tercer grado.
+Noté que, aunque mi hijo se sabía las tablas de memoria, no las tenía firmes. Hasta las sumas llevando a veces le salían mal.
+
+Así que hice este juego para practicar el cálculo mental (multiplicación, y sumas y restas llevando y prestando), para que los niños ganen esas habilidades mientras se divierten.
+
+A mi hijo le encanta y ha ganado mucha soltura. Ojalá también le sirva a su familia.
+
+El juego gratuito, Defensa de Meteoros, ya ofrece casi toda la práctica. Si quiere más formas de practicar, puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
+
+CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa de Meteoros es gratis; los otros cuatro se pueden probar gratis 3 veces cada uno)
+● Defensa de Meteoros (de todo): al escribir la respuesta, un láser derriba los meteoros que caen sobre el pueblito. Lo fallado regresa de otras formas: al revés (? × 7 = 56), en serie (7, 14, ?, 28) y como jefe cada 5 oleadas. Y hay cofres y misiles buscadores.
+● Carrera Fantasma (rapidez): 20 preguntas contra el reloj, contra la propia carrera anterior, hasta que las respuestas salgan sin pensar.
+● Jala la Cuerda (duelo): dos jugadores frente a frente. Contra un adulto o contra un robot que se ajusta al ritmo de su hijo, para que a veces gane y a veces pierda.
+● ¿Mayor? ¿Menor? (comparar): tres operaciones; sin resolverlas todas, se estima cuál es la mayor o la menor. Desarrolla el sentido numérico.
+● Brigada Bomba (múltiplos): encontrar los múltiplos de una tabla en una cuadrícula, una base para factores y múltiplos. Con sumas y restas, encontrar las operaciones que dan el número de la bomba, para aprender a descomponer números.
+
+CUANTO MÁS JUEGAN, MEJOR LO SABEN
+● Lo que el niño falla sale más seguido sin que lo note, y vuelve un poco después para otro intento. Para él, solo está jugando.
+● Mapa Estelar: cada operación es una estrella. Se enciende cuando la respuesta es rápida y correcta: de un vistazo se ve qué falta practicar.
+● Misiones diarias, insignias y una mascota que criar: las respuestas dan polvo estelar para alimentar a la mascota (Peludín, Draki o Croac, y un huevo legendario, Nova), abrir accesorios y darle premios que llenan sus corazones. El polvo estelar solo se gana respondiendo; nunca se vende.
+● Sin "tu mascota tiene hambre" ni castigos. Nada presiona al niño.
+
+PARA PADRES
+● Descarga gratis: Defensa de Meteoros, el Mapa Estelar, las misiones diarias y la mascota son gratis. Los otros cuatro juegos se pueden probar 3 veces cada uno, y una única compra los desbloquea todos (no es suscripción; sirve para todos los niños del dispositivo).
+● Las compras están detrás de un control parental: los niños no compran por accidente. El pago lo procesa el App Store.
+● Sin anuncios, sin registro y sin recopilar datos personales.
+● Funciona sin conexión (solo las compras se conectan a la tienda). El progreso se guarda solo en este dispositivo y no podemos verlo.
+● ¿Teléfono o tableta nuevos? Con "Copia de seguridad" en Ajustes, un adulto pasa el progreso con un archivo o un código. Usted la guarda donde quiera; el juego nunca la sube.
+● Hasta 4 niños, cada uno con su progreso. En Ajustes puede elegir qué tablas practicar (del 1 al 12).
+● También puede cambiar a sumas y restas hasta 20 (llevando y prestando), o practicar ambas. Los cinco juegos las incluyen, y al fallar se muestran trucos como hacer 10 y los dobles.
+● Todo enlace fuera del juego pide antes que un adulto responda una pregunta.
+● Disponible en español, inglés, chino tradicional, japonés y coreano.
+
+Política de privacidad: https://jiujiu.sanbaofang.com/privacy/es.html
+```
+
+
+**完整說明：Google 版（Play Console）**（3983／4000）
+
+```text
+Escuadrón Meteoro 9×9 es un juego para practicar las tablas de multiplicar, para niños de 2.º a 3.º grado, aproximadamente. La meta no es solo "aprenderlas", sino pasar del "me las sé, pero a veces me equivoco" a responder rápido y bien, incluso con prisa.
+
+UNA NOTA DEL AUTOR
+Soy papá de tres, y uno de mis hijos está en tercer grado.
+Noté que, aunque mi hijo se sabía las tablas de memoria, no las tenía firmes. Hasta las sumas llevando a veces le salían mal.
+
+Así que hice este juego para practicar el cálculo mental (multiplicación, y sumas y restas llevando y prestando), para que los niños ganen esas habilidades mientras se divierten.
+
+A mi hijo le encanta y ha ganado mucha soltura. Ojalá también le sirva a su familia.
+
+El juego gratuito, Defensa de Meteoros, ya ofrece casi toda la práctica. Si quiere más formas de practicar, puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
+
+CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa de Meteoros es gratis; los otros cuatro se pueden probar gratis 3 veces cada uno)
+● Defensa de Meteoros (de todo): al escribir la respuesta, un láser derriba los meteoros que caen sobre el pueblito. Lo fallado regresa de otras formas: al revés (? × 7 = 56), en serie (7, 14, ?, 28) y como jefe cada 5 oleadas. Y hay cofres y misiles buscadores.
+● Carrera Fantasma (rapidez): 20 preguntas contra el reloj, contra la propia carrera anterior, hasta que las respuestas salgan sin pensar.
+● Jala la Cuerda (duelo): dos jugadores frente a frente. Contra un adulto o contra un robot que se ajusta al ritmo de su hijo, para que a veces gane y a veces pierda.
+● ¿Mayor? ¿Menor? (comparar): tres operaciones; sin resolverlas todas, se estima cuál es la mayor o la menor. Desarrolla el sentido numérico.
+● Brigada Bomba (múltiplos): encontrar los múltiplos de una tabla en una cuadrícula, una base para factores y múltiplos. Con sumas y restas, encontrar las operaciones que dan el número de la bomba, para aprender a descomponer números.
+
+CUANTO MÁS JUEGAN, MEJOR LO SABEN
+● Lo que el niño falla sale más seguido sin que lo note, y vuelve un poco después para otro intento. Para él, solo está jugando.
+● Mapa Estelar: cada operación es una estrella. Se enciende cuando la respuesta es rápida y correcta: de un vistazo se ve qué falta practicar.
+● Misiones diarias, insignias y una mascota que criar: las respuestas dan polvo estelar para alimentar a la mascota (Peludín, Draki o Croac, y un huevo legendario, Nova), abrir accesorios y darle premios que llenan sus corazones. El polvo estelar solo se gana respondiendo; nunca se vende.
+● Sin "tu mascota tiene hambre" ni castigos. Nada presiona al niño.
+
+PARA PADRES
+● Descarga gratis: Defensa de Meteoros, el Mapa Estelar, las misiones diarias y la mascota son gratis. Los otros cuatro juegos se pueden probar 3 veces cada uno, y una única compra los desbloquea todos (no es suscripción; sirve para todos los niños del dispositivo).
+● Las compras están detrás de un control parental: los niños no compran por accidente. El pago lo procesa Google Play.
+● Sin anuncios, sin registro y sin recopilar datos personales.
+● Funciona sin conexión (solo las compras se conectan a la tienda). El progreso se guarda solo en este dispositivo y no podemos verlo.
+● ¿Teléfono o tableta nuevos? Con "Copia de seguridad" en Ajustes, un adulto pasa el progreso con un archivo o un código. Usted la guarda donde quiera; el juego nunca la sube.
+● Hasta 4 niños, cada uno con su progreso. En Ajustes puede elegir qué tablas practicar (del 1 al 12).
+● También puede cambiar a sumas y restas hasta 20 (llevando y prestando), o practicar ambas. Los cinco juegos las incluyen, y al fallar se muestran trucos como hacer 10 y los dobles.
+● Todo enlace fuera del juego pide antes que un adulto responda una pregunta.
+● Disponible en español, inglés, chino tradicional, japonés y coreano.
+
+Política de privacidad: https://jiujiu.sanbaofang.com/privacy/es.html
+```
+
 > 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己索引）；不要放競品或商標名稱。
 > 說明中沒有宣稱成效（如「保證進步」），也沒有宣稱「手繪」（寵物與配件插畫是 AI 生成，見 `CLAUDE.md`）。
 

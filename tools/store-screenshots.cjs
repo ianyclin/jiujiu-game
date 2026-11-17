@@ -28,6 +28,8 @@ const LANGS = {
   'zh-Hant': { who: '小星', pet: '糰糰' },
   en:        { who: 'Star', pet: 'Mochi' },
   ja:        { who: 'ほし', pet: 'もち' },
+  ko:        { who: '별이', pet: '몽실이' },
+  es:        { who: 'Sol', pet: 'Copito' },
 };
 const SHOTS = ['menu', 'meteor', 'bomb', 'ghost', 'versus', 'cmp', 'pet', 'map', 'addmap'];   // 五個遊戲都要出現；搜尋結果只顯示前三張，遊戲畫面排前面
 
