@@ -19,6 +19,8 @@ const DEVICES = {
   'apple-iphone-6.9': { w: 440, h: 956, s: 3, mobile: true },     // 1320×2868
   'apple-iphone-6.3': { w: 402, h: 874, s: 3, mobile: true },     // 1206×2622
   'apple-ipad-13':    { w: 1032, h: 1376, s: 2, mobile: false },  // 2064×2752
+  'apple-duo-outer':  { w: 466, h: 678, s: 3, mobile: true },     // 1398×2034（iPhone Duo 外螢幕）
+  'apple-duo-inner':  { w: 669, h: 951, s: 3, mobile: true },     // 2007×2853（iPhone Duo 內螢幕，直向）
   'google-phone':     { w: 360, h: 720, s: 3, mobile: true },     // 1080×2160（長邊不超過短邊 2 倍）
   'google-tablet-10': { w: 800, h: 1280, s: 2, mobile: false },   // 1600×2560
 };
