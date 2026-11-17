@@ -302,13 +302,13 @@ Privacy policy: https://jiujiu.sanbaofang.com/privacy/en.html
 
 | 項目 | 建議 |
 |---|---|
-| Apple 主要類別／次要類別 | 教育（Education）／遊戲（Games → Educational） |
+| Apple 主要類別／次要類別 | 教育（Education）／遊戲（Games），子類別選「家庭遊戲」（Family；「教育」子類別已經沒有了），第二個子類別可選「動作遊戲」或留空 |
 | Apple Kids 類別 | 勾選，年齡層**只能選一個**：建議 **6–8**（主要對象是小二、小三）。**核准後不能改、也不能退出 Kids**，之後每一版都要守 Kids 規則（不能加第三方分析、廣告，外部連結與購買要家長關卡）。來源：developer.apple.com/app-store/categories/、App Store Connect 說明「Set an app age rating」 |
 | Apple 年齡分級問卷 | 照實填，全部答「無／沒有」：暴力（卡通或幻想暴力也答無）、**Contests（競賽）答無**（沒有線上排行、不跟別的玩家比；答 Frequent 會變 13+、進不了 Kids）、**Loot Boxes 答無**（定義是「可購買的隨機虛擬物品」，遊戲的寶箱不能買）、使用者產生內容、社群媒體、In-App Controls、Shared Location、Dating、不受限網頁存取、賭博 → 預期 4+。問卷**沒有**「App 內購買」這一題。來源：App Store Connect 說明「Age ratings values and definitions」 |
 | Google 類別 | 教育（Education）；Families：目標年齡 6–8、9–12 |
 | Google 內容分級（IARC） | 「數位購買」答「是」（有 `unlock_all` 內購），其他全部「否」；預期全年齡 |
 | 價格 | App 本身**免費**＋一個**非消耗型**內購 `unlock_all`（建議 US$2.99，解鎖幽靈競速、雙人拔河、哪個大、炸彈拆除）；無廣告（Play Console「包含廣告」選「否」）。Apple 要在商品設定打開「家人共享」 |
-| 版權欄（Apple Copyright） | `© 2026 指數三寶飯` |
+| 版權欄（Apple Copyright） | `2026 指數三寶飯`（不要自己打 ©，Apple 會自動加） |
 
 ## 三、隱私問卷（照實填）
 
