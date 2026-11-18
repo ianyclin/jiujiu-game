@@ -500,9 +500,9 @@ Privacy policy: https://jiujiu.sanbaofang.com/privacy/en.html
 | 宣傳文字（Apple Promotional Text） | 156／170 | Derriba meteoros, enciende el mapa estelar y domina las tablas de multiplicar rápido y sin errores. Sin anuncios, funciona sin conexión y no recopila datos. |
 | 簡短說明（Google Short description） | 77／80 | Derriba meteoros y enciende el mapa estelar. Domina las tablas. Sin anuncios. |
 | 關鍵字（Apple Keywords） | 95／100 | multiplicar,matemáticas,niños,práctica,segundo grado,tercer grado,aprender,escuela,sumas,restas |
-| 新功能（What's New） | 246／4000 | 1.4: Practica sumas y restas hasta 20, con trucos de hacer 10 y dobles cuando fallas. Cuida a tu mascota y cambia polvo estelar por insignias. Los cuatro juegos de pago se pueden probar 3 veces cada uno. Cómo jugar ahora tiene una versión simple. |
+| 新功能（What's New） | 245／4000 | 1.4: Practica sumas y restas hasta 20, con trucos de hacer 10 y dobles cuando fallas. Cuida a tu mascota y cambia polvo estelar por medallas. Los cuatro juegos de pago se pueden probar 3 veces cada uno. Cómo jugar ahora tiene una versión simple. |
 
-**完整說明：Apple 版（App Store Connect）**（3984／4000）
+**完整說明：Apple 版（App Store Connect）**（3967／4000）
 
 ```text
 Escuadrón Meteoro 9×9 es un juego para practicar las tablas de multiplicar, para niños de 2.º a 3.º grado, aproximadamente. La meta no es solo "aprenderlas", sino pasar del "me las sé, pero a veces me equivoco" a responder rápido y bien, incluso con prisa.
@@ -515,10 +515,10 @@ Así que hice este juego para practicar el cálculo mental (multiplicación, y s
 
 A mi hijo le encanta y ha ganado mucha soltura. Ojalá también le sirva a su familia.
 
-El juego gratuito, Defensa de Meteoros, ya ofrece casi toda la práctica. Si quiere más formas de practicar, puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
+El juego gratuito, Defensa Meteoro, ya ofrece casi toda la práctica. Si quiere más formas de practicar, puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
 
-CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa de Meteoros es gratis; los otros cuatro se pueden probar gratis 3 veces cada uno)
-● Defensa de Meteoros (de todo): al escribir la respuesta, un láser derriba los meteoros que caen sobre el pueblito. Lo fallado regresa de otras formas: al revés (? × 7 = 56), en serie (7, 14, ?, 28) y como jefe cada 5 oleadas. Y hay cofres y misiles buscadores.
+CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa Meteoro es gratis; los otros cuatro se pueden probar gratis 3 veces cada uno)
+● Defensa Meteoro (de todo): al escribir la respuesta, un láser derriba los meteoros que caen sobre el pueblito. Lo fallado regresa de otras formas: al revés (? × 7 = 56), en serie (7, 14, ?, 28) y como jefe cada 5 oleadas. Y hay cofres y misiles buscadores.
 ● Carrera Fantasma (rapidez): 20 preguntas contra el reloj, contra la propia carrera anterior, hasta que las respuestas salgan sin pensar.
 ● Jala la Cuerda (duelo): dos jugadores frente a frente. Contra un adulto o contra un robot que se ajusta al ritmo de su hijo, para que a veces gane y a veces pierda.
 ● ¿Mayor? ¿Menor? (comparar): tres operaciones; sin resolverlas todas, se estima cuál es la mayor o la menor. Desarrolla el sentido numérico.
@@ -527,11 +527,11 @@ CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa de Meteoros es gratis; 
 CUANTO MÁS JUEGAN, MEJOR LO SABEN
 ● Lo que el niño falla sale más seguido sin que lo note, y vuelve un poco después para otro intento. Para él, solo está jugando.
 ● Mapa Estelar: cada operación es una estrella. Se enciende cuando la respuesta es rápida y correcta: de un vistazo se ve qué falta practicar.
-● Misiones diarias, insignias y una mascota que criar: las respuestas dan polvo estelar para alimentar a la mascota (Peludín, Draki o Croac, y un huevo legendario, Nova), abrir accesorios y darle premios que llenan sus corazones. El polvo estelar solo se gana respondiendo; nunca se vende.
+● Misiones diarias, medallas y una mascota que criar: las respuestas dan polvo estelar para alimentar a la mascota (Peludín, Draki o Croac, y un huevo legendario, Nova), abrir accesorios y darle premios que llenan sus corazones. El polvo estelar solo se gana respondiendo; nunca se vende.
 ● Sin "tu mascota tiene hambre" ni castigos. Nada presiona al niño.
 
 PARA PADRES
-● Descarga gratis: Defensa de Meteoros, el Mapa Estelar, las misiones diarias y la mascota son gratis. Los otros cuatro juegos se pueden probar 3 veces cada uno, y una única compra los desbloquea todos (no es suscripción; sirve para todos los niños del dispositivo).
+● Descarga gratis: Defensa Meteoro, el Mapa Estelar, las misiones diarias y la mascota son gratis. Los otros cuatro juegos se pueden probar 3 veces cada uno, y una única compra los desbloquea todos (no es suscripción; sirve para todos los niños del dispositivo).
 ● Las compras están detrás de un control parental: los niños no compran por accidente. El pago lo procesa el App Store.
 ● Sin anuncios, sin registro y sin recopilar datos personales.
 ● Funciona sin conexión (solo las compras se conectan a la tienda). El progreso se guarda solo en este dispositivo y no podemos verlo.
@@ -545,7 +545,7 @@ Política de privacidad: https://jiujiu.sanbaofang.com/privacy/es.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（3983／4000）
+**完整說明：Google 版（Play Console）**（3966／4000）
 
 ```text
 Escuadrón Meteoro 9×9 es un juego para practicar las tablas de multiplicar, para niños de 2.º a 3.º grado, aproximadamente. La meta no es solo "aprenderlas", sino pasar del "me las sé, pero a veces me equivoco" a responder rápido y bien, incluso con prisa.
@@ -558,10 +558,10 @@ Así que hice este juego para practicar el cálculo mental (multiplicación, y s
 
 A mi hijo le encanta y ha ganado mucha soltura. Ojalá también le sirva a su familia.
 
-El juego gratuito, Defensa de Meteoros, ya ofrece casi toda la práctica. Si quiere más formas de practicar, puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
+El juego gratuito, Defensa Meteoro, ya ofrece casi toda la práctica. Si quiere más formas de practicar, puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
 
-CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa de Meteoros es gratis; los otros cuatro se pueden probar gratis 3 veces cada uno)
-● Defensa de Meteoros (de todo): al escribir la respuesta, un láser derriba los meteoros que caen sobre el pueblito. Lo fallado regresa de otras formas: al revés (? × 7 = 56), en serie (7, 14, ?, 28) y como jefe cada 5 oleadas. Y hay cofres y misiles buscadores.
+CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa Meteoro es gratis; los otros cuatro se pueden probar gratis 3 veces cada uno)
+● Defensa Meteoro (de todo): al escribir la respuesta, un láser derriba los meteoros que caen sobre el pueblito. Lo fallado regresa de otras formas: al revés (? × 7 = 56), en serie (7, 14, ?, 28) y como jefe cada 5 oleadas. Y hay cofres y misiles buscadores.
 ● Carrera Fantasma (rapidez): 20 preguntas contra el reloj, contra la propia carrera anterior, hasta que las respuestas salgan sin pensar.
 ● Jala la Cuerda (duelo): dos jugadores frente a frente. Contra un adulto o contra un robot que se ajusta al ritmo de su hijo, para que a veces gane y a veces pierda.
 ● ¿Mayor? ¿Menor? (comparar): tres operaciones; sin resolverlas todas, se estima cuál es la mayor o la menor. Desarrolla el sentido numérico.
@@ -570,11 +570,11 @@ CINCO JUEGOS, CADA UNO DESARROLLA UNA HABILIDAD (Defensa de Meteoros es gratis; 
 CUANTO MÁS JUEGAN, MEJOR LO SABEN
 ● Lo que el niño falla sale más seguido sin que lo note, y vuelve un poco después para otro intento. Para él, solo está jugando.
 ● Mapa Estelar: cada operación es una estrella. Se enciende cuando la respuesta es rápida y correcta: de un vistazo se ve qué falta practicar.
-● Misiones diarias, insignias y una mascota que criar: las respuestas dan polvo estelar para alimentar a la mascota (Peludín, Draki o Croac, y un huevo legendario, Nova), abrir accesorios y darle premios que llenan sus corazones. El polvo estelar solo se gana respondiendo; nunca se vende.
+● Misiones diarias, medallas y una mascota que criar: las respuestas dan polvo estelar para alimentar a la mascota (Peludín, Draki o Croac, y un huevo legendario, Nova), abrir accesorios y darle premios que llenan sus corazones. El polvo estelar solo se gana respondiendo; nunca se vende.
 ● Sin "tu mascota tiene hambre" ni castigos. Nada presiona al niño.
 
 PARA PADRES
-● Descarga gratis: Defensa de Meteoros, el Mapa Estelar, las misiones diarias y la mascota son gratis. Los otros cuatro juegos se pueden probar 3 veces cada uno, y una única compra los desbloquea todos (no es suscripción; sirve para todos los niños del dispositivo).
+● Descarga gratis: Defensa Meteoro, el Mapa Estelar, las misiones diarias y la mascota son gratis. Los otros cuatro juegos se pueden probar 3 veces cada uno, y una única compra los desbloquea todos (no es suscripción; sirve para todos los niños del dispositivo).
 ● Las compras están detrás de un control parental: los niños no compran por accidente. El pago lo procesa Google Play.
 ● Sin anuncios, sin registro y sin recopilar datos personales.
 ● Funciona sin conexión (solo las compras se conectan a la tienda). El progreso se guarda solo en este dispositivo y no podemos verlo.
