@@ -5,7 +5,7 @@ import json, os, sys
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 L = json.load(open(os.path.join(root, 'store', 'listing.json'), encoding='utf-8'))
 LIM = {'name': 30, 'subtitle': 30, 'promo': 170, 'short': 80, 'keywords': 100, 'whatsNew': 4000, 'description': 4000}
-NAMES = {'zh-Hant': '繁體中文（zh-Hant／台灣）', 'en': 'English（en-US）', 'ja': '日本語（ja）'}
+NAMES = {'zh-Hant': '繁體中文（zh-Hant／台灣）', 'en': 'English（en-US）', 'en-GB': 'English（en-GB／英國，只有商店頁，遊戲用 en）', 'ja': '日本語（ja）', 'ko': '한국어（ko）', 'es': 'Español（es-MX／中南美，App Store 選「Spanish (Mexico)」）'}
 def desc(d, store):   # description 裡的 {store} 換成該商店的名字
     return d['description'].replace('{store}', d['stores'][store])
 bad = []
