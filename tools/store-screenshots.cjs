@@ -119,6 +119,17 @@ async function meteorBot(page, until) {
   return n;
 }
 
+// 幽靈競速：答幾題讓自己領先幽靈，再打下一題的第一個數字
+function solveQ(t) {
+  t = (t || '').replace(/\s+/g, ' ').trim(); let m;
+  if ((m = /^(\d+) × (\d+) =/.exec(t))) return +m[1] * +m[2];
+  if ((m = /(\d+) × (\d+) = \D*$/.exec(t))) return +m[1] * +m[2];
+  if ((m = /× (\d+) = (\d+)/.exec(t)) && !/^\d+ ×/.test(t)) return +m[2] / +m[1];
+  if ((m = /^(\d+) × .*= (\d+)/.exec(t))) return +m[2] / +m[1];
+  const nums = t.split(/[、,]/).map(x => x.trim()); const k = nums.findIndex(x => !/^\d+$/.test(x));
+  if (nums.length >= 4 && k >= 0) { const v = nums.map(Number), d = k >= 2 ? v[1] - v[0] : v[3] - v[2]; return k > 0 ? v[k - 1] + d : v[1] - d; }
+  return null;
+}
 async function shotMenu(page, f) { await page.waitForTimeout(2600); await snap(page, f); }   // 開場動畫（.intro）3 秒才拿掉，等它播完再截
 async function shotMeteor(page, f) {
   // 數畫面上有幾顆流星：流星的算式是用 canvas fillText 畫的，記下最近 60ms 內畫過的不同算式
@@ -142,10 +153,10 @@ async function shotVersus(page, f) {
   // 小隊長（下方）連答幾題把繩子往下拉，機器人偶爾也答
   for (let i = 0; i < 4; i++) {
     for (let tries = 0; tries < 20; tries++) {
-      const t = await page.textContent('#v-bot [data-q]');
-      const m = /(\d+)\s*×\s*(\d+)/.exec(t || '');
-      if (m && !/\?/.test(t.replace(/=.*/, ''))) {
-        for (const ch of String(+m[1] * +m[2])) { await page.click(`#v-bot [data-pad] .key >> text="${ch}"`, { timeout: 2000 }).catch(() => {}); await page.waitForTimeout(120); }
+      const t = await page.evaluate(() => { const q = document.querySelector('#v-bot [data-q]'); return [...q.childNodes].map(n => n.nodeType === 3 ? n.textContent : (n.classList && n.classList.contains('qlab') ? '' : (/^\d+$/.test(n.textContent.trim()) || /[×=、,]/.test(n.textContent) ? n.textContent : ' ? '))).join(' '); });
+      const ans = solveQ(t);   // 數列題也算得出來（不然機器人會一直拉，截到「機器人贏了」）
+      if (ans != null && Number.isFinite(ans)) {
+        for (const ch of String(ans)) { await page.click(`#v-bot [data-pad] .key >> text="${ch}"`, { timeout: 2000 }).catch(() => {}); await page.waitForTimeout(120); }
         break;
       }
       await page.waitForTimeout(250);
@@ -155,17 +166,6 @@ async function shotVersus(page, f) {
   await snap(page, f);
 }
 async function shotAddMap(page, f) { await page.click('#go-map'); await page.waitForTimeout(800); const t = await page.$('#map-tabs [data-tab="add"], #map-tabs button:last-child'); if (t && !(await t.getAttribute('aria-pressed') === 'true')) await t.click().catch(() => {}); await page.waitForTimeout(500); await snap(page, f); }
-// 幽靈競速：答幾題讓自己領先幽靈，再打下一題的第一個數字
-function solveQ(t) {
-  t = (t || '').replace(/\s+/g, ' ').trim(); let m;
-  if ((m = /^(\d+) × (\d+) =/.exec(t))) return +m[1] * +m[2];
-  if ((m = /(\d+) × (\d+) = \D*$/.exec(t))) return +m[1] * +m[2];
-  if ((m = /× (\d+) = (\d+)/.exec(t)) && !/^\d+ ×/.test(t)) return +m[2] / +m[1];
-  if ((m = /^(\d+) × .*= (\d+)/.exec(t))) return +m[2] / +m[1];
-  const nums = t.split(/[、,]/).map(x => x.trim()); const k = nums.findIndex(x => !/^\d+$/.test(x));
-  if (nums.length >= 4 && k >= 0) { const v = nums.map(Number), d = k >= 2 ? v[1] - v[0] : v[3] - v[2]; return k > 0 ? v[k - 1] + d : v[1] - d; }
-  return null;
-}
 async function shotGhost(page, f) {
   await page.click('#go-ghost'); await page.waitForTimeout(3600);
   for (let i = 0; i < 9; i++) {
