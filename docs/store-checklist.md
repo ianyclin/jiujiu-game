@@ -89,6 +89,7 @@
 - **先上 iPhone**（2026-10-17）：Android 等決定要不要收費再做（Google 規定有營利的個人帳號公開完整地址、不收郵政信箱；Android 完全免費、不放內購就不用）。
 - **App Store 不在歐盟 27 國上架**（2026-10-17）：歐盟數位服務法（DSA）要求「交易者」在歐盟的商店頁公開地址、電話、email（個人可以用郵政信箱，但要附租用收據等證明）。App 與 `unlock_all` 的銷售地區都取消歐盟 27 國（挪威、冰島、列支敦斯登、瑞士、英國不是歐盟，保留），DSA 申報選「不是交易者」：Apple 的說明是只在歐盟以外上架的開發者不算 App Store 上的交易者，但不管有沒有在歐盟上架都要申報。之後想進歐盟再改成交易者並補資料。來源：Apple〈Manage European Union Digital Services Act (DSA) trader requirements〉。
 - **2026-11-12 上架前審查（`store/prelaunch_review.md`）後的決定**：
+- **Android 先不上架**（2026-11-18 Ian 決定）：個人帳號賣內購，Google 會公開完整住址（Play Console 說明「View and manage your developer account information」）；不想公開住家、也不用別人的地址，免費版又會讓 iPhone 付費的家長覺得不公平、之後難改收費。等 iPhone 的實際收入出來，再決定要不要登記行號（用營業地址）後一次用付費模式上 Android。Android 的程式、測試 APK、截圖、文案都留著，不刪。
   - **再排除越南**：越南資訊通訊部要求 App Store 上的遊戲有許可（https://developer.apple.com/news/?id=06h4gf33 ），外國個人拿不到。App 與 `unlock_all` 都少 29 個地區。南韓、日本留著；巴西、印尼規定不明，第一版先留，有疑慮再排除。
   - **Apple 版不能提 Google Play**（2.3.10）：商店說明分 Apple 版／Google 版（`store/listing.json` 的 `{store}`），App 內關於頁的付款那句依平台顯示（`about.storeI／storeA／storeW`）。隱私權政策、支援頁是網頁，如實寫兩家商店沒問題。
   - **付費協議、銀行、稅表（W-8BEN）全部生效才送審**；TestFlight 看得到價錢才送。小型企業計畫（15%）要自己申請。台灣商店標準抽成 2026-10-31 起 26%（https://developer.apple.com/news/?id=w9mxlhek ）。
