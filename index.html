@@ -327,11 +327,23 @@ html,body{overscroll-behavior:none}
 .band{flex:none;height:60px;display:flex;align-items:center;gap:10px;padding-inline:16px;background:rgba(6,12,24,.78);border-block:1px solid var(--line)}
 .end{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--f-num);color:#08111f;font-size:15px}
 .end.p1{background:var(--mint)} .end.p2{background:var(--ember)}
-.rope{position:relative;flex:1;height:10px;border-radius:5px;background:repeating-linear-gradient(115deg,#d1a86e 0 6px,#9c7443 6px 12px)}
-.rope .mid{position:absolute;left:50%;top:-8px;bottom:-8px;width:2px;background:rgba(255,255,255,.35)}
-.rope.f2{background:repeating-linear-gradient(115deg,#ffd77a 0 6px,#c99a4a 6px 12px);box-shadow:0 0 14px rgba(255,210,63,.55)}   /* 拉很久分不出勝負：繩子變滑，一次拉兩格 */
-.rope.f3{background:repeating-linear-gradient(115deg,#ffb08a 0 6px,#d9633f 6px 12px);box-shadow:0 0 18px rgba(255,120,80,.7)}
-.knot{position:absolute;top:50%;left:50%;width:34px;height:34px;transform:translate(-50%,-50%);transition:left .35s cubic-bezier(.3,1.6,.5,1)}
+.rope{position:relative;flex:1;height:10px;border-radius:5px}
+/* 左半是小隊長（薄荷）、右半是對手（橘），一眼看出星星在誰那邊 */
+.rope::before,.rope::after{content:"";position:absolute;top:0;bottom:0;background-size:26.5px 100%}
+.rope::before{left:0;right:50%;border-radius:5px 0 0 5px;background-image:repeating-linear-gradient(115deg,#8ff7df 0 6px,#2fae93 6px 12px)}
+.rope::after{left:50%;right:0;border-radius:0 5px 5px 0;background-image:repeating-linear-gradient(115deg,#ffc98f 0 6px,#c9772c 6px 12px)}
+.rope .mid{position:absolute;left:50%;top:-8px;bottom:-8px;width:2px;background:rgba(255,255,255,.55);z-index:1}
+/* 拉很久分不出勝負：繩子變滑，一次拉兩格（發光、紋路流動） */
+.rope.f2{box-shadow:0 0 14px rgba(255,210,63,.6)} .rope.f3{box-shadow:0 0 18px rgba(255,120,80,.75)}
+.rope.f2::before,.rope.f2::after{animation:ropeSlide .9s linear infinite} .rope.f3::before,.rope.f3::after{animation:ropeSlide .5s linear infinite}
+@keyframes ropeSlide{to{background-position:26.5px 0}}
+.knot{position:absolute;top:50%;left:50%;width:42px;height:42px;z-index:2;overflow:visible;transform:translate(-50%,-50%);transition:left .35s cubic-bezier(.3,1.6,.5,1);animation:knotGlow 1.6s ease-in-out infinite}
+@keyframes knotGlow{0%,100%{filter:drop-shadow(0 0 3px rgba(255,210,63,.55))}50%{filter:drop-shadow(0 0 9px rgba(255,210,63,.95))}}
+.knot g{transform-box:view-box;transform-origin:17px 17.3px}   /* 星星的中心（不是外框中心），轉完 72° 才不會跳一下 */
+/* 拉一下：星星往被拉的那邊轉一圈（72° 正好是星星對稱的角度）並彈大 */
+.knot g.popl{animation:knotPopL .45s cubic-bezier(.3,1.5,.5,1)} .knot g.popr{animation:knotPopR .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes knotPopL{0%{transform:scale(1)}40%{transform:scale(1.5) rotate(-40deg)}100%{transform:scale(1) rotate(-72deg)}}
+@keyframes knotPopR{0%{transform:scale(1)}40%{transform:scale(1.5) rotate(40deg)}100%{transform:scale(1) rotate(72deg)}}
 .band-btns{display:flex;gap:10px;justify-content:center;flex:1}
 .band-btns .btn{padding:12px 16px;min-height:44px;font-size:16px}
 
@@ -715,7 +727,7 @@ html,body{overscroll-behavior:none}
     <div class="band" id="v-band">
       <span class="end p1" aria-hidden="true"></span>
       <div class="rope" id="v-rope"><span class="mid"></span>
-        <svg class="knot" id="v-knot" viewBox="0 0 34 34" aria-hidden="true"><path d="m17 2 4.4 9.4 10.2 1.2-7.6 7 2 10.1L17 24.6l-9 5.1 2-10.1-7.6-7 10.2-1.2z" fill="#ffd23f" stroke="#a87a00" stroke-width="2"/></svg>
+        <svg class="knot" id="v-knot" viewBox="0 0 34 34" aria-hidden="true"><g><path d="m17 2 4.4 9.4 10.2 1.2-7.6 7 2 10.1L17 24.6l-9 5.1 2-10.1-7.6-7 10.2-1.2z" fill="#ffd23f" stroke="#a87a00" stroke-width="2"/></g></svg>
       </div>
       <span class="end p2" aria-hidden="true"></span>
       <button class="icon-btn" id="v-quit" type="button" data-ta="v.pauseAria"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="3" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="12" y="3" width="4" height="14" rx="1.5" fill="currentColor"/></svg></button>
@@ -3222,7 +3234,8 @@ function vForce() {
   if (f !== V.force) { V.force = f; $('#v-rope').classList.toggle('f2', f === 2); $('#v-rope').classList.toggle('f3', f === 3); toast(tx(f === 2 ? 'v.slip2' : 'v.slip3')); SFX.power(); }
   return f;
 }
-function vPull(dir) { V.pos = clamp(V.pos + dir * vForce(), -V.win, V.win); $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%'; SFX.zap(Math.abs(V.pos) * 2); }
+function vPull(dir) { V.pos = clamp(V.pos + dir * vForce(), -V.win, V.win); $('#v-knot').style.left = (50 + V.pos / V.win * 50) + '%'; SFX.zap(Math.abs(V.pos) * 2);
+  const g = $('#v-knot g'); g.classList.remove('popl', 'popr'); g.getBoundingClientRect(); g.classList.add(dir < 0 ? 'popl' : 'popr'); }   // 重新觸發轉圈動畫
 function updateVersus() {
   if (!V || !V.started || V.over || V.paused) return;
   vForce();
@@ -3242,7 +3255,7 @@ function updateVersus() {
   $('#v-mouth').setAttribute('d', 'M23 43q9 6 18 0'); $('#v-say').textContent = [tx('v.got'), `${p.q.text} = ${p.q.ans}`, tx('v.pull')][ri(0, 2)];
   vPull(1);
   const r = $('#v-knot').getBoundingClientRect();
-  spark(r.left + 17, r.top + 17, 18, ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
+  spark(r.left + r.width / 2, r.top + r.height / 2, 18, ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
   if (Math.abs(V.pos) >= V.win) return endVersus(1);
   newVQ(1);
 }
@@ -3282,7 +3295,7 @@ function vKey(i, d) {
       if (i === 0 && !p.rev) { recordOk(p.q, p.fk || now() - p.qt); quest('answers'); earn(1); }
       vPull(i === 0 ? -1 : 1);
       const r = $('#v-knot').getBoundingClientRect();
-      spark(r.left + 17, r.top + 17, 18, i === 0 ? ['#5ff2d0', '#ffffff'] : ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
+      spark(r.left + r.width / 2, r.top + r.height / 2, 18, i === 0 ? ['#5ff2d0', '#ffffff'] : ['#ffae57', '#ffd23f'], 180, 3, 0.6, 0);
       if (Math.abs(V.pos) >= V.win) return endVersus(i);
       newVQ(i); return;
     }
