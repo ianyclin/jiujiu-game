@@ -13,6 +13,11 @@
   - 網頁版轉 App：網頁版加備份提醒、寫「怎麼搬到 App」說明，約一個月後關閉網頁版並給朋友優惠碼；關閉時同步改隱私權政策、`CLAUDE.md`、商店說明。
   - 觀察真人：見下面「觀察一週後再調」與「解鎖提醒觀察」（App 沒有追蹤，只靠家人朋友回饋）。
   - 報稅：打電話問國稅局 Apple 收入怎麼申報，留通話紀錄。
+- **App 開發 skill 家族**（2026-11-26 決定，照順序）：
+  1. 九九上架後，補完 `app-store-launch` skill 的「待補」（Apple 對 1.3 問卷回覆的處理、上架後實際步驟），請燼燈深淵的 session 把它的上架經驗補進來。skill 原稿不在 repo 裡，更新時要先拿到目前版本再改、重新打包給 Ian 按「Save skill」。
+  2. 做 `kids-app-dev` skill：從本檔 `CLAUDE.md` 抽出兒童 App 通用的規則（硬限制、家長關卡、多語言與字型子集、Capacitor＋內購、存檔與備份、觸控與減少動態、說明 ELI5），跟滴答小鎮（`ianyclin/tick-town`）的 `CLAUDE.md` 比對，兩邊都用得上的才放。
+  3. 範本 repo（家長關卡、語言切換、截圖腳本、隱私權頁）等第三個 App 開工時再做。
+  - 不做成 Claude 專案（Projects）：Claude Code 的 session 看不到；要的話只當在手機上討論點子用。
 - **下一版（1.4.1 或 1.5）**：
   - repo 的 iOS build 號改成 9 以上（`CURRENT_PROJECT_VERSION`，送審的 1.4 是 8，只在 Xcode 改過）。
   - 已合併待發：拔河繩子左右兩色、星星發光轉圈（#104），商店的拔河截圖要重截。
