@@ -17,7 +17,7 @@
   1. 九九上架後，補完 `app-store-launch` skill 的「待補」（Apple 對 1.3 問卷回覆的處理、上架後實際步驟），請燼燈深淵的 session 把它的上架經驗補進來。skill 原稿不在 repo 裡，更新時要先拿到目前版本再改、重新打包給 Ian 按「Save skill」。
   2. 做 `kids-app-dev` skill：從本檔 `CLAUDE.md` 抽出兒童 App 通用的規則（硬限制、家長關卡、多語言與字型子集、Capacitor＋內購、存檔與備份、觸控與減少動態、說明 ELI5），跟滴答小鎮（`ianyclin/tick-town`）的 `CLAUDE.md` 比對，兩邊都用得上的才放。
   3. 範本 repo（家長關卡、語言切換、截圖腳本、隱私權頁）等第三個 App 開工時再做。
-  - 不做成 Claude 專案（Projects）：Claude Code 的 session 看不到；要的話只當在手機上討論點子用。
+  - Ian 另外建了「App 開發」專案（2026-11-27），能直接開工作改各 repo、開 PR。九九 iOS 1.4 的審查留在「九九流星隊上架」session；審查以外的事（含九九之後改程式）都可以在專案裡做。
 - **下一版（1.4.1 或 1.5）**：
   - repo 的 iOS build 號改成 9 以上（`CURRENT_PROJECT_VERSION`，送審的 1.4 是 8，只在 Xcode 改過）。
   - 已合併待發：拔河繩子左右兩色、星星發光轉圈（#104），商店的拔河截圖要重截。
